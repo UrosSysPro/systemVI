@@ -47,6 +47,9 @@ sourceSets {
 
 dependencies {
 
+	// https://mvnrepository.com/artifact/com.googlecode.lanterna/lanterna
+	implementation group: 'com.googlecode.lanterna', name: 'lanterna', version: '3.0.1'
+
 	implementation 'org.scala-lang:scala-library:2.11.12'
 
 	implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
