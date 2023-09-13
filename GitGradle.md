@@ -19,3 +19,20 @@ Program koji se sastoji samo od jednog source fajla se moze kompajlirati i pokre
 `java Main`<br>
 Problem nastaje u slucajevima kada u projektu imamo vise klasa. Svaku klasu moramo da navedemo kompajleru, da navedemo u kojoj klasi je `main` funkcija...
 Zato je napravljen build system. U `build.gradle` fajlu samo napisemo u kom folderu se nalaze source fajlovi, i da je nas projekat aplikacija a ne biblioteka.
+
+## Git
+Git je program koji se instalira lokalno na kompjuter, i koristi se za upravljanje git repozitorijuma.
+Repozitorijum je cool ime za folder u kome se nalazi projekat. Da bi jedan folder postao git repository potrebno je da otvorimo taj folder u terminalu i pokrenemo komandu `git init`. Git radi dve bitne stvari, cuva svaku izmenu koju je bilo ko napravio u bilo kom fajlu, i dozvoljava nam da pravimo paralelne verzije projekta.
+Za pocetak koristicemo samo tri git naredbe.<br>
+`git clone`<br>
+`git add .`<br>
+`git commit -m "komentar o tome sta je zimenjeno"`<br>
+Git zapravo ne cuva svaku izmenu, vec cuva nesto sto se zove git commit. Commit je trenutno stanje projekta. Svaki commit ima svoj id, datum i komentar, id i datum se postavljaju sami, mi postavljamo komentar. Kada zalimo da pogledamo kako je projekat izgledao ranije, mozemo da pogledamo listu svih commit-ova i po komentaru zakljucimo koji nas zanima. `git add .` je komanda koja dodaje sve izmene iz trenutnog foldera u commit. `git commit -m"komentar"` kreira novi commit, commit je kao checkpoint u igrici, uvek mozemo da se vratimo i pogledamo ovu verziju projekta.<br>
+
+### Github
+Github je drustvena mreza na kojoj programeri, timovi i kompanije, objavljuju source kod svojih projekata. Vazna razlika je da je git program koji se instalira a github drustvena mreza. Jedan od nacina da vise ljudi radi na istom projektu je koristeci github. Glavni projekat se zove `upstream`. Svako ko zeli da doda kod u projekat moze to da ucini tako sto:
+1. Napravi nalog na github-u
+1. Napravi kopiju projekta na svom nalogu, ovo se naviva fork (to fork a project)
+1. Koristeci naredbu `git clone` preuzme lokalnu kopiju projekta.
+1. Napravi svoj branch(svoju paralelnu verziju projekta)
+Kompletan tutorijal [how to make pull request](https://opensource.com/article/19/7/create-pull-request-github)
