@@ -1,13 +1,13 @@
 package com.systemvi.examples.datastructures;
 
-public class LinkedList {
+public class LinkedList<T> {
     private class Node{
-        public int value;
+        public T value;
         public Node next;
-        public Node(int value){
+        public Node(T value){
             this(value,null);
         }
-        public Node(int value,Node next){
+        public Node(T value,Node next){
             this.value=value;
             this.next=next;
         }
@@ -24,12 +24,12 @@ public class LinkedList {
         }
         return n;
     }
-    public void addStart(int value){
+    public void addStart(T value){
         Node node=new Node(value);
         node.next=root;
         root=node;
     }
-    public void addEnd(int value){
+    public void addEnd(T value){
         Node node = new Node(value);
         if(root==null){
             root=node;
@@ -38,6 +38,13 @@ public class LinkedList {
         Node last=root;
         while(last.next!=null)last=last.next;
         last.next=node;
+    }
+    public T get(int i){
+        Node node=root;
+        for(int j=0;j<i;j++){
+            node=node.next;
+        }
+        return node.value;
     }
     public void removeStart(){
         root=root.next;

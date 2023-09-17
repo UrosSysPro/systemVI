@@ -23,6 +23,19 @@ public class Tree {
     }
 
     public void add(int value){
+//        addI(value);
+        root=addR(root,value);
+    }
+    private Node addR(Node root,int value){
+        if(root==null)return new Node(value);
+
+        if(value>root.value)
+            root.right=addR(root.right,value);
+        else
+            root.left=addR(root.left,value);
+        return root;
+    }
+    private void addI(int value){
         Node node=root;
         if(root==null){
             root=new Node(value);
@@ -47,10 +60,18 @@ public class Tree {
         }
     }
     public boolean contains(int value){
-        return false;
+        return containsR(root,value);
+    }
+    private boolean containsR(Node root,int value){
+        if(root==null)return false;
+        if(root.value==value)return true;
+        if(value>root.value)
+            return containsR(root.right,value);
+        else
+            return containsR(root.left,value);
     }
     public void print(){
-        printI();
+        printR(root);
     }
     private void printR(Node root){
         if(root==null)return;
@@ -60,14 +81,15 @@ public class Tree {
         printR(root.right);
     }
     private void printI(){
-        Stack<Node> stack=new Stack<>();
-        stack.push(root);
-        while(!stack.isEmpty()){
-            Node node=stack.pop();
+        LinkedList<Node> list=new LinkedList<>();
+        list.addStart(root);
+        while(list.getSize()!=0){
+            Node node=list.get(0);
+            list.removeStart();
             if(node==null)continue;
             System.out.println(node.value);
-            stack.push(node.left);
-            stack.push(node.right);
+            list.addStart(node.left);
+            list.addStart(node.right);
         }
     }
 }

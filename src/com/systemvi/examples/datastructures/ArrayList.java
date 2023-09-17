@@ -1,28 +1,28 @@
 package com.systemvi.examples.datastructures;
 
-public class ArrayList {
-    private int[] niz;
+public class ArrayList<T> {
+    private Object[] niz;
     private int n;
 
     public ArrayList(){
-        niz=new int[1];
+        niz=new Object[1];
         n=0;
     }
     public int getSize(){
         return n;
     }
-    public void set(int i,int v){
+    public void set(int i,T v){
         niz[i]=v;
     }
-    public int get(int i){
-        return niz[i];
+    public T get(int i){
+        return (T)niz[i];
     }
     public void remove(){
         n--;
     }
-    public void add(int v){
+    public void add(T v){
         if(n>=niz.length){
-            int[] noviNiz=new int[n*2];
+            Object[] noviNiz=new Object[n*2];
             for(int i=0;i<n;i++)
                 noviNiz[i]=niz[i];
             niz=noviNiz;
