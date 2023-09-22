@@ -27,3 +27,5 @@ Od softvera za ovu godinu potrebni su nam:
 + [git](https://git-scm.com/)
 + [IntelliJ](https://www.jetbrains.com/idea/download) (Skinuti Community edition, pri dnu stranice je link)
 
+test ovo je ubaceno iz pull requesta
+
