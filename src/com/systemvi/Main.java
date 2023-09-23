@@ -1,12 +1,9 @@
 package com.systemvi;
 
-import com.systemvi.examples.datastructures.ArrayList;
-import com.systemvi.examples.datastructures.Sendvic;
-import com.systemvi.examples.datastructures.Tree;
-import com.systemvi.examples.terminalgraphics.Test;
+import com.systemvi.examples.openglwindow.WindowExample;
 
 public class Main {
     public static void main(String[] args) {
-        Test.test();
+        new WindowExample();
     }
 }
