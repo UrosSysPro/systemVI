@@ -2,6 +2,9 @@ package com.systemvi.examples.openglwindow;
 
 import org.lwjgl.opengl.GL;
 
+import java.io.File;
+import java.util.Scanner;
+
 import static org.lwjgl.opengl.GL33.*;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -9,7 +12,7 @@ import static org.lwjgl.glfw.GLFW.*;
 public class WindowExample {
 
     public long window;
-    public int vertexBuffer;
+    public int vertexBuffer,shaderProgram,attributeBuffer;
 
     public float r=0,g=0,b=0.5f;
 
@@ -55,13 +58,72 @@ public class WindowExample {
             0.0f,  0.5f, 0.0f
         };
         vertexBuffer=glGenBuffers();
+//        glBindBuffer(GL_ARRAY_BUFFER,vertexBuffer);
+//        glBufferData(GL_ARRAY_BUFFER,vertices,vertexBuffer);
+//
+////        glVertexAttribPointer(0,3,GL_FLOAT,false,3*4,0);
+//        glEnableVertexAttribArray(0);
+
+        attributeBuffer=glGenVertexArrays();
+        glBindVertexArray(attributeBuffer);
         glBindBuffer(GL_ARRAY_BUFFER,vertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER,vertices,vertexBuffer);
+        glBufferData(GL_ARRAY_BUFFER,vertices,GL_STATIC_DRAW);
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, 3*4 , 0);
+        glEnableVertexAttribArray(0);
     }
     public void createShader(){
+        try{
+            File vertexFile=new File("assets/openglwindow/vertex.glsl");
+            Scanner scanner=new Scanner(vertexFile);
+            String vertexSource="";
+            while(scanner.hasNext()){
+                vertexSource+=scanner.nextLine()+"\n";
+            }
+            scanner.close();
+            int vertexShader=glCreateShader(GL_VERTEX_SHADER);
+            glShaderSource(vertexShader,vertexSource);
+            glCompileShader(vertexShader);
+            int[] status=new int[1];
+            glGetShaderiv(vertexShader,GL_COMPILE_STATUS,status);
+            System.out.println("status: "+status[0]);
+            if(status[0]==0){
+                String log=glGetShaderInfoLog(vertexShader);
+                System.out.println(log);
+            }
 
+            File fragmentFile=new File("assets/openglwindow/fragment.glsl");
+            scanner=new Scanner(fragmentFile);
+            String fragmentSource="";
+            while (scanner.hasNext()){
+                fragmentSource+=scanner.nextLine()+"\n";
+            }
+            scanner.close();
+            int fragmentShader=glCreateShader(GL_FRAGMENT_SHADER);
+            glShaderSource(fragmentShader,fragmentSource);
+            glCompileShader(fragmentShader);
+            glGetShaderiv(fragmentShader,GL_COMPILE_STATUS,status);
+            System.out.println("status: "+status[0]);
+            if(status[0]==0){
+                String log=glGetShaderInfoLog(fragmentShader);
+                System.out.println(log);
+            }
 
+            shaderProgram=glCreateProgram();
+            glAttachShader(shaderProgram,vertexShader);
+            glAttachShader(shaderProgram,fragmentShader);
+            glLinkProgram(shaderProgram);
+
+            glGetProgramiv(shaderProgram,GL_LINK_STATUS,status);
+            if(status[0]==0){
+                String log=glGetProgramInfoLog(shaderProgram);
+                System.out.println(log);
+            }
+            glUseProgram(shaderProgram);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
+    // java -> vertex -> raster -> fragment
     public void loop(){
         while(!glfwWindowShouldClose(window)){
             glfwPollEvents();
@@ -70,6 +132,10 @@ public class WindowExample {
             //input
             //update
             //draw
+            glUseProgram(shaderProgram);
+            glBindVertexArray(attributeBuffer);
+            glDrawArrays(GL_TRIANGLES,0,3);
+
             glfwSwapBuffers(window);
             sleep(16);
         }
