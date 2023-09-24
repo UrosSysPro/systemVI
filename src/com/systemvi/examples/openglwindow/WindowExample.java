@@ -57,14 +57,8 @@ public class WindowExample {
             0.5f, -0.5f, 0.0f,
             0.0f,  0.5f, 0.0f
         };
-        vertexBuffer=glGenBuffers();
-//        glBindBuffer(GL_ARRAY_BUFFER,vertexBuffer);
-//        glBufferData(GL_ARRAY_BUFFER,vertices,vertexBuffer);
-//
-////        glVertexAttribPointer(0,3,GL_FLOAT,false,3*4,0);
-//        glEnableVertexAttribArray(0);
-
         attributeBuffer=glGenVertexArrays();
+        vertexBuffer=glGenBuffers();
         glBindVertexArray(attributeBuffer);
         glBindBuffer(GL_ARRAY_BUFFER,vertexBuffer);
         glBufferData(GL_ARRAY_BUFFER,vertices,GL_STATIC_DRAW);
@@ -73,8 +67,10 @@ public class WindowExample {
     }
     public void createShader(){
         try{
-            File vertexFile=new File("assets/openglwindow/vertex.glsl");
-            Scanner scanner=new Scanner(vertexFile);
+            File file;
+            Scanner scanner;
+            file=new File("assets/openglwindow/vertex.glsl");
+            scanner=new Scanner(file);
             String vertexSource="";
             while(scanner.hasNext()){
                 vertexSource+=scanner.nextLine()+"\n";
@@ -91,8 +87,8 @@ public class WindowExample {
                 System.out.println(log);
             }
 
-            File fragmentFile=new File("assets/openglwindow/fragment.glsl");
-            scanner=new Scanner(fragmentFile);
+            file=new File("assets/openglwindow/fragment.glsl");
+            scanner=new Scanner(file);
             String fragmentSource="";
             while (scanner.hasNext()){
                 fragmentSource+=scanner.nextLine()+"\n";
@@ -118,6 +114,8 @@ public class WindowExample {
                 String log=glGetProgramInfoLog(shaderProgram);
                 System.out.println(log);
             }
+            glDeleteShader(vertexShader);
+            glDeleteShader(fragmentShader);
             glUseProgram(shaderProgram);
         }catch (Exception e){
             e.printStackTrace();
@@ -134,7 +132,10 @@ public class WindowExample {
             //draw
             glUseProgram(shaderProgram);
             glBindVertexArray(attributeBuffer);
+            glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+            glLineWidth(3.0f);
             glDrawArrays(GL_TRIANGLES,0,3);
+            glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
 
             glfwSwapBuffers(window);
             sleep(16);
