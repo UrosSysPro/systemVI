@@ -1,7 +1,5 @@
 package com.systemvi.examples.openglwindow;
 
-import org.lwjgl.glfw.GLFWFramebufferSizeCallback;
-import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.opengl.GL33.*;
@@ -11,11 +9,15 @@ import static org.lwjgl.glfw.GLFW.*;
 public class WindowExample {
 
     public long window;
+    public int vertexBuffer;
+
     public float r=0,g=0,b=0.5f;
 
     public WindowExample(){
         init();
         createWindow();
+        createMesh();
+        createShader();
         loop();
     }
 
@@ -45,6 +47,20 @@ public class WindowExample {
             r=(float)x/800;
             g=(float)y/600;
         });
+    }
+    public void createMesh(){
+        float[] vertices = {
+            -0.5f, -0.5f, 0.0f,
+            0.5f, -0.5f, 0.0f,
+            0.0f,  0.5f, 0.0f
+        };
+        vertexBuffer=glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER,vertexBuffer);
+        glBufferData(GL_ARRAY_BUFFER,vertices,vertexBuffer);
+    }
+    public void createShader(){
+
+
     }
     public void loop(){
         while(!glfwWindowShouldClose(window)){
