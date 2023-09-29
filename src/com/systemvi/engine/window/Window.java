@@ -59,7 +59,7 @@ public class Window {
     public boolean shouldClose(){
         return glfwWindowShouldClose(id);
     }
-    public static void pollEvents(){
+    public void pollEvents(){
         glfwPollEvents();
     }
     public void swapBuffers(){

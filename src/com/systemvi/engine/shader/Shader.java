@@ -6,6 +6,8 @@ import static org.lwjgl.opengl.GL20.*;
 
 public class Shader {
     private int id;
+    private boolean compiled=true;
+    private String compilationLog="";
 
     public Shader(String vertex,String fragment){
         String vertexSource=readFile(vertex);
@@ -17,20 +19,20 @@ public class Shader {
         glShaderSource(vertexShader,vertexSource);
         glCompileShader(vertexShader);
         glGetShaderiv(vertexShader,GL_COMPILE_STATUS,status);
-//        System.out.println("status: "+status[0]);
         if(status[0]==0){
-            String log=glGetShaderInfoLog(vertexShader);
-            System.out.println(log);
+            compiled=false;
+            compilationLog+="Vertex Log:\n";
+            compilationLog+=glGetShaderInfoLog(vertexShader)+"\n";
         }
 
         int fragmentShader=glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(fragmentShader,fragmentSource);
         glCompileShader(fragmentShader);
         glGetShaderiv(fragmentShader,GL_COMPILE_STATUS,status);
-//        System.out.println("status: "+status[0]);
         if(status[0]==0){
-            String log=glGetShaderInfoLog(fragmentShader);
-            System.out.println(log);
+            compiled=false;
+            compilationLog+="Fragment Log:\n";
+            compilationLog+=glGetShaderInfoLog(fragmentShader)+"\n";
         }
 
         id=glCreateProgram();
@@ -40,16 +42,32 @@ public class Shader {
 
         glGetProgramiv(id,GL_LINK_STATUS,status);
         if(status[0]==0){
-            String log=glGetProgramInfoLog(id);
-            System.out.println(log);
+            compiled=false;
+            compilationLog+="Program Link Log:\n";
+            compilationLog+=glGetProgramInfoLog(id)+"\n";
         }
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
         glUseProgram(id);
     }
+
+    public boolean isCompiled() {
+        return compiled;
+    }
+
+    public String getLog() {
+        return compilationLog;
+    }
+
+    public int getId() {
+        return id;
+    }
+
     public void use(){
         glUseProgram(id);
-//        gluni
+    }
+    public void delete(){
+        glDeleteProgram(id);
     }
 
     public String readFile(String name){
