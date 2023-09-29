@@ -21,6 +21,11 @@ public class Window {
     public void use(){
         glfwMakeContextCurrent(id);
     }
+
+    public long getId() {
+        return id;
+    }
+
     public void addOnClickListener(MouseClickListener listener){
         glfwSetMouseButtonCallback(id,(long window, int button, int action, int mods)-> {
             listener.click(button,action,mods);

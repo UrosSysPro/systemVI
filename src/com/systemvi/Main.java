@@ -1,7 +1,6 @@
 package com.systemvi;
 
-import com.systemvi.engine.window.WindowTest;
-import com.systemvi.examples.openglwindow.WindowExample;
+import com.systemvi.examples.applicationtest.WindowTest;
 
 public class Main {
     public static void main(String[] args) {

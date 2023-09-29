@@ -1,4 +1,6 @@
-package com.systemvi.engine.window;
+package com.systemvi.examples.applicationtest;
+
+import com.systemvi.engine.window.Window;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL33.*;
