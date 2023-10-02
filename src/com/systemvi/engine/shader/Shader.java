@@ -1,4 +1,6 @@
 package com.systemvi.engine.shader;
+import org.joml.Matrix4f;
+
 import java.io.File;
 import java.util.Scanner;
 
@@ -85,4 +87,11 @@ public class Shader {
             return null;
         }
     }
+
+    public void setUniform(String name, Matrix4f mat){
+        float[] data=new float[16];
+        int uniformId=glGetUniformLocation(id,name);
+        glUniformMatrix4fv(uniformId,false,mat.get(data));
+    }
+
 }

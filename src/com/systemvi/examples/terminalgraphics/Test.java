@@ -13,7 +13,6 @@ import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
 import com.googlecode.lanterna.terminal.TerminalFactory;
 import com.googlecode.lanterna.terminal.swing.SwingTerminal;
-import com.systemvi.Main;
 
 import java.io.IOException;
 

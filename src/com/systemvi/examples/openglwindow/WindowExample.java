@@ -64,6 +64,8 @@ public class WindowExample {
         glBufferData(GL_ARRAY_BUFFER,vertices,GL_STATIC_DRAW);
         glVertexAttribPointer(0, 3, GL_FLOAT, false, 3*4 , 0);
         glEnableVertexAttribArray(0);
+        //pppccc
+        //pcpcpc
     }
     public void createShader(){
         try{
