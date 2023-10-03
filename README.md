@@ -9,7 +9,9 @@ Projekat za 6.godinu 2023-2024 u terminu 13:30
    + [Bonus terminal graphics](docs/Lanterna.md)
 1. [GLFW window, uvod u opengl](docs/openglwindow/window.md)
 1. [Crtanje trougla](docs/openglwindow/triangle.md)
-
+1. [Linearna Algebra, Vektori i Matrice](docs/vektori/vektori.md)
+1. [Kamera](docs/kamera/kamera.md)
+   + [shader in/out/uniform](docs/shader/shader.md)
 ## Domaci
 1. + Napraviti `Stack` klasu. `Stack` je struktura podataka koja definise dve operacije 
 push i pop. `push` dodaje element na vrh steka, `pop` vraca i brise element sa vrha. Obe operacije

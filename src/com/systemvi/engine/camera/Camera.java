@@ -1,6 +1,7 @@
 package com.systemvi.engine.camera;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 public class Camera {
     private Matrix4f view,rotation,scale,translate,screenSize,projection;
@@ -36,6 +37,12 @@ public class Camera {
     public void setRotation(float x,float y,float z){
         rotation.identity().rotateXYZ(-x,-y,-z);
     }
+//    public void lookAt(Vector3f position,Vector3f target){
+//        Vector3f direction=new Vector3f().add(target).sub(position);
+//        Vector3f up=new Vector3f(0,1,0);
+//        Vector3f right=new Vector3f().set(direction).cross(up);
+//
+//    }
     public void update(){
         view.identity().mul(scale).mul(screenSize).mul(rotation).mul(translate);
     }
