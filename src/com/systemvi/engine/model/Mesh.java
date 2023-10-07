@@ -41,6 +41,10 @@ public class Mesh {
         glBindVertexArray(arrayBuffer);
         glDrawArrays(GL_TRIANGLES,0,vertices.length);
     }
+    public void draw(int count){
+        glBindVertexArray(arrayBuffer);
+        glDrawArrays(GL_TRIANGLES,0,count);
+    }
 
     public void delete(){
         glDeleteBuffers(arrayBuffer);
