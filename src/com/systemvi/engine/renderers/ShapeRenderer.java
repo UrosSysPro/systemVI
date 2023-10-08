@@ -92,7 +92,34 @@ public class ShapeRenderer {
     }
 
     public void polygon(Vector2f[] points, Vector4f color){
+        for(int i=0;i<points.length-2;i++){
+            int index=pointsToDraw*vertexSize;
+            verexData[index+0]=points[0].x;
+            verexData[index+1]=points[0].y;
+            verexData[index+2]=color.x;
+            verexData[index+3]=color.y;
+            verexData[index+4]=color.z;
+            verexData[index+5]=color.w;
+            pointsToDraw++;
 
+            index+=vertexSize;
+            verexData[index+0]=points[i+1].x;
+            verexData[index+1]=points[i+1].y;
+            verexData[index+2]=color.x;
+            verexData[index+3]=color.y;
+            verexData[index+4]=color.z;
+            verexData[index+5]=color.w;
+            pointsToDraw++;
+
+            index+=vertexSize;
+            verexData[index+0]=points[i+2].x;
+            verexData[index+1]=points[i+2].y;
+            verexData[index+2]=color.x;
+            verexData[index+3]=color.y;
+            verexData[index+4]=color.z;
+            verexData[index+5]=color.w;
+            pointsToDraw++;
+        }
     }
     public void flush(){
         shader.use();

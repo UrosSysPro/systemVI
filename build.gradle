@@ -51,7 +51,7 @@ sourceSets {
 }
 
 dependencies {
-
+	implementation 'org.jbox2d:jbox2d-library:2.2.1.1'
 	// https://mvnrepository.com/artifact/com.googlecode.lanterna/lanterna
 	implementation group: 'com.googlecode.lanterna', name: 'lanterna', version: '3.0.1'
 

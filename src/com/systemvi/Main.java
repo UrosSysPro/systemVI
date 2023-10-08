@@ -1,13 +1,11 @@
 package com.systemvi;
 
-import com.systemvi.examples.applicationtest.ApplicationTest;
-import com.systemvi.examples.applicationtest.CameraTest;
 import com.systemvi.examples.applicationtest.ShapeRendererTest;
-import com.systemvi.examples.applicationtest.WindowTest;
+import com.systemvi.examples.flappybird.FlappyBird;
 
 public class Main {
     public static void main(String[] args) {
 
-        new ShapeRendererTest(3,3,60).run();
+        new FlappyBird(3,3,60).run();
     }
 }

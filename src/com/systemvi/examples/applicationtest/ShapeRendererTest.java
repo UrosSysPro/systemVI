@@ -5,6 +5,8 @@ import com.systemvi.engine.camera.Camera;
 import com.systemvi.engine.renderers.ShapeRenderer;
 import com.systemvi.engine.window.Window;
 import static org.lwjgl.opengl.GL33.*;
+
+import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 public class ShapeRendererTest extends Application {
@@ -38,12 +40,19 @@ public class ShapeRendererTest extends Application {
         glClear(GL_COLOR_BUFFER_BIT);
         window.pollEvents();
         renderer.setCamera(camera);
-//        renderer.rect(100,100,300,300,new Vector4f(0.3f,0.5f,0.7f,1.0f));
-        for(int i=0;i<100;i++){
-            for(int j=0;j<100;j++){
-                renderer.rect(i*20,j*20,10,10,new Vector4f(0.3f,0.5f,0.7f,1.0f));
-            }
+//        for(int i=0;i<10;i++){
+//            for(int j=0;j<10;j++){
+//                renderer.rect(i*100,j*100,100,100,new Vector4f((float)i/10f,(float)j/10f,0.5f,1.0f));
+//            }
+//        }
+        Vector2f[] points=new Vector2f[7];
+        for(int i=0;i<points.length;i++){
+            float ugao=(float)Math.PI*2/points.length*i;
+            points[i]=new Vector2f();
+            points[i].x=(float)Math.cos(ugao)*200+400;
+            points[i].y=(float)Math.sin(ugao)*200+300;
         }
+        renderer.polygon(points,new Vector4f(0.3f,0.2f,0.7f,1.0f));
         renderer.flush();
         window.swapBuffers();
     }
