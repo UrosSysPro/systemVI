@@ -8,11 +8,15 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 public class ShapeRenderer {
-    private Mesh mesh;
-    private Shader shader;
+    private final Mesh mesh;
+    private final Shader shader;
     private int pointsToDraw=0;
-    private int maxPoints=1000,vertexSize=6;
-    private float[] verexData;
+    private int trianglesToDraw=0;
+    private final int vertexSize=6;
+    private final float[] vertexData;
+    private final int[] indices;
+    int maxPoints = 1000;
+    int maxTriangles = 1000;
     private Camera camera;
 
     public ShapeRenderer(){
@@ -27,64 +31,33 @@ public class ShapeRenderer {
         if(!shader.isCompiled()){
             System.out.println(shader.getLog());
         }
-        verexData=new float[vertexSize*maxPoints];
+        vertexData =new float[vertexSize* maxPoints];
+        indices=new int[3* maxTriangles];
     }
     public void rect(float x, float y, float width, float height, Vector4f color){
-        if(pointsToDraw+6>=maxPoints)flush();
-        //prva tacka
-        int index=pointsToDraw*vertexSize;
-        verexData[index+0]=x;
-        verexData[index+1]=y;
-        verexData[index+2]=color.x;
-        verexData[index+3]=color.y;
-        verexData[index+4]=color.z;
-        verexData[index+5]=color.w;
-        //druga tacka
-        pointsToDraw++;
-        index+=vertexSize;
-        verexData[index+0]=x+width;
-        verexData[index+1]=y;
-        verexData[index+2]=color.x;
-        verexData[index+3]=color.y;
-        verexData[index+4]=color.z;
-        verexData[index+5]=color.w;
-        //treca tacka
-        pointsToDraw++;
-        index+=vertexSize;
-        verexData[index+0]=x;
-        verexData[index+1]=y+height;
-        verexData[index+2]=color.x;
-        verexData[index+3]=color.y;
-        verexData[index+4]=color.z;
-        verexData[index+5]=color.w;
-        //cetvrta tacka
-        pointsToDraw++;
-        index+=vertexSize;
-        verexData[index+0]=x+width;
-        verexData[index+1]=y;
-        verexData[index+2]=color.x;
-        verexData[index+3]=color.y;
-        verexData[index+4]=color.z;
-        verexData[index+5]=color.w;
-        //peta tacka
-        pointsToDraw++;
-        index+=vertexSize;
-        verexData[index+0]=x;
-        verexData[index+1]=y+height;
-        verexData[index+2]=color.x;
-        verexData[index+3]=color.y;
-        verexData[index+4]=color.z;
-        verexData[index+5]=color.w;
-        //sesta tacka
-        pointsToDraw++;
-        index+=vertexSize;
-        verexData[index+0]=x+width;
-        verexData[index+1]=y+height;
-        verexData[index+2]=color.x;
-        verexData[index+3]=color.y;
-        verexData[index+4]=color.z;
-        verexData[index+5]=color.w;
-        pointsToDraw++;
+        if(pointsToDraw+4>maxPoints||trianglesToDraw+2>maxTriangles)flush();
+
+        int pointsOffset=pointsToDraw;
+        for(int j=0;j<2;j++){
+            for(int i=0;i<2;i++){
+                int index=pointsToDraw*vertexSize;
+                vertexData[index+0]=x+i*width;
+                vertexData[index+1]=y+j*height;
+                vertexData[index+2]=color.x;
+                vertexData[index+3]=color.y;
+                vertexData[index+4]=color.z;
+                vertexData[index+5]=color.w;
+                pointsToDraw++;
+            }
+        }
+        int index=trianglesToDraw*3;
+        indices[index+0]= (pointsOffset+0);
+        indices[index+1]= (pointsOffset+1);
+        indices[index+2]= (pointsOffset+2);
+        indices[index+3]= (pointsOffset+1);
+        indices[index+4]= (pointsOffset+2);
+        indices[index+5]= (pointsOffset+3);
+        trianglesToDraw+=2;
     }
 
     public void setCamera(Camera camera) {
@@ -92,41 +65,33 @@ public class ShapeRenderer {
     }
 
     public void polygon(Vector2f[] points, Vector4f color){
-        for(int i=0;i<points.length-2;i++){
+        int pointsOffset=pointsToDraw;
+        for(int i=0;i<points.length;i++){
             int index=pointsToDraw*vertexSize;
-            verexData[index+0]=points[0].x;
-            verexData[index+1]=points[0].y;
-            verexData[index+2]=color.x;
-            verexData[index+3]=color.y;
-            verexData[index+4]=color.z;
-            verexData[index+5]=color.w;
+            vertexData[index+0]=points[i].x;
+            vertexData[index+1]=points[i].y;
+            vertexData[index+2]=color.x;
+            vertexData[index+3]=color.y;
+            vertexData[index+4]=color.z;
+            vertexData[index+5]=color.w;
             pointsToDraw++;
-
-            index+=vertexSize;
-            verexData[index+0]=points[i+1].x;
-            verexData[index+1]=points[i+1].y;
-            verexData[index+2]=color.x;
-            verexData[index+3]=color.y;
-            verexData[index+4]=color.z;
-            verexData[index+5]=color.w;
-            pointsToDraw++;
-
-            index+=vertexSize;
-            verexData[index+0]=points[i+2].x;
-            verexData[index+1]=points[i+2].y;
-            verexData[index+2]=color.x;
-            verexData[index+3]=color.y;
-            verexData[index+4]=color.z;
-            verexData[index+5]=color.w;
-            pointsToDraw++;
+        }
+        for(int i=0;i<points.length-2;i++){
+            int index=trianglesToDraw*3;
+            indices[index+0]=pointsOffset+0;
+            indices[index+1]=pointsOffset+i+1;
+            indices[index+2]=pointsOffset+i+2;
+            trianglesToDraw++;
         }
     }
     public void flush(){
         shader.use();
         shader.setUniform("view",camera.getView());
         shader.setUniform("projection",camera.getProjection());
-        mesh.setVertexData(verexData);
-        mesh.draw(pointsToDraw*vertexSize);
+        mesh.setVertexData(vertexData);
+        mesh.setIndices(indices);
+        mesh.drawElements(pointsToDraw,trianglesToDraw);
         pointsToDraw=0;
+        trianglesToDraw=0;
     }
 }

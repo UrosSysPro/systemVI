@@ -7,8 +7,11 @@ import static org.lwjgl.opengl.GL33.*;
 
 public class Window {
     private KeyListener keyPress=null,keyRelease=null;
+    private int width,height;
     private long id;
     public Window(int width,int height,String title){
+        this.width=width;
+        this.height=height;
         id=glfwCreateWindow(width,height,title,0,0);
         if(id==0){
             System.out.println("[ERROR] Cant create window");
@@ -52,10 +55,21 @@ public class Window {
     }
     public void addOnResizeListener(ResizeListener listener){
         glfwSetFramebufferSizeCallback(id,(long windw,int width,int height)->{
+            this.width=width;
+            this.height=height;
             glViewport(0,0,width,height);
             listener.resize(width,height);
         });
     }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
     public boolean shouldClose(){
         return glfwWindowShouldClose(id);
     }

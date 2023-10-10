@@ -4,6 +4,9 @@ import com.systemvi.engine.application.Application;
 import com.systemvi.engine.camera.Camera;
 import com.systemvi.engine.renderers.ShapeRenderer;
 import com.systemvi.engine.window.Window;
+import org.joml.Vector2f;
+import org.joml.Vector4f;
+
 import static org.lwjgl.opengl.GL33.*;
 
 public class FlappyBird extends Application {
@@ -26,9 +29,22 @@ public class FlappyBird extends Application {
         camera.setScale(1,-1,1);
         camera.setScreenSize(800,600);
         camera.update();
-        bird=new Bird();
-        walls=new Wall[1];
-        walls[0]=new Wall();
+        bird=new Bird(window);
+        walls=new Wall[5];
+        for(int i=0;i<walls.length;i++){
+            walls[i]=new Wall(window,i);
+        }
+        window.addOnClickListener((int button,int action,int mods)->{
+            bird.speed=-200;
+        });
+        window.addOnKeyPressListener((key,scancode,action,mods)->{
+            bird.speed=-200;
+        });
+        window.addOnResizeListener((width,height)->{
+            camera.setScreenSize(width,height);
+            camera.setPosition(width/2,height/2,0);
+            camera.update();
+        });
     }
 
     @Override
@@ -38,8 +54,10 @@ public class FlappyBird extends Application {
         window.pollEvents();
 
         //update
-        for(Wall w:walls)w.update(delta);
-
+        for(Wall w:walls)w.update(delta,window);
+        bird.update(delta,window,walls);
+//        if(bird.hasCollided()) System.out.println("sudar");
+        if(bird.hasCollided())close();
         //draw
         glClearColor(0,0,0,1);
         glClear(GL_COLOR_BUFFER_BIT);
