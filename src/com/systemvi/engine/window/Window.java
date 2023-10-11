@@ -1,5 +1,6 @@
 package com.systemvi.engine.window;
 
+import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.opengl.GL;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -7,6 +8,7 @@ import static org.lwjgl.opengl.GL33.*;
 
 public class Window {
     private KeyListener keyPress=null,keyRelease=null;
+    private MousePressListener mouseUp=null,mouseDown=null;
     private int width,height;
     private long id;
     public Window(int width,int height,String title){
@@ -29,9 +31,18 @@ public class Window {
         return id;
     }
 
-    public void addOnClickListener(MouseClickListener listener){
-        glfwSetMouseButtonCallback(id,(long window, int button, int action, int mods)-> {
-            listener.click(button,action,mods);
+    public void addOnMouseDownListener(MousePressListener listener){
+        mouseDown=listener;
+        glfwSetMouseButtonCallback(id,(window,button,action,mods)->{
+           if(action==GLFW_PRESS&&mouseDown!=null)mouseDown.mousePress(button,mods);
+           if(action==GLFW_RELEASE&&mouseUp!=null)mouseUp.mousePress(button,mods);
+        });
+    }
+    public void addOnMouseUpListener(MousePressListener listener){
+        mouseUp=listener;
+        glfwSetMouseButtonCallback(id,(window,button,action,mods)->{
+            if(action==GLFW_PRESS&&mouseDown!=null)mouseDown.mousePress(button,mods);
+            if(action==GLFW_RELEASE&&mouseUp!=null)mouseUp.mousePress(button,mods);
         });
     }
     public void addOnMouseMoveListener(MouseMoveListener listener){
@@ -42,15 +53,15 @@ public class Window {
     public void addOnKeyPressListener(KeyListener listener){
         keyPress=listener;
         glfwSetKeyCallback(id,(long window,int key,int scancode,int action,int mods)->{
-            if((action&GLFW_PRESS)!=0&&keyPress!=null)keyPress.key(key,scancode,action,mods);
-            if((action&GLFW_RELEASE)!=0&&keyRelease!=null)keyRelease.key(key,scancode,action,mods);
+            if((action==GLFW_PRESS)&&keyPress!=null)keyPress.key(key,scancode,mods);
+            if((action==GLFW_RELEASE)&&keyRelease!=null)keyRelease.key(key,scancode,mods);
         });
     }
     public void addOnKeyReleaseListener(KeyListener listener){
         keyRelease=listener;
         glfwSetKeyCallback(id,(long window,int key,int scancode,int action,int mods)->{
-            if((action&GLFW_PRESS)!=0&&keyPress!=null)keyPress.key(key,scancode,action,mods);
-            if((action&GLFW_RELEASE)!=0&&keyRelease!=null)keyRelease.key(key,scancode,action,mods);
+            if((action==GLFW_PRESS)&&keyPress!=null)keyPress.key(key,scancode,mods);
+            if((action==GLFW_RELEASE)&&keyRelease!=null)keyRelease.key(key,scancode,mods);
         });
     }
     public void addOnResizeListener(ResizeListener listener){
@@ -59,6 +70,11 @@ public class Window {
             this.height=height;
             glViewport(0,0,width,height);
             listener.resize(width,height);
+        });
+    }
+    public void addOnScrollListener(ScrollListener listener){
+        glfwSetScrollCallback(id, (long window, double xoffset, double yoffset)->{
+            listener.scroll(xoffset,yoffset);
         });
     }
 
@@ -78,5 +94,8 @@ public class Window {
     }
     public void swapBuffers(){
         glfwSwapBuffers(id);
+    }
+    public void close(){
+        glfwDestroyWindow(id);
     }
 }

@@ -34,10 +34,10 @@ public class FlappyBird extends Application {
         for(int i=0;i<walls.length;i++){
             walls[i]=new Wall(window,i);
         }
-        window.addOnClickListener((int button,int action,int mods)->{
+        window.addOnMouseDownListener((int button,int mods)->{
             bird.speed=-200;
         });
-        window.addOnKeyPressListener((key,scancode,action,mods)->{
+        window.addOnKeyPressListener((key,scancode,mods)->{
             bird.speed=-200;
         });
         window.addOnResizeListener((width,height)->{

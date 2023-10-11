@@ -33,6 +33,7 @@ public abstract class Application {
         return frameTime;
     }
     public int getFPS(){
+        if(frameTime==0)return 1000_000_000;
         return (int)(1000_000_000/frameTime);
     }
 

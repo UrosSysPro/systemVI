@@ -66,10 +66,8 @@ public class Mesh {
         glDrawArrays(GL_TRIANGLES,offset,count);
         glBindVertexArray(0);
     }
-    public void drawElements(int pointsToDraw,int trianglesToDraw){
-//        System.out.println(trianglesToDraw);
+    public void drawElements(int trianglesToDraw){
         glBindVertexArray(arrayBuffer);
-//        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,elementBuffer);
         glDrawElements(GL_TRIANGLES,trianglesToDraw*3,GL_UNSIGNED_INT,0);
         glBindVertexArray(0);
     }

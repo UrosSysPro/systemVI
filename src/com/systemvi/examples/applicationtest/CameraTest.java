@@ -58,9 +58,9 @@ public class CameraTest extends Application {
             camera.setPosition(width/2,height/2,0);
             camera.update();
         });
-        window.addOnKeyPressListener((int key, int scancode, int action, int mods)-> {
-            if(key==GLFW_KEY_UP&&action==GLFW_PRESS)rotation+=0.05;
-            if(key==GLFW_KEY_DOWN&&action==GLFW_PRESS)rotation-=0.05;
+        window.addOnKeyPressListener((int key, int scancode, int mods)-> {
+            if(key==GLFW_KEY_UP)rotation+=0.05;
+            if(key==GLFW_KEY_DOWN)rotation-=0.05;
 
             float speed=5*zoom;
             float rightX=(float) Math.cos(rotation)*speed;
@@ -68,13 +68,13 @@ public class CameraTest extends Application {
             float upX=(float) Math.cos(rotation+(float)Math.PI/2f)*speed;
             float upY=(float) Math.sin(rotation+(float)Math.PI/2f)*speed;
 
-            if(key==GLFW_KEY_W&&action==GLFW_PRESS){x-=upX;y-=upY;}
-            if(key==GLFW_KEY_S&&action==GLFW_PRESS){x+=upX;y+=upY;}
-            if(key==GLFW_KEY_A&&action==GLFW_PRESS){x-=rightX;y-=rightY;}
-            if(key==GLFW_KEY_D&&action==GLFW_PRESS){x+=rightX;y+=rightY;}
+            if(key==GLFW_KEY_W){x-=upX;y-=upY;}
+            if(key==GLFW_KEY_S){x+=upX;y+=upY;}
+            if(key==GLFW_KEY_A){x-=rightX;y-=rightY;}
+            if(key==GLFW_KEY_D){x+=rightX;y+=rightY;}
 
-            if(key==GLFW_KEY_Q&&action==GLFW_PRESS)zoom*=0.9f;
-            if(key==GLFW_KEY_E&&action==GLFW_PRESS)zoom*=1.1f;
+            if(key==GLFW_KEY_Q)zoom*=0.9f;
+            if(key==GLFW_KEY_E)zoom*=1.1f;
 
             camera.setScale(zoom,-zoom,1);
             camera.setPosition(x,y,1);

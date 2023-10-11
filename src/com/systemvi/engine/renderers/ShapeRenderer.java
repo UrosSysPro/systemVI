@@ -15,11 +15,13 @@ public class ShapeRenderer {
     private final int vertexSize=6;
     private final float[] vertexData;
     private final int[] indices;
-    int maxPoints = 1000;
-    int maxTriangles = 1000;
+    int maxPoints;
+    int maxTriangles;
     private Camera camera;
 
-    public ShapeRenderer(){
+    public ShapeRenderer(int maxPoints,int maxTriangles){
+        this.maxPoints=maxPoints;
+        this.maxTriangles=maxTriangles;
         mesh=new Mesh(
             new VertexAttribute("position",2),
             new VertexAttribute("color",4)
@@ -33,6 +35,9 @@ public class ShapeRenderer {
         }
         vertexData =new float[vertexSize* maxPoints];
         indices=new int[3* maxTriangles];
+    }
+    public ShapeRenderer(){
+        this(1000,1000);
     }
     public void rect(float x, float y, float width, float height, Vector4f color){
         if(pointsToDraw+4>maxPoints||trianglesToDraw+2>maxTriangles)flush();
@@ -65,6 +70,8 @@ public class ShapeRenderer {
     }
 
     public void polygon(Vector2f[] points, Vector4f color){
+        if(pointsToDraw+points.length>maxPoints)flush();
+        if(trianglesToDraw+pointsToDraw-2>maxTriangles)flush();
         int pointsOffset=pointsToDraw;
         for(int i=0;i<points.length;i++){
             int index=pointsToDraw*vertexSize;
@@ -90,7 +97,7 @@ public class ShapeRenderer {
         shader.setUniform("projection",camera.getProjection());
         mesh.setVertexData(vertexData);
         mesh.setIndices(indices);
-        mesh.drawElements(pointsToDraw,trianglesToDraw);
+        mesh.drawElements(trianglesToDraw);
         pointsToDraw=0;
         trianglesToDraw=0;
     }
