@@ -10,6 +10,6 @@ import java.awt.*;
 public class Main {
     public static void main(String[] args) {
 
-        new FlappyBird(3,3,60).run();
+        new ShapeRendererTest(3,3,60).run();
     }
 }

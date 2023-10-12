@@ -4,12 +4,14 @@ import com.systemvi.engine.camera.Camera;
 import com.systemvi.engine.model.Mesh;
 import com.systemvi.engine.model.VertexAttribute;
 import com.systemvi.engine.shader.Shader;
-import org.joml.Vector2f;
-import org.joml.Vector4f;
+import org.joml.*;
 
 public class ShapeRenderer {
     private final Mesh mesh;
     private final Shader shader;
+    private Shader customShader=null;
+    private final Vector4f helperVector=new Vector4f();
+    private final Matrix4f helperMatrix=new Matrix4f();
     private int pointsToDraw=0;
     private int trianglesToDraw=0;
     private final int vertexSize=6;
@@ -36,6 +38,9 @@ public class ShapeRenderer {
         vertexData =new float[vertexSize* maxPoints];
         indices=new int[3* maxTriangles];
     }
+    public void setShader(Shader shader){
+        customShader=shader;
+    }
     public ShapeRenderer(){
         this(1000,1000);
     }
@@ -48,6 +53,35 @@ public class ShapeRenderer {
                 int index=pointsToDraw*vertexSize;
                 vertexData[index+0]=x+i*width;
                 vertexData[index+1]=y+j*height;
+                vertexData[index+2]=color.x;
+                vertexData[index+3]=color.y;
+                vertexData[index+4]=color.z;
+                vertexData[index+5]=color.w;
+                pointsToDraw++;
+            }
+        }
+        int index=trianglesToDraw*3;
+        indices[index+0]= (pointsOffset+0);
+        indices[index+1]= (pointsOffset+1);
+        indices[index+2]= (pointsOffset+2);
+        indices[index+3]= (pointsOffset+1);
+        indices[index+4]= (pointsOffset+2);
+        indices[index+5]= (pointsOffset+3);
+        trianglesToDraw+=2;
+    }
+    public void rect(float x, float y, float width, float height, Vector4f color,float angle){
+        if(pointsToDraw+4>maxPoints||trianglesToDraw+2>maxTriangles)flush();
+
+        helperMatrix.identity().translate((x+width/2),(y+height/2),0).rotateZ(angle).translate(-(x+width/2),-(y+height/2),0);
+
+        int pointsOffset=pointsToDraw;
+        for(int j=0;j<2;j++){
+            for(int i=0;i<2;i++){
+                int index=pointsToDraw*vertexSize;
+                helperVector.set(x+i*width,y+j*height,1);
+                helperMatrix.transform(helperVector);
+                vertexData[index+0]=helperVector.x;
+                vertexData[index+1]=helperVector.y;
                 vertexData[index+2]=color.x;
                 vertexData[index+3]=color.y;
                 vertexData[index+4]=color.z;
@@ -92,6 +126,7 @@ public class ShapeRenderer {
         }
     }
     public void flush(){
+        Shader shader=customShader!=null?customShader:this.shader;
         shader.use();
         shader.setUniform("view",camera.getView());
         shader.setUniform("projection",camera.getProjection());
