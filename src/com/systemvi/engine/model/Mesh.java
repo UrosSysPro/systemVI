@@ -63,7 +63,7 @@ public class Mesh {
         int attributeIndexStart=attributes.length;
 
         for(int i=0;i<instanceAttributes.length;i++){
-            glVertexAttribPointer(attributeIndexStart+i,instanceAttributes[i].size,GL_FLOAT,false,instanceSize,pointer);
+            glVertexAttribPointer(attributeIndexStart+i,instanceAttributes[i].size,GL_FLOAT,false,instanceSize*4,pointer*4);
             pointer+=instanceAttributes[i].size;
         }
 
@@ -110,6 +110,11 @@ public class Mesh {
     public void drawInstanced(int instancesToDraw){
         glBindVertexArray(arrayBuffer);
         glDrawArraysInstanced(GL_TRIANGLES,0,vertices.length,instancesToDraw);
+        glBindVertexArray(0);
+    }
+    public void drawInstanced(int verticesToDraw,int instancesToDraw){
+        glBindVertexArray(arrayBuffer);
+        glDrawArraysInstanced(GL_TRIANGLES,0,verticesToDraw,instancesToDraw);
         glBindVertexArray(0);
     }
 

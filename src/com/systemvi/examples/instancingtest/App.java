@@ -27,34 +27,36 @@ public class App extends Application {
             new VertexAttribute("color",4)
         );
         int size=10;
-        mesh.setVertexData(new float[]{
-            -size,  size, 1.0f, 0.0f, 0.0f, 1.0f,
-            size,  size, 0.0f, 0.0f, 1.0f, 1.0f,
-            -size, -size, 1.0f, 0.0f, 0.0f, 1.0f,
-            size,  size, 0.0f, 0.0f, 1.0f, 1.0f,
-            -size, -size, 1.0f, 0.0f, 0.0f, 1.0f,
-            size, -size, 0.0f, 0.0f, 1.0f, 1.0f,
-        });
 //        mesh.setVertexData(new float[]{
 //            -size,  size, 1.0f, 0.0f, 0.0f, 1.0f,
-//             size,  size, 0.0f, 0.0f, 1.0f, 1.0f,
+//            size,  size, 0.0f, 0.0f, 1.0f, 1.0f,
 //            -size, -size, 1.0f, 0.0f, 0.0f, 1.0f,
-//             size, -size, 0.0f, 0.0f, 1.0f, 1.0f,
+//            size,  size, 0.0f, 0.0f, 1.0f, 1.0f,
+//            -size, -size, 1.0f, 0.0f, 0.0f, 1.0f,
+//            size, -size, 0.0f, 0.0f, 1.0f, 1.0f,
 //        });
-//        mesh.setIndices(new int[]{
-//            0,1,2,
-//            1,2,3
-//        });
+        mesh.setVertexData(new float[]{
+            -size,  size, 1.0f, 0.0f, 0.0f, 1.0f,
+             size,  size, 0.0f, 0.0f, 1.0f, 1.0f,
+            -size, -size, 1.0f, 0.0f, 0.0f, 1.0f,
+             size, -size, 0.0f, 0.0f, 1.0f, 1.0f,
+        });
+        mesh.setIndices(new int[]{
+            0,1,2,
+            1,2,3
+        });
         mesh.enableInstancing(
-            new VertexAttribute("offset",2)
+            new VertexAttribute("offset",2),
+            new VertexAttribute("tint",1)
         );
         int n=5;
-        float[] instanceData=new float[2*n*n];
+        float[] instanceData=new float[3*n*n];
         for(int i=0;i<n;i++){
             for(int j=0;j<n;j++){
                 int index=j*n+i;
-                instanceData[index*2+0]=i*30;
-                instanceData[index*2+1]=j*30;
+                instanceData[index*3+0]=i*30;
+                instanceData[index*3+1]=j*30;
+                instanceData[index*3+2]=(float)index/n/n;
             }
         }
         mesh.setInstanceData(instanceData);
@@ -88,8 +90,8 @@ public class App extends Application {
         shader.use();
         shader.setUniform("view",camera.getView());
         shader.setUniform("projection",camera.getProjection());
-        mesh.drawInstanced(instancesToDraw);
-//        mesh.drawInstancedElements(2,instancesToDraw);
+//        mesh.drawInstanced(6,24);
+        mesh.drawInstancedElements(2,24);
 
         window.swapBuffers();
     }
