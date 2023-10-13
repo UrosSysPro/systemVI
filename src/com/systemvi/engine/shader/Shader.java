@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.Scanner;
 
 import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 
 public class Shader {
     private int id;
@@ -93,5 +94,8 @@ public class Shader {
         int uniformId=glGetUniformLocation(id,name);
         glUniformMatrix4fv(uniformId,false,mat.get(data));
     }
-
+    public void setUniform(String name,int value){
+        int unifromId=glGetUniformLocation(id,name);
+        glUniform1i(unifromId,value);
+    }
 }
