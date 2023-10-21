@@ -51,7 +51,14 @@ public class App extends Application {
         camera.setScreenSize(800,600);
         camera.setScale(1,-1,1);
         camera.update();
-        texture=new Texture("assets/examples/textureTest/wall.jpg");
+
+        texture=new Texture("assets/examples/textureTest/tiles.png");
+//        texture.setRepeat(GL_CLAMP_TO_EDGE,GL_CLAMP_TO_EDGE);
+//        texture.setRepeat(GL_CLAMP_TO_BORDER,GL_CLAMP_TO_BORDER);
+//        texture.setRepeat(GL_MIRRORED_REPEAT,GL_MIRRORED_REPEAT);
+        texture.setRepeat(GL_REPEAT,GL_REPEAT);
+        texture.setBorderColor(0,1,1,1);
+//        texture.setSamplerFilter(GL_NEAREST,GL_NEAREST);
 
         window.addOnResizeListener((width1, height1) -> {
             camera.setPosition(width1/2,height1/2,0);
@@ -68,9 +75,11 @@ public class App extends Application {
         glClearColor(0.2f,0.6f,0.8f,1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        texture.bind(10);
+        texture.bind(3);
         shader.use();
-        shader.setUniform("wall",10);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+        shader.setUniform("wall",3);
         shader.setUniform("view",camera.getView());
         shader.setUniform("projection",camera.getProjection());
         mesh.drawElements(2);

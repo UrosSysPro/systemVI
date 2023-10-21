@@ -30,7 +30,11 @@ public class Texture{
         this.width=width[0];
         this.height=height[0];
         this.channels=chanels[0];
-        glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,width[0],height[0],0,GL_RGB,GL_UNSIGNED_BYTE,buffer);
+        int format=GL_RED;
+        if(this.channels==2)format=GL_RG;
+        if(this.channels==3)format=GL_RGB;
+        if(this.channels==4)format=GL_RGBA;
+        glTexImage2D(GL_TEXTURE_2D,0,format,width[0],height[0],0,format,GL_UNSIGNED_BYTE,buffer);
         glGenerateMipmap(GL_TEXTURE_2D);
         STBImage.stbi_image_free(buffer);
         glBindTexture(GL_TEXTURE_2D,0);
