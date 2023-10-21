@@ -18,6 +18,7 @@ public class BreakOut extends Application {
     Player player;
     Wall[][] walls;
     Ball ball;
+    ParticleSimulation particleSimulation;
 
     @Override
     public void setup() {
@@ -55,6 +56,9 @@ public class BreakOut extends Application {
             }
         }
         ball=new Ball(window.getWidth(),window.getHeight());
+        particleSimulation=new ParticleSimulation();
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     }
 
     @Override
@@ -65,7 +69,9 @@ public class BreakOut extends Application {
         glClearColor(0,0,0,1);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        ball.update(delta,walls,window,player);
+
+        ball.update(delta,walls,window,player,particleSimulation);
+        particleSimulation.update(delta);
 
         renderer.setCamera(camera);
         for(int i=0;i<walls.length;i++){
@@ -76,6 +82,7 @@ public class BreakOut extends Application {
         }
         player.draw(renderer);
         ball.draw(renderer);
+        particleSimulation.draw(renderer);
         renderer.flush();
 
         window.swapBuffers();

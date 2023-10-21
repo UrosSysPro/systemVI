@@ -4,7 +4,7 @@ import org.lwjgl.stb.STBImage;
 
 import java.nio.ByteBuffer;
 
-public class Texture {
+public class Texture{
     private int id,width,height,channels;
 //    public Texture(){
 //        id=glGenTextures();

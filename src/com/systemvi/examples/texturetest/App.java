@@ -27,13 +27,13 @@ public class App extends Application {
             new VertexAttribute("color",4),
             new VertexAttribute("texCoords",2)
         );
-        int width=800,height=800;
+        int width=800,height=600;
         mesh.setVertexData(new float[]{
-            //position                //color           //texCoords
-                  100,        100,    0, 0, 0.5f, 1,    0, 0,
-                  100, 100+height,    1, 0, 0.5f, 1,    0, 1,
-            100+width,        100,    0, 1, 0.5f, 1,    1, 0,
-            100+width, 100+height,    1, 1, 0.5f, 1,    1, 1,
+            //position            //color           //texCoords
+                  0,        0,    0, 0, 0.5f, 1,    0, 0,
+                  0,      600,    1, 0, 0.5f, 1,    0, 1,
+                800,        0,    0, 1, 0.5f, 1,    1, 0,
+                800,      600,    1, 1, 0.5f, 1,    1, 1,
         });
         mesh.setIndices(new int[]{
             0,1,2,
@@ -52,9 +52,6 @@ public class App extends Application {
         camera.setScale(1,-1,1);
         camera.update();
         texture=new Texture("assets/examples/textureTest/wall.jpg");
-        texture.setBorderColor(1,0,1,1);
-        texture.setRepeat(GL_CLAMP_TO_EDGE,GL_REPEAT);
-        texture.setSamplerFilter(GL_LINEAR_MIPMAP_NEAREST,GL_NEAREST);
 
         window.addOnResizeListener((width1, height1) -> {
             camera.setPosition(width1/2,height1/2,0);
