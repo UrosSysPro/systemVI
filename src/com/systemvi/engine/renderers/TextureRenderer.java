@@ -112,7 +112,7 @@ public class TextureRenderer {
                 vertexData[index+0]=x+i*width;
                 vertexData[index+1]=y+j*height;
                 vertexData[index+2]=i==0?region.getLeft():region.getRight();
-                vertexData[index+3]=i==0?region.getTop():region.getBottom();
+                vertexData[index+3]=j==0?region.getTop():region.getBottom();
                 pointsToDraw++;
             }
         }
