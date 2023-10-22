@@ -29,6 +29,7 @@ public class TextureRendererTest extends Application {
         camera.setScale(1,-1,1);
         camera.update();
         texture=new Texture("assets/examples/textureTest/tiles.png");
+//        texture.setSamplerFilter(GL_LINEAR,GL_LINEAR);
         regions=TextureRegion.split(texture,18,18);
         renderer=new TextureRenderer();
         renderer.setCamera(camera);
@@ -42,8 +43,8 @@ public class TextureRendererTest extends Application {
         glClearColor(0,0,0,1);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        renderer.draw(texture,100,100,200,100);
         renderer.draw(regions[0][0],500,500,20,20);
+        renderer.draw(regions[4][0],100,100,200,200);
         renderer.flush();
 
         window.swapBuffers();
