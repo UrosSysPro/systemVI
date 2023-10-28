@@ -3,17 +3,21 @@ Projekat za 6.godinu 2023-2024 u terminu 13:30
 
 ## Casovi
 1. [Git, Gradle](GitGradle.md)
-1. [Data structures: ArrayList, LinkedList](src/com/systemvi/examples/datastructures/Lists.md)
-1. [Binarno stablo](src/com/systemvi/examples/datastructures/Tree.md)
-1. [Generic class, Builder pattern](src/com/systemvi/examples/datastructures/GenericBuilder.md)
+2. [Data structures: ArrayList, LinkedList](src/com/systemvi/examples/datastructures/Lists.md)
+3. [Binarno stablo](src/com/systemvi/examples/datastructures/Tree.md)
+4. [Generic class, Builder pattern](src/com/systemvi/examples/datastructures/GenericBuilder.md)
    + [Bonus terminal graphics](docs/Lanterna.md)
-1. [GLFW window, uvod u opengl](docs/openglwindow/window.md)
-1. [Crtanje trougla](docs/openglwindow/triangle.md)
-1. [Linearna Algebra, Vektori i Matrice](docs/vektori/vektori.md)
-1. [Kamera](docs/kamera/kamera.md)
+5. [GLFW window, uvod u opengl](docs/openglwindow/window.md)
+6. [Crtanje trougla](docs/openglwindow/triangle.md)
+7. [Linearna Algebra, Vektori i Matrice](docs/vektori/vektori.md)
+8. [Kamera](docs/kamera/kamera.md)
    + [shader in/out/uniform](docs/shader/shader.md)
-1. [Batch rendering](docs/optimizacijeRenderovanja/batch.md)
-1. [Elements ](docs/optimizacijeRenderovanja/elements.md)i [Instance rendering](docs/optimizacijeRenderovanja/instance.md)
+9. [Batch rendering](docs/optimizacijeRenderovanja/batch.md)
+10. [Elements ](docs/optimizacijeRenderovanja/elements.md)i [Instance rendering](docs/optimizacijeRenderovanja/instance.md)
+11. [Breakout igrica](docs/breakout.md)
+12. [Texture](docs/textures/texture.md)
+13. [TextureRenderer](docs/textures/textureRenderer.md)
+14. [Box2d](docs/physics/box2d.md)
 ## Domaci
 1. + Napraviti `Stack` klasu. `Stack` je struktura podataka koja definise dve operacije 
 push i pop. `push` dodaje element na vrh steka, `pop` vraca i brise element sa vrha. Obe operacije
