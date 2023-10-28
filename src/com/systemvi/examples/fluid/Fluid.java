@@ -32,7 +32,7 @@ public class Fluid extends Application {
         camera.setPosition(width/2,height/2,0);
         camera.update();
         renderer.setCamera(camera);
-        size=4;
+        size=10;
         System.out.println(width/size);
         simulation=new Simulation(width/size,height/size);
 
@@ -64,8 +64,8 @@ public class Fluid extends Application {
         glClear(GL_COLOR_BUFFER_BIT);
 
         if(mouseDown){
-            simulation.add((int) (px/size), (int) (py/size),size);
-            simulation.addVelocity((int) (px/size), (int) (py/size),px-prevx,py-prevy,size);
+            simulation.add((int) (px/size), (int) (py/size),3);
+            simulation.addVelocity((int) (px/size), (int) (py/size),px-prevx,py-prevy,3);
         }
 
         simulation.dens_step(0.000f,delta);
