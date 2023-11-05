@@ -1,6 +1,8 @@
 package com.systemvi.examples.inversekinematics;
 
 import com.systemvi.engine.application.Application;
+import com.systemvi.engine.camera.Camera;
+import com.systemvi.engine.renderers.ShapeRenderer;
 import com.systemvi.engine.window.Window;
 import com.systemvi.examples.datastructures.ArrayList;
 
@@ -15,9 +17,19 @@ public class Fabrik extends Application {
     public ArrayList<Vector> points;
     public ArrayList<Float> lengths;
 
+    public ShapeRenderer renderer;
+    public Camera camera;
+
     @Override
     public void setup() {
         window=new Window(800,600,"Fabrik");
+        renderer=new ShapeRenderer();
+        camera=new Camera();
+        camera.setScreenSize(800,600);
+        camera.setPosition(400,300,0);
+        camera.setScale(1,-1,1);
+        camera.update();
+        renderer.setCamera(camera);
     }
 
     @Override
