@@ -14,13 +14,13 @@ public class Camera {
         scale=new Matrix4f().identity();
         translate=new Matrix4f().identity();
     }
-    public void setOrthographicProjection(float near, float far){
-        projection.identity().ortho(-1,1,-1,1,near,far);
-    }
-    public void setPerspectiveProjection(float fov,float near,float far){
-        projection.identity().perspective(fov,1,near,far);
+    public void setOrthographicProjection(float left, float right,float top,float bottom,float near, float far){
+        projection.identity().ortho(left,right,bottom,top,near,far);
     }
 
+    public void setPerspectiveProjection(float fov,float aspect,float near,float far){
+        projection.identity().perspective(fov,aspect,near,far);
+    }
     public Matrix4f getProjection() {
         return projection;
     }
@@ -39,10 +39,10 @@ public class Camera {
         rotation.identity().rotateXYZ(-x,-y,-z);
     }
     public void lookAt(Vector3f dir){
-        rotation.lookAlong(dir,new Vector3f(0,1,0));
+        rotation.identity().lookAlong(dir,new Vector3f(0,1,0));
     }
     public void lookAt(Vector3f dir,Vector3f up){
-        rotation.lookAlong(dir,up);
+        rotation.identity().lookAlong(dir,up);
     }
     public void update(){
         view.identity().mul(scale).mul(screenSize).mul(rotation).mul(translate);

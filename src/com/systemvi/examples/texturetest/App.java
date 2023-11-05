@@ -47,7 +47,8 @@ public class App extends Application {
             System.out.println(shader.getLog());
         }
         camera=new Camera();
-        camera.setPosition(400,300,0);
+        camera.setPosition(400,300,1);
+//        camera.setOrthographicProjection(0,800,600,0,0,100);
         camera.setScreenSize(800,600);
         camera.setScale(1,-1,1);
         camera.update();

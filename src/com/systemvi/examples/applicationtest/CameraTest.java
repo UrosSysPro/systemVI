@@ -49,7 +49,7 @@ public class CameraTest extends Application {
         camera.setPosition(400,300,1);
         camera.setScale(1,-1,1);
         camera.setScreenSize(800,600);
-        camera.setOrthographicProjection(0,1000);
+//        camera.setOrthographicProjection(0,1000);
 //        camera.setPerspectiveProjection((float) Math.PI/3f,0.1f,1000f);
         camera.update();
 
