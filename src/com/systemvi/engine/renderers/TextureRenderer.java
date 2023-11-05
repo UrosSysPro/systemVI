@@ -125,33 +125,39 @@ public class TextureRenderer {
         indices[index+5]= (pointsOffset+3);
         trianglesToDraw+=2;
     }
+    public void draw(TextureRegion region,int x,int y,int width,int height,float angle){
+        this.texture=region.getTexture();
+        if(pointsToDraw+4>maxPoints||trianglesToDraw+2>maxTriangles)flush();
+
+        helperMatrix.identity().translate((x+width/2),(y+height/2),0).rotateZ(angle).translate(-(x+width/2),-(y+height/2),0);
+
+        int pointsOffset=pointsToDraw;
+        for(int j=0;j<2;j++){
+            for(int i=0;i<2;i++){
+                int index=pointsToDraw*vertexSize;
+                helperVector.set(x+i*width,y+j*height,1);
+                helperMatrix.transform(helperVector);
+                vertexData[index+0]=helperVector.x;
+                vertexData[index+1]=helperVector.y;
+                vertexData[index+2]=i==0?region.getLeft():region.getRight();
+                vertexData[index+3]=j==0?region.getTop():region.getBottom();
+                pointsToDraw++;
+            }
+        }
+        int index=trianglesToDraw*3;
+        indices[index+0]= (pointsOffset+0);
+        indices[index+1]= (pointsOffset+1);
+        indices[index+2]= (pointsOffset+2);
+        indices[index+3]= (pointsOffset+1);
+        indices[index+4]= (pointsOffset+2);
+        indices[index+5]= (pointsOffset+3);
+        trianglesToDraw+=2;
+    }
 
     public void setCamera(Camera camera) {
         this.camera = camera;
     }
 
-//    public void polygon(Vector2f[] points, Vector4f color){
-//        if(pointsToDraw+points.length>maxPoints)flush();
-//        if(trianglesToDraw+pointsToDraw-2>maxTriangles)flush();
-//        int pointsOffset=pointsToDraw;
-//        for(int i=0;i<points.length;i++){
-//            int index=pointsToDraw*vertexSize;
-//            vertexData[index+0]=points[i].x;
-//            vertexData[index+1]=points[i].y;
-//            vertexData[index+2]=color.x;
-//            vertexData[index+3]=color.y;
-//            vertexData[index+4]=color.z;
-//            vertexData[index+5]=color.w;
-//            pointsToDraw++;
-//        }
-//        for(int i=0;i<points.length-2;i++){
-//            int index=trianglesToDraw*3;
-//            indices[index+0]=pointsOffset+0;
-//            indices[index+1]=pointsOffset+i+1;
-//            indices[index+2]=pointsOffset+i+2;
-//            trianglesToDraw++;
-//        }
-//    }
     public void flush(){
         Shader shader=customShader!=null?customShader:this.shader;
         texture.bind(0);

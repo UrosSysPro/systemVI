@@ -36,7 +36,7 @@ public class Fabrik extends Application {
         camera.update();
         renderer.setCamera(camera);
 
-        n=3;
+        n=10;
         points=new ArrayList<>(n);
         lengths=new ArrayList<>(n-1);
         float length=200;

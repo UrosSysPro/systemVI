@@ -6,6 +6,8 @@ import com.systemvi.engine.model.VertexAttribute;
 import com.systemvi.engine.shader.Shader;
 import org.joml.*;
 
+import java.lang.Math;
+
 public class ShapeRenderer {
     private final Mesh mesh;
     private final Shader shader;
@@ -124,6 +126,68 @@ public class ShapeRenderer {
             indices[index+2]=pointsOffset+i+2;
             trianglesToDraw++;
         }
+    }
+
+    public void polygon(Vector2f[] points, Vector4f color,Vector3f position,float angle){
+        if(pointsToDraw+points.length>maxPoints)flush();
+        if(trianglesToDraw+pointsToDraw-2>maxTriangles)flush();
+        int pointsOffset=pointsToDraw;
+        helperMatrix.identity().rotateZ(angle);
+        for(int i=0;i<points.length;i++){
+            int index=pointsToDraw*vertexSize;
+            helperVector.set(points[i].x,points[i].y,0,1);
+            vertexData[index+0]=helperVector.x+position.x;
+            vertexData[index+1]=helperVector.y+position.y;
+            vertexData[index+2]=color.x;
+            vertexData[index+3]=color.y;
+            vertexData[index+4]=color.z;
+            vertexData[index+5]=color.w;
+            pointsToDraw++;
+        }
+        for(int i=0;i<points.length-2;i++){
+            int index=trianglesToDraw*3;
+            indices[index+0]=pointsOffset+0;
+            indices[index+1]=pointsOffset+i+1;
+            indices[index+2]=pointsOffset+i+2;
+            trianglesToDraw++;
+        }
+    }
+
+    public void regularPolygon(int n,float r,Vector2f position,Vector4f color,float angle){
+        if(pointsToDraw+n>maxPoints)flush();
+        if(trianglesToDraw+pointsToDraw-2>maxTriangles)flush();
+        int pointsOffset=pointsToDraw;
+        helperMatrix.identity().rotateZ(angle);
+        for(int i=0;i<n;i++){
+            int index=pointsToDraw*vertexSize;
+            float a=(float)Math.toRadians(360f/n*i)+angle;
+            float x=(float)(Math.cos(a))*r;
+            float y=(float)(Math.sin(a))*r;
+            helperVector.set(x,y,0,1);
+            vertexData[index+0]=helperVector.x+position.x;
+            vertexData[index+1]=helperVector.y+position.y;
+            vertexData[index+2]=color.x;
+            vertexData[index+3]=color.y;
+            vertexData[index+4]=color.z;
+            vertexData[index+5]=color.w;
+            pointsToDraw++;
+        }
+        for(int i=0;i<n-2;i++){
+            int index=trianglesToDraw*3;
+            indices[index+0]=pointsOffset+0;
+            indices[index+1]=pointsOffset+i+1;
+            indices[index+2]=pointsOffset+i+2;
+            trianglesToDraw++;
+        }
+    }
+    public void line(Vector2f start, Vector2f end, float width, Vector4f color){
+        float x=(start.x+end.x)/2;
+        float y=(start.y+end.y)/2;
+        float d=start.distance(end);
+        x-=width/2;
+        y-=d/2;
+        float angle=(float)-Math.atan2(start.x-end.x,start.y-end.y);
+        rect(x,y,width,d,color,angle);
     }
     public void flush(){
         Shader shader=customShader!=null?customShader:this.shader;
