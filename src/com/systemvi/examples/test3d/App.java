@@ -7,6 +7,9 @@ import com.systemvi.engine.model.VertexAttribute;
 import com.systemvi.engine.shader.Shader;
 import com.systemvi.engine.window.Window;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
+
 import static org.lwjgl.opengl.GL33.*;
 
 public class App extends Application {
@@ -71,20 +74,78 @@ public class App extends Application {
         window.pollEvents();
 
         glClearColor(0,0,0,1);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
         controller.update(delta);
 
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
         shader.use();
         shader.setUniform("view",camera.getView());
         shader.setUniform("projection",camera.getProjection());
 
-        shader.setUniform("model",new Matrix4f().identity().translate(0,0,0));
-        mesh.drawElements(2);
+        shader.setUniform("lightPosition",new Vector3f(3,3,3));
+        shader.setUniform("lightColor",new Vector3f(1,1,1));
 
-        shader.setUniform("model",new Matrix4f().identity().translate(2,2,2));
-        mesh.drawElements(2);
+        drawCube(-3,0,0);
+        drawCube(0,0,0);
+        drawCube(3,0,0);
+        glDisable(GL_BLEND);
+        glDisable(GL_DEPTH_TEST);
 
         window.swapBuffers();
+    }
+
+    public void drawCube(float x,float y,float z) {
+        //prednja strana
+        shader.setUniform("model", new Matrix4f()
+            .identity()
+            .translate(x,y,z)
+            .translate(0, 0, 1));
+        shader.setUniform("color", new Vector4f(0.3f, 0.6f, 0.9f, 1.0f));
+        mesh.drawElements(2);
+        //zadnja
+        shader.setUniform("model", new Matrix4f()
+            .identity()
+            .translate(x,y,z)
+            .translate(0, 0, -1));
+        shader.setUniform("color", new Vector4f(0.7f, 0.6f, 0.5f, 1.0f));
+        mesh.drawElements(2);
+        //desno
+        shader.setUniform("model", new Matrix4f()
+            .identity()
+            .translate(x,y,z)
+            .translate(1, 0, 0)
+            .rotateY((float) Math.toRadians(90))
+        );
+        shader.setUniform("color", new Vector4f(0.4f, 0.3f, 0.8f, 1.0f));
+        mesh.drawElements(2);
+        //leva strana
+        shader.setUniform("model", new Matrix4f()
+            .identity()
+            .translate(x,y,z)
+            .translate(-1, 0, 0)
+            .rotateY((float) Math.toRadians(90))
+        );
+        shader.setUniform("color", new Vector4f(0.3f, 0.2f, 0.7f, 1.0f));
+        mesh.drawElements(2);
+        //gornja strana
+        shader.setUniform("model", new Matrix4f()
+            .identity()
+            .translate(x,y,z)
+            .translate(0, 1, 0)
+            .rotateX((float) Math.toRadians(90))
+        );
+        shader.setUniform("color", new Vector4f(0.1f, 0.8f, 0.2f, 1.0f));
+        mesh.drawElements(2);
+        shader.setUniform("model", new Matrix4f()
+            .identity()
+            .translate(x,y,z)
+            .translate(0, -1, 0)
+            .rotateX((float) Math.toRadians(90))
+        );
+        shader.setUniform("color", new Vector4f(0.32f, 0.8768f, 0.432f, 1.0f));
+        mesh.drawElements(2);
     }
 }

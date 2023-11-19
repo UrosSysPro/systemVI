@@ -1,5 +1,7 @@
 package com.systemvi.engine.shader;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import java.io.File;
 import java.util.Scanner;
@@ -97,5 +99,13 @@ public class Shader {
     public void setUniform(String name,int value){
         int unifromId=glGetUniformLocation(id,name);
         glUniform1i(unifromId,value);
+    }
+    public void setUniform(String name, Vector4f value){
+        int unifromId=glGetUniformLocation(id,name);
+        glUniform4f(unifromId,value.x,value.y,value.z,value.w);
+    }
+    public void setUniform(String name, Vector3f value){
+        int unifromId=glGetUniformLocation(id,name);
+        glUniform3f(unifromId,value.x,value.y,value.z);
     }
 }
