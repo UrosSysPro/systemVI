@@ -19,7 +19,6 @@ public class App extends Application {
     public Camera camera;
     public CameraController controller;
     public Window window;
-    float x=0,y=0,z=50;
 
     @Override
     public void setup() {
