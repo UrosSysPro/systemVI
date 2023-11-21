@@ -18,6 +18,12 @@ Projekat za 6.godinu 2023-2024 u terminu 13:30
 12. [Texture](docs/textures/texture.md)
 13. [TextureRenderer](docs/textures/textureRenderer.md)
 14. [Box2d](docs/physics/box2d.md)
+15. i 16. [Maze Generation](docs/mazeGeneration.md)
+16. -------| |----------
+17. [3d model basics](docs/test3d/3dmodelBasics.md)
+18. [Camera Controller](docs/test3d/cameraController.md)
+19. [Zamena](docs/zamena.md)
+20. [Rendering multiple models](docs/test3d/instancing.md)
 ## Domaci
 1. + Napraviti `Stack` klasu. `Stack` je struktura podataka koja definise dve operacije 
 push i pop. `push` dodaje element na vrh steka, `pop` vraca i brise element sa vrha. Obe operacije

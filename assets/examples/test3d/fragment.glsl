@@ -9,5 +9,5 @@ uniform vec3 lightColor;
 uniform vec3 lightPosition;
 
 void main(){
-    pixel=vec4(vec3(length(worldPostion-lightPosition)/7.0),1.0);
+    pixel=color;
 }
