@@ -2,7 +2,7 @@
 
 out vec4 pixel;
 
-in vec3 worldPostion;
+in vec3 worldPosition;
 in vec3 vNormal;
 
 uniform vec4 color;
@@ -25,8 +25,8 @@ void main(){
     //dot(v1,v2);  x1*x2+y1*y2+z1*z2   |v1|*|v2|*cos(teta)
     //cross(v1,v2);
     //v1*v2;  vec3(x1*x2,y1*y2,z1*z2);
-    vec3 lightDirection=normalize(lightPosition-worldPostion);
-    vec3 viewDirection=normalize(cameraPosition-worldPostion);
+    vec3 lightDirection=normalize(lightPosition-worldPosition);
+    vec3 viewDirection=normalize(cameraPosition-worldPosition);
 
     pixel=calculateLigting(vNormal,lightDirection,viewDirection)*color;
 }

@@ -44,7 +44,7 @@ public class ShapeRendererTest extends Application {
     @Override
     public void loop(float delta) {
         if(window.shouldClose())close();
-        OpenGLUtils.clearColor(0,0,0,1);
+        OpenGLUtils.clear(0,0,0,1,OpenGLUtils.Buffer.COLOR_BUFFER);
         window.pollEvents();
         renderer.setCamera(camera);
 

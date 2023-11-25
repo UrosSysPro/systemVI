@@ -15,7 +15,7 @@ void main(){
     mat3 normalRotation=mat3(model);
     normalRotation=transpose(inverse(normalRotation));
 
-    vNormal=normalRotation*aNormal;
+    vNormal=normalize(normalRotation*aNormal);
     vec4 tmp=model*vec4(aPosition,1.0);
     worldPosition=tmp.xyz;
     gl_Position=projection*view*model*vec4(aPosition,1.0);
