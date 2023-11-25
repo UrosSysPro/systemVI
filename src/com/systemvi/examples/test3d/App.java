@@ -85,8 +85,9 @@ public class App extends Application {
         shader.setUniform("view",camera.getView());
         shader.setUniform("projection",camera.getProjection());
 
-        shader.setUniform("lightPosition",new Vector3f(3,3,3));
+        shader.setUniform("lightPosition",new Vector3f(5,5,5));
         shader.setUniform("lightColor",new Vector3f(1,1,1));
+        shader.setUniform("cameraPosition",new Vector3f(controller.x,controller.y,controller.z));
 
         drawCube(-3,0,0);
         drawCube(0,0,0);
@@ -109,7 +110,9 @@ public class App extends Application {
         shader.setUniform("model", new Matrix4f()
             .identity()
             .translate(x,y,z)
-            .translate(0, 0, -1));
+            .translate(0, 0, -1)
+            .rotateY((float)Math.toRadians(180))
+        );
         shader.setUniform("color", new Vector4f(0.7f, 0.6f, 0.5f, 1.0f));
         mesh.drawElements(2);
         //desno
@@ -126,7 +129,7 @@ public class App extends Application {
             .identity()
             .translate(x,y,z)
             .translate(-1, 0, 0)
-            .rotateY((float) Math.toRadians(90))
+            .rotateY((float) Math.toRadians(-90))
         );
         shader.setUniform("color", new Vector4f(0.3f, 0.2f, 0.7f, 1.0f));
         mesh.drawElements(2);
@@ -135,7 +138,7 @@ public class App extends Application {
             .identity()
             .translate(x,y,z)
             .translate(0, 1, 0)
-            .rotateX((float) Math.toRadians(90))
+            .rotateX((float) Math.toRadians(-90))
         );
         shader.setUniform("color", new Vector4f(0.1f, 0.8f, 0.2f, 1.0f));
         mesh.drawElements(2);
