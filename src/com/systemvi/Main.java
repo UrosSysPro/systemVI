@@ -1,6 +1,4 @@
 package com.systemvi;
-
-import com.systemvi.examples.applicationtest.ShapeRendererTest;
 import com.systemvi.examples.reactiondiffusion.App;
 
 public class Main {
