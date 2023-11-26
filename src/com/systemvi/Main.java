@@ -1,5 +1,6 @@
 package com.systemvi;
-import com.systemvi.examples.reactiondiffusion.App;
+
+import com.systemvi.examples.test3d.App;
 
 public class Main {
     public static void main(String[] args) {

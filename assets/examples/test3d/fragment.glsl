@@ -29,4 +29,5 @@ void main(){
     vec3 viewDirection=normalize(cameraPosition-worldPosition);
 
     pixel=calculateLigting(vNormal,lightDirection,viewDirection)*color;
+//    pixel=vec4(worldPosition,1.0);
 }
