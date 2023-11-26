@@ -6,6 +6,7 @@ layout(location=2)in vec2 aUV;
 
 out vec3 worldPosition;
 out vec3 vNormal;
+out vec2 vUV;
 
 uniform mat4 view;
 uniform mat4 projection;
@@ -16,6 +17,7 @@ void main(){
     normalRotation=transpose(inverse(normalRotation));
 
     vNormal=normalize(normalRotation*aNormal);
+    vUV=aUV;
     vec4 tmp=model*vec4(aPosition,1.0);
     worldPosition=tmp.xyz;
     gl_Position=projection*view*model*vec4(aPosition,1.0);

@@ -5,11 +5,14 @@ import com.systemvi.engine.camera.Camera;
 import com.systemvi.engine.model.Mesh;
 import com.systemvi.engine.model.VertexAttribute;
 import com.systemvi.engine.shader.Shader;
+import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.utils.OpenGLUtils;
 import com.systemvi.engine.window.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL33.*;
 
 public class App extends Application {
 
@@ -19,6 +22,7 @@ public class App extends Application {
     public Mesh mesh;
     public Shader shader;
     public Camera camera;
+    public Texture diffuse,specular,ambient;
     public CameraController controller;
     public Window window;
     public float angle;
@@ -27,7 +31,7 @@ public class App extends Application {
     public void setup() {
 
         float width=800,height=600;
-
+        glfwWindowHint(GLFW_SAMPLES,3);
         window=new Window(800,600,"Test 3d");
         mesh=new Mesh(
             new VertexAttribute("position",3),
@@ -67,6 +71,11 @@ public class App extends Application {
         window.addOnMouseDownListener((button, mods) -> controller.mouseDown());
         window.addOnMouseUpListener((button, mods) -> controller.mouseUp());
         angle=0;
+
+        diffuse=new Texture("assets/examples/test3d/rock/diffuse.png");
+        specular=new Texture("assets/examples/test3d/rock/roughness.png");
+        ambient=new Texture("assets/examples/test3d/rock/ambientOclusion.png");
+
     }
 
     @Override
@@ -83,9 +92,18 @@ public class App extends Application {
 
         OpenGLUtils.enableDepthTest();
         OpenGLUtils.enableFaceCulling(OpenGLUtils.Face.FRONT);
+        glEnable(GL_MULTISAMPLE);
         shader.use();
         shader.setUniform("view",camera.getView());
         shader.setUniform("projection",camera.getProjection());
+
+        diffuse.bind(0);
+        specular.bind(1);
+        ambient.bind(2);
+
+        shader.setUniform("diffuseTexture",0);
+        shader.setUniform("specularTexture",1);
+        shader.setUniform("ambientTexture",2);
 
         shader.setUniform("lightPosition",lightPosition);
         shader.setUniform("lightColor",new Vector3f(1,1,1));
