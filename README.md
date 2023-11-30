@@ -24,6 +24,8 @@ Projekat za 6.godinu 2023-2024 u terminu 13:30
 18. [Camera Controller](docs/test3d/cameraController.md)
 19. [Zamena](docs/zamena.md)
 20. [Rendering multiple models](docs/test3d/instancing.md)
+21. [Phong shading](docs/test3d/phongShading.md)
+22. [Simple materilals for 3 models](docs/test3d/material.md)
 ## Domaci
 1. + Napraviti `Stack` klasu. `Stack` je struktura podataka koja definise dve operacije 
 push i pop. `push` dodaje element na vrh steka, `pop` vraca i brise element sa vrha. Obe operacije
