@@ -60,8 +60,8 @@ public class App extends Application {
         controller.camera=camera;
 
         shader=new Shader(
-            "assets/examples/test3d/vertex.glsl",
-            "assets/examples/test3d/fragment.glsl"
+            "assets/examples/test3d/normalmapping/vertex.glsl",
+            "assets/examples/test3d/normalmapping/fragment.glsl"
         );
         if(!shader.isCompiled()){
             System.out.println(shader.getLog());
