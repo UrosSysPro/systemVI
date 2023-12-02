@@ -23,7 +23,7 @@ public class App extends Application {
     public Mesh mesh;
     public Shader shader;
     public Camera camera;
-    public Texture diffuse,specular,ambient;
+    public Texture diffuse,specular,ambient,normal;
     public CameraController controller;
     public Window window;
     public float angle;
@@ -37,15 +37,17 @@ public class App extends Application {
         mesh=new Mesh(
             new VertexAttribute("position",3),
             new VertexAttribute("normal", 3),
+            new VertexAttribute("tangent", 3),
+            new VertexAttribute("bitangent", 3),
             new VertexAttribute("uv",2)
         );
         float size=1;
         mesh.setVertexData(new float[]{
-            //position      normal      uv
-            -size,  size, 0,      0,0,1,      0,1,
-            size,  size, 0,      0,0,1,      1,1,
-            -size, -size, 0,      0,0,1,      0,0,
-            size, -size, 0,      0,0,1,      0,1,
+            //position            normal  tangent  bitangent   uv
+            -size,  size, 0,      0,0,1,  1,0,0,   0,1,0,      0,1,
+             size,  size, 0,      0,0,1,  1,0,0,   0,1,0,      1,1,
+            -size, -size, 0,      0,0,1,  1,0,0,   0,1,0,      0,0,
+             size, -size, 0,      0,0,1,  1,0,0,   0,1,0,      0,1,
         });
         mesh.setIndices(new int[]{
             0,1,2,
@@ -76,6 +78,7 @@ public class App extends Application {
         diffuse=new Texture("assets/examples/test3d/rock/diffuse.png");
         specular=new Texture("assets/examples/test3d/rock/roughness.png");
         ambient=new Texture("assets/examples/test3d/rock/ambientOclusion.png");
+        normal=new Texture("assets/examples/test3d/rock/normal.png");
 
     }
 
@@ -101,10 +104,12 @@ public class App extends Application {
         diffuse.bind(0);
         specular.bind(1);
         ambient.bind(2);
+        normal.bind(3);
 
         shader.setUniform("diffuseTexture",0);
         shader.setUniform("specularTexture",1);
         shader.setUniform("ambientTexture",2);
+        shader.setUniform("normalTexture",3);
 
         shader.setUniform("lightPosition",lightPosition);
         shader.setUniform("lightColor",new Vector3f(1,1,1));
