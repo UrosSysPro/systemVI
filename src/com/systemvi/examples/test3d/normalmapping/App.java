@@ -1,4 +1,4 @@
-package com.systemvi.examples.test3d;
+package com.systemvi.examples.test3d.normalmapping;
 
 import com.systemvi.engine.application.Application;
 import com.systemvi.engine.camera.Camera;
@@ -8,6 +8,7 @@ import com.systemvi.engine.shader.Shader;
 import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.utils.OpenGLUtils;
 import com.systemvi.engine.window.Window;
+import com.systemvi.examples.test3d.CameraController;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -42,9 +43,9 @@ public class App extends Application {
         mesh.setVertexData(new float[]{
             //position      normal      uv
             -size,  size, 0,      0,0,1,      0,1,
-             size,  size, 0,      0,0,1,      1,1,
+            size,  size, 0,      0,0,1,      1,1,
             -size, -size, 0,      0,0,1,      0,0,
-             size, -size, 0,      0,0,1,      0,1,
+            size, -size, 0,      0,0,1,      0,1,
         });
         mesh.setIndices(new int[]{
             0,1,2,

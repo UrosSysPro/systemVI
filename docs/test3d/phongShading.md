@@ -20,4 +20,4 @@ Phong shading je jedan od najpopularnijih nacina renderovanja u igricama. U ovom
 ambient, diffuse i specular. Diffuse i specular su aproksimacije direktnog osvetljenja a ambient je aproksimacija indirektnog.
 Ambient je najjednostavnija komponenta, kod ovakvog nacina renderovanja predpostavljamo da odredjena kolicina svetlosti 
 stize do svake tacke u sceni. Kod direktnog osvetljenja, u zavistnosti od tipa materijala, neki deo svetlost se odbije 
-pod istim uglom, a neki deo se rasipa u svim smerovima,
+pod istim uglom, a neki deo se rasipa u svim smerovima, 
