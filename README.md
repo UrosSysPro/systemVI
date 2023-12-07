@@ -26,6 +26,8 @@ Projekat za 6.godinu 2023-2024 u terminu 13:30
 20. [Rendering multiple models](docs/test3d/instancing.md)
 21. [Phong shading](docs/test3d/phongShading.md)
 22. [Simple materilals for 3 models](docs/test3d/material.md)
+23. [Normal mapping](docs/test3d/normalMapping.md)
+24. [Shader toy signed distance field](docs/shaderToy/introSDF.md)
 ## Domaci
 1. + Napraviti `Stack` klasu. `Stack` je struktura podataka koja definise dve operacije 
 push i pop. `push` dodaje element na vrh steka, `pop` vraca i brise element sa vrha. Obe operacije
