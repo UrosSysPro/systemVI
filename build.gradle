@@ -12,6 +12,10 @@ application {
 	mainClass = 'com.systemvi.Main'
 }
 
+run {
+	standardInput = System.in
+}
+
 import org.gradle.internal.os.OperatingSystem
 
 project.ext.lwjglVersion = "3.3.2"
