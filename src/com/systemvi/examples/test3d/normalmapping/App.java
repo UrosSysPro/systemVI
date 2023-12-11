@@ -61,10 +61,11 @@ public class App extends Application {
         controller=new CameraController(0,0,2,0,0,-(float)Math.PI/2);
         controller.camera=camera;
 
-        shader=new Shader(
-            "assets/examples/test3d/normalmapping/vertex.glsl",
-            "assets/examples/test3d/normalmapping/fragment.glsl"
-        );
+        shader=Shader.builder()
+            .fragment("assets/examples/test3d/normalmapping/fragment.glsl")
+            .vertex("assets/examples/test3d/normalmapping/vertex.glsl")
+            .build();
+
         if(!shader.isCompiled()){
             System.out.println(shader.getLog());
         }
