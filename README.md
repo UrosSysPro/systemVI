@@ -28,6 +28,9 @@ Projekat za 6.godinu 2023-2024 u terminu 13:30
 22. [Simple materilals for 3 models](docs/test3d/material.md)
 23. [Normal mapping](docs/test3d/normalMapping.md)
 24. [Shader toy signed distance field](docs/shaderToy/introSDF.md)
+25. [2d Ray Marching](docs/shaderToy/2dRayMarching.md)
+26. [3d Ray Marching](docs/shaderToy/3dRayMarching.md)
+
 ## Domaci
 1. + Napraviti `Stack` klasu. `Stack` je struktura podataka koja definise dve operacije 
 push i pop. `push` dodaje element na vrh steka, `pop` vraca i brise element sa vrha. Obe operacije
