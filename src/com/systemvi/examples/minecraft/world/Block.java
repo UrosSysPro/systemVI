@@ -10,5 +10,5 @@ public class Block {
         this.region=region;
     }
 
-    public static Block AIR,STONE,DIRT;
+    public static Block AIR=new Block(null),STONE=new Block(null),DIRT=new Block(null);
 }

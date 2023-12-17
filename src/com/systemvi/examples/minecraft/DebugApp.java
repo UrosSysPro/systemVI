@@ -34,7 +34,7 @@ public class DebugApp extends Application {
 //        camera.setOrthographicProjection(-width/height,width/height,height/height,-height/height,0.1f,100);
         camera.update();
 
-        controller=new CameraController(0,0,2,0,0,-(float)Math.PI/2);
+        controller=new CameraController(0,0,0,0,0,-(float)Math.PI/2);
         controller.camera=camera;
         window.addOnKeyPressListener((key, scancode, mods) -> controller.keyDown(key));
         window.addOnKeyReleaseListener((key, scancode, mods) -> controller.keyUp(key));
@@ -51,11 +51,17 @@ public class DebugApp extends Application {
 
         OpenGLUtils.clear(0,0,0,0,
             Buffer.COLOR_BUFFER,
-                Buffer.DEPTH_BUFFER
+            Buffer.DEPTH_BUFFER
         );
+        OpenGLUtils.enableDepthTest();
+        OpenGLUtils.enableFaceCulling();
+
         controller.update(delta);
 
         world.debugDraw(controller);
+
+        OpenGLUtils.disableDepthTest();
+        OpenGLUtils.disableFaceCulling();
 
         window.swapBuffers();
     }

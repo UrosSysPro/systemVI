@@ -21,7 +21,7 @@ public class WorldDebugRenderer {
             new VertexAttribute("normal", 3),
             new VertexAttribute("uv",2)
         );
-        float size=1;
+        float size=0.5f;
         mesh.setVertexData(new float[]{
             //position      normal      uv
             -size,  size, 0,      0,0,1,      0,1,
@@ -58,7 +58,7 @@ public class WorldDebugRenderer {
         shader.setUniform("specularTexture",1);
         shader.setUniform("ambientTexture",2);
 
-        shader.setUniform("lightPosition",new Vector4f(100));
+        shader.setUniform("lightPosition",new Vector3f(100,100,100));
         shader.setUniform("lightColor",new Vector3f(1,1,1));
         shader.setUniform("cameraPosition",new Vector3f(controller.x,controller.y,controller.z));
 

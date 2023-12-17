@@ -8,7 +8,7 @@ public class World {
     private WorldDebugRenderer debugRenderer;
 
     public World(){
-        chunks=new Chunk[2][1][2];
+        chunks=new Chunk[1][1][1];
         for(int i=0;i<chunks.length;i++){
             for(int j=0;j<chunks[0].length;j++){
                 for(int k=0;k<chunks[0][0].length;k++){
@@ -20,6 +20,8 @@ public class World {
     }
     public void debugDraw(CameraController controller){
         debugRenderer.use(controller);
+//        debugRenderer.draw(0,0,0);
+//        debugRenderer.draw(2,4,1);
         for(int i=0;i<chunks.length;i++){
             for(int j=0;j<chunks[0].length;j++){
                 for(int k=0;k<chunks[0][0].length;k++){

@@ -6,10 +6,12 @@ public class Table {
     public Field[][] map;
     public int size;
     public int bombs;
+    public boolean gameOver;
 
     public Table(int size,int bombs){
         this.size=size;
         this.bombs=bombs;
+        gameOver=false;
 
         map = new Field[size][size];
         restart();
@@ -48,6 +50,10 @@ public class Table {
         }
     }
     public void open(int x,int y){
+        if(map[x][y].bomb){
+            gameOver=true;
+            return;
+        }
         map[x][y].open=true;
     }
 
