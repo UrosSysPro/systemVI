@@ -64,18 +64,19 @@ public class WorldDebugRenderer {
 
     }
     public void draw(float x,float y,float z){
+        float size=0.5f;
 //prednja strana
         shader.setUniform("model", new Matrix4f()
             .identity()
             .translate(x,y,z)
-            .translate(0, 0, 1));
+            .translate(0, 0, size));
         shader.setUniform("color", new Vector4f(0.3f, 0.6f, 0.9f, 1.0f));
         mesh.drawElements(2);
         //zadnja
         shader.setUniform("model", new Matrix4f()
             .identity()
             .translate(x,y,z)
-            .translate(0, 0, -1)
+            .translate(0, 0, -size)
             .rotateY((float)Math.toRadians(180))
         );
         shader.setUniform("color", new Vector4f(0.7f, 0.6f, 0.5f, 1.0f));
@@ -84,7 +85,7 @@ public class WorldDebugRenderer {
         shader.setUniform("model", new Matrix4f()
             .identity()
             .translate(x,y,z)
-            .translate(1, 0, 0)
+            .translate(size, 0, 0)
             .rotateY((float) Math.toRadians(90))
         );
         shader.setUniform("color", new Vector4f(0.4f, 0.3f, 0.8f, 1.0f));
@@ -93,7 +94,7 @@ public class WorldDebugRenderer {
         shader.setUniform("model", new Matrix4f()
             .identity()
             .translate(x,y,z)
-            .translate(-1, 0, 0)
+            .translate(-size, 0, 0)
             .rotateY((float) Math.toRadians(-90))
         );
         shader.setUniform("color", new Vector4f(0.3f, 0.2f, 0.7f, 1.0f));
@@ -102,7 +103,7 @@ public class WorldDebugRenderer {
         shader.setUniform("model", new Matrix4f()
             .identity()
             .translate(x,y,z)
-            .translate(0, 1, 0)
+            .translate(0, size, 0)
             .rotateX((float) Math.toRadians(-90))
         );
         shader.setUniform("color", new Vector4f(0.1f, 0.8f, 0.2f, 1.0f));
@@ -110,7 +111,7 @@ public class WorldDebugRenderer {
         shader.setUniform("model", new Matrix4f()
             .identity()
             .translate(x,y,z)
-            .translate(0, -1, 0)
+            .translate(0, -size, 0)
             .rotateX((float) Math.toRadians(90))
         );
         shader.setUniform("color", new Vector4f(0.32f, 0.8768f, 0.432f, 1.0f));

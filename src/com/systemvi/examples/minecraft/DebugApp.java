@@ -41,6 +41,11 @@ public class DebugApp extends Application {
         window.addOnMouseMoveListener((x1, y1) -> controller.mouseMove((float) x1, 600-(float) y1));
         window.addOnMouseDownListener((button, mods) -> controller.mouseDown());
         window.addOnMouseUpListener((button, mods) -> controller.mouseUp());
+        window.addOnResizeListener((width1, height1) -> {
+            camera.setPerspectiveProjection((float)Math.toRadians(60),(float)width1/(float)height1,0.1f,1000);
+//        camera.setOrthographicProjection(-width/height,width/height,height/height,-height/height,0.1f,100);
+            camera.update();
+        });
         world=new World();
     }
 
