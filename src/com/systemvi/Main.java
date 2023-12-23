@@ -7,7 +7,7 @@ import com.systemvi.examples.minesweaper.App;
 
 public class Main {
     public static void main(String[] args) {
-        new ShapeRendererTest(3,3,60).run();
+        new DebugApp(3,3,60).run();
 //        App.start();
 //        new WebHook().run();
     }

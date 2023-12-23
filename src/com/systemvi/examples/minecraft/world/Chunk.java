@@ -1,5 +1,6 @@
 package com.systemvi.examples.minecraft.world;
 
+import com.systemvi.engine.noise.Perlin2d;
 import org.joml.Vector3i;
 
 import java.util.ArrayList;
@@ -12,21 +13,20 @@ public class Chunk {
     public BlockState[][][] blockStates;
     public ArrayList<BlockFace> cache;
 
-    public Chunk(Vector3i chunkPosition) {
+    public Chunk(Vector3i chunkPosition, Perlin2d noise) {
         blockStates = new BlockState[WIDTH][HEIGHT][DEPTH];
         Random r = new Random();
-            for (int i = 0; i < WIDTH; i++) {
-                for (int k = 0; k < DEPTH; k++) {
-                    int landLevel = r.nextInt(5)+3;
-                    for (int j = 0; j < HEIGHT; j++) {
-                    if (j < landLevel) {
-                        blockStates[i][j][k] = new BlockState(Block.STONE);
-                    } else {
-                        blockStates[i][j][k] = new BlockState(Block.AIR);
-                    }
-//                    if(j<3)blockStates[i][j][k]=new BlockState(Block.STONE);
-//                    if(j==3)blockStates[i][j][k]=new BlockState(Block.DIRT);
-//                    if(j>3)blockStates[i][j][k]=new BlockState(Block.AIR);
+        for (int i = 0; i < WIDTH; i++) {
+            for (int k = 0; k < DEPTH; k++) {
+                int height = (int) (noise.get(
+                    (float) (chunkPosition.x * WIDTH + i) / 40,
+                    (float) (chunkPosition.z * DEPTH + k) / 40
+                ) * 30) + 1;
+                for (int j = 0; j < HEIGHT; j++) {
+                    if((chunkPosition.y*HEIGHT+j)==height)
+                        blockStates[i][j][k]=new BlockState(Block.STONE);
+                    else
+                        blockStates[i][j][k]=new BlockState(Block.AIR);
                 }
             }
         }

@@ -34,7 +34,7 @@ public class DebugApp extends Application {
 //        camera.setOrthographicProjection(-width/height,width/height,height/height,-height/height,0.1f,100);
         camera.update();
 
-        controller=new CameraController(0,0,0,0,0,-(float)Math.PI/2);
+        controller=new CameraController(0,40,0,0,0,-(float)Math.PI/2);
         controller.camera=camera;
         window.addOnKeyPressListener((key, scancode, mods) -> controller.keyDown(key));
         window.addOnKeyReleaseListener((key, scancode, mods) -> controller.keyUp(key));
