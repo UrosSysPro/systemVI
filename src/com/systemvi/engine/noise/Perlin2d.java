@@ -19,8 +19,35 @@ public class Perlin2d {
             }
         }
     }
-    public float get(int x,int y){
+    public float get(float x,float y){
+        int i=(int)x;
+        int j=(int)y;
 
-        return 0.5f;
+        float dx=x-i;
+        float dy=y-j;
+
+        Vector2f topLeft=grid[i][j];
+        Vector2f topRight=grid[i+1][j];
+        Vector2f bottomLeft=grid[i][j+1];
+        Vector2f bottomRight=grid[i+1][j+1];
+
+        Vector2f point=new Vector2f();
+        float dotTopLeft=topLeft.dot(point.set(dx,dy));
+        float dotTopRight=topRight.dot(point.set(dx-1,dy));
+        float dotBottomLeft=bottomLeft.dot(point.set(dx,dy-1));
+        float dotBottomRight=bottomRight.dot(point.set(dx-1,dy-1));
+
+        float top=smooth(1-dx)*dotTopLeft+smooth(dx)*dotTopRight;
+        float bottom=smooth(1-dx)*dotBottomLeft+smooth(dx)*dotBottomRight;
+
+        float value=top*smooth(1-dy)+smooth(dy)*bottom;
+
+        value=(value+1)/2;
+
+        return (value);
+    }
+
+    private float smooth(float a){
+        return 6*a*a*a*a*a - 15*a*a*a*a + 10*a*a*a;
     }
 }

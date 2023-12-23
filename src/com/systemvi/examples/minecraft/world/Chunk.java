@@ -15,11 +15,8 @@ public class Chunk {
     public Chunk(Vector3i chunkPosition) {
         blockStates = new BlockState[WIDTH][HEIGHT][DEPTH];
         Random r = new Random();
-
-
             for (int i = 0; i < WIDTH; i++) {
                 for (int k = 0; k < DEPTH; k++) {
-
                     int landLevel = r.nextInt(5)+3;
                     for (int j = 0; j < HEIGHT; j++) {
                     if (j < landLevel) {

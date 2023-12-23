@@ -30,6 +30,8 @@ Projekat za 6.godinu 2023-2024 u terminu 13:30
 24. [Shader toy signed distance field](docs/shaderToy/introSDF.md)
 25. [2d Ray Marching](docs/shaderToy/2dRayMarching.md)
 26. [3d Ray Marching](docs/shaderToy/3dRayMarching.md)
+27. [Minecraft: World, Chunk, Block, BlockState](docs/minecraft/1.md)
+28. [Minecraft: BlockFace, World generation](docs/minecraft/2.md)
 
 ## Domaci
 1. + Napraviti `Stack` klasu. `Stack` je struktura podataka koja definise dve operacije 
