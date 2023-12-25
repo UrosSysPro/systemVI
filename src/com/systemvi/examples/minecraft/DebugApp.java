@@ -35,6 +35,7 @@ public class DebugApp extends Application {
         camera.update();
 
         controller=new CameraController(0,40,0,0,0,-(float)Math.PI/2);
+        controller.speed=30;
         controller.camera=camera;
         window.addOnKeyPressListener((key, scancode, mods) -> controller.keyDown(key));
         window.addOnKeyReleaseListener((key, scancode, mods) -> controller.keyUp(key));
@@ -63,7 +64,8 @@ public class DebugApp extends Application {
 
         controller.update(delta);
 
-        world.debugDraw(controller);
+        world.draw(controller);
+//        world.debugDraw(controller);
 
         OpenGLUtils.disableDepthTest();
         OpenGLUtils.disableFaceCulling();
