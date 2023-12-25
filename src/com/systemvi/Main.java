@@ -9,7 +9,7 @@ import com.systemvi.examples.tetris.Test;
 public class Main {
     public static void main(String[] args) {
 //        new DebugApp(3,3,60).run();
-        new Test(3,3,60).run();
+//        new Test(3,3,60).run();
 //        App.start();
 //        new WebHook().run();
     }
