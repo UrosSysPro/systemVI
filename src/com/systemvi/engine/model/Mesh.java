@@ -23,13 +23,11 @@ public class Mesh {
         for (VertexAttribute attribute : attributes) vertexSize += attribute.size;
 
         long pointer=0;
+        int sizeOfFloat=4;
         for(int i=0;i<attributes.length;i++){
-            glVertexAttribPointer(i, attributes[i].size, GL_FLOAT, false, vertexSize*4 , pointer*4);
-//            glEnableVertexAttribArray(i);
-            pointer+=attributes[i].size;
-        }
-        for(int i=0;i<attributes.length;i++){
+            glVertexAttribPointer(i, attributes[i].size, GL_FLOAT, false, vertexSize*sizeOfFloat , pointer*sizeOfFloat);
             glEnableVertexAttribArray(i);
+            pointer+=attributes[i].size;
         }
         glBindVertexArray(0);
     }
@@ -37,6 +35,7 @@ public class Mesh {
     public void setVertexData(float[] vertices){
         this.vertices=vertices;
         glBindVertexArray(arrayBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER,vertexBuffer);
         glBufferData(GL_ARRAY_BUFFER,vertices,GL_STATIC_DRAW);
         glBindVertexArray(0);
     }
@@ -64,11 +63,8 @@ public class Mesh {
 
         for(int i=0;i<instanceAttributes.length;i++){
             glVertexAttribPointer(attributeIndexStart+i,instanceAttributes[i].size,GL_FLOAT,false,instanceSize*4,pointer*4);
-            pointer+=instanceAttributes[i].size;
-        }
-
-        for(int i=0;i<instanceAttributes.length;i++){
             glEnableVertexAttribArray(attributeIndexStart+i);
+            pointer+=instanceAttributes[i].size;
         }
         for(int i=0;i<instanceAttributes.length;i++){
             glVertexAttribDivisor(attributeIndexStart+i,1);
@@ -120,16 +116,20 @@ public class Mesh {
 
     public void delete(){
         glBindVertexArray(arrayBuffer);
+        //brisanje vertex buffera
         glBindBuffer(GL_ARRAY_BUFFER,0);
         glDeleteBuffers(vertexBuffer);
-
+        //brisanje elements buffera
         if(elementsEnabled){
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
             glDeleteBuffers(elementBuffer);
         }
+        //brisanje instance buffera
         if(instancingEnabled){
-//            glBindBuffer(GL_IN);
+            glBindBuffer(GL_ARRAY_BUFFER,0);
+            glDeleteBuffers(instanceBuffer);
         }
+
         glDeleteVertexArrays(arrayBuffer);
     }
 }

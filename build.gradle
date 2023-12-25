@@ -9,7 +9,7 @@ scala {
 }
 
 application {
-	mainClass = 'com.systemvi.Main2'
+	mainClass = 'com.systemvi.Main'
 }
 
 run {
