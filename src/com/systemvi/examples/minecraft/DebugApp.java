@@ -31,7 +31,9 @@ public class DebugApp extends Application {
 
         camera=new Camera();
         camera.setPerspectiveProjection((float)Math.toRadians(60),width/height,0.1f,1000);
-//        camera.setOrthographicProjection(-width/height,width/height,height/height,-height/height,0.1f,100);
+//        float aspect=width/height;
+//        float viewportScale=50;
+//        camera.setOrthographicProjection(-aspect*viewportScale,aspect*viewportScale,viewportScale,-viewportScale,0.1f,1000);
         camera.update();
 
         controller=new CameraController(0,40,0,0,0,-(float)Math.PI/2);
