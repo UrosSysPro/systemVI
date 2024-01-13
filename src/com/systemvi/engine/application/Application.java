@@ -5,11 +5,15 @@ import static org.lwjgl.glfw.GLFW.*;
 import org.joml.*;
 
 public abstract class Application {
+    private long nanosInSecond;
     private boolean exit=false;
-    private long lastFrame,frameTime;
+    private double lastFrame,frameTime;
     private int targetFPS;
+    private long targetFrameTime;
     public Application(int openglVersionMajor,int openglVersionMinor,int targetFPS){
+        nanosInSecond=1000_000_000L;
         this.targetFPS=targetFPS;
+        targetFrameTime=nanosInSecond/targetFPS;
         glfwInit();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,openglVersionMajor);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,openglVersionMinor);
@@ -18,23 +22,25 @@ public abstract class Application {
     }
 
     public void run(){
-        lastFrame=System.nanoTime()-1000_000_000/targetFPS;
-        while (!exit){
-            long startTime=System.nanoTime();
-            loop((float)((double)(startTime-lastFrame)/1000_000_000d));
-            lastFrame=startTime;
-            long endTime=System.nanoTime();
+        lastFrame=glfwGetTime()-targetFrameTime;
+        while(!exit){
+            double startTime=glfwGetTime();
+            loop((float)(startTime-lastFrame));
+            double endTime=glfwGetTime();
             frameTime=endTime-startTime;
-            sleep(1000_000_000/targetFPS-(endTime-startTime));
+
+            sleep(targetFrameTime-(long)(frameTime*nanosInSecond));
+
+            lastFrame=startTime;
         }
     }
 
-    public long getFrameTime() {
+    public double getFrameTime() {
         return frameTime;
     }
     public int getFPS(){
-        if(frameTime==0)return 1000_000_000;
-        return (int)(1000_000_000/frameTime);
+        if(frameTime==0)return (int)nanosInSecond;
+        return (int)(nanosInSecond/frameTime);
     }
 
     public void sleep(long time){

@@ -22,6 +22,8 @@ public class Window {
         GL.createCapabilities();
         glViewport(0,0,width,height);
         addOnResizeListener((int w,int h)->{});
+        String log=glGetString(GL_VERSION);
+        System.out.println(log);
     }
     public void use(){
         glfwMakeContextCurrent(id);
