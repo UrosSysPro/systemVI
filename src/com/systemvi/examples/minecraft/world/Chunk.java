@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Chunk {
-    public static final int WIDTH=16,HEIGHT=16,DEPTH=16;
+    public static final int SIZE_X=16,SIZE_Y=16,SIZE_Z=16;
 
 
     public BlockState[][][] blockStates;
@@ -20,16 +20,16 @@ public class Chunk {
 //    public ArrayList<BlockFace> cache;
 
     public Chunk(Vector3i chunkPosition, Perlin2d noise) {
-        blockStates = new BlockState[WIDTH][HEIGHT][DEPTH];
+        blockStates = new BlockState[SIZE_X][SIZE_Y][SIZE_Z];
         Random r = new Random();
-        for (int i = 0; i < WIDTH; i++) {
-            for (int k = 0; k < DEPTH; k++) {
+        for (int i = 0; i < SIZE_X; i++) {
+            for (int k = 0; k < SIZE_Z; k++) {
                 int height = (int) (noise.get(
-                    (float) (chunkPosition.x * WIDTH + i) / 40,
-                    (float) (chunkPosition.z * DEPTH + k) / 40
+                    (float) (chunkPosition.x * SIZE_X + i) / 40,
+                    (float) (chunkPosition.z * SIZE_Z + k) / 40
                 ) * 30) + 1;
-                for (int j = 0; j < HEIGHT; j++) {
-                    if((chunkPosition.y*HEIGHT+j)<height)
+                for (int j = 0; j < SIZE_Y; j++) {
+                    if((chunkPosition.y*SIZE_Y+j)<height)
                         blockStates[i][j][k]=new BlockState(Block.STONE);
                     else
                         blockStates[i][j][k]=new BlockState(Block.AIR);
@@ -66,29 +66,29 @@ public class Chunk {
 
     public void generateCache(Vector3i chunkPosition){
         ArrayList<Matrix4f> matrices=new ArrayList<>();
-        for(int i=0;i<WIDTH;i++){
-            for(int j=0;j<HEIGHT;j++){
-                for(int k=0;k<DEPTH;k++){
+        for(int i=0;i<SIZE_X;i++){
+            for(int j=0;j<SIZE_Y;j++){
+                for(int k=0;k<SIZE_Z;k++){
                     if(blockStates[i][j][k].block==Block.AIR)continue;
                     if(i-1<0||blockStates[i-1][j][k].block==Block.AIR){
                         //left
                         matrices.add(new Matrix4f()
                             .translate(
-                                chunkPosition.x*WIDTH+i,
-                                chunkPosition.y*HEIGHT+j,
-                                chunkPosition.z*DEPTH+k
+                                chunkPosition.x*SIZE_X+i,
+                                chunkPosition.y*SIZE_Y+j,
+                                chunkPosition.z*SIZE_Z+k
                             )
                             .translate(-0.5f,0,0)
                             .rotateY((float)Math.toRadians(-90))
                         );
                     }
-                    if(i+1>=WIDTH||blockStates[i+1][j][k].block==Block.AIR){
+                    if(i+1>=SIZE_X||blockStates[i+1][j][k].block==Block.AIR){
                         //right
                         matrices.add(new Matrix4f()
                             .translate(
-                                chunkPosition.x*WIDTH+i,
-                                chunkPosition.y*HEIGHT+j,
-                                chunkPosition.z*DEPTH+k
+                                chunkPosition.x*SIZE_X+i,
+                                chunkPosition.y*SIZE_Y+j,
+                                chunkPosition.z*SIZE_Z+k
                             )
                             .translate(0.5f,0,0)
                             .rotateY((float)Math.toRadians(90))
@@ -98,21 +98,21 @@ public class Chunk {
                         //down
                         matrices.add(new Matrix4f()
                             .translate(
-                                chunkPosition.x*WIDTH+i,
-                                chunkPosition.y*HEIGHT+j,
-                                chunkPosition.z*DEPTH+k
+                                chunkPosition.x*SIZE_X+i,
+                                chunkPosition.y*SIZE_Y+j,
+                                chunkPosition.z*SIZE_Z+k
                             )
                             .translate(0,-0.5f,0)
                             .rotateX((float)Math.toRadians(90))
                         );
                     }
-                    if(j+1>=HEIGHT||blockStates[i][j+1][k].block==Block.AIR){
+                    if(j+1>=SIZE_Y||blockStates[i][j+1][k].block==Block.AIR){
                         //up
                         matrices.add(new Matrix4f()
                             .translate(
-                                chunkPosition.x*WIDTH+i,
-                                chunkPosition.y*HEIGHT+j,
-                                chunkPosition.z*DEPTH+k
+                                chunkPosition.x*SIZE_X+i,
+                                chunkPosition.y*SIZE_Y+j,
+                                chunkPosition.z*SIZE_Z+k
                             )
                             .translate(0,0.5f,0)
                             .rotateX((float)Math.toRadians(-90))
@@ -122,24 +122,94 @@ public class Chunk {
                        //back
                         matrices.add(new Matrix4f()
                             .translate(
-                                chunkPosition.x*WIDTH+i,
-                                chunkPosition.y*HEIGHT+j,
-                                chunkPosition.z*DEPTH+k
+                                chunkPosition.x*SIZE_X+i,
+                                chunkPosition.y*SIZE_Y+j,
+                                chunkPosition.z*SIZE_Z+k
                             )
                             .translate(0,0,-0.5f)
                             .rotateY((float)Math.toRadians(180))
                         );
                     }
-                    if(k+1>=DEPTH||blockStates[i][j][k+1].block==Block.AIR){
+                    if(k+1>=SIZE_Z||blockStates[i][j][k+1].block==Block.AIR){
                         //front
                         matrices.add(new Matrix4f()
                             .translate(
-                                chunkPosition.x*WIDTH+i,
-                                chunkPosition.y*HEIGHT+j,
-                                chunkPosition.z*DEPTH+k
+                                chunkPosition.x*SIZE_X+i,
+                                chunkPosition.y*SIZE_Y+j,
+                                chunkPosition.z*SIZE_Z+k
                             )
                             .translate(0,0,0.5f)
                             .rotateY((float)Math.toRadians(0))
+                        );
+                    }
+                }
+            }
+        }
+        int matrixSize=16;
+        float[] instanceData=new float[matrices.size()*matrixSize];
+        float[] matrixData=new float[matrixSize];
+        for(int i=0;i<matrices.size();i++){
+            matrices.get(i).get(matrixData);
+            for(int j=0;j<matrixSize;j++){
+                instanceData[i*matrixSize+j]=matrixData[j];
+            }
+        }
+        instancesToDraw=matrices.size();
+        mesh.setInstanceData(instanceData);
+    }
+    public void generateCache(Vector3i chunkPosition,World world){
+        ArrayList<Matrix4f> matrices=new ArrayList<>();
+        for(int i=0;i<SIZE_X;i++){
+            for(int j=0;j<SIZE_Y;j++){
+                for(int k=0;k<SIZE_Z;k++){
+                    if(blockStates[i][j][k].block==Block.AIR)continue;
+                    int x=i+SIZE_X*chunkPosition.x,y=j+SIZE_Y*chunkPosition.y,z=k+SIZE_Z*chunkPosition.z;
+                    if(world.getBlockState(x-1,y,z).block==Block.AIR){
+                        //left
+                        matrices.add(new Matrix4f()
+                                .translate(x,y,z)
+                                .translate(-0.5f,0,0)
+                                .rotateY((float)Math.toRadians(-90))
+                        );
+                    }
+                    if(world.getBlockState(x+1,y,z).block==Block.AIR){
+                        //right
+                        matrices.add(new Matrix4f()
+                                .translate(x,y,z)
+                                .translate(0.5f,0,0)
+                                .rotateY((float)Math.toRadians(90))
+                        );
+                    }
+                    if(world.getBlockState(x,y-1,z).block==Block.AIR){
+                        //down
+                        matrices.add(new Matrix4f()
+                                .translate(x,y,z)
+                                .translate(0,-0.5f,0)
+                                .rotateX((float)Math.toRadians(90))
+                        );
+                    }
+                    if(world.getBlockState(x,y+1,z).block==Block.AIR){
+                        //up
+                        matrices.add(new Matrix4f()
+                                .translate(x,y,z)
+                                .translate(0,0.5f,0)
+                                .rotateX((float)Math.toRadians(-90))
+                        );
+                    }
+                    if(world.getBlockState(x,y,z-1).block==Block.AIR){
+                        //back
+                        matrices.add(new Matrix4f()
+                                .translate(x,y,z)
+                                .translate(0,0,-0.5f)
+                                .rotateY((float)Math.toRadians(180))
+                        );
+                    }
+                    if(world.getBlockState(x,y,z+1).block==Block.AIR){
+                        //front
+                        matrices.add(new Matrix4f()
+                                .translate(x,y,z)
+                                .translate(0,0,0.5f)
+                                .rotateY((float)Math.toRadians(0))
                         );
                     }
                 }
@@ -161,9 +231,9 @@ public class Chunk {
 //    public void generateCache(){
 //        cache=new ArrayList<>();
 //
-//        for(int i=0;i<WIDTH;i++){
-//            for(int j=0;j<HEIGHT;j++){
-//                for(int k=0;k<DEPTH;k++){
+//        for(int i=0;i<SIZE_X;i++){
+//            for(int j=0;j<SIZE_Y;j++){
+//                for(int k=0;k<SIZE_Z;k++){
 //                    if(blockStates[i][j][k].block==Block.AIR)continue;
 //                    if(i-1<0||blockStates[i-1][j][k].block==Block.AIR){
 //                        cache.add(new BlockFace(
@@ -172,7 +242,7 @@ public class Chunk {
 //                            BlockFace.LEFT
 //                        ));
 //                    }
-//                    if(i+1>=WIDTH||blockStates[i+1][j][k].block==Block.AIR){
+//                    if(i+1>=SIZE_X||blockStates[i+1][j][k].block==Block.AIR){
 //                        cache.add(new BlockFace(
 //                            new Vector3i(i,j,k),
 //                            blockStates[i][j][k].block.region,
@@ -186,7 +256,7 @@ public class Chunk {
 //                            BlockFace.DOWN
 //                        ));
 //                    }
-//                    if(j+1>=HEIGHT||blockStates[i][j+1][k].block==Block.AIR){
+//                    if(j+1>=SIZE_Y||blockStates[i][j+1][k].block==Block.AIR){
 //                        cache.add(new BlockFace(
 //                            new Vector3i(i,j,k),
 //                            blockStates[i][j][k].block.region,
@@ -200,7 +270,7 @@ public class Chunk {
 //                            BlockFace.BACK
 //                        ));
 //                    }
-//                    if(k+1>=DEPTH||blockStates[i][j][k+1].block==Block.AIR){
+//                    if(k+1>=SIZE_Z||blockStates[i][j][k+1].block==Block.AIR){
 //                        cache.add(new BlockFace(
 //                            new Vector3i(i,j,k),
 //                            blockStates[i][j][k].block.region,
@@ -213,11 +283,11 @@ public class Chunk {
 //    }
 
     public void debugDraw(int x,int y,int z,WorldDebugRenderer debugRenderer){
-        for(int i=0;i<WIDTH;i++){
-            for(int j=0;j<HEIGHT;j++){
-                for(int k=0;k<DEPTH;k++){
+        for(int i=0;i<SIZE_X;i++){
+            for(int j=0;j<SIZE_Y;j++){
+                for(int k=0;k<SIZE_Z;k++){
                     if(blockStates[i][j][k].block!=Block.AIR){
-                        debugRenderer.draw(i+x*WIDTH,j+y*HEIGHT,k+z*DEPTH);
+                        debugRenderer.draw(i+x*SIZE_X,j+y*SIZE_Y,k+z*SIZE_Z);
                     }
                 }
             }

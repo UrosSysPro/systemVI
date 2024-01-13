@@ -11,5 +11,5 @@ in struct VERTEX_OUT{
 }vertexOut;
 
 void main(){
-    FragColor=vec4(vertexOut.normal,1.0);
+    FragColor=vec4(vertexOut.normal/2+0.5,1.0);
 }
