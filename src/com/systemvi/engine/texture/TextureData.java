@@ -1,6 +1,7 @@
 package com.systemvi.engine.texture;
 
 import org.joml.*;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.Buffer;
@@ -23,7 +24,7 @@ public class TextureData {
         this.width=width;
         this.height=height;
         this.format=format;
-        buffer= ByteBuffer.allocate(width*height*format.channels);
+        buffer= BufferUtils.createByteBuffer(width*height*format.channels);
 
         color4f=new Vector4f();
         color3f=new Vector3f();

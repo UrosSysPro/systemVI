@@ -35,16 +35,18 @@ public class TextureDataTest extends Application {
 
 //        texture=new Texture("assets/examples/test3d/rock/diffuse.png");
 
-        texture=new Texture(255,255, Format.RGBA);
-        TextureData data=new TextureData(255,255,Format.RGBA);
+//        texture=new Texture(255,255, Format.RGBA);
+//        TextureData data=new TextureData(255,255,Format.RGBA);
 //        for(int i=0;i<data.getWidth();i++){
 //            for(int j=0;j<data.getHeight();j++){
-//                data.setPixel4i(i,j,new Vector4i(i,j,128,255));
+//                data.setPixel4i(i,j,new Vector4i(i,j,255,255));
 //            }
 //        }
-        texture.setData(data);
+//        texture.setData(data);
 
-//        texture=new Texture();
+//        texture.loadFromFile("assets/examples/test3d/rock/diffuse.png");
+
+        texture=new Texture();
     }
 
     @Override
@@ -52,8 +54,8 @@ public class TextureDataTest extends Application {
         if(window.shouldClose())close();
         window.pollEvents();
 
-        OpenGLUtils.clear(0,0,0,0, OpenGLUtils.Buffer.COLOR_BUFFER, OpenGLUtils.Buffer.DEPTH_BUFFER);
-        renderer.draw(texture,0,0,100,100);
+        OpenGLUtils.clear(1,0,0,0, OpenGLUtils.Buffer.COLOR_BUFFER, OpenGLUtils.Buffer.DEPTH_BUFFER);
+        renderer.draw(texture,100,100,100,100);
         renderer.flush();
 
         window.swapBuffers();

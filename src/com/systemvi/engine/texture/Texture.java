@@ -1,5 +1,7 @@
 package com.systemvi.engine.texture;
 import static org.lwjgl.opengl.GL33.*;
+
+import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 
 import java.nio.ByteBuffer;
@@ -11,37 +13,13 @@ public class Texture{
         id=glGenTextures();
         glBindTexture(GL_TEXTURE_2D,id);
 
+
         glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-
-        int[] width=new int[1],height=new int[1],chanels=new int[1];
-        ByteBuffer buffer=STBImage.stbi_load(fileName,width,height,chanels,0);
-        if(buffer==null){
-            System.out.println("[ERROR] Loading Image");
-            return;
-        }
-        this.width=width[0];
-        this.height=height[0];
-        int channels=chanels[0];
-        this.format=Format.R;
-        if(channels==2)this.format=Format.RG;
-        if(channels==3)this.format=Format.RGB;
-        if(channels==4)this.format=Format.RGBA;
-
-//        System.out.println("width: "+this.width);
-//        System.out.println("height: "+this.height);
-//        System.out.println("channels: "+this.format.channels);
-//        System.out.println("sum: " +this.width*this.height*this.format.channels);
-//        System.out.println("buffer size: "+buffer.capacity());
-
-        glTexImage2D(GL_TEXTURE_2D,0,this.format.id,this.width,this.height,0,this.format.id,GL_UNSIGNED_BYTE,buffer);
-        glGenerateMipmap(GL_TEXTURE_2D);
-        STBImage.stbi_image_free(buffer);
-        glBindTexture(GL_TEXTURE_2D,0);
+        loadFromFile(fileName);
     }
 
     public Texture(int width,int height,Format format){
@@ -50,7 +28,6 @@ public class Texture{
         this.format=format;
         id=glGenTextures();
         glBindTexture(GL_TEXTURE_2D,id);
-
 
         glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
@@ -67,7 +44,7 @@ public class Texture{
     public Texture(){
         this.width=255;
         this.height=255;
-        this.format=Format.RGBA;
+        this.format=Format.RGB;
         id=glGenTextures();
         glBindTexture(GL_TEXTURE_2D,id);
 
@@ -77,31 +54,56 @@ public class Texture{
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-//        ByteBuffer buffer=ByteBuffer.allocate(width*height*format.channels);
-        ByteBuffer buffer=ByteBuffer.allocate((width)*(height)*format.channels);
+        ByteBuffer buffer= BufferUtils.createByteBuffer((width)*(height)*format.channels);
         for(int i=0;i<width;i++){
             for(int j=0;j<height;j++){
                 int index=(i+j*width)*format.channels;
                 buffer.put(index,(byte)i);
                 buffer.put(index+1,(byte)j);
                 buffer.put(index+2,(byte)128);
-                buffer.put(index+3,(byte)255);
             }
         }
-        glTexImage2D(GL_TEXTURE_2D,0,this.format.id,this.width,this.height,0,this.format.id,GL_UNSIGNED_BYTE,buffer);
-//        glTexImage2D(GL_TEXTURE_2D,0,this.format.id,width,height,0,GL_RGBA,GL_UNSIGNED_BYTE, buffer);
+        glTexImage2D(GL_TEXTURE_2D,0,this.format.id,width,height,0,this.format.id,GL_UNSIGNED_BYTE,buffer);
+
         glGenerateMipmap(GL_TEXTURE_2D);
 
         glBindTexture(GL_TEXTURE_2D,0);
     }
 
     public Texture setData(TextureData data){
+        width=data.getWidth();
+        height=data.getHeight();
 
         glBindTexture(GL_TEXTURE_2D,id);
 
-        glTexImage2D(GL_TEXTURE_2D,0,format.id,width,height,0,data.getFormat().id,GL_UNSIGNED_BYTE,data.getBuffer());
+        data.getBuffer().flip();
+        glTexImage2D(GL_TEXTURE_2D,0,this.format.id,width,height,0,data.getFormat().id,GL_UNSIGNED_BYTE,data.getBuffer());
         glGenerateMipmap(GL_TEXTURE_2D);
 
+        glBindTexture(GL_TEXTURE_2D,0);
+        return this;
+    }
+
+    public Texture loadFromFile(String fileName){
+        glBindTexture(GL_TEXTURE_2D,id);
+
+        int[] width=new int[1],height=new int[1],chanels=new int[1];
+        ByteBuffer buffer=STBImage.stbi_load(fileName,width,height,chanels,0);
+        if(buffer==null){
+            System.out.println("[ERROR] Loading Image");
+            return this;
+        }
+        this.width=width[0];
+        this.height=height[0];
+        int channels=chanels[0];
+        this.format=Format.R;
+        if(channels==2)this.format=Format.RG;
+        if(channels==3)this.format=Format.RGB;
+        if(channels==4)this.format=Format.RGBA;
+
+        glTexImage2D(GL_TEXTURE_2D,0,this.format.id,this.width,this.height,0,this.format.id,GL_UNSIGNED_BYTE,buffer);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        STBImage.stbi_image_free(buffer);
         glBindTexture(GL_TEXTURE_2D,0);
         return this;
     }
