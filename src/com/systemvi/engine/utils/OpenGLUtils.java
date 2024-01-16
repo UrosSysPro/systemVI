@@ -64,4 +64,12 @@ public class OpenGLUtils {
        glDisable(GL_DEPTH_TEST);
     }
 
+    public static void enableLines(int lineWidth){
+       glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+       glLineWidth(lineWidth);
+    }
+    public static void disableLines(){
+       glPolygonMode(GL_FRONT_AND_BACK,GL_TRIANGLES);
+    }
+
 }

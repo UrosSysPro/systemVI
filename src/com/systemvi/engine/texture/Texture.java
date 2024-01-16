@@ -41,34 +41,35 @@ public class Texture{
         glBindTexture(GL_TEXTURE_2D,0);
     }
 
-    public Texture(){
-        this.width=255;
-        this.height=255;
-        this.format=Format.RGB;
-        id=glGenTextures();
-        glBindTexture(GL_TEXTURE_2D,id);
-
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-        ByteBuffer buffer= BufferUtils.createByteBuffer((width)*(height)*format.channels);
-        for(int i=0;i<width;i++){
-            for(int j=0;j<height;j++){
-                int index=(i+j*width)*format.channels;
-                buffer.put(index,(byte)i);
-                buffer.put(index+1,(byte)j);
-                buffer.put(index+2,(byte)128);
-            }
-        }
-        glTexImage2D(GL_TEXTURE_2D,0,this.format.id,width,height,0,this.format.id,GL_UNSIGNED_BYTE,buffer);
-
-        glGenerateMipmap(GL_TEXTURE_2D);
-
-        glBindTexture(GL_TEXTURE_2D,0);
-    }
+//    public Texture(){
+//        this.width=255;
+//        this.height=255;
+//        this.format=Format.RGB;
+//        id=glGenTextures();
+//        glBindTexture(GL_TEXTURE_2D,id);
+//
+//        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
+//        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+//
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+//
+//        ByteBuffer buffer= BufferUtils.createByteBuffer((width)*(height)*format.channels);
+//
+//        for(int i=0;i<width;i++){
+//            for(int j=0;j<height;j++){
+//                int index=(i+j*width)*format.channels;
+//                buffer.put(index,(byte)i);
+//                buffer.put(index+1,(byte)j);
+//                buffer.put(index+2,(byte)128);
+//            }
+//        }
+//        glTexImage2D(GL_TEXTURE_2D,0,this.format.id,width,height,0,this.format.id,GL_UNSIGNED_BYTE,buffer);
+//
+//        glGenerateMipmap(GL_TEXTURE_2D);
+//
+//        glBindTexture(GL_TEXTURE_2D,0);
+//    }
 
     public Texture setData(TextureData data){
         width=data.getWidth();
