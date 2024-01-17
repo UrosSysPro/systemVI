@@ -55,6 +55,8 @@ public class SkyBoxRenderer {
 
     public void draw(Camera camera){
         shader.use();
+        cubeMap.bind();
+        shader.setUniform("cubeMap",0);
         shader.setUniform("view",camera.getView());
         shader.setUniform("projection",camera.getProjection());
         mesh.drawElements(12);

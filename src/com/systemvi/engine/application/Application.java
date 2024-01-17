@@ -5,23 +5,27 @@ import static org.lwjgl.glfw.GLFW.*;
 import org.joml.*;
 
 public abstract class Application {
-    private long nanosInSecond;
+    private final long nanosInSecond,millisInSecond,microsInSecond;
+    private final int maxNanos;
     private boolean exit=false;
     private double lastFrame,frameTime;
     private int targetFPS;
-    private long targetFrameTime;
+    private double targetFrameTime;
     public Application(int openglVersionMajor,int openglVersionMinor,int targetFPS){
         nanosInSecond=1000_000_000L;
+        microsInSecond=1000_000L;
+        millisInSecond=1000L;
+        maxNanos=1000_000;
         this.targetFPS=targetFPS;
-        targetFrameTime=nanosInSecond/targetFPS;
+        targetFrameTime=1d/targetFPS;
         glfwInit();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,openglVersionMajor);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,openglVersionMinor);
         glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
-        setup();
     }
 
     public void run(){
+        setup();
         lastFrame=glfwGetTime()-targetFrameTime;
         while(!exit){
             double startTime=glfwGetTime();
@@ -29,10 +33,11 @@ public abstract class Application {
             double endTime=glfwGetTime();
             frameTime=endTime-startTime;
 
-            sleep(targetFrameTime-(long)(frameTime*nanosInSecond));
+            sleep(targetFrameTime-frameTime);
 
             lastFrame=startTime;
         }
+        dispose();
     }
 
     public double getFrameTime() {
@@ -40,18 +45,37 @@ public abstract class Application {
     }
     public int getFPS(){
         if(frameTime==0)return (int)nanosInSecond;
-        return (int)(nanosInSecond/frameTime);
+        return (int)(1/frameTime);
+    }
+    public double frameToFrameTime(){
+        return glfwGetTime()-lastFrame;
     }
 
-    public void sleep(long time){
+    public int getTargetFPS(){
+        return targetFPS;
+    }
+    public void setTargetFPS(int fps){
+        this.targetFPS=fps;
+        this.targetFrameTime=1d/fps;
+    }
+    public void sleep(double time){
+
+        time=time>0?time:0;
+        long millis=(long)(time*millisInSecond);
+        int nanos=(int)((time*nanosInSecond)%maxNanos);
+
         try{
-            time=time>0?time:0;
-            Thread.sleep(time/1000_000,(int)(time%1000_000));
+            Thread.sleep(millis,nanos);
         }catch (Exception e){
+            System.out.println("millis: "+millis);
+            System.out.println("nanos: "+nanos);
             e.printStackTrace();
         }
     }
 
+    public  void dispose(){
+
+    }
     public void close(){
         exit=true;
     }

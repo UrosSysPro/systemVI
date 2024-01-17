@@ -4,6 +4,10 @@ out vec4 FragColor;
 
 in vec3 position;
 
+uniform samplerCube cubeMap;
+
 void main(){
-    FragColor=vec4(position,1.0);
+    vec4 color=texture(cubeMap,position);
+    FragColor=color;
+//    FragColor=vec4(abs(normalize(position)),1.0);
 }

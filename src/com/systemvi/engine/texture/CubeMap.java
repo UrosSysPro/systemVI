@@ -30,6 +30,10 @@ public class CubeMap {
     }
 
     public void bind(int i){
-
+        glActiveTexture(i);
+        glBindTexture(GL_TEXTURE_CUBE_MAP,id);
+    }
+    public void bind(){
+        bind(0);
     }
 }

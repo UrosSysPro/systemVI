@@ -1,5 +1,7 @@
 package com.systemvi.engine.window;
 
+import com.systemvi.examples.datastructures.ArrayList;
+import org.joml.Vector2d;
 import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.opengl.GL;
 
@@ -10,7 +12,16 @@ public class Window {
     private KeyListener keyPress=null,keyRelease=null;
     private MousePressListener mouseUp=null,mouseDown=null;
     private int width,height;
-    private long id;
+    private final long id;
+    private ArrayList<KeyListener> keyUpEvents;
+    private ArrayList<KeyListener> keyDownEvents;
+    private ArrayList<MousePressListener> mouseUpEvents;
+    private ArrayList<MousePressListener> mouseDownEvents;
+    private ArrayList<MouseMoveListener> mouseMoveEvents;
+    private ArrayList<ResizeListener> resizeEvents;
+    private ArrayList<ScrollListener> scrollEvents;
+    private Vector2d mousePosition;
+    private final String openglInfo;
     public Window(int width,int height,String title){
         this.width=width;
         this.height=height;
@@ -22,15 +33,37 @@ public class Window {
         GL.createCapabilities();
         glViewport(0,0,width,height);
         addOnResizeListener((int w,int h)->{});
-        String log=glGetString(GL_VERSION);
-        System.out.println(log);
-    }
-    public void use(){
-        glfwMakeContextCurrent(id);
-    }
+        openglInfo=glGetString(GL_VERSION);
+        System.out.println(openglInfo);
 
-    public long getId() {
-        return id;
+        mousePosition=new Vector2d(0,0);
+
+        //keyboard events
+        keyUpEvents=new ArrayList<>();
+        keyDownEvents=new ArrayList<>();
+        glfwSetKeyCallback(id,(long window,int key,int scancode,int action,int mods)->{
+
+        });
+        //mouse events
+        mouseDownEvents=new ArrayList<>();
+        mouseUpEvents=new ArrayList<>();
+        mouseMoveEvents=new ArrayList<>();
+        glfwSetMouseButtonCallback(id,(window,button, action, mods) -> {
+
+        });
+        glfwSetCursorPosCallback(id,(long window,double x,double y)->{
+
+        });
+        //resize events
+        resizeEvents=new ArrayList<>();
+        glfwSetFramebufferSizeCallback(id,(long windw,int w,int h)->{
+
+        });
+        //scroll events
+        scrollEvents=new ArrayList<>();
+        glfwSetScrollCallback(id, (long window, double xoffset, double yoffset)->{
+
+        });
     }
 
     public void addOnMouseDownListener(MousePressListener listener){
@@ -80,14 +113,22 @@ public class Window {
         });
     }
 
+    public String getOpenglInfo() {
+        return openglInfo;
+    }
+
+    public void use(){
+        glfwMakeContextCurrent(id);
+    }
+    public long getId() {
+        return id;
+    }
     public int getWidth() {
         return width;
     }
-
     public int getHeight() {
         return height;
     }
-
     public boolean shouldClose(){
         return glfwWindowShouldClose(id);
     }
