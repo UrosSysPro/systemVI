@@ -22,10 +22,14 @@ public class CubeMap {
             glTexImage2D(
                     GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
                     0, GL_RGB, width[0], height[0],
-                    0, formats[channels[0]], GL_UNSIGNED_BYTE, data
+                    0, formats[channels[0]-1], GL_UNSIGNED_BYTE, data
             );
             stbi_image_free(data);
         }
         glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+    }
+
+    public void bind(int i){
+
     }
 }
