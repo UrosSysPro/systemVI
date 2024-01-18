@@ -22,6 +22,8 @@ public class Window {
     private ArrayList<ScrollListener> scrollEvents;
     private Vector2d mousePosition;
     private final String openglInfo;
+
+    private InputProcessor inputProcessor;
     public Window(int width,int height,String title){
         this.width=width;
         this.height=height;
@@ -85,7 +87,12 @@ public class Window {
         scrollEvents.remove(listener);
     }
 
+    public void setInputProcessor(InputProcessor processor){
+        inputProcessor=processor;
+    }
+
     private void registerListeners(){
+        inputProcessor=null;
         mousePosition=new Vector2d(0,0);
 
         //keyboard events
@@ -93,11 +100,13 @@ public class Window {
         keyDownEvents=new ArrayList<>();
         glfwSetKeyCallback(id,(long window,int key,int scancode,int action,int mods)->{
             if(action==GLFW_PRESS){
+                if(inputProcessor!=null)inputProcessor.keyDown(key,scancode,mods);
                 for(KeyListener listener:keyDownEvents){
                     listener.key(key,scancode,mods);
                 }
             }
             if(action==GLFW_RELEASE){
+                if(inputProcessor!=null)inputProcessor.keyUp(key,scancode,mods);
                 for(KeyListener listener:keyUpEvents){
                     listener.key(key,scancode,mods);
                 }
@@ -112,11 +121,13 @@ public class Window {
         mouseMoveEvents=new ArrayList<>();
         glfwSetMouseButtonCallback(id,(window,button, action, mods) -> {
             if(action==GLFW_PRESS){
+                if(inputProcessor!=null)inputProcessor.mouseDown(button,mods,mousePosition.x,mousePosition.y);
                 for(MousePressListener listener:mouseDownEvents){
                     listener.mousePress(button,mods);
                 }
             }
             if(action==GLFW_RELEASE){
+                if(inputProcessor!=null)inputProcessor.mouseUp(button,mods,mousePosition.x,mousePosition.y);
                 for(MousePressListener listener:mouseUpEvents){
                     listener.mousePress(button,mods);
                 }
@@ -128,6 +139,7 @@ public class Window {
         glfwSetCursorPosCallback(id,(long window,double x,double y)->{
             mousePosition.x=x;
             mousePosition.y=y;
+            if(inputProcessor!=null)inputProcessor.mouseMove(mousePosition.x,mousePosition.y);
             for(MouseMoveListener listener:mouseMoveEvents){
                 listener.move(x,y);
             }
@@ -138,6 +150,7 @@ public class Window {
             this.width=w;
             this.height=h;
             glViewport(0,0,w,h);
+            if(inputProcessor!=null)inputProcessor.resize(w,h);
             for(ResizeListener listener:resizeEvents){
                 listener.resize(w,h);
             }
@@ -145,6 +158,7 @@ public class Window {
         //scroll events
         scrollEvents=new ArrayList<>();
         glfwSetScrollCallback(id, (long window, double xoffset, double yoffset)->{
+            if(inputProcessor!=null)inputProcessor.scroll(xoffset,yoffset);
             for(ScrollListener listener:scrollEvents){
                 listener.scroll(xoffset,yoffset);
             }

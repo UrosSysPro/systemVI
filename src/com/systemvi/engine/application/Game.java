@@ -1,11 +1,13 @@
 package com.systemvi.engine.application;
 
+import com.systemvi.engine.window.InputAdapter;
+import com.systemvi.engine.window.InputProcessor;
 import com.systemvi.engine.window.Window;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
-public abstract class Game{
+public abstract class Game implements InputProcessor {
     private final long nanosInSecond,millisInSecond,microsInSecond;
     private final int maxNanos;
     private boolean exit=false;
@@ -25,6 +27,7 @@ public abstract class Game{
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,openglVersionMinor);
         glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
         window=new Window(windowWidth,windowHeight,title);
+        window.setInputProcessor(this);
     }
 
     public void run(){
@@ -92,4 +95,45 @@ public abstract class Game{
 
     public abstract void setup();
     public abstract void loop(float delta);
+
+    @Override
+    public boolean keyDown(int key, int scancode, int mods) {
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int key, int scancode, int mods) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseDown(int button, int mods, double x, double y) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseUp(int button, int mods, double x, double y) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMove(double x, double y) {
+        return false;
+    }
+
+    @Override
+    public boolean scroll(double offsetX, double offsetY) {
+        return false;
+    }
+
+    @Override
+    public boolean resize(int width, int height) {
+        return false;
+    }
+    public void setInputProcessor(InputProcessor processor){
+        if(processor==null)
+            window.setInputProcessor(this);
+        else
+            window.setInputProcessor(processor);
+    }
 }
