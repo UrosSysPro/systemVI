@@ -1,6 +1,6 @@
 package com.systemvi.engine.window;
 
-import com.systemvi.examples.datastructures.ArrayList;
+import java.util.ArrayList;
 import org.joml.Vector2d;
 import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.opengl.GL;
@@ -32,84 +32,122 @@ public class Window {
         glfwMakeContextCurrent(id);
         GL.createCapabilities();
         glViewport(0,0,width,height);
-        addOnResizeListener((int w,int h)->{});
+
         openglInfo=glGetString(GL_VERSION);
         System.out.println(openglInfo);
 
+        registerListeners();
+    }
+
+    public void addOnMouseDownListener(MousePressListener listener){
+        mouseDownEvents.add(listener);
+    }
+    public void addOnMouseUpListener(MousePressListener listener){
+        mouseUpEvents.add(listener);
+    }
+    public void addOnMouseMoveListener(MouseMoveListener listener){
+        mouseMoveEvents.add(listener);
+    }
+    public void addOnKeyPressListener(KeyListener listener){
+        keyDownEvents.add(listener);
+    }
+    public void addOnKeyReleaseListener(KeyListener listener){
+        keyUpEvents.add(listener);
+    }
+    public void addOnResizeListener(ResizeListener listener){
+        resizeEvents.add(listener);
+    }
+    public void addOnScrollListener(ScrollListener listener){
+        scrollEvents.add(listener);
+    }
+
+    public void removeOnMouseDownListener(MousePressListener listener){
+        mouseDownEvents.remove(listener);
+    }
+    public void removeOnMouseUpListener(MousePressListener listener){
+        mouseUpEvents.remove(listener);
+    }
+    public void removeOnMouseMoveListener(MouseMoveListener listener){
+        mouseMoveEvents.remove(listener);
+    }
+
+    public void removeOnKeyDownListener(KeyListener listener){
+        keyDownEvents.remove(listener);
+    }
+    public void removeOnKeyUpListener(KeyListener listener){
+        keyUpEvents.remove(listener);
+    }
+
+    public void removeOnResizeListener(ResizeListener listener){
+        resizeEvents.remove(listener);
+    }
+    public void removeOnScrollListener(ScrollListener listener){
+        scrollEvents.remove(listener);
+    }
+
+    private void registerListeners(){
         mousePosition=new Vector2d(0,0);
 
         //keyboard events
         keyUpEvents=new ArrayList<>();
         keyDownEvents=new ArrayList<>();
         glfwSetKeyCallback(id,(long window,int key,int scancode,int action,int mods)->{
+            if(action==GLFW_PRESS){
+                for(KeyListener listener:keyDownEvents){
+                    listener.key(key,scancode,mods);
+                }
+            }
+            if(action==GLFW_RELEASE){
+                for(KeyListener listener:keyUpEvents){
+                    listener.key(key,scancode,mods);
+                }
+            }
+            if(action==GLFW_REPEAT){
 
+            }
         });
         //mouse events
         mouseDownEvents=new ArrayList<>();
         mouseUpEvents=new ArrayList<>();
         mouseMoveEvents=new ArrayList<>();
         glfwSetMouseButtonCallback(id,(window,button, action, mods) -> {
+            if(action==GLFW_PRESS){
+                for(MousePressListener listener:mouseDownEvents){
+                    listener.mousePress(button,mods);
+                }
+            }
+            if(action==GLFW_RELEASE){
+                for(MousePressListener listener:mouseUpEvents){
+                    listener.mousePress(button,mods);
+                }
+            }
+            if(action==GLFW_REPEAT){
 
+            }
         });
         glfwSetCursorPosCallback(id,(long window,double x,double y)->{
-
+            mousePosition.x=x;
+            mousePosition.y=y;
+            for(MouseMoveListener listener:mouseMoveEvents){
+                listener.move(x,y);
+            }
         });
         //resize events
         resizeEvents=new ArrayList<>();
         glfwSetFramebufferSizeCallback(id,(long windw,int w,int h)->{
-
+            this.width=w;
+            this.height=h;
+            glViewport(0,0,w,h);
+            for(ResizeListener listener:resizeEvents){
+                listener.resize(w,h);
+            }
         });
         //scroll events
         scrollEvents=new ArrayList<>();
         glfwSetScrollCallback(id, (long window, double xoffset, double yoffset)->{
-
-        });
-    }
-
-    public void addOnMouseDownListener(MousePressListener listener){
-        mouseDown=listener;
-        glfwSetMouseButtonCallback(id,(window,button,action,mods)->{
-           if(action==GLFW_PRESS&&mouseDown!=null)mouseDown.mousePress(button,mods);
-           if(action==GLFW_RELEASE&&mouseUp!=null)mouseUp.mousePress(button,mods);
-        });
-    }
-    public void addOnMouseUpListener(MousePressListener listener){
-        mouseUp=listener;
-        glfwSetMouseButtonCallback(id,(window,button,action,mods)->{
-            if(action==GLFW_PRESS&&mouseDown!=null)mouseDown.mousePress(button,mods);
-            if(action==GLFW_RELEASE&&mouseUp!=null)mouseUp.mousePress(button,mods);
-        });
-    }
-    public void addOnMouseMoveListener(MouseMoveListener listener){
-        glfwSetCursorPosCallback(id,(long window,double x,double y)->{
-           listener.move(x,y);
-        });
-    }
-    public void addOnKeyPressListener(KeyListener listener){
-        keyPress=listener;
-        glfwSetKeyCallback(id,(long window,int key,int scancode,int action,int mods)->{
-            if((action==GLFW_PRESS)&&keyPress!=null)keyPress.key(key,scancode,mods);
-            if((action==GLFW_RELEASE)&&keyRelease!=null)keyRelease.key(key,scancode,mods);
-        });
-    }
-    public void addOnKeyReleaseListener(KeyListener listener){
-        keyRelease=listener;
-        glfwSetKeyCallback(id,(long window,int key,int scancode,int action,int mods)->{
-            if((action==GLFW_PRESS)&&keyPress!=null)keyPress.key(key,scancode,mods);
-            if((action==GLFW_RELEASE)&&keyRelease!=null)keyRelease.key(key,scancode,mods);
-        });
-    }
-    public void addOnResizeListener(ResizeListener listener){
-        glfwSetFramebufferSizeCallback(id,(long windw,int width,int height)->{
-            this.width=width;
-            this.height=height;
-            glViewport(0,0,width,height);
-            listener.resize(width,height);
-        });
-    }
-    public void addOnScrollListener(ScrollListener listener){
-        glfwSetScrollCallback(id, (long window, double xoffset, double yoffset)->{
-            listener.scroll(xoffset,yoffset);
+            for(ScrollListener listener:scrollEvents){
+                listener.scroll(xoffset,yoffset);
+            }
         });
     }
 
