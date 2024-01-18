@@ -7,18 +7,19 @@ import org.lwjgl.stb.STBImage;
 import java.nio.ByteBuffer;
 
 public class Texture{
-    private int id,width,height;
+    private final int id;
+    private int width;
+    private int height;
     private Format format;
+    private Texture(){
+        id=glGenTextures();
+        setRepeat(GL_REPEAT,GL_REPEAT);
+        setSamplerFilter(GL_NEAREST,GL_NEAREST);
+    }
     public Texture(String fileName){
         id=glGenTextures();
-        glBindTexture(GL_TEXTURE_2D,id);
-
-
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        setRepeat(GL_REPEAT,GL_REPEAT);
+        setSamplerFilter(GL_NEAREST,GL_NEAREST);
         loadFromFile(fileName);
     }
 
@@ -27,49 +28,14 @@ public class Texture{
         this.height=height;
         this.format=format;
         id=glGenTextures();
+
+        setRepeat(GL_REPEAT,GL_REPEAT);
+        setSamplerFilter(GL_NEAREST,GL_NEAREST);
+
         glBindTexture(GL_TEXTURE_2D,id);
-
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
         glTexImage2D(GL_TEXTURE_2D,0,this.format.id,width,height,0,GL_RGBA,GL_UNSIGNED_BYTE, (ByteBuffer) null);
-//        glGenerateMipmap(GL_TEXTURE_2D);
-
         glBindTexture(GL_TEXTURE_2D,0);
     }
-
-//    public Texture(){
-//        this.width=255;
-//        this.height=255;
-//        this.format=Format.RGB;
-//        id=glGenTextures();
-//        glBindTexture(GL_TEXTURE_2D,id);
-//
-//        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
-//        glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
-//
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-//
-//        ByteBuffer buffer= BufferUtils.createByteBuffer((width)*(height)*format.channels);
-//
-//        for(int i=0;i<width;i++){
-//            for(int j=0;j<height;j++){
-//                int index=(i+j*width)*format.channels;
-//                buffer.put(index,(byte)i);
-//                buffer.put(index+1,(byte)j);
-//                buffer.put(index+2,(byte)128);
-//            }
-//        }
-//        glTexImage2D(GL_TEXTURE_2D,0,this.format.id,width,height,0,this.format.id,GL_UNSIGNED_BYTE,buffer);
-//
-//        glGenerateMipmap(GL_TEXTURE_2D);
-//
-//        glBindTexture(GL_TEXTURE_2D,0);
-//    }
 
     public Texture setData(TextureData data){
         width=data.getWidth();
@@ -108,9 +74,28 @@ public class Texture{
         glBindTexture(GL_TEXTURE_2D,0);
         return this;
     }
+
+    public static Texture depth(int width,int height){
+        Texture t=new Texture();
+        glBindTexture(GL_TEXTURE_2D,t.getId());
+        glTexImage2D(GL_TEXTURE_2D,0,GL_DEPTH_COMPONENT,width,height,0,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE,(ByteBuffer) null);
+        glBindTexture(GL_TEXTURE_2D,0);
+        return t;
+    }
+
+    public static Texture stencil(){
+        return null;
+    }
+    public void bind(){
+        bind(0);
+    }
     public void bind(int i){
         glActiveTexture(GL_TEXTURE0+i);
         glBindTexture(GL_TEXTURE_2D,id);
+    }
+
+    public int getId() {
+        return id;
     }
 
     public int getWidth() {

@@ -1,6 +1,7 @@
 package com.systemvi.examples.applicationtest;
 
 import com.systemvi.engine.application.Game;
+import com.systemvi.engine.window.Window;
 
 public class GameTest extends Game {
     public GameTest(int openglVersionMajor, int openglVersionMinor, int targetFPS, int windowWidth, int windowHeight, String title) {
@@ -8,7 +9,7 @@ public class GameTest extends Game {
     }
 
     @Override
-    public void setup() {
+    public void setup(Window window) {
 
     }
 

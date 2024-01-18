@@ -19,7 +19,7 @@ public class CubeMapTest extends Game {
     public CameraController controller;
 
     @Override
-    public void setup() {
+    public void setup(Window window) {
         int width=800,height=600;
         cubeMap=new CubeMap(new String[]{
             "assets/examples/test3d/rock/diffuse.png",
@@ -35,7 +35,6 @@ public class CubeMapTest extends Game {
         camera.update();
         controller=new CameraController(0,0,0,0,0,0);
         controller.camera=camera;
-        Window window=getWindow();
         window.addOnKeyPressListener((key, scancode, mods) -> controller.keyDown(key));
         window.addOnKeyReleaseListener((key, scancode, mods) -> controller.keyUp(key));
         window.addOnMouseDownListener((button, mods) -> controller.mouseDown());

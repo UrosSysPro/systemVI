@@ -31,7 +31,7 @@ public abstract class Game implements InputProcessor {
     }
 
     public void run(){
-        setup();
+        setup(window);
         lastFrame=glfwGetTime()-targetFrameTime;
         while(!exit){
             double startTime=glfwGetTime();
@@ -93,7 +93,7 @@ public abstract class Game implements InputProcessor {
         exit=true;
     }
 
-    public abstract void setup();
+    public abstract void setup(Window window);
     public abstract void loop(float delta);
 
     @Override

@@ -4,8 +4,7 @@ import java.nio.ByteBuffer;
 import static org.lwjgl.opengl.GL33.*;
 import static org.lwjgl.stb.STBImage.*;
 public class CubeMap {
-    private int id;
-    private int width,height,channels;
+    private final int id;
     public CubeMap(String[] faces){
         id=glGenTextures();
         glBindTexture(GL_TEXTURE_CUBE_MAP, id);

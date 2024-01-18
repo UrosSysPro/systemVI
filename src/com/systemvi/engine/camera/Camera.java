@@ -1,11 +1,12 @@
 package com.systemvi.engine.camera;
 
+import com.systemvi.engine.window.Window;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 public class Camera {
-    private Matrix4f view,rotation,scale,translate,screenSize,projection;
+    private final Matrix4f rotation,scale,translate,screenSize,view,projection;
     public Camera(){
         projection=new Matrix4f().identity();
         screenSize=new Matrix4f().identity();
@@ -50,5 +51,14 @@ public class Camera {
 
     public Matrix4f getView() {
         return view;
+    }
+
+    public static Camera default2d(Window window){
+        Camera camera=new Camera();
+        camera.setScreenSize(window.getWidth(),window.getHeight());
+        camera.setPosition(window.getWidth()/2,window.getHeight()/2,0);
+        camera.setScale(1,-1,1);
+        camera.update();
+        return camera;
     }
 }
