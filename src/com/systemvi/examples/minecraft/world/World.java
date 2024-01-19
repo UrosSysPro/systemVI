@@ -1,5 +1,6 @@
 package com.systemvi.examples.minecraft.world;
 
+import com.systemvi.engine.camera.CameraController2;
 import com.systemvi.engine.noise.Perlin2d;
 import com.systemvi.examples.minecraft.renderer.BlockFaceRenderer;
 import com.systemvi.engine.camera.CameraController;
@@ -61,7 +62,7 @@ public class World {
             }
         }
     }
-    public void draw(CameraController controller){
+    public void draw(CameraController2 controller){
         renderer.use();
         renderer.setCamera(controller.camera);
         for(int i=0;i<chunks.length;i++){

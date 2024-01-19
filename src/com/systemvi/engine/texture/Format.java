@@ -18,8 +18,12 @@ public enum Format {
     RGBA8(GL_RGBA8,4),
     RGB8(GL_RGB8,3),
     RG8(GL_RG8,2),
-    R8(GL_R8,1);
-
+    R8(GL_R8,1),
+    DEPTH(GL_DEPTH_COMPONENT,1),
+    DEPTH16(GL_DEPTH_COMPONENT16,1),
+    DEPTH32(GL_DEPTH_COMPONENT32,1),
+    DEPTH24(GL_DEPTH_COMPONENT24,1),
+    ;
     public final int id,channels;
 
     Format(int id,int channels){

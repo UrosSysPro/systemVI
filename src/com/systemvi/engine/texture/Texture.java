@@ -75,8 +75,11 @@ public class Texture{
         return this;
     }
 
-    public static Texture depth(int width,int height){
+    public static Texture depth(int width,int height,Format format){
         Texture t=new Texture();
+        t.width=width;
+        t.height=height;
+        t.format=format;
         glBindTexture(GL_TEXTURE_2D,t.getId());
         glTexImage2D(GL_TEXTURE_2D,0,GL_DEPTH_COMPONENT24,width,height,0,GL_DEPTH_COMPONENT,GL_FLOAT,(ByteBuffer) null);
         glBindTexture(GL_TEXTURE_2D,0);

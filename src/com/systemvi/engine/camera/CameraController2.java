@@ -13,7 +13,7 @@ public class CameraController2 implements InputProcessor {
     public float sensitivity,speed;
     public boolean forward,backwards,left,right,up,down,mouseDown;
     public float mx,my;
-    private boolean captured;
+    private boolean captured,flipX,flipY;
 
     public CameraController2(Camera camera,float x,float y,float z,float roll,float pitch,float yaw){
         this.camera=camera;
@@ -35,12 +35,65 @@ public class CameraController2 implements InputProcessor {
         sensitivity=0.01f;
         speed=1;
         captured=true;
+        flipX=false;
+        flipY=false;
     }
+
+
 
     public CameraController2(Camera camera){
         this(camera,0,0,0,0,0,0);
     }
-
+    public static class Builder{
+        private float yaw,pitch,roll;
+        private float x,y,z;
+        private boolean flipX,flipY;
+        private Camera camera;
+        private float sensitivity,speed;
+        public Builder(){
+            yaw=0;pitch=0;roll=0;
+            x=0;y=0;z=0;
+            flipX=false;flipY=false;
+            camera=null;
+            sensitivity=0.01f;speed=10;
+        }
+        public Builder position(float x,float y,float z){
+            this.x=x;this.y=y;this.z=z;
+            return this;
+        }
+        public Builder direction(float yaw,float pitch,float roll){
+            this.yaw=yaw;this.pitch=pitch;this.roll=roll;
+            return this;
+        }
+        public Builder flip(boolean flipX,boolean flipY){
+            this.flipX=flipX;
+            this.flipY=flipY;
+            return this;
+        }
+        public Builder camera(Camera camera){
+            this.camera=camera;
+            return this;
+        }
+        public Builder sensitivity(float sensitivity){
+            this.sensitivity=sensitivity;
+            return this;
+        }
+        public Builder speed(float speed){
+            this.speed=speed;
+            return this;
+        }
+        public CameraController2 build(){
+            CameraController2 controller=new CameraController2(camera,x,y,z,roll,pitch,yaw);
+            controller.sensitivity=sensitivity;
+            controller.speed=speed;
+            controller.flipX=flipX;
+            controller.flipY=flipY;
+            return controller;
+        }
+    }
+    public static Builder builder(){
+        return new Builder();
+    }
     public void setCaptured(boolean captured) {
         this.captured = captured;
         if(captured){
@@ -97,8 +150,10 @@ public class CameraController2 implements InputProcessor {
     @Override
     public boolean mouseMove(double x, double y) {
         if(mouseDown){
-            yaw+= (float) ((x-mx)*sensitivity);
-            pitch+= (float) ((y-my)*sensitivity);
+            yaw+= (float) ((x-mx)*sensitivity)*(flipX?-1:1);
+            pitch+= (float) ((y-my)*sensitivity)*(flipY?-1:1);
+            if(pitch>Math.PI/2-0.1f)pitch=(float) Math.PI/2-0.1f;
+            if(pitch<-Math.PI/2+0.1f)pitch=(float) -Math.PI/2+0.1f;
         }
         mx= (float) x;
         my= (float) y;
