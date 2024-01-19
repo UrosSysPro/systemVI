@@ -53,12 +53,15 @@ public class Camera {
         return view;
     }
 
-    public static Camera default2d(Window window){
+    public static Camera default2d(Window window,float x,float y, boolean flipY){
         Camera camera=new Camera();
         camera.setScreenSize(window.getWidth(),window.getHeight());
-        camera.setPosition(window.getWidth()/2,window.getHeight()/2,0);
-        camera.setScale(1,-1,1);
+        camera.setPosition(x,y,0);
+        camera.setScale(1,flipY?-1:1,1);
         camera.update();
         return camera;
+    }
+    public static Camera default2d(Window window){
+        return default2d(window,window.getWidth()/2,window.getHeight()/2,true);
     }
 }

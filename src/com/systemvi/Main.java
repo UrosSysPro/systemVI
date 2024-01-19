@@ -8,8 +8,8 @@ import com.systemvi.examples.texturetest.TextureDataTest;
 
 public class Main {
     public static void main(String[] args) {
-        new FrameBufferTest(3,3,60,800,600,"Game test").run();
+//        new FrameBufferTest(3,3,60,800,600,"Game test").run();
 //        new CubeMapTest(3,3,60).run();
-//        new DebugApp(3,3,60).run();
+        new DebugApp(3,3,60).run();
     }
 }

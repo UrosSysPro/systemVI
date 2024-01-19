@@ -2,8 +2,12 @@ package com.systemvi.examples.minecraft;
 
 import com.systemvi.engine.application.Application;
 import com.systemvi.engine.camera.Camera;
+import com.systemvi.engine.renderers.TextureRenderer;
+import com.systemvi.engine.texture.Format;
+import com.systemvi.engine.texture.FrameBuffer;
+import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.utils.OpenGLUtils;
-import com.systemvi.engine.utils.OpenGLUtils.Buffer;
+import static com.systemvi.engine.utils.OpenGLUtils.Buffer.*;
 import com.systemvi.engine.window.Window;
 import com.systemvi.examples.minecraft.world.World;
 import com.systemvi.examples.test3d.CameraController;
@@ -21,7 +25,10 @@ public class DebugApp extends Application {
     public CameraController controller;
     public Camera camera;
     public World world;
-
+    public Texture colorTexture;
+    public FrameBuffer frameBuffer;
+    public TextureRenderer renderer;
+    public Camera camera2d;
     @Override
     public void setup() {
 
@@ -50,6 +57,15 @@ public class DebugApp extends Application {
             camera.update();
         });
         world=new World();
+
+        colorTexture=new Texture(800,600, Format.RGBA);
+        frameBuffer=FrameBuffer.builder()
+            .color(colorTexture)
+            .depthAndStencil(true)
+            .build();
+        camera2d=Camera.default2d(window,window.getWidth()/2,window.getHeight()/2,false);
+        renderer=new TextureRenderer();
+        renderer.setCamera(camera2d);
     }
 
     @Override
@@ -57,10 +73,10 @@ public class DebugApp extends Application {
         if(window.shouldClose())close();
         window.pollEvents();
 
-        OpenGLUtils.clear(0,0,0,0,
-            Buffer.COLOR_BUFFER,
-            Buffer.DEPTH_BUFFER
-        );
+        frameBuffer.begin();
+
+        OpenGLUtils.clear(0,0,0,0, COLOR_BUFFER,DEPTH_BUFFER);
+
         OpenGLUtils.enableDepthTest();
         OpenGLUtils.enableFaceCulling();
 
@@ -71,6 +87,12 @@ public class DebugApp extends Application {
 
         OpenGLUtils.disableDepthTest();
         OpenGLUtils.disableFaceCulling();
+
+        frameBuffer.end();
+
+        OpenGLUtils.clear(0,0,0,0, COLOR_BUFFER, DEPTH_BUFFER);
+        renderer.draw(colorTexture,0,0,colorTexture.getWidth(),colorTexture.getHeight());
+        renderer.flush();
 
         window.swapBuffers();
     }

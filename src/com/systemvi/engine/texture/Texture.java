@@ -83,9 +83,13 @@ public class Texture{
         return t;
     }
 
-    public static Texture stencil(){
-        return null;
-    }
+//    public static Texture stencil(int width,int height){
+//        Texture t=new Texture();
+//        glBindTexture(GL_TEXTURE_2D,t.getId());
+//        glTexImage2D(GL_TEXTURE_2D,0,GL_STENCIL_,width,height,0,GL_DEPTH_COMPONENT,GL_UNSIGNED_BYTE,(ByteBuffer) null);
+//        glBindTexture(GL_TEXTURE_2D,0);
+//        return t;
+//    }
     public void bind(){
         bind(0);
     }

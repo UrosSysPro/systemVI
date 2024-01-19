@@ -25,7 +25,7 @@ public class FrameBufferTest extends Game {
     public void setup(Window window) {
         texture=new Texture(800,600, Format.RGBA);
         camera=Camera.default2d(window);
-        frameBuffer=new FrameBuffer(new Texture[]{texture},null,null);
+        frameBuffer=new FrameBuffer(new Texture[]{texture},true);
 
         renderer=new TextureRenderer();
         renderer.setCamera(camera);
@@ -48,7 +48,7 @@ public class FrameBufferTest extends Game {
         OpenGLUtils.clear(0.3f,0.6f,0.9f,1.0f, OpenGLUtils.Buffer.COLOR_BUFFER);
 
 //        texture.bind(0);
-        renderer.draw(texture,0,0, texture.getWidth(), texture.getHeight());
+        renderer.draw(texture,0,0, texture.getWidth()/2, texture.getHeight()/2);
         renderer.flush();
     }
 
