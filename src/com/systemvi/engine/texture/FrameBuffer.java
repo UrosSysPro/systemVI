@@ -1,9 +1,13 @@
 package com.systemvi.engine.texture;
 
 import java.util.ArrayList;
+import java.util.Stack;
+
 import  static org.lwjgl.opengl.GL33.*;
 
 public class FrameBuffer {
+
+    public static Stack<FrameBuffer> stack=new Stack<>();
     private final int id,renderBuffer;
     private final int width,height;
     private final boolean hasDepthAndStencil;
@@ -96,10 +100,18 @@ public class FrameBuffer {
         return glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
     }
     public void begin(){
+        stack.push(this);
         glBindFramebuffer(GL_FRAMEBUFFER,id);
     }
     public void end(){
-        glBindFramebuffer(GL_FRAMEBUFFER,0);
+        if(stack.peek()!=this) System.out.println("[ERROR] Framebuffers closed out of order");
+        if(stack.empty()) {System.out.println("[ERROR] Framebuffers calling end on empty framebuffer stack");return;}
+        stack.pop();
+        if(stack.isEmpty()){
+            glBindFramebuffer(GL_FRAMEBUFFER,0);
+        }else{
+            glBindFramebuffer(GL_FRAMEBUFFER,stack.peek().getId());
+        }
     }
     public void delete(){
         glDeleteFramebuffers(id);
