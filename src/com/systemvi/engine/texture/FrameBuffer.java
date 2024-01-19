@@ -68,13 +68,17 @@ public class FrameBuffer {
             for(int i=0;i<colorAttachments.size();i++){
                 c[i]=colorAttachments.get(i);
             }
-            if(depthAttachment!=null){
+            FrameBuffer frameBuffer=new FrameBuffer(c,hasDepthAndStencil);
 
+            if(depthAttachment!=null){
+                frameBuffer.begin();
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthAttachment.getId(), 0);
+                frameBuffer.end();
             }
             if(stencilAttachment!=null){
 
             }
-            return new FrameBuffer(c,hasDepthAndStencil);
+            return frameBuffer;
         }
     }
 

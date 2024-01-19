@@ -25,7 +25,7 @@ public class DebugApp extends Application {
     public CameraController controller;
     public Camera camera;
     public World world;
-    public Texture colorTexture,colorTexture2;
+    public Texture colorTexture,colorTexture2,depth;
     public FrameBuffer frameBuffer,frameBuffer2;
     public TextureRenderer renderer;
     public Camera camera2d;
@@ -60,9 +60,11 @@ public class DebugApp extends Application {
 
         colorTexture=new Texture(800,600, Format.RGBA);
         colorTexture2=new Texture(800,600,Format.RG);
+        depth=Texture.depth(800,600);
         frameBuffer=FrameBuffer.builder()
             .color(colorTexture)
-            .depthAndStencil(true)
+//            .depthAndStencil(true)
+            .depth(depth)
             .build();
         frameBuffer2=FrameBuffer.builder()
             .color(colorTexture2)
@@ -92,6 +94,9 @@ public class DebugApp extends Application {
         renderer.flush();
 
         renderer.draw(colorTexture2,colorTexture2.getWidth()/2,0,colorTexture.getWidth()/2,colorTexture.getHeight()/2);
+        renderer.flush();
+
+        renderer.draw(depth,0,colorTexture2.getHeight()/2,colorTexture.getWidth()/2,colorTexture.getHeight()/2);
         renderer.flush();
 
         window.swapBuffers();
