@@ -8,7 +8,7 @@ import com.systemvi.engine.shader.Shader;
 import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.utils.OpenGLUtils;
 import com.systemvi.engine.window.Window;
-import com.systemvi.examples.test3d.CameraController;
+import com.systemvi.engine.camera.CameraController;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;

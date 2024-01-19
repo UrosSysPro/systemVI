@@ -1,4 +1,4 @@
-package com.systemvi.examples.test3d;
+package com.systemvi.engine.camera;
 
 import com.systemvi.engine.camera.Camera;
 import org.joml.Vector2f;

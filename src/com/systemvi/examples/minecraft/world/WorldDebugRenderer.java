@@ -1,11 +1,10 @@
 package com.systemvi.examples.minecraft.world;
 
-import com.systemvi.engine.camera.Camera;
 import com.systemvi.engine.model.Mesh;
 import com.systemvi.engine.model.VertexAttribute;
 import com.systemvi.engine.shader.Shader;
 import com.systemvi.engine.texture.Texture;
-import com.systemvi.examples.test3d.CameraController;
+import com.systemvi.engine.camera.CameraController;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;

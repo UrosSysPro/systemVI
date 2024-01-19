@@ -1,13 +1,12 @@
 package com.systemvi.examples.texturetest;
 
-import com.systemvi.engine.application.Application;
 import com.systemvi.engine.application.Game;
 import com.systemvi.engine.camera.Camera;
 import com.systemvi.engine.renderers.SkyBoxRenderer;
 import com.systemvi.engine.texture.CubeMap;
 import com.systemvi.engine.utils.OpenGLUtils;
 import com.systemvi.engine.window.Window;
-import com.systemvi.examples.test3d.CameraController;
+import com.systemvi.engine.camera.CameraController;
 
 public class CubeMapTest extends Game {
     public CubeMapTest(int openglVersionMajor, int openglVersionMinor, int targetFPS) {

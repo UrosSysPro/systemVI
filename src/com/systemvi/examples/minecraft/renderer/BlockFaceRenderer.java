@@ -1,10 +1,8 @@
 package com.systemvi.examples.minecraft.renderer;
 
 import com.systemvi.engine.camera.Camera;
-import com.systemvi.engine.model.Mesh;
 import com.systemvi.engine.shader.Shader;
 import com.systemvi.examples.minecraft.world.Chunk;
-import com.systemvi.examples.test3d.CameraController;
 
 public class BlockFaceRenderer {
     private Shader shader;

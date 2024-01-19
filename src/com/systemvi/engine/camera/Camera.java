@@ -64,4 +64,14 @@ public class Camera {
     public static Camera default2d(Window window){
         return default2d(window,window.getWidth()/2,window.getHeight()/2,true);
     }
+    public static Camera default3d(Window window,float fowDeg,float near,float far,float x,float y,float z){
+        Camera camera=new Camera();
+        camera.setPosition(x,y,z);
+        camera.setPerspectiveProjection((float)Math.toRadians(fowDeg),(float) window.getWidth()/(float)window.getHeight(),near,far);
+        camera.update();
+        return camera;
+    }
+    public static Camera default3d(Window window){
+        return default3d(window,60,0.1f,1000,0,0,0);
+    }
 }

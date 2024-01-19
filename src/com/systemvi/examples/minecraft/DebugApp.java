@@ -10,7 +10,7 @@ import com.systemvi.engine.utils.OpenGLUtils;
 import static com.systemvi.engine.utils.OpenGLUtils.Buffer.*;
 import com.systemvi.engine.window.Window;
 import com.systemvi.examples.minecraft.world.World;
-import com.systemvi.examples.test3d.CameraController;
+import com.systemvi.engine.camera.CameraController;
 
 import static org.lwjgl.glfw.GLFW.GLFW_SAMPLES;
 import static org.lwjgl.glfw.GLFW.glfwWindowHint;
