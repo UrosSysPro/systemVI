@@ -1,6 +1,10 @@
 #version 330 core
 
-out vec4 FragColor;
+//layout(location=0) out vec4 ColoBuffer;
+//layout(location=1) out vec4 NormalBuffer;
+
+out vec4 ColoBuffer;
+out vec4 NormalBuffer;
 
 in struct VERTEX_OUT{
     vec3 position;
@@ -11,5 +15,6 @@ in struct VERTEX_OUT{
 }vertexOut;
 
 void main(){
-    FragColor=vec4(vertexOut.normal/2+0.5,1.0);
+    ColoBuffer=vec4(vertexOut.texCoords,0.5,1.0);
+    NormalBuffer=vec4(vertexOut.normal/2+0.5,1.0);
 }
