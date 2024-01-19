@@ -37,16 +37,17 @@ public class TextureDataTest extends Application {
 
         Vector3i color=new Vector3i();
         texture=new Texture(255,255, Format.RGBA);
-        TextureData data=new TextureData(255,255,Format.RGBA);
-        for(int i=0;i<data.getWidth();i++){
-            for(int j=0;j<data.getHeight();j++){
-                int repeat=1;
-                int width=256/repeat;
-                int r=(i%width)*(256/width);
-                int g=(j%width)*(256/width);
-                data.setPixel3i(i,j,color.set(r,g,128));
-            }
-        }
+//        TextureData data=new TextureData(255,255,Format.RGBA);
+//        for(int i=0;i<data.getWidth();i++){
+//            for(int j=0;j<data.getHeight();j++){
+//                int repeat=1;
+//                int width=256/repeat;
+//                int r=(i%width)*(256/width);
+//                int g=(j%width)*(256/width);
+//                data.setPixel3i(i,j,color.set(r,g,128));
+//            }
+//        }
+        TextureData data=new TextureData("assets/examples/test3d/rock/diffuse.png");
         texture.setData(data);
     }
 

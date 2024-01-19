@@ -4,12 +4,14 @@ import com.systemvi.engine.application.Game;
 import com.systemvi.engine.camera.Camera;
 import com.systemvi.engine.camera.CameraController2;
 import com.systemvi.engine.renderers.TextureRenderer;
+import com.systemvi.engine.shader.Shader;
 import com.systemvi.engine.texture.Format;
 import com.systemvi.engine.texture.FrameBuffer;
 import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.utils.OpenGLUtils;
 import static com.systemvi.engine.utils.OpenGLUtils.Buffer.*;
 import com.systemvi.engine.window.Window;
+import com.systemvi.examples.minecraft.materials.Material;
 import com.systemvi.examples.minecraft.renderer.WorldRenderer;
 import com.systemvi.examples.minecraft.world.World;
 
@@ -24,18 +26,24 @@ public class DebugApp extends Game {
     public World world;
     public WorldRenderer worldRenderer;
     public TextureRenderer renderer;
+    public Shader depthShader,positionShader;
     public Camera camera2d;
+    public Material material;
+    public Window mainWindow,secondWindow;
     @Override
     public void setup(Window window) {
+        mainWindow=window;
+//        secondWindow=new Window(window.getWidth(),window.getHeight(),"Combined");
+        material=new Material();
         camera=Camera.default3d(window);
 
         controller=CameraController2.builder()
             .camera(camera)
             .flip(false,true)
-            .speed(30)
+            .speed(10)
             .build();
-        setInputProcessor(controller);
-
+        mainWindow.setInputProcessor(controller);
+//        secondWindow.setInputProcessor(controller);
         world=new World();
 
         camera2d=Camera.default2d(window,window.getWidth()/2,window.getHeight()/2,false);
@@ -49,22 +57,54 @@ public class DebugApp extends Game {
         });
 
         worldRenderer=new WorldRenderer(window.getWidth(),window.getHeight());
+
+        depthShader= Shader.builder()
+            .fragment("assets/examples/minecraft/debug/depthShader.glsl")
+            .vertex("assets/renderer/textureRenderer/vertex.glsl")
+            .build();
+        if(!depthShader.isCompiled()){
+            System.out.println(depthShader.getLog());
+        }
+        positionShader= Shader.builder()
+            .fragment("assets/examples/minecraft/debug/positionShader.glsl")
+            .vertex("assets/renderer/textureRenderer/vertex.glsl")
+            .build();
+        if(!positionShader.isCompiled()){
+            System.out.println(positionShader.getLog());
+        }
     }
 
     @Override
     public void loop(float delta) {
+//        mainWindow.use();
         controller.update(delta);
 
-        worldRenderer.render(world,camera);
+        worldRenderer.render(world,camera,material);
 
         OpenGLUtils.clear(0,0,0,0, COLOR_BUFFER, DEPTH_BUFFER);
         Texture color=worldRenderer.color;
         Texture normal=worldRenderer.normal;
+        Texture depth=worldRenderer.depth;
+        Texture position=worldRenderer.position;
+        int width=color.getWidth(),height=color.getHeight();
 
-        renderer.draw(color,0,0,color.getWidth()/2,color.getHeight()/2);
+        renderer.draw(color,0,0,width/2,height/2);
         renderer.flush();
-        renderer.draw(normal,normal.getWidth()/2,0,color.getWidth()/2,color.getHeight()/2);
+
+        renderer.draw(normal,width/2,0,width/2,height/2);
         renderer.flush();
+
+        renderer.setShader(depthShader);
+        renderer.draw(depth,0,600-height/2, width/2,height/2 );
+        renderer.flush();
+        renderer.setShader(null);
+
+        renderer.setShader(positionShader);
+        renderer.draw(position,width/2,height/2,width/2,height/2);
+        renderer.flush();
+        renderer.setShader(null);
+
+//        secondWindow.use();
     }
 
 }

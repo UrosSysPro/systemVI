@@ -2,6 +2,7 @@ package com.systemvi.engine.texture;
 
 import org.joml.*;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.Buffer;
@@ -20,12 +21,7 @@ public class TextureData {
     private Vector2i color2i;
     private int color1i;
 
-    public TextureData(int width,int height,Format format){
-        this.width=width;
-        this.height=height;
-        this.format=format;
-        buffer= BufferUtils.createByteBuffer(width*height*format.channels);
-
+    private TextureData(){
         color4f=new Vector4f();
         color3f=new Vector3f();
         color2f=new Vector2f();
@@ -34,6 +30,31 @@ public class TextureData {
         color3i=new Vector3i();
         color2i=new Vector2i();
         color1i=0;
+    }
+    public TextureData(int width,int height,Format format){
+        this();
+        this.width=width;
+        this.height=height;
+        this.format=format;
+        buffer= BufferUtils.createByteBuffer(width*height*format.channels);
+    }
+    public TextureData(String fileName){
+        int[] width=new int[1],height=new int[1],chanels=new int[1];
+        ByteBuffer buffer= STBImage.stbi_load(fileName,width,height,chanels,0);
+        if(buffer==null){
+            System.out.println("[ERROR] Loading Image");
+            return;
+        }
+        this.width=width[0];
+        this.height=height[0];
+        int channels=chanels[0];
+        this.format=Format.R;
+        if(channels==2)this.format=Format.RG;
+        if(channels==3)this.format=Format.RGB;
+        if(channels==4)this.format=Format.RGBA;
+        this.buffer=BufferUtils.createByteBuffer(buffer.capacity());
+        this.buffer.put(buffer);
+        STBImage.stbi_image_free(buffer);
     }
 
     //get texutre data using floats

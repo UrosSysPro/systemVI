@@ -22,7 +22,8 @@ out struct VERTEX_OUT{
 void main(){
     mat3 modelRotation=mat3(model);
 
-    vec4 vertexPosition=view*model*vec4(position,0.0,1.0);
+    vec4 vertexPosition=model*vec4(position,0.0,1.0);
+
 
     vertexOut.position=vertexPosition.xyz;
     vertexOut.normal=modelRotation*normal;
