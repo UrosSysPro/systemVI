@@ -20,6 +20,7 @@ public class WorldRenderer {
     public WorldRenderer(int width,int height){
         blockFaceRenderer=new BlockFaceRenderer();
         color=new Texture(width,height, Format.RGB);
+
         depth=Texture.depth(width,height,Format.DEPTH);
         normal=new Texture(width,height,Format.RGB);
 

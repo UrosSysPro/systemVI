@@ -11,7 +11,13 @@ public class FrameBuffer {
     private final int id,renderBuffer;
     private final int width,height;
     private final boolean hasDepthAndStencil;
+    private int[] drawBuffers;
     public FrameBuffer(Texture[] colorAttachments,boolean createDepthAndStencilBuffer){
+        drawBuffers=new int[colorAttachments.length];
+        for(int i=0;i<drawBuffers.length;i++){
+            drawBuffers[i]=GL_COLOR_ATTACHMENT0+i;
+        }
+
         id=glGenFramebuffers();
         glBindFramebuffer(GL_FRAMEBUFFER,id);
 
@@ -106,6 +112,7 @@ public class FrameBuffer {
     public void begin(){
         stack.push(this);
         glBindFramebuffer(GL_FRAMEBUFFER,id);
+        glDrawBuffers(drawBuffers);
     }
     public void end(){
         if(stack.peek()!=this) System.out.println("[ERROR] Framebuffers closed out of order");
@@ -115,6 +122,7 @@ public class FrameBuffer {
             glBindFramebuffer(GL_FRAMEBUFFER,0);
         }else{
             glBindFramebuffer(GL_FRAMEBUFFER,stack.peek().getId());
+            glDrawBuffers(stack.peek().drawBuffers);
         }
     }
     public void delete(){
