@@ -9,9 +9,6 @@ import com.systemvi.engine.texture.TextureData;
 import com.systemvi.engine.utils.OpenGLUtils;
 import com.systemvi.engine.window.Window;
 import org.joml.Vector3i;
-import org.joml.Vector4i;
-
-import java.util.Random;
 
 public class TextureDataTest extends Application {
 
