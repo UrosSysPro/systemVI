@@ -88,21 +88,21 @@ public class DebugApp extends Game {
         Texture position=worldRenderer.position;
         int width=color.getWidth(),height=color.getHeight();
 
-        renderer.draw(color,0,0,width/2,height/2);
+//        renderer.draw(color,0,0,width/2,height/2);
+//        renderer.flush();
+
+        renderer.draw(normal,0,0,width,height);
         renderer.flush();
 
-        renderer.draw(normal,width/2,0,width/2,height/2);
-        renderer.flush();
+//        renderer.setShader(depthShader);
+//        renderer.draw(depth,0,600-height/2, width/2,height/2 );
+//        renderer.flush();
+//        renderer.setShader(null);
 
-        renderer.setShader(depthShader);
-        renderer.draw(depth,0,600-height/2, width/2,height/2 );
-        renderer.flush();
-        renderer.setShader(null);
-
-        renderer.setShader(positionShader);
-        renderer.draw(position,width/2,height/2,width/2,height/2);
-        renderer.flush();
-        renderer.setShader(null);
+//        renderer.setShader(positionShader);
+//        renderer.draw(position,width/2,height/2,width/2,height/2);
+//        renderer.flush();
+//        renderer.setShader(null);
 
 //        secondWindow.use();
     }

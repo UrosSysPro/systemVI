@@ -11,7 +11,7 @@ import com.systemvi.examples.texturetest.TextureDataTest;
 
 public class Main {
     public static void main(String[] args){
-//        new DebugApp(3,3,60).run();
-        new GameOfLife(4,6,60).run();
+        new DebugApp(3,3,60).run();
+//        new GameOfLife(4,6,60).run();
     }
 }

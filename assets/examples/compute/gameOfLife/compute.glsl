@@ -14,7 +14,7 @@ void main() {
     //    value.x = float(texelCoord.x)/(gl_NumWorkGroups.x);
     //    value.y = float(texelCoord.y)/(gl_NumWorkGroups.y);
 
-    bool isalive =value.r >= 0.5;
+    bool isalive = value.r >= 0.5;
     int alive = 0;
 
     for (int i = -1; i <= 1; i++){
