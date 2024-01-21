@@ -32,6 +32,10 @@ Projekat za 6.godinu 2023-2024 u terminu 13:30
 26. [3d Ray Marching](docs/shaderToy/3dRayMarching.md)
 27. [Minecraft: World, Chunk, Block, BlockState](docs/minecraft/1.md)
 28. [Minecraft: BlockFace, World generation](docs/minecraft/2.md)
+29. [Noise algorithms]()
+30. [Scala syntax]()
+31. [Deffered rendering]()
+32. [Menger sponge]()
 
 ## Domaci
 1. + Napraviti `Stack` klasu. `Stack` je struktura podataka koja definise dve operacije 

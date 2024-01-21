@@ -13,7 +13,7 @@ public class World {
 
     public World(){
         noise=new Perlin2d((int)System.currentTimeMillis(),100,100);
-        chunks=new Chunk[15][2][15];
+        chunks=new Chunk[8][8][8];
         for(int i=0;i<chunks.length;i++){
             for(int j=0;j<chunks[0].length;j++){
                 for(int k=0;k<chunks[0][0].length;k++){
@@ -21,10 +21,38 @@ public class World {
                 }
             }
         }
+        generateFractal();
         for(int i=0;i<chunks.length;i++){
             for(int j=0;j<chunks[0].length;j++){
                 for(int k=0;k<chunks[0][0].length;k++){
                     chunks[i][j][k].generateCache(new Vector3i(i,j,k),this);
+                }
+            }
+        }
+    }
+
+    public void generateFractal() {
+        getBlockState(50, 50, 50).block = Block.STONE;
+        int maxSteps = 4;
+        for (int i = 0; i < 81; i++) {
+            for (int j = 0; j < 81; j++) {
+                for (int k = 0; k < 81; k++) {
+                    boolean isEmpty = false;
+                    int size = 3;
+                    for (int l = 1; l <= maxSteps; l++) {
+                        int x = (i % size)/(size/3);
+                        int y = (j % size)/(size/3);
+                        int z = (k % size)/(size/3);
+                        if ((x == 1 && y == 1)||(x == 1 && z == 1)||(z == 1 && y == 1)) {
+                            isEmpty = true;
+                        }
+                        size *= 3;
+                    }
+                    if (isEmpty) {
+                        getBlockState(i, j, k).block = Block.AIR;
+                    } else {
+                        getBlockState(i, j, k).block = Block.STONE;
+                    }
                 }
             }
         }

@@ -14,6 +14,7 @@ import com.systemvi.engine.window.Window;
 import com.systemvi.examples.minecraft.materials.Material;
 import com.systemvi.examples.minecraft.renderer.WorldRenderer;
 import com.systemvi.examples.minecraft.world.World;
+import org.joml.Vector3f;
 
 
 public class DebugApp extends Game {
@@ -26,7 +27,7 @@ public class DebugApp extends Game {
     public World world;
     public WorldRenderer worldRenderer;
     public TextureRenderer renderer;
-    public Shader depthShader,positionShader;
+    public Shader depthShader,positionShader,finalGather;
     public Camera camera2d;
     public Material material;
     public Window mainWindow,secondWindow;
@@ -72,6 +73,13 @@ public class DebugApp extends Game {
         if(!positionShader.isCompiled()){
             System.out.println(positionShader.getLog());
         }
+        finalGather= Shader.builder()
+                .fragment("assets/examples/minecraft/debug/finalGather.glsl")
+                .vertex("assets/renderer/textureRenderer/vertex.glsl")
+                .build();
+        if(!positionShader.isCompiled()){
+            System.out.println(positionShader.getLog());
+        }
     }
 
     @Override
@@ -93,6 +101,20 @@ public class DebugApp extends Game {
 
         renderer.draw(normal,0,0,width,height);
         renderer.flush();
+
+//        finalGather.use();
+//        normal.bind(1);
+//        position.bind(2);
+//        finalGather.setUniform("normalBuffer",1);
+//        finalGather.setUniform("positionBuffer",2);
+//        finalGather.setUniform("cameraPosition",new Vector3f(
+//                controller.x,controller.y,controller.z
+//        ));
+//        finalGather.setUniform("lightPosition",new Vector3f(20,100,20));
+//        renderer.setShader(finalGather);
+//        renderer.draw(color,0,0,width,height);
+//        renderer.flush();
+//        renderer.setShader(null);
 
 //        renderer.setShader(depthShader);
 //        renderer.draw(depth,0,600-height/2, width/2,height/2 );

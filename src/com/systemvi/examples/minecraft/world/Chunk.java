@@ -282,15 +282,4 @@ public class Chunk {
 //        }
 //    }
 
-    public void debugDraw(int x,int y,int z,WorldDebugRenderer debugRenderer){
-        for(int i=0;i<SIZE_X;i++){
-            for(int j=0;j<SIZE_Y;j++){
-                for(int k=0;k<SIZE_Z;k++){
-                    if(blockStates[i][j][k].block!=Block.AIR){
-                        debugRenderer.draw(i+x*SIZE_X,j+y*SIZE_Y,k+z*SIZE_Z);
-                    }
-                }
-            }
-        }
-    }
 }
