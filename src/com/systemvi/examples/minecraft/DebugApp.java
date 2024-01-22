@@ -99,22 +99,22 @@ public class DebugApp extends Game {
 //        renderer.draw(color,0,0,width/2,height/2);
 //        renderer.flush();
 
-        renderer.draw(normal,0,0,width,height);
-        renderer.flush();
-
-//        finalGather.use();
-//        normal.bind(1);
-//        position.bind(2);
-//        finalGather.setUniform("normalBuffer",1);
-//        finalGather.setUniform("positionBuffer",2);
-//        finalGather.setUniform("cameraPosition",new Vector3f(
-//                controller.x,controller.y,controller.z
-//        ));
-//        finalGather.setUniform("lightPosition",new Vector3f(20,100,20));
-//        renderer.setShader(finalGather);
-//        renderer.draw(color,0,0,width,height);
+//        renderer.draw(normal,0,0,width,height);
 //        renderer.flush();
-//        renderer.setShader(null);
+
+        finalGather.use();
+        normal.bind(1);
+        position.bind(2);
+        finalGather.setUniform("normalBuffer",1);
+        finalGather.setUniform("positionBuffer",2);
+        finalGather.setUniform("cameraPosition",new Vector3f(
+                controller.x,controller.y,controller.z
+        ));
+        finalGather.setUniform("lightPosition",new Vector3f(20,100,20));
+        renderer.setShader(finalGather);
+        renderer.draw(color,0,0,width,height);
+        renderer.flush();
+        renderer.setShader(null);
 
 //        renderer.setShader(depthShader);
 //        renderer.draw(depth,0,600-height/2, width/2,height/2 );
