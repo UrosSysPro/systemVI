@@ -20,7 +20,7 @@ import org.joml.Vector3f;
 public class DebugApp extends Game {
 
     public DebugApp(int openglVersionMajor, int openglVersionMinor, int targetFPS) {
-        super(openglVersionMajor, openglVersionMinor, targetFPS,800,600,"Voxel world");
+        super(openglVersionMajor, openglVersionMinor, targetFPS,1400,900,"Voxel world");
     }
     public CameraController2 controller;
     public Camera camera;
@@ -30,11 +30,10 @@ public class DebugApp extends Game {
     public Shader depthShader,positionShader,finalGather;
     public Camera camera2d;
     public Material material;
-    public Window mainWindow,secondWindow;
+    public Window mainWindow;
     @Override
     public void setup(Window window) {
         mainWindow=window;
-//        secondWindow=new Window(window.getWidth(),window.getHeight(),"Combined");
         material=new Material();
         camera=Camera.default3d(window);
 
@@ -44,7 +43,6 @@ public class DebugApp extends Game {
             .speed(10)
             .build();
         mainWindow.setInputProcessor(controller);
-//        secondWindow.setInputProcessor(controller);
         world=new World();
 
         camera2d=Camera.default2d(window,window.getWidth()/2,window.getHeight()/2,false);
@@ -84,7 +82,6 @@ public class DebugApp extends Game {
 
     @Override
     public void loop(float delta) {
-//        mainWindow.use();
         controller.update(delta);
 
         worldRenderer.render(world,camera,material);
@@ -96,37 +93,35 @@ public class DebugApp extends Game {
         Texture position=worldRenderer.position;
         int width=color.getWidth(),height=color.getHeight();
 
-//        renderer.draw(color,0,0,width/2,height/2);
-//        renderer.flush();
+        renderer.draw(color,0,0,width/2,height/2);
+        renderer.flush();
 
-//        renderer.draw(normal,0,0,width,height);
-//        renderer.flush();
+        renderer.draw(normal,width/2,0,width/2,height/2);
+        renderer.flush();
 
-        finalGather.use();
-        normal.bind(1);
-        position.bind(2);
-        finalGather.setUniform("normalBuffer",1);
-        finalGather.setUniform("positionBuffer",2);
-        finalGather.setUniform("cameraPosition",new Vector3f(
-                controller.x,controller.y,controller.z
-        ));
-        finalGather.setUniform("lightPosition",new Vector3f(20,100,20));
-        renderer.setShader(finalGather);
-        renderer.draw(color,0,0,width,height);
+//        finalGather.use();
+//        normal.bind(1);
+//        position.bind(2);
+//        finalGather.setUniform("normalBuffer",1);
+//        finalGather.setUniform("positionBuffer",2);
+//        finalGather.setUniform("cameraPosition",new Vector3f(
+//                controller.x,controller.y,controller.z
+//        ));
+//        finalGather.setUniform("lightPosition",new Vector3f(20,100,20));
+//        renderer.setShader(finalGather);
+//        renderer.draw(color,0,0,width,height);
+//        renderer.flush();
+//        renderer.setShader(null);
+
+        renderer.setShader(depthShader);
+        renderer.draw(depth,0,height/2, width/2,height/2 );
         renderer.flush();
         renderer.setShader(null);
 
-//        renderer.setShader(depthShader);
-//        renderer.draw(depth,0,600-height/2, width/2,height/2 );
-//        renderer.flush();
-//        renderer.setShader(null);
-
-//        renderer.setShader(positionShader);
-//        renderer.draw(position,width/2,height/2,width/2,height/2);
-//        renderer.flush();
-//        renderer.setShader(null);
-
-//        secondWindow.use();
+        renderer.setShader(positionShader);
+        renderer.draw(position,width/2,height/2,width/2,height/2);
+        renderer.flush();
+        renderer.setShader(null);
     }
 
 }
