@@ -8,6 +8,8 @@ import com.systemvi.engine.texture.Format;
 import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.utils.OpenGLUtils;
 import com.systemvi.engine.window.Window;
+import org.joml.Vector2f;
+import static org.lwjgl.glfw.GLFW.*;
 
 public class Mandelbrotset extends Game {
 
@@ -19,8 +21,19 @@ public class Mandelbrotset extends Game {
     Texture texture;
     Camera camera;
     Shader shader;
+    Vector2f position;
+    float aspect;
+    float zoom;
+    boolean up,down,right,left,zoomin,zoomout;
     @Override
     public void setup(Window window) {
+        up=false;
+        down=false;
+        right=false;
+        left=false;
+        zoomin=false;
+        zoomout=false;
+        aspect= (float) window.getWidth() /window.getHeight();
         camera=Camera.default2d(window);
         renderer=new TextureRenderer();
         renderer.setCamera(camera);
@@ -33,12 +46,70 @@ public class Mandelbrotset extends Game {
             System.out.println(shader.getLog());
         }
         renderer.setShader(shader);
+        position=new Vector2f(0);
+        zoom=1;
     }
 
     @Override
     public void loop(float delta) {
         OpenGLUtils.clear(0,0,0,0, OpenGLUtils.Buffer.COLOR_BUFFER);
+
+        if(right)position.x+=0.01f*zoom;
+        if(left)position.x-=0.01f*zoom;
+        if(down)position.y+=0.01f*zoom;
+        if(up)position.y-=0.01f*zoom;
+
+        shader.use();
+        shader.setUniform("position",position);
+        shader.setUniform("zoom",zoom);
+        shader.setUniform("aspect",aspect);
         renderer.draw(texture,0,0,800,600);
         renderer.flush();
+    }
+
+    @Override
+    public boolean resize(int width, int height) {
+        aspect= (float) width /height;
+        return super.resize(width, height);
+    }
+
+    @Override
+    public boolean keyDown(int key, int scancode, int mods) {
+        if(key==GLFW_KEY_RIGHT)right=true;
+        if(key==GLFW_KEY_LEFT)left=true;
+        if(key==GLFW_KEY_UP)up=true;
+        if(key==GLFW_KEY_DOWN)down=true;
+        if(key==GLFW_KEY_D)right=true;
+        if(key==GLFW_KEY_A)left=true;
+        if(key==GLFW_KEY_W)up=true;
+        if(key==GLFW_KEY_S)down=true;
+        if(key==GLFW_KEY_Q)zoomin=true;
+        if(key==GLFW_KEY_E)zoomout=true;
+        return super.keyDown(key, scancode, mods);
+    }
+
+    @Override
+    public boolean keyUp(int key, int scancode, int mods) {
+        if(key==GLFW_KEY_RIGHT)right=false;
+        if(key==GLFW_KEY_LEFT)left=false;
+        if(key==GLFW_KEY_UP)up=false;
+        if(key==GLFW_KEY_DOWN)down=false;
+        if(key==GLFW_KEY_D)right=false;
+        if(key==GLFW_KEY_A)left=false;
+        if(key==GLFW_KEY_W)up=false;
+        if(key==GLFW_KEY_S)down=false;
+        if(key==GLFW_KEY_Q)zoomin=false;
+        if(key==GLFW_KEY_E)zoomout=false;
+        return super.keyUp(key, scancode, mods);
+    }
+
+    @Override
+    public boolean scroll(double offsetX, double offsetY) {
+        if(offsetY>0){
+            zoom*=1.01f;
+        }else{
+            zoom/=1.01f;
+        }
+        return super.scroll(offsetX, offsetY);
     }
 }
