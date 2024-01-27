@@ -6,7 +6,7 @@ import com.systemvi.engine.renderers.TextureRenderer;
 import com.systemvi.engine.shader.Shader;
 import com.systemvi.engine.texture.Format;
 import com.systemvi.engine.texture.Texture;
-import com.systemvi.engine.utils.OpenGLUtils;
+import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
 import org.joml.Vector2f;
 import static org.lwjgl.glfw.GLFW.*;
@@ -52,12 +52,14 @@ public class Mandelbrotset extends Game {
 
     @Override
     public void loop(float delta) {
-        OpenGLUtils.clear(0,0,0,0, OpenGLUtils.Buffer.COLOR_BUFFER);
+        Utils.clear(0,0,0,0, Utils.Buffer.COLOR_BUFFER);
 
         if(right)position.x+=0.01f*zoom;
         if(left)position.x-=0.01f*zoom;
         if(down)position.y+=0.01f*zoom;
         if(up)position.y-=0.01f*zoom;
+        if(zoomin)zoom*=1.01f;
+        if(zoomout)zoom/=1.01f;
 
         shader.use();
         shader.setUniform("position",position);

@@ -1,13 +1,11 @@
 package com.systemvi.examples.minecraft.renderer;
 
 import com.systemvi.engine.camera.Camera;
-import com.systemvi.engine.renderers.ShapeRenderer;
-import com.systemvi.engine.renderers.TextureRenderer;
 import com.systemvi.engine.shader.Shader;
 import com.systemvi.engine.texture.Format;
 import com.systemvi.engine.texture.FrameBuffer;
 import com.systemvi.engine.texture.Texture;
-import com.systemvi.engine.utils.OpenGLUtils;
+import com.systemvi.engine.utils.Utils;
 import com.systemvi.examples.minecraft.materials.Material;
 import com.systemvi.examples.minecraft.world.Chunk;
 import com.systemvi.examples.minecraft.world.World;
@@ -47,9 +45,9 @@ public class WorldRenderer {
         Chunk[][][] chunks=world.getChunks();
 
         frameBuffer.begin();
-        OpenGLUtils.clear(0,0,0,0, OpenGLUtils.Buffer.COLOR_BUFFER, OpenGLUtils.Buffer.DEPTH_BUFFER);
-        OpenGLUtils.enableDepthTest();
-        OpenGLUtils.enableFaceCulling();
+        Utils.clear(0,0,0,0, Utils.Buffer.COLOR_BUFFER, Utils.Buffer.DEPTH_BUFFER);
+        Utils.enableDepthTest();
+        Utils.enableFaceCulling();
 
         blockFaceShader.use();
         blockFaceShader.setUniform("view",camera.getView());
@@ -69,8 +67,8 @@ public class WorldRenderer {
             }
         }
 
-        OpenGLUtils.disableDepthTest();
-        OpenGLUtils.disableFaceCulling();
+        Utils.disableDepthTest();
+        Utils.disableFaceCulling();
         frameBuffer.end();
     }
 }

@@ -49,7 +49,7 @@ public class ComputeShader {
 
     public void dispatch(int x, int y, int z){
         glDispatchCompute(x, y, z);
-        glMemoryBarrier(GL_ALL_BARRIER_BITS);
+//        glMemoryBarrier(GL_ALL_BARRIER_BITS);
     }
 
     public static String readFile(String name){

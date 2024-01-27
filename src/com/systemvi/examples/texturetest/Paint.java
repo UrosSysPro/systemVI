@@ -7,7 +7,7 @@ import com.systemvi.engine.renderers.TextureRenderer;
 import com.systemvi.engine.texture.Format;
 import com.systemvi.engine.texture.FrameBuffer;
 import com.systemvi.engine.texture.Texture;
-import com.systemvi.engine.utils.OpenGLUtils;
+import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -43,7 +43,7 @@ public class Paint extends Game {
     }
     @Override
     public void loop(float delta) {
-        OpenGLUtils.clear(0,0,0,0, OpenGLUtils.Buffer.COLOR_BUFFER);
+        Utils.clear(0,0,0,0, Utils.Buffer.COLOR_BUFFER);
         frameBuffer.begin();
         camera.setScale(1,1,1);
         camera.update();

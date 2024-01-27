@@ -5,16 +5,13 @@ import com.systemvi.engine.camera.Camera;
 import com.systemvi.engine.camera.CameraController2;
 import com.systemvi.engine.renderers.TextureRenderer;
 import com.systemvi.engine.shader.Shader;
-import com.systemvi.engine.texture.Format;
-import com.systemvi.engine.texture.FrameBuffer;
 import com.systemvi.engine.texture.Texture;
-import com.systemvi.engine.utils.OpenGLUtils;
-import static com.systemvi.engine.utils.OpenGLUtils.Buffer.*;
+import com.systemvi.engine.utils.Utils;
+import static com.systemvi.engine.utils.Utils.Buffer.*;
 import com.systemvi.engine.window.Window;
 import com.systemvi.examples.minecraft.materials.Material;
 import com.systemvi.examples.minecraft.renderer.WorldRenderer;
 import com.systemvi.examples.minecraft.world.World;
-import org.joml.Vector3f;
 
 
 public class DebugApp extends Game {
@@ -86,7 +83,7 @@ public class DebugApp extends Game {
 
         worldRenderer.render(world,camera,material);
 
-        OpenGLUtils.clear(0,0,0,0, COLOR_BUFFER, DEPTH_BUFFER);
+        Utils.clear(0,0,0,0, COLOR_BUFFER, DEPTH_BUFFER);
         Texture color=worldRenderer.color;
         Texture normal=worldRenderer.normal;
         Texture depth=worldRenderer.depth;

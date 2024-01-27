@@ -7,6 +7,7 @@ import com.systemvi.engine.shader.ComputeShader;
 import com.systemvi.engine.texture.Format;
 import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.texture.TextureData;
+import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
 import org.joml.Random;
 import org.joml.Vector2i;
@@ -64,6 +65,7 @@ public class GameOfLife extends Application {
         shader.use();
         shader.setUniform("size", new Vector2i(800, 600));
         shader.dispatch(current.getWidth(), current.getHeight(), 1);
+        Utils.barrier(Utils.Barrier.IMAGE_ACCESS);
         Texture temp = current;
         current = next;
         next = temp;

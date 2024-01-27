@@ -7,7 +7,7 @@ import com.systemvi.engine.renderers.TextureRenderer;
 import com.systemvi.engine.texture.Format;
 import com.systemvi.engine.texture.FrameBuffer;
 import com.systemvi.engine.texture.Texture;
-import com.systemvi.engine.utils.OpenGLUtils;
+import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
 import org.joml.Vector4f;
 
@@ -40,12 +40,12 @@ public class FrameBufferTest extends Game {
     @Override
     public void loop(float delta) {
         frameBuffer.begin();
-        OpenGLUtils.clear(0.6f,0.3f,0.9f,1.0f, OpenGLUtils.Buffer.COLOR_BUFFER);
+        Utils.clear(0.6f,0.3f,0.9f,1.0f, Utils.Buffer.COLOR_BUFFER);
         shapeRenderer.rect(100,100,100,100,new Vector4f(0.2f,0.7f,0.5f,1.0f));
         shapeRenderer.flush();
         frameBuffer.end();
 
-        OpenGLUtils.clear(0.3f,0.6f,0.9f,1.0f, OpenGLUtils.Buffer.COLOR_BUFFER);
+        Utils.clear(0.3f,0.6f,0.9f,1.0f, Utils.Buffer.COLOR_BUFFER);
 
 //        texture.bind(0);
         renderer.draw(texture,0,0, texture.getWidth()/2, texture.getHeight()/2);

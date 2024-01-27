@@ -6,7 +6,7 @@ import com.systemvi.engine.model.Mesh;
 import com.systemvi.engine.model.VertexAttribute;
 import com.systemvi.engine.shader.Shader;
 import com.systemvi.engine.texture.Texture;
-import com.systemvi.engine.utils.OpenGLUtils;
+import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
 import com.systemvi.engine.camera.CameraController;
 import org.joml.Matrix4f;
@@ -84,15 +84,15 @@ public class App extends Application {
         if(window.shouldClose())close();
         window.pollEvents();
 
-        OpenGLUtils.clear(0,0,0,1, OpenGLUtils.Buffer.COLOR_BUFFER, OpenGLUtils.Buffer.DEPTH_BUFFER);
+        Utils.clear(0,0,0,1, Utils.Buffer.COLOR_BUFFER, Utils.Buffer.DEPTH_BUFFER);
 
         controller.update(delta);
         angle+=0.01;
 
         Vector3f lightPosition=new Vector3f(2,2,2);
 
-        OpenGLUtils.enableDepthTest();
-        OpenGLUtils.enableFaceCulling(OpenGLUtils.Face.FRONT);
+        Utils.enableDepthTest();
+        Utils.enableFaceCulling(Utils.Face.FRONT);
         glEnable(GL_MULTISAMPLE);
         shader.use();
         shader.setUniform("view",camera.getView());
@@ -114,8 +114,8 @@ public class App extends Application {
         drawCube(new Matrix4f().identity().translate(0,0,0));
         drawCube(new Matrix4f().identity().translate(-3,0,0).scale((float)Math.sin(angle)));
 //        drawCube(lightPosition.x,lightPosition.y,lightPosition.z);
-        OpenGLUtils.disableFaceCulling();
-        OpenGLUtils.disableDepthTest();
+        Utils.disableFaceCulling();
+        Utils.disableDepthTest();
 
         window.swapBuffers();
     }

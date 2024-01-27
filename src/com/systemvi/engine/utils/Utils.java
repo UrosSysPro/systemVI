@@ -4,7 +4,8 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import static org.lwjgl.opengl.GL33.*;
-public class OpenGLUtils {
+import static org.lwjgl.opengl.GL46.*;
+public class Utils {
    public enum Buffer{
        COLOR_BUFFER(GL_COLOR_BUFFER_BIT),
        DEPTH_BUFFER(GL_DEPTH_BUFFER_BIT),
@@ -72,4 +73,20 @@ public class OpenGLUtils {
        glPolygonMode(GL_FRONT_AND_BACK,GL_TRIANGLES);
     }
 
+    public enum Barrier{
+        IMAGE_ACCESS(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT),
+        SHADER_STORAGE(GL_SHADER_STORAGE_BARRIER_BIT),
+        ;
+       public final int value;
+       Barrier(int barrierBit){
+           this.value=barrierBit;
+       }
+    }
+    public static void barrier(Barrier... barriers){
+       int mask=0;
+       for(Barrier barrier:barriers){
+           mask|=barrier.value;
+       }
+       glMemoryBarrier(mask);
+    }
 }

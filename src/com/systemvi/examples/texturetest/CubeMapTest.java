@@ -4,7 +4,7 @@ import com.systemvi.engine.application.Game;
 import com.systemvi.engine.camera.Camera;
 import com.systemvi.engine.renderers.SkyBoxRenderer;
 import com.systemvi.engine.texture.CubeMap;
-import com.systemvi.engine.utils.OpenGLUtils;
+import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
 import com.systemvi.engine.camera.CameraController;
 
@@ -45,13 +45,13 @@ public class CubeMapTest extends Game {
     @Override
     public void loop(float delta) {
         controller.update(delta);
-        OpenGLUtils.clear(0.3f,0.6f,0.9f,1.0f, OpenGLUtils.Buffer.COLOR_BUFFER, OpenGLUtils.Buffer.DEPTH_BUFFER);
+        Utils.clear(0.3f,0.6f,0.9f,1.0f, Utils.Buffer.COLOR_BUFFER, Utils.Buffer.DEPTH_BUFFER);
 
 
 
-        OpenGLUtils.enableDepthTest();
+        Utils.enableDepthTest();
         renderer.draw(camera);
-        OpenGLUtils.disableDepthTest();
+        Utils.disableDepthTest();
 
 
         System.out.printf("fps: "+getFPS()+"\r");

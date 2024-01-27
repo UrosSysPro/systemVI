@@ -6,7 +6,7 @@ import com.systemvi.engine.renderers.TextureRenderer;
 import com.systemvi.engine.texture.Format;
 import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.texture.TextureData;
-import com.systemvi.engine.utils.OpenGLUtils;
+import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
 import org.joml.Vector3i;
 
@@ -54,7 +54,7 @@ public class TextureDataTest extends Application {
         window.pollEvents();
 
 //        OpenGLUtils.enableLines(4);
-        OpenGLUtils.clear(0.3f,0.6f,0.9f,1.0f, OpenGLUtils.Buffer.COLOR_BUFFER, OpenGLUtils.Buffer.DEPTH_BUFFER);
+        Utils.clear(0.3f,0.6f,0.9f,1.0f, Utils.Buffer.COLOR_BUFFER, Utils.Buffer.DEPTH_BUFFER);
         renderer.draw(texture,100,100, texture.getWidth(), texture.getHeight());
         renderer.flush();
 //        OpenGLUtils.disableLines();

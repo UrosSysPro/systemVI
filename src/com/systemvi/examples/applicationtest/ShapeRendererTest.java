@@ -4,12 +4,9 @@ import com.systemvi.engine.application.Application;
 import com.systemvi.engine.camera.Camera;
 import com.systemvi.engine.noise.Perlin2d;
 import com.systemvi.engine.renderers.ShapeRenderer;
-import com.systemvi.engine.shader.Shader;
-import com.systemvi.engine.utils.OpenGLUtils;
+import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
-import static org.lwjgl.opengl.GL33.*;
 
-import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 public class ShapeRendererTest extends Application {
@@ -49,7 +46,7 @@ public class ShapeRendererTest extends Application {
     @Override
     public void loop(float delta) {
         if(window.shouldClose())close();
-        OpenGLUtils.clear(0,0,0,1,OpenGLUtils.Buffer.COLOR_BUFFER);
+        Utils.clear(0,0,0,1, Utils.Buffer.COLOR_BUFFER);
         window.pollEvents();
         renderer.setCamera(camera);
 
