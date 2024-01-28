@@ -1,6 +1,9 @@
 package com.systemvi;
 
+import com.systemvi.examples.compute.Gradient;
 import com.systemvi.examples.compute.Graph;
+import com.systemvi.examples.fluid.Fluid;
+import com.systemvi.examples.fractals.Juliaset;
 import com.systemvi.examples.fractals.Mandelbrotset;
 import com.systemvi.examples.compute.GameOfLife;
 
@@ -8,6 +11,9 @@ public class Main {
     public static void main(String[] args){
 //        new GameOfLife(4,6,60).run();
 //        new Mandelbrotset(3,3,60,800,600,"Mandelbrot Set").run();
-        new Graph(4,6,60,800,600,"Compute graph").run();
+//        new Juliaset(3,3,60,800,600,"Mandelbrot Set").run();
+//        new Graph(4,6,60,800,600,"Compute graph").run();
+//        new Fluid(3,3,60).run();
+        new Gradient(4,3,60,800,600,"Gradient").run();
     }
 }
