@@ -2,7 +2,6 @@ package com.systemvi.examples.minecraft.world;
 
 import com.systemvi.engine.camera.CameraController2;
 import com.systemvi.engine.noise.Perlin2d;
-import com.systemvi.examples.minecraft.renderer.BlockFaceRenderer;
 import com.systemvi.engine.camera.CameraController;
 import org.joml.Vector3i;
 

@@ -3,7 +3,7 @@
 //layout(location=0) out vec4 ColoBuffer;
 //layout(location=1) out vec4 NormalBuffer;
 
-layout(location=0) out vec4 ColoBuffer;
+layout(location=0) out vec2 UvBuffer;
 layout(location=1) out vec4 NormalBuffer;
 layout(location=2) out vec4 PositionBuffer;
 
@@ -15,7 +15,6 @@ in struct VERTEX_OUT{
     vec2 texCoords;
 }vertexOut;
 
-uniform sampler2D diffuseMap;
 uniform sampler2D normalMap;
 
 void main(){
@@ -26,7 +25,8 @@ void main(){
     normal=TBN*normal;
     normal=normal*0.5+0.5;
 
-    ColoBuffer=texture(diffuseMap,vertexOut.texCoords);
+//    UvBuffer=vec4(vertexOut.texCoords,0.0,1.0);
+    UvBuffer=vertexOut.texCoords;
     NormalBuffer=vec4(normal,1.0);
     PositionBuffer=vec4(vertexOut.position,1.0);
 }

@@ -12,21 +12,17 @@ import com.systemvi.examples.minecraft.world.World;
 import org.joml.Vector3f;
 
 public class WorldRenderer {
-    public Vector3f sunDirection;
-    public Vector3f sunColor;
-    public Vector3f amibient;
-
-    public Texture color,normal,depth,position;
+    public Texture uv,normal,depth,position;
     private final FrameBuffer frameBuffer;
     private final Shader blockFaceShader;
     public WorldRenderer(int width,int height){
-        color=new Texture(width,height, Format.RGB);
+        uv=new Texture(width,height, Format.RG);
         depth=new Texture(width,height,Format.DEPTH32);
         normal=new Texture(width,height,Format.RGB);
         position=new Texture(width,height,Format.RGB32);
 
         frameBuffer= FrameBuffer.builder()
-            .color(color)
+            .color(uv)
             .color(normal)
             .color(position)
             .depth(depth)
@@ -53,11 +49,9 @@ public class WorldRenderer {
         blockFaceShader.setUniform("view",camera.getView());
         blockFaceShader.setUniform("projection",camera.getProjection());
 
-        material.diffuse.bind(0);
-        blockFaceShader.setUniform("diffuseMap",0);
+        material.normal.bind(0);
+        blockFaceShader.setUniform("normalMap",0);
 
-        material.normal.bind(1);
-        blockFaceShader.setUniform("normalMap",1);
         for(int i=0;i<chunks.length;i++){
             for(int j=0;j<chunks[i].length;j++){
                 for(int k=0;k<chunks[i][j].length;k++){

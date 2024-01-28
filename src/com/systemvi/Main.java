@@ -6,6 +6,7 @@ import com.systemvi.examples.fluid.Fluid;
 import com.systemvi.examples.fractals.Juliaset;
 import com.systemvi.examples.fractals.Mandelbrotset;
 import com.systemvi.examples.compute.GameOfLife;
+import com.systemvi.examples.minecraft.DebugApp;
 
 public class Main {
     public static void main(String[] args){
@@ -14,6 +15,7 @@ public class Main {
 //        new Juliaset(3,3,60,800,600,"Mandelbrot Set").run();
 //        new Graph(4,6,60,800,600,"Compute graph").run();
 //        new Fluid(3,3,60).run();
-        new Gradient(4,3,60,800,600,"Gradient").run();
+//        new Gradient(4,3,60,800,600,"Gradient").run();
+        new DebugApp(3,3,60).run();
     }
 }
