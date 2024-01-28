@@ -14,6 +14,7 @@ import com.systemvi.engine.window.Window;
 import com.systemvi.examples.minecraft.materials.Material;
 import com.systemvi.examples.minecraft.renderer.WorldRenderer;
 import com.systemvi.examples.minecraft.world.World;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -52,12 +53,6 @@ public class DebugApp extends Game {
         renderer=new TextureRenderer();
         renderer.setCamera(camera2d);
 
-        window.addOnResizeListener((width, height) -> {
-            camera2d.setPosition(width/2,height/2,0);
-            camera2d.setScreenSize(width,height);
-            camera2d.update();
-        });
-
         worldRenderer=new WorldRenderer(window.getWidth(),window.getHeight());
 
         depthShader= Shader.builder()
@@ -65,20 +60,18 @@ public class DebugApp extends Game {
             .vertex("assets/renderer/textureRenderer/vertex.glsl")
             .build();
 
-        if(!depthShader.isCompiled())System.out.println(depthShader.getLog());
-
         positionShader= Shader.builder()
             .fragment("assets/examples/minecraft/debug/positionShader.glsl")
             .vertex("assets/renderer/textureRenderer/vertex.glsl")
             .build();
-
-        if(!positionShader.isCompiled())System.out.println(positionShader.getLog());
 
         finalGather= Shader.builder()
                 .fragment("assets/examples/minecraft/debug/finalGather.glsl")
                 .vertex("assets/renderer/textureRenderer/vertex.glsl")
                 .build();
 
+        if(!positionShader.isCompiled())System.out.println(positionShader.getLog());
+        if(!depthShader.isCompiled())System.out.println(depthShader.getLog());
         if(!positionShader.isCompiled())System.out.println(positionShader.getLog());
     }
 
@@ -139,7 +132,13 @@ public class DebugApp extends Game {
         renderer.flush();
         renderer.setShader(null);
     }
-
+    @Override
+    public boolean resize(int width, int height) {
+        camera2d.setPosition(width/2,height/2,0);
+        camera2d.setScreenSize(width,height);
+        camera2d.update();
+        return false;
+    }
     @Override
     public boolean keyDown(int key, int scancode, int mods) {
         if(key==GLFW_KEY_ESCAPE){
