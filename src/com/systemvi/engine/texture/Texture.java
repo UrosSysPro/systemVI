@@ -1,5 +1,6 @@
 package com.systemvi.engine.texture;
 import static org.lwjgl.opengl.GL33.*;
+import static org.lwjgl.opengl.GL42.glBindImageTexture;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
@@ -90,6 +91,12 @@ public class Texture{
     public void bind(int i){
         glActiveTexture(GL_TEXTURE0+i);
         glBindTexture(GL_TEXTURE_2D,id);
+    }
+
+    public void bindAsImage(int i){
+        glActiveTexture(GL_TEXTURE0+i);
+//        glBindTexture(GL_TEXTURE_2D,id);
+        glBindImageTexture(i, id, 0, false, 0, GL_READ_WRITE, format.id);
     }
 
     public int getId() {
