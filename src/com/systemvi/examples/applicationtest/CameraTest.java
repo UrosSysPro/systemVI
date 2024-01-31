@@ -24,10 +24,10 @@ public class CameraTest extends Application {
     @Override
     public void setup() {
         window=new Window(800,600,"Camera Test");
-        shader=new Shader(
-            "assets/cameraTest/vertex.glsl",
-            "assets/cameraTest/fragment.glsl"
-        );
+        shader= Shader.builder()
+            .fragment("assets/cameraTest/fragment.glsl")
+            .vertex("assets/cameraTest/vertex.glsl")
+            .build();
         if(!shader.isCompiled()){
             System.out.println(shader.getLog());
         }

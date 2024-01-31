@@ -7,60 +7,18 @@ import java.util.Scanner;
 import static org.lwjgl.opengl.GL46.*;
 
 public class Shader {
-    private int id;
-    private boolean compiled=true;
-    private String compilationLog="";
+    private final int id;
+    private final boolean compiled;
+    private final String compilationLog;
 
-    public Shader(String vertex,String fragment){
-        String vertexSource=readFile(vertex);
-        String fragmentSource=readFile(fragment);
-
-        int[] status=new int[1];
-
-        int vertexShader=glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertexShader,vertexSource);
-        glCompileShader(vertexShader);
-        glGetShaderiv(vertexShader,GL_COMPILE_STATUS,status);
-        if(status[0]==0){
-            compiled=false;
-            compilationLog+="Vertex Log:\n";
-            compilationLog+=glGetShaderInfoLog(vertexShader)+"\n";
-        }
-
-        int fragmentShader=glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragmentShader,fragmentSource);
-        glCompileShader(fragmentShader);
-        glGetShaderiv(fragmentShader,GL_COMPILE_STATUS,status);
-        if(status[0]==0){
-            compiled=false;
-            compilationLog+="Fragment Log:\n";
-            compilationLog+=glGetShaderInfoLog(fragmentShader)+"\n";
-        }
-
-        id=glCreateProgram();
-        glAttachShader(id,vertexShader);
-        glAttachShader(id,fragmentShader);
-        glLinkProgram(id);
-
-        glGetProgramiv(id,GL_LINK_STATUS,status);
-        if(status[0]==0){
-            compiled=false;
-            compilationLog+="Program Link Log:\n";
-            compilationLog+=glGetProgramInfoLog(id)+"\n";
-        }
-        glDeleteShader(vertexShader);
-        glDeleteShader(fragmentShader);
-        glUseProgram(id);
-    }
-
-    public Shader(int programId,boolean compiled,String log){
+    private Shader(int programId,boolean compiled,String log){
         this.id=programId;
         this.compiled=compiled;
         this.compilationLog=log;
     }
 
     public static class Builder{
-        public String fragment,vertex,geometry;
+        private String fragment,vertex,geometry,compute;
 
         public Builder(){
             fragment=null;
@@ -79,6 +37,10 @@ public class Shader {
             geometry=readFile(file);
             return this;
         }
+        public Builder compute(String file){
+            compute=readFile(file);
+            return this;
+        }
         public Builder fragmentSource(String source){
             fragment=source;
             return this;
@@ -91,32 +53,45 @@ public class Shader {
             geometry=source;
             return this;
         }
+        public Builder computeSource(String source){
+            compute=source;
+            return this;
+        }
         public Shader build(){
             boolean compiled=true;
             String log="";
 
             int[] status=new int[1];
 
-            int vertexShader=glCreateShader(GL_VERTEX_SHADER);
-            glShaderSource(vertexShader,vertex);
-            glCompileShader(vertexShader);
-            glGetShaderiv(vertexShader,GL_COMPILE_STATUS,status);
-            if(status[0]==0){
-                compiled=false;
-                log+="Vertex Log:\n";
-                log+=glGetShaderInfoLog(vertexShader)+"\n";
+            //cmopiling vertext shader
+            int vertexShader=0;
+            if(vertex!=null){
+                vertexShader=glCreateShader(GL_VERTEX_SHADER);
+                glShaderSource(vertexShader,vertex);
+                glCompileShader(vertexShader);
+                glGetShaderiv(vertexShader,GL_COMPILE_STATUS,status);
+                if(status[0]==0){
+                    compiled=false;
+                    log+="Vertex Log:\n";
+                    log+=glGetShaderInfoLog(vertexShader)+"\n";
+                }
             }
 
-            int fragmentShader=glCreateShader(GL_FRAGMENT_SHADER);
-            glShaderSource(fragmentShader,fragment);
-            glCompileShader(fragmentShader);
-            glGetShaderiv(fragmentShader,GL_COMPILE_STATUS,status);
-            if(status[0]==0){
-                compiled=false;
-                log+="Fragment Log:\n";
-                log+=glGetShaderInfoLog(fragmentShader)+"\n";
+            //compiling fragment
+            int fragmentShader=0;
+            if(fragment!=null){
+                fragmentShader=glCreateShader(GL_FRAGMENT_SHADER);
+                glShaderSource(fragmentShader,fragment);
+                glCompileShader(fragmentShader);
+                glGetShaderiv(fragmentShader,GL_COMPILE_STATUS,status);
+                if(status[0]==0){
+                    compiled=false;
+                    log+="Fragment Log:\n";
+                    log+=glGetShaderInfoLog(fragmentShader)+"\n";
+                }
             }
 
+            //compiling geometry
             int geometryShader=0;
             if(geometry!=null){
                 geometryShader=glCreateShader(GL_GEOMETRY_SHADER);
@@ -130,10 +105,25 @@ public class Shader {
                 }
             }
 
+            //compiling compute shader
+            int computeShader=0;
+            if(compute!=null){
+                computeShader=glCreateShader(GL_COMPUTE_SHADER);
+                glShaderSource(computeShader,compute);
+                glCompileShader(computeShader);
+                glGetShaderiv(computeShader,GL_COMPILE_STATUS,status);
+                if(status[0]==0){
+                    compiled=false;
+                    log+="Compute Log:\n";
+                    log+=glGetShaderInfoLog(computeShader)+"\n";
+                }
+            }
+
             int programId=glCreateProgram();
-            glAttachShader(programId,vertexShader);
-            glAttachShader(programId,fragmentShader);
-            if(geometry!=null)glAttachShader(programId,geometryShader);
+            if(vertex   !=null)    glAttachShader(programId,vertexShader);
+            if(fragment !=null)  glAttachShader(programId,fragmentShader);
+            if(geometry !=null)  glAttachShader(programId,geometryShader);
+            if(compute  !=null)  glAttachShader(programId,computeShader);
             glLinkProgram(programId);
 
             glGetProgramiv(programId,GL_LINK_STATUS,status);
@@ -142,9 +132,11 @@ public class Shader {
                 log+="Program Link Log:\n";
                 log+=glGetProgramInfoLog(programId)+"\n";
             }
-            glDeleteShader(vertexShader);
-            glDeleteShader(fragmentShader);
+            if(vertex!=null)glDeleteShader(vertexShader);
+            if(fragment!=null)glDeleteShader(fragmentShader);
             if(geometry!=null)glDeleteShader(geometryShader);
+            if(compute!=null)glDeleteShader(computeShader);
+
             glUseProgram(programId);
 
             return new Shader(programId,compiled,log);
@@ -236,5 +228,28 @@ public class Shader {
     public void setUniform(String name, float value){
         int uniformId=glGetUniformLocation(id,name);
         glUniform1f(uniformId,value);
+    }
+
+    public void drawArrays(Primitive primitive,int first,int count){
+        glDrawArrays(primitive.id,first,count);
+    }
+    public void drawArrays(Primitive primitive,int count){
+        drawArrays(primitive,0,count);
+    }
+    public void drawElements(Primitive primitive,int count, ElementsDataType type,int elementsToDraw){
+        glDrawElements(primitive.id,count,type.id,elementsToDraw);
+    }
+    public void drawArraysInstanced(Primitive primitive,int first,int count,int instancesToDraw){
+        glDrawArraysInstanced(primitive.id,first,count,instancesToDraw);
+    }
+    public void drawArraysInstanced(Primitive primitive,int count,int instancesToDraw){
+        drawArraysInstanced(primitive,0,count,instancesToDraw);
+    }
+    public void drawElementsInstanced(Primitive primitive,int count,ElementsDataType type,int elementsToDraw,int instancesToDraw){
+        glDrawElementsInstanced(primitive.id,count,type.id,elementsToDraw,instancesToDraw);
+    }
+
+    public void dispatch(int x,int y,int z){
+        glDispatchCompute(x,y,z);
     }
 }

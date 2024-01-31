@@ -30,10 +30,11 @@ public class ShapeRenderer {
             new VertexAttribute("position",2),
             new VertexAttribute("color",4)
         );
-        shader=new Shader(
-            "assets/renderer/shapeRenderer/vertex.glsl",
-            "assets/renderer/shapeRenderer/fragment.glsl"
-        );
+        shader= Shader.builder()
+            .fragment("assets/renderer/shapeRenderer/fragment.glsl")
+            .vertex("assets/renderer/shapeRenderer/vertex.glsl")
+            .build();
+
         if(!shader.isCompiled()){
             System.out.println(shader.getLog());
         }

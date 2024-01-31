@@ -65,6 +65,10 @@ public class Utils {
        glDisable(GL_DEPTH_TEST);
     }
 
+    public static void copyDepthBuffer(int sourceFrabebufferId,int destFramebufferId){
+
+    }
+
     public static void enableLines(int lineWidth){
        glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
        glLineWidth(lineWidth);

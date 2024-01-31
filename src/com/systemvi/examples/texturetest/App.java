@@ -39,10 +39,10 @@ public class App extends Application {
             0,1,2,
             1,2,3,
         });
-        shader=new Shader(
-            "assets/examples/textureTest/vertex.glsl",
-            "assets/examples/textureTest/fragment.glsl"
-        );
+        shader= Shader.builder()
+            .fragment("assets/examples/textureTest/fragment.glsl")
+            .vertex("assets/examples/textureTest/vertex.glsl")
+            .build();
         if(!shader.isCompiled()){
             System.out.println(shader.getLog());
         }

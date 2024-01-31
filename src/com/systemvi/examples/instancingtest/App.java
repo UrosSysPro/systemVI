@@ -66,10 +66,10 @@ public class App extends Application {
         camera.setScale(1,-1,1);
         camera.update();
 
-        shader=new Shader(
-            "assets/examples/instancingTest/vertex.glsl",
-            "assets/examples/instancingTest/fragment.glsl"
-        );
+        shader= Shader.builder()
+            .fragment("assets/examples/instancingTest/fragment.glsl")
+            .vertex("assets/examples/instancingTest/vertex.glsl")
+            .build();
         if(!shader.isCompiled()){
             System.out.println(shader.getLog());
         }

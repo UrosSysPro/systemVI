@@ -33,10 +33,10 @@ public class TextureRenderer {
             new VertexAttribute("position",2),
             new VertexAttribute("texCoords",2)
         );
-        shader=new Shader(
-            "assets/renderer/textureRenderer/vertex.glsl",
-            "assets/renderer/textureRenderer/fragment.glsl"
-        );
+        shader= Shader.builder()
+            .fragment("assets/renderer/textureRenderer/fragment.glsl")
+            .vertex("assets/renderer/textureRenderer/vertex.glsl")
+            .build();
         if(!shader.isCompiled()){
             System.out.println(shader.getLog());
         }

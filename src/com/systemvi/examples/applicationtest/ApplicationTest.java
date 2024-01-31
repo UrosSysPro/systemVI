@@ -31,7 +31,10 @@ public class ApplicationTest extends Application {
             0.25f, -0.25f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
             0.0f,   0.25f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
         });
-        shader=new Shader("assets/applicationtest/vertex.glsl","assets/applicationtest/fragment.glsl");
+        shader= Shader.builder()
+            .fragment("assets/applicationtest/fragment.glsl")
+            .vertex("assets/applicationtest/vertex.glsl")
+            .build();
     }
 
     @Override
