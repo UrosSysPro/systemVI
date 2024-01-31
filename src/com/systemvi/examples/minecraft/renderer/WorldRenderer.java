@@ -32,9 +32,6 @@ public class WorldRenderer {
             .fragment("assets/examples/minecraft/blockFaceRenderer/fragment.glsl")
             .vertex("assets/examples/minecraft/blockFaceRenderer/vertex.glsl")
             .build();
-        if(!blockFaceShader.isCompiled()){
-            System.out.println(blockFaceShader.getLog());
-        }
     }
 
     public void render(World world, Camera camera, Material material){

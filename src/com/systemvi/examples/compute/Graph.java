@@ -3,7 +3,6 @@ package com.systemvi.examples.compute;
 import com.systemvi.engine.application.Game;
 import com.systemvi.engine.camera.Camera;
 import com.systemvi.engine.renderers.TextureRenderer;
-import com.systemvi.engine.shader.ComputeShader;
 import com.systemvi.engine.shader.Shader;
 import com.systemvi.engine.shader.ShaderStorage;
 import com.systemvi.engine.texture.Format;
@@ -16,7 +15,7 @@ public class Graph extends Game {
         super(openglVersionMajor, openglVersionMinor, targetFPS, windowWidth, windowHeight, title);
     }
 
-    ComputeShader compute;
+    Shader compute;
     ShaderStorage storage;
     Shader shader;
     Texture texture;
@@ -31,7 +30,7 @@ public class Graph extends Game {
         texture=new Texture(window.getWidth(),window.getHeight(), Format.RGB);
         renderer=new TextureRenderer();
         renderer.setCamera(camera);
-        compute=new ComputeShader("assets/examples/compute/graph/compute.glsl");
+        compute=Shader.builder().compute("assets/examples/compute/graph/compute.glsl").build();
         shader= Shader.builder()
             .vertex("assets/renderer/textureRenderer/vertex.glsl")
             .fragment("assets/examples/compute/graph/fragment.glsl")

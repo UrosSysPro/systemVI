@@ -120,9 +120,15 @@ public class DebugApp extends Game {
         normal.bind(1);
         position.bind(2);
         depth.bind(3);
+        material.diffuse.bind(4);
+        material.specular.bind(5);
+
         finalGather.setUniform("normalBuffer",1);
         finalGather.setUniform("positionBuffer",2);
         finalGather.setUniform("depthBuffer",3);
+        finalGather.setUniform("diffuseTexture",4);
+        finalGather.setUniform("specularTexture",5);
+
         finalGather.setUniform("cameraPosition",new Vector3f(
                 controller.x,controller.y,controller.z
         ));

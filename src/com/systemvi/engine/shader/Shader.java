@@ -139,6 +139,10 @@ public class Shader {
 
             glUseProgram(programId);
 
+            if(!compiled){
+                System.out.println(log);
+            }
+
             return new Shader(programId,compiled,log);
         }
     }

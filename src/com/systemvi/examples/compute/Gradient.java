@@ -3,7 +3,6 @@ package com.systemvi.examples.compute;
 import com.systemvi.engine.application.Game;
 import com.systemvi.engine.camera.Camera;
 import com.systemvi.engine.renderers.TextureRenderer;
-import com.systemvi.engine.shader.ComputeShader;
 import com.systemvi.engine.shader.Shader;
 import com.systemvi.engine.texture.Format;
 import com.systemvi.engine.texture.Texture;

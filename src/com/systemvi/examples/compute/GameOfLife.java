@@ -3,7 +3,7 @@ package com.systemvi.examples.compute;
 import com.systemvi.engine.application.Application;
 import com.systemvi.engine.camera.Camera;
 import com.systemvi.engine.renderers.TextureRenderer;
-import com.systemvi.engine.shader.ComputeShader;
+import com.systemvi.engine.shader.Shader;
 import com.systemvi.engine.texture.Format;
 import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.texture.TextureData;
@@ -25,7 +25,7 @@ public class GameOfLife extends Application {
     private Texture current, next;
     private TextureRenderer renderer;
     private Camera camera;
-    private ComputeShader shader;
+    private Shader shader;
 
     @Override
     public void setup() {
@@ -47,7 +47,9 @@ public class GameOfLife extends Application {
         camera.update();
         renderer = new TextureRenderer();
         renderer.setCamera(camera);
-        shader=new ComputeShader("assets/examples/compute/gameOfLife/compute.glsl");
+        shader= Shader.builder()
+            .compute("assets/examples/compute/gameOfLife/compute.glsl")
+            .build();
     }
 
     @Override
