@@ -6,3 +6,5 @@
  */
 
 rootProject.name = 'systemVI'
+include 'voxel-world'
+include 'demo-examples'
