@@ -34,5 +34,15 @@ void main(){
     vec3 lightDirection=normalize(lightPosition-position);
     vec3 viewDirection=normalize(cameraPosition-position);
 
-    FragColor=phongLighting(uv,normal,lightDirection,viewDirection)*texture(diffuseTexture,uv);
+    float z=texture(depthBuffer,vTexCoord).r;
+    float near=0.1,far=1000.0;
+    float depth= (2.0 * near) / (far + near - z * (far - near));
+
+    vec4 fogColor=vec4(0.3,0.6,0.9,1.0);
+
+    vec4 lighting=phongLighting(uv,normal,lightDirection,viewDirection);
+
+    vec4 diffuse=texture(diffuseTexture,uv);
+
+    FragColor=mix(diffuse*lighting,fogColor,depth);
 }

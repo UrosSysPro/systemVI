@@ -7,7 +7,7 @@ import static org.lwjgl.opengl.GL33.*;
 public class Material {
     public final Texture diffuse,specular,normal;
     public Material(){
-        diffuse=new Texture("assets/examples/test3d/rock/diffuse.png");
+        diffuse=new Texture("assets/examples/minecraft/textures/mc.png");
         diffuse.setSamplerFilter(GL_LINEAR_MIPMAP_NEAREST,GL_NEAREST);
         specular=new Texture("assets/examples/test3d/rock/roughness.png");
         specular.setSamplerFilter(GL_LINEAR_MIPMAP_NEAREST,GL_NEAREST);
