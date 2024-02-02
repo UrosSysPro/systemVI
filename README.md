@@ -36,6 +36,8 @@ Projekat za 6.godinu 2023-2024 u terminu 13:30
 30. [Scala syntax]()
 31. [Deffered rendering]()
 32. [Menger sponge]()
+33. [Mandelbrot i julia set]()
+34. [Compute shader]()
 
 ## Domaci
 1. + Napraviti `Stack` klasu. `Stack` je struktura podataka koja definise dve operacije 
