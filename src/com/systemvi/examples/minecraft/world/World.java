@@ -31,7 +31,7 @@ public class World {
     }
 
     public void generateFractal() {
-        getBlockState(50, 50, 50).block = Block.STONE;
+//        getBlockState(50, 50, 50).block = Block.STONE;
         int maxSteps = 4;
         for (int i = 0; i < 81; i++) {
             for (int j = 0; j < 81; j++) {

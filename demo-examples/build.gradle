@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+application {
+    mainClass = 'com.systemvi.examples.Main'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+    }
+}
+dependencies {
+    implementation rootProject
+}

@@ -6,6 +6,7 @@ import com.systemvi.engine.camera.CameraController2;
 import com.systemvi.engine.renderers.TextureRenderer;
 import com.systemvi.engine.shader.Shader;
 import com.systemvi.engine.texture.Texture;
+import com.systemvi.engine.texture.TextureRegion;
 import com.systemvi.engine.utils.Utils;
 import static com.systemvi.engine.utils.Utils.Buffer.*;
 
@@ -13,6 +14,7 @@ import com.systemvi.engine.window.InputMultiplexer;
 import com.systemvi.engine.window.Window;
 import com.systemvi.examples.minecraft.materials.Material;
 import com.systemvi.examples.minecraft.renderer.WorldRenderer;
+import com.systemvi.examples.minecraft.world.Block;
 import com.systemvi.examples.minecraft.world.World;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -38,7 +40,13 @@ public class DebugApp extends Game {
         f3Pressed=false;
 
         mainWindow=window;
-        material=new Material();
+        material=new Material("assets/examples/minecraft/textures");
+
+        TextureRegion[][] regions=TextureRegion.split(material.diffuse,16,16);
+        Block.AIR=new Block(null);
+        Block.STONE=new Block(regions[7][0]);
+        Block.DIRT=new Block(regions[1][3]);
+
         camera=Camera.default3d(window);
 
         controller=CameraController2.builder()
