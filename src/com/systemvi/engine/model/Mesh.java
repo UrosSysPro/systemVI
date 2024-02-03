@@ -114,6 +114,10 @@ public class Mesh {
         glBindVertexArray(0);
     }
 
+    public void bind(){
+        glBindVertexArray(arrayBuffer);
+    }
+
     public void delete(){
         glBindVertexArray(arrayBuffer);
         //brisanje vertex buffera
