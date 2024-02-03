@@ -16,10 +16,10 @@ public class Material {
     }
     public Material(String path){
         diffuse=new Texture(path+"/diffuse.png");
-        diffuse.setSamplerFilter(GL_NEAREST_MIPMAP_NEAREST,GL_NEAREST);
+        diffuse.setSamplerFilter(GL_NEAREST_MIPMAP_LINEAR,GL_NEAREST);
         specular=new Texture(path+"/specular.png");
-        specular.setSamplerFilter(GL_NEAREST_MIPMAP_NEAREST,GL_NEAREST);
+        specular.setSamplerFilter(GL_NEAREST_MIPMAP_LINEAR,GL_NEAREST);
         normal=new Texture(path+"/normal.png");
-        normal.setSamplerFilter(GL_NEAREST_MIPMAP_NEAREST,GL_NEAREST);
+        normal.setSamplerFilter(GL_NEAREST_MIPMAP_LINEAR,GL_NEAREST);
     }
 }

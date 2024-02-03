@@ -16,8 +16,8 @@ public class WorldRenderer {
     private final FrameBuffer frameBuffer;
     private final Shader blockFaceShader;
     public WorldRenderer(int width,int height){
-        uv=new Texture(width,height, Format.RG);
-        depth=new Texture(width,height,Format.DEPTH32);
+        uv=new Texture(width,height, Format.RG16);
+        depth=new Texture(width,height,Format.DEPTH16);
         normal=new Texture(width,height,Format.RGB);
         position=new Texture(width,height,Format.RGB32);
 

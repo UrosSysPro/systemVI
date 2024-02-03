@@ -43,9 +43,9 @@ public class DebugApp extends Game {
         material=new Material("assets/examples/minecraft/textures");
 
         TextureRegion[][] regions=TextureRegion.split(material.diffuse,16,16);
-        Block.AIR=new Block(null);
-        Block.STONE=new Block(regions[7][0]);
-        Block.DIRT=new Block(regions[1][3]);
+        Block.AIR=new Block(null,null,null);
+        Block.STONE=new Block(regions[7][0],regions[7][0],regions[7][0]);
+        Block.DIRT=new Block(regions[2][3],regions[1][2],regions[1][3]);
 
         camera=Camera.default3d(window);
 

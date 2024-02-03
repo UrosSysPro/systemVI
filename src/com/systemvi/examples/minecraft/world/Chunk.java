@@ -49,10 +49,10 @@ public class Chunk {
         float size=0.5f;
         mesh.setVertexData(new float[]{
             //position    //normal  //tangent  //bitangent //texCoords
-            +size, +size, 0, 0, 1,  1, 0, 0,   0, 1, 0,    1, 1,
-            -size, -size, 0, 0, 1,  1, 0, 0,   0, 1, 0,    0, 0,
-            +size, -size, 0, 0, 1,  1, 0, 0,   0, 1, 0,    1, 0,
-            -size, +size, 0, 0, 1,  1, 0, 0,   0, 1, 0,    0, 1,
+            +size, +size, 0, 0, 1,  1, 0, 0,   0, 1, 0,    1, 0,
+            -size, -size, 0, 0, 1,  1, 0, 0,   0, 1, 0,    0, 1,
+            +size, -size, 0, 0, 1,  1, 0, 0,   0, 1, 0,    1, 1,
+            -size, +size, 0, 0, 1,  1, 0, 0,   0, 1, 0,    0, 0,
         });
         mesh.setIndices(new int[]{
             0,2,1,
@@ -84,7 +84,7 @@ public class Chunk {
                                 .rotateY((float)Math.toRadians(-90))
                         );
                         Block block=world.getBlockState(x,y,z).block;
-                        uvs.add(new Vector2f(block.region.x,block.region.y));
+                        uvs.add(new Vector2f(block.left.x,block.left.y));
                     }
                     if(world.getBlockState(x+1,y,z).block==Block.AIR){
                         //right
@@ -94,7 +94,7 @@ public class Chunk {
                                 .rotateY((float)Math.toRadians(90))
                         );
                         Block block=world.getBlockState(x,y,z).block;
-                        uvs.add(new Vector2f(block.region.x,block.region.y));
+                        uvs.add(new Vector2f(block.right.x,block.right.y));
                     }
                     if(world.getBlockState(x,y-1,z).block==Block.AIR){
                         //down
@@ -104,7 +104,7 @@ public class Chunk {
                                 .rotateX((float)Math.toRadians(90))
                         );
                         Block block=world.getBlockState(x,y,z).block;
-                        uvs.add(new Vector2f(block.region.x,block.region.y));
+                        uvs.add(new Vector2f(block.bottom.x,block.bottom.y));
                     }
                     if(world.getBlockState(x,y+1,z).block==Block.AIR){
                         //up
@@ -114,7 +114,7 @@ public class Chunk {
                                 .rotateX((float)Math.toRadians(-90))
                         );
                         Block block=world.getBlockState(x,y,z).block;
-                        uvs.add(new Vector2f(block.region.x,block.region.y));
+                        uvs.add(new Vector2f(block.top.x,block.top.y));
                     }
                     if(world.getBlockState(x,y,z-1).block==Block.AIR){
                         //back
@@ -124,7 +124,7 @@ public class Chunk {
                                 .rotateY((float)Math.toRadians(180))
                         );
                         Block block=world.getBlockState(x,y,z).block;
-                        uvs.add(new Vector2f(block.region.x,block.region.y));
+                        uvs.add(new Vector2f(block.back.x,block.back.y));
                     }
                     if(world.getBlockState(x,y,z+1).block==Block.AIR){
                         //front
@@ -134,7 +134,7 @@ public class Chunk {
                                 .rotateY((float)Math.toRadians(0))
                         );
                         Block block=world.getBlockState(x,y,z).block;
-                        uvs.add(new Vector2f(block.region.x,block.region.y));
+                        uvs.add(new Vector2f(block.front.x,block.front.y));
                     }
                 }
             }

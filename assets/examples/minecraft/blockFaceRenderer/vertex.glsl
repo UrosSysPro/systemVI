@@ -33,18 +33,8 @@ void main(){
     vertexOut.normal=modelRotation*normal;
     vertexOut.tangent=modelRotation*tangent;
     vertexOut.bitangent=modelRotation*bitangent;
-    vec2 uvs[4];
-//    uvs[0]=vec2(0.0,1.0);
-//    uvs[1]=vec2(1.0,0.0);
-//    uvs[2]=vec2(0.0,0.0);
-//    uvs[3]=vec2(1.0,1.0);
-
-    uvs[0]=vec2(1.0,1.0);
-    uvs[1]=vec2(0.0,0.0);
-    uvs[2]=vec2(1.0,0.0);
-    uvs[3]=vec2(0.0,1.0);
-
-    vertexOut.texCoords=(uv+uvs[gl_VertexID]*spriteSize-vec2(0.0,1.0))/spriteSheetSize;
+    vec2 offset=vec2(1.0,0.0)/spriteSheetSize;
+    vertexOut.texCoords=(uv+texCoords*spriteSize-offset)/spriteSheetSize;
 
     gl_Position=projection*view*model*vec4(position,0.0,1.0);
 }
