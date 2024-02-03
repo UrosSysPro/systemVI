@@ -35,8 +35,10 @@ public class DebugApp extends Game {
     public Material material;
     public Window mainWindow;
     public boolean f3Pressed;
+    public Player player;
     @Override
     public void setup(Window window) {
+        player=new Player(new Vector3f(50,50,50));
         f3Pressed=false;
 
         mainWindow=window;
@@ -145,6 +147,8 @@ public class DebugApp extends Game {
         renderer.draw(uv,0,0,width,height);
         renderer.flush();
         renderer.setShader(null);
+
+        player.draw(camera);
     }
     @Override
     public boolean resize(int width, int height) {
