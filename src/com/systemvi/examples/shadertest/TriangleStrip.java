@@ -7,7 +7,7 @@ import com.systemvi.engine.shader.Primitive;
 import com.systemvi.engine.shader.Shader;
 import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
-import jdk.jshell.execution.Util;
+//import jdk.jshell.execution.Util;
 
 public class TriangleStrip extends Game {
     public TriangleStrip() {

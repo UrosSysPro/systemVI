@@ -8,6 +8,7 @@ import com.systemvi.examples.fractals.Mandelbrotset;
 import com.systemvi.examples.compute.GameOfLife;
 import com.systemvi.examples.minecraft.DebugApp;
 import com.systemvi.examples.shadertest.TriangleStrip;
+import com.systemvi.examples.uitest.Test;
 
 public class Main {
     public static void main(String[] args){
@@ -18,6 +19,7 @@ public class Main {
 //        new Fluid(3,3,60).run();
 //        new Gradient(4,3,60,800,600,"Gradient").run();
 //        new DebugApp(3,3,60).run();
-        new TriangleStrip().run();
+//        new TriangleStrip().run();
+        new Test(3,3,60,800,600,"Widget renderer test").run();
     }
 }
