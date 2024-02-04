@@ -1,3 +1,3 @@
-git push gitlab main
+git push gitlab-http main
 git push github main
 
