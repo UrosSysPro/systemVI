@@ -10,5 +10,5 @@ in VERTEX_OUT{
 out vec4 FragColor;
 
 void main(){
-    FragColor=vec4(vertexOut.position.xy,0.5,1.0);
+    FragColor=vertexOut.color;
 }

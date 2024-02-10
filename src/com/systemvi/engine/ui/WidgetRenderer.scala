@@ -35,10 +35,12 @@ class WidgetRenderer(window:Window){
   ))
   val maxRectsToDraw=1000
   var rectsToDraw=0
-  val transofrms:Array[Matrix4f]=(0 until maxRectsToDraw)
-    .map((index:Int)=>new Matrix4f()).toArray
-  val colors:Array[Vector4f]= (0 until maxRectsToDraw)
-    .map((index: Int) => new Vector4f()).toArray
+  val rects:Array[RoundedRect]=(0 until maxRectsToDraw).map((index:Int)=>RoundedRect(
+    transofrm = new Matrix4f(),
+    color = new Vector4f(),
+    borderRadius = 0,
+    blur = 0
+  )).toArray
 
   val instanceData:Array[Float]=Array.ofDim(maxRectsToDraw*16)
   mesh.enableInstancing(
@@ -55,27 +57,38 @@ class WidgetRenderer(window:Window){
 
   }
   def rect(x:Float,y:Float,w:Float,h:Float,color:Vector4f):Unit={
-    transofrms(rectsToDraw).identity().translate(x,y,0).scale(w,h,1)
+    rects(rectsToDraw).transofrm.identity().translate(x+w/2,y+h/2,0).scale(w,h,1)
+    rects(rectsToDraw).color.set(color)
     rectsToDraw+=1
+  }
+  def roundedRect():Unit={
+
   }
   def flush():Unit={
     val matrixSize:Int=16
     val colorSize=4
     val borderRadiusSize=1
     val blurSize=1
-    val data:Array[Float]=Array.ofDim(matrixSize+colorSize+borderRadiusSize+blurSize)
+    val rectSize=matrixSize+colorSize+borderRadiusSize+blurSize
+    val data:Array[Float]=Array.ofDim(rectSize*rectsToDraw)
     for(i<-0 until rectsToDraw){
-      transofrms(i).get(data)
+      val offset=i*rectSize
+      rects(i).transofrm.get(data)
       for(j<-0 until 16){
-        instanceData(i*16+j)=data(j)
+        instanceData(offset+j)=data(j)
       }
-//      instanceData(16+0)=
+      instanceData(offset+16+0)=rects(i).color.x
+      instanceData(offset+16+1)=rects(i).color.y
+      instanceData(offset+16+2)=rects(i).color.z
+      instanceData(offset+16+3)=rects(i).color.w
+      instanceData(offset+16+4)=rects(i).borderRadius
+      instanceData(offset+16+5)=rects(i).blur
     }
     mesh.setInstanceData(instanceData)
     shader.use()
     shader.setUniform("view",camera.getView())
     shader.setUniform("projection",camera.getProjection())
-    mesh.drawInstancedElements(3,rectsToDraw)
+    mesh.drawInstancedElements(2,rectsToDraw)
     rectsToDraw=0
   }
 }

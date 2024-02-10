@@ -17,7 +17,8 @@ public class Test extends Game {
 
     @Override
     public void loop(float delta) {
-        renderer.rect(400,500,200,300,new Vector4f(0.3f,0.6f,0.9f,1.0f));
+        renderer.rect(400,300,200,300,new Vector4f(0.3f,0.6f,0.9f,1.0f));
+        renderer.rect(100,100,150,200,new Vector4f(0.6f,0.2f,0.9f,1.0f));
         renderer.flush();
     }
 }
