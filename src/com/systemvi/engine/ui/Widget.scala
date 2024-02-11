@@ -14,17 +14,3 @@ abstract class Widget {
   def draw(renderer:WidgetRenderer): Unit
   def debugPrint(tabs:String): Unit
 }
-
-/**
- * container
- *    padding
- *        row
- *            container
- *              padding
- *            container
- *              padding
- *            container
- *              padding
- *
- *
- */

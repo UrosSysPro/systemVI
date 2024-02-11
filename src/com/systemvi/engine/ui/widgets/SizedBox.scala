@@ -30,5 +30,5 @@ class SizedBox(child:Widget,var preferedSize:Vector2f) extends StatelessWidget {
 }
 
 object SizedBox{
-  def apply(child: Widget=null, size: Vector2f=new Vector2f(1000000,1000000)): SizedBox = new SizedBox(child, size)
+  def apply(child: Widget=null, size: Vector2f=new Vector2f(Float.MaxValue,Float.MaxValue)): SizedBox = new SizedBox(child, size)
 }
