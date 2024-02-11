@@ -31,7 +31,7 @@ class Column(val children:Array[Widget]) extends StatelessWidget {
     for(child<-children){
       child match{
         case expanded:Expanded=>
-          val childSize=expanded.calculateSize(new Vector2f(maxParentSize.y,availableHeight*expanded.flex/totalFlex))
+          val childSize=expanded.calculateSize(new Vector2f(maxParentSize.x,availableHeight*expanded.flex/totalFlex))
           if(childSize.x>maxWidth)maxWidth=childSize.x
           totalHeight+=childSize.y
         case _=>
