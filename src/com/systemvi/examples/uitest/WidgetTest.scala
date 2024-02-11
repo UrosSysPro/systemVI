@@ -18,11 +18,18 @@ class WidgetTest extends Game(3,3,60,800,600,"Widget test"){
       child=Padding(
         padding=EdgeInsets.all(20),
         child=Column(
-          children = (0 until 3).map(rowIndex=>Expanded(child=Row(
-            children = (0 until 3).map(columnIndex=>Expanded(
-              child=Container(color = new Vector4f(rowIndex/3f,columnIndex/3f,0.9f,1.0f))
-            )).toArray
-          ))).toArray
+          children = (0 until 3).map(rowIndex=>
+            Expanded(
+              child=Row(
+                children = (0 until 3).map(columnIndex=>
+                  Expanded(
+                    child=Container(color = new Vector4f(rowIndex/3f,columnIndex/3f,0.9f,1.0f)
+                    )
+                  )
+                ).toArray
+              )
+            )
+          ).toArray
         )
       )
     )
