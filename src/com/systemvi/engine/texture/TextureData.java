@@ -1,5 +1,6 @@
 package com.systemvi.engine.texture;
 
+import com.systemvi.engine.utils.Utils;
 import org.joml.*;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
@@ -39,6 +40,7 @@ public class TextureData {
         buffer= BufferUtils.createByteBuffer(width*height*format.channels);
     }
     public TextureData(String fileName){
+        fileName= Utils.assetsFolder+fileName;
         int[] width=new int[1],height=new int[1],chanels=new int[1];
         ByteBuffer buffer= STBImage.stbi_load(fileName,width,height,chanels,0);
         if(buffer==null){

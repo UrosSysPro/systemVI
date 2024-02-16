@@ -2,6 +2,7 @@ package com.systemvi.engine.texture;
 import static org.lwjgl.opengl.GL33.*;
 import static org.lwjgl.opengl.GL42.glBindImageTexture;
 
+import com.systemvi.engine.utils.Utils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 
@@ -63,6 +64,7 @@ public class Texture{
     }
 
     public Texture loadFromFile(String fileName){
+        fileName= Utils.assetsFolder+fileName;
         glBindTexture(GL_TEXTURE_2D,id);
 
         int[] width=new int[1],height=new int[1],chanels=new int[1];

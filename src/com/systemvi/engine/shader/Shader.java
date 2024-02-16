@@ -1,4 +1,5 @@
 package com.systemvi.engine.shader;
+import com.systemvi.engine.utils.Utils;
 import org.joml.*;
 
 import java.io.File;
@@ -26,19 +27,19 @@ public class Shader {
             geometry=null;
         }
         public Builder fragment(String file){
-            fragment=readFile(file);
+            fragment= Utils.readFile(file);
             return this;
         }
         public Builder vertex(String file){
-            vertex=readFile(file);
+            vertex=Utils.readFile(file);
             return this;
         }
         public Builder geometry(String file){
-            geometry=readFile(file);
+            geometry=Utils.readFile(file);
             return this;
         }
         public Builder compute(String file){
-            compute=readFile(file);
+            compute=Utils.readFile(file);
             return this;
         }
         public Builder fragmentSource(String source){
@@ -168,22 +169,6 @@ public class Shader {
     }
     public void delete(){
         glDeleteProgram(id);
-    }
-
-    public static String readFile(String name){
-        try{
-            File file=new File(name);
-            Scanner scanner=new Scanner(file);
-            StringBuilder content= new StringBuilder();
-            while(scanner.hasNext()){
-                content.append(scanner.nextLine()).append("\n");
-            }
-            scanner.close();
-            return content.toString();
-        }catch (Exception e){
-            e.printStackTrace();
-            return null;
-        }
     }
 
     public void setUniform(String name, Matrix4f mat){

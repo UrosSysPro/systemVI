@@ -1,4 +1,4 @@
-package com.systemvi.examples.minecraft.world;
+package com.systemvi.voxel.world.world;
 
 import org.joml.Vector3i;
 

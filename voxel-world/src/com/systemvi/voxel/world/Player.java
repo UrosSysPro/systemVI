@@ -1,4 +1,4 @@
-package com.systemvi.examples.minecraft;
+package com.systemvi.voxel.world;
 
 import com.systemvi.engine.camera.Camera;
 import com.systemvi.engine.shader.Primitive;

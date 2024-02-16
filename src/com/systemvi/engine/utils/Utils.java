@@ -3,6 +3,9 @@ package com.systemvi.engine.utils;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import java.io.File;
+import java.util.Scanner;
+
 import static org.lwjgl.opengl.GL33.*;
 import static org.lwjgl.opengl.GL46.*;
 public class Utils {
@@ -11,7 +14,7 @@ public class Utils {
        DEPTH_BUFFER(GL_DEPTH_BUFFER_BIT),
        STENCIL_BUFFER(GL_STENCIL_BUFFER_BIT);
        public final int value;
-       private Buffer(int value){
+       Buffer(int value){
            this.value=value;
        }
    }
@@ -19,7 +22,7 @@ public class Utils {
        FRONT(GL_FRONT),
        BACK(GL_BACK);
        public final int value;
-       private Face(int value){
+       Face(int value){
            this.value=value;
        }
    }
@@ -92,5 +95,20 @@ public class Utils {
            mask|=barrier.value;
        }
        glMemoryBarrier(mask);
+    }
+    public static String assetsFolder="";
+    public static String readFile(String fileName){
+        fileName=assetsFolder+fileName;
+        File file=new File(fileName);
+        try(Scanner scanner=new Scanner(file)){
+            StringBuilder text= new StringBuilder();
+            while(scanner.hasNextLine()){
+                text.append(scanner.nextLine()).append("\n");
+            }
+            return text.toString();
+        }catch (Exception ignored){
+            System.out.println("[ERROR] reading file "+file.getPath());
+            return "";
+        }
     }
 }
