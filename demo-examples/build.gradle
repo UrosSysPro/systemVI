@@ -1,15 +1,23 @@
 plugins {
-    id 'java'
     id 'application'
+    id 'scala'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+scala {
+    zincVersion = "1.6.1"
 }
 
 application {
     mainClass = 'com.systemvi.examples.Main'
 }
 
+run {
+    standardInput = System.in
+}
 sourceSets {
     main {
-        java {
+        scala {
             srcDirs = ['src']
         }
     }
