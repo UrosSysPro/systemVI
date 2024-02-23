@@ -1,0 +1,40 @@
+#version 430 core
+
+layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+
+layout (r16f, binding = 0) uniform image2D density;
+layout (r16f, binding = 1) uniform image2D density_prev;
+layout (r16f, binding = 2) uniform image2D u_texture;
+layout (r16f, binding = 3) uniform image2D v_texture;
+
+uniform float delta;
+uniform int size;
+
+void main() {
+    ivec2 position = ivec2(gl_GlobalInvocationID.xy);
+    float dt0 = delta * float(size);
+    float u = imageLoad(u_texture, position).x;
+    float v = imageLoad(v_texture, position).x;
+    int i = position.x;
+    int j = position.y;
+    float x = float(i) - dt0 * u;
+    float y = float(j) - dt0 * v;
+    if (x > float(size)) x = x - float(size);
+    if (x < 0.0) x = float(size) + x;
+    int i0 = int(x);
+    int i1 = 1 + i0;
+    if (y > float(size)) y = y - float(size);
+    if (y < 0.0) y = float(size) + y;
+    int j0 = int(y);
+    int j1 = 1 + j0;
+    float s1 = x - float(i0);
+    float s0 = 1.0 - s1;
+    float t1 = y - float(j0);
+    float t0 = 1.0 - t1;
+    float d00 = imageLoad(density_prev, ivec2(i0, j0)).x;
+    float d01 = imageLoad(density_prev, ivec2(i0, j1)).x;
+    float d10 = imageLoad(density_prev, ivec2(i1, j0)).x;
+    float d11 = imageLoad(density_prev, ivec2(i1, j1)).x;
+    float d = s0 * (t0 * d00 + t1 * d01) + s1 * (t0 * d10 + t1 * d11);
+    imageStore(density, position, vec4(d));
+}
