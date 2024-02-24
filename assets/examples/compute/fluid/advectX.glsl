@@ -1,4 +1,4 @@
-#version 430 core
+#version 460 core
 
 layout (local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
 
@@ -14,24 +14,20 @@ float readPreviousDensity(ivec2 position){
     if(position.x<0)position.x+=size;
     if(position.y>size)position.y-=size;
     if(position.y<0)position.y+=size;
-    return imageLoad(density_prev,position).x;
+    return imageLoad(u_texture,position).x;
 }
 
 void main() {
     ivec2 position = ivec2(gl_GlobalInvocationID.xy);
     float dt0 = delta * float(size);
-    float u = imageLoad(u_texture, position).x;
-    float v = imageLoad(v_texture, position).x;
+    float u = imageLoad(u_prev_texture, position).x;
+    float v = imageLoad(v_prev_texture, position).x;
     int i = position.x;
     int j = position.y;
     float x = float(i) - dt0 * u;
     float y = float(j) - dt0 * v;
-    if (x > float(size)) x = x - float(size);
-    if (x < 0.0) x = float(size) + x;
     int i0 = int(x);
     int i1 = 1 + i0;
-    if (y > float(size)) y = y - float(size);
-    if (y < 0.0) y = float(size) + y;
     int j0 = int(y);
     int j1 = 1 + j0;
     float s1 = x - float(i0);
@@ -43,5 +39,5 @@ void main() {
     float d10 = readPreviousDensity(ivec2(i1, j0));
     float d11 = readPreviousDensity(ivec2(i1, j1));
     float d = s0 * (t0 * d00 + t1 * d01) + s1 * (t0 * d10 + t1 * d11);
-    imageStore(density, position, vec4(d));
+    imageStore(u_texture, position, vec4(d));
 }

@@ -1,12 +1,8 @@
 package com.systemvi.examples;
 
 import com.systemvi.engine.utils.Utils;
-import com.systemvi.examples.compute.GameOfLife;
-import com.systemvi.examples.compute.Gradient;
-import com.systemvi.examples.compute.fluid.Fluid;
-import com.systemvi.examples.fractals.Juliaset;
-import com.systemvi.examples.instancingtest.App;
-import com.systemvi.examples.uitest.WidgetTest;
+import com.systemvi.examples.compute.fluid.App;
+
 public class Main {
     public static void main(String[] args){
         Utils.assetsFolder="../";
@@ -18,6 +14,6 @@ public class Main {
 //        new App(3,3,60).run();
 //        new Gradient(4,6,60,800,600,"Gradient").run();
 //        new GameOfLife(4,6,60).run();
-        new Fluid().run();
+        new App().run();
     }
 }

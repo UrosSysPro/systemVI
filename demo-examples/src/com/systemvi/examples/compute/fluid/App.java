@@ -8,17 +8,14 @@ import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
-import org.joml.Vector3f;
 
-public class Fluid extends Game {
+public class App extends Game {
 
-    public Fluid() {
-        super(4, 3, 60,512,512,"Fluid");
+    public App() {
+        super(4, 6, 60,512,512,"Fluid");
     }
 
     private Camera camera;
-    private Shader klik;
-//    private Shader shader;
     private TextureRenderer renderer;
     private Simulation simulation;
     private int width, height;
@@ -37,21 +34,8 @@ public class Fluid extends Game {
 
         simulation = new Simulation(width, height);
 
-        klik = Shader.builder().compute("assets/examples/compute/fluid/fill.glsl").build();
-        if(!klik.isCompiled()){
-            System.out.println(klik.getLog());
-        }
-
-//        shader= Shader.builder()
-//            .fragment("assets/examples/compute/fluid/fragment.glsl")
-//            .vertex("assets/renderer/textureRenderer/vertex.glsl")
-//            .build();
-//        if(!shader.isCompiled()){
-//            System.out.println(shader.getLog());
-//        }
         renderer = new TextureRenderer();
         renderer.setCamera(camera);
-//        renderer.setShader(shader);
 
         mouseDown = false;
     }
@@ -61,17 +45,13 @@ public class Fluid extends Game {
         Utils.clear(0f,0.3f,0.9f,1.0f, Utils.Buffer.COLOR_BUFFER);
 
         if (mouseDown) {
-            int size = 20;
-            simulation.density.bindAsImage(0);
-            simulation.u.bindAsImage(1);
-            simulation.v.bindAsImage(2);
-            klik.use();
-            klik.setUniform("size", new Vector2i(width, height));
-            klik.setUniform("deltaTime", delta);
-            klik.setUniform("offset", new Vector2i(mouse).div((float) getWindow().getWidth()/simulation.width).sub(size/2,size/2));
-            klik.setUniform("velocity", new Vector2f(previousMouse).sub(mouse.x,mouse.y).div(10));
-            klik.dispatch(size, size, 1);
-            Utils.barrier(Utils.Barrier.IMAGE_ACCESS);
+            int size=20;
+            int scale=1;
+            int x=mouse.x/scale;
+            int y=mouse.y/scale;
+            int px=previousMouse.x/scale;
+            int py=previousMouse.y/scale;
+            simulation.add(x,y,px,py,delta,size);
         }
 
         simulation.update(delta);
