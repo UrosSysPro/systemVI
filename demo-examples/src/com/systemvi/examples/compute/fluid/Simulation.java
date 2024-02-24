@@ -6,15 +6,10 @@ import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.utils.Utils;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
-import org.joml.Vector3i;
-
-import static org.lwjgl.opengl.GL15.GL_READ_WRITE;
-import static org.lwjgl.opengl.GL30.GL_R16F;
-import static org.lwjgl.opengl.GL42.*;
 
 public class Simulation {
-    public Texture density, density_prev, u, u_prev, v, v_prev;
-    public Shader project, advect, advectX, advectY,fill;
+    public Texture density, density_prev, u, u_prev, v, v_prev,helper;
+    public Shader project, advect,advectX,advectY,fill;
     public int width, height;
 
     public Simulation(int width, int height){
@@ -27,6 +22,7 @@ public class Simulation {
         u_prev          = new Texture(width, height, Format.R16F);
         v               = new Texture(width, height, Format.R16F);
         v_prev          = new Texture(width, height, Format.R16F);
+        helper          = new Texture(width, height, Format.R16F);
 
         project=Shader.builder().compute("assets/examples/compute/fluid/project.glsl").build();
         if(!project.isCompiled()) System.out.println(project.getLog());
@@ -36,8 +32,11 @@ public class Simulation {
 
         advectX=Shader.builder().compute("assets/examples/compute/fluid/advectX.glsl").build();
         if(!advectX.isCompiled())System.out.println(advectX.getLog());
+
         advectY=Shader.builder().compute("assets/examples/compute/fluid/advectY.glsl").build();
         if(!advectY.isCompiled())System.out.println(advectY.getLog());
+
+
 
         fill = Shader.builder().compute("assets/examples/compute/fluid/fill.glsl").build();
         if(!fill.isCompiled())System.out.println(fill.getLog());
@@ -47,15 +46,13 @@ public class Simulation {
         Texture temp = density;
         density = density_prev;
         density_prev = temp;
-        advect(delta, density, density_prev, u, v);
+        advect(delta, helper, density_prev, u, v);
+        temp=density;density=helper;helper=temp;
 
-        temp = u;
-        u = u_prev;
-        u_prev = temp;
-        temp = v;
-        v = v_prev;
-        v_prev = temp;
+        temp = u;u = u_prev;u_prev = temp;
+        temp = v;v = v_prev;v_prev = temp;
         advectVelocity(delta);
+
 //        project(u, v, u_prev);
     }
 
@@ -71,7 +68,6 @@ public class Simulation {
         advect.dispatch(width/8, height/8, 1);
         Utils.barrier(Utils.Barrier.IMAGE_ACCESS);
     }
-
     private void advectVelocity(float delta){
         advectX.use();
         u.bindAsImage(0);
@@ -91,7 +87,6 @@ public class Simulation {
         advectY.dispatch(width/8, height/8, 1);
         Utils.barrier(Utils.Barrier.IMAGE_ACCESS);
     }
-
     private void project(Texture u, Texture v, Texture p){
         project.use();
         u.bindAsImage(0);
@@ -99,7 +94,7 @@ public class Simulation {
         p.bindAsImage(2);
         project.setUniform("size", width);
         project.dispatch(width/8, height/8, 1);
-        glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+        Utils.barrier(Utils.Barrier.IMAGE_ACCESS);
     }
 
     public void add(int x,int y,int px,int py,float delta,int size){

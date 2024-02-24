@@ -14,7 +14,7 @@ float readPreviousDensity(ivec2 position){
     if(position.x<0)position.x+=size;
     if(position.y>size)position.y-=size;
     if(position.y<0)position.y+=size;
-    return imageLoad(u_texture,position).x;
+    return imageLoad(u_prev_texture,position).x;
 }
 
 void main() {
