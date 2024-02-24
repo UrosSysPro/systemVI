@@ -7,9 +7,9 @@ layout (r16f, binding = 1) uniform image2D u_prev_texture;
 layout (r16f, binding = 2) uniform image2D v_prev_texture;
 
 uniform float delta;
-uniform int size;
 
 float readPreviousDensity(ivec2 position){
+    int size=imageSize(v_texture).x;
     if(position.x>size)position.x-=size;
     if(position.x<0)position.x+=size;
     if(position.y>size)position.y-=size;
@@ -18,6 +18,7 @@ float readPreviousDensity(ivec2 position){
 }
 
 void main() {
+    int size=imageSize(v_texture).x;
     ivec2 position = ivec2(gl_GlobalInvocationID.xy);
     float dt0 = delta * float(size);
     float u = imageLoad(u_prev_texture, position).x;

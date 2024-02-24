@@ -64,7 +64,6 @@ public class Simulation {
         u.bindAsImage(2);
         v.bindAsImage(3);
         advect.setUniform("delta", delta);
-        advect.setUniform("size", width);
         advect.dispatch(width/8, height/8, 1);
         Utils.barrier(Utils.Barrier.IMAGE_ACCESS);
     }
@@ -74,7 +73,6 @@ public class Simulation {
         u_prev.bindAsImage(1);
         v_prev.bindAsImage(2);
         advectX.setUniform("delta", delta);
-        advectX.setUniform("size", width);
         advectX.dispatch(width/8, height/8, 1);
         Utils.barrier(Utils.Barrier.IMAGE_ACCESS);
 
@@ -83,7 +81,6 @@ public class Simulation {
         u_prev.bindAsImage(1);
         v_prev.bindAsImage(2);
         advectY.setUniform("delta", delta);
-        advectY.setUniform("size", width);
         advectY.dispatch(width/8, height/8, 1);
         Utils.barrier(Utils.Barrier.IMAGE_ACCESS);
     }
