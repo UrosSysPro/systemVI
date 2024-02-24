@@ -20,12 +20,12 @@ public class Simulation {
         this.width = width;
         this.height = height;
 
-        density = new Texture(width, height, Format.R16);
-        density_prev = new Texture(width, height, Format.R16);
-        u = new Texture(width, height, Format.R16);
-        u_prev = new Texture(width, height, Format.R16);
-        v = new Texture(width, height, Format.R16);
-        v_prev = new Texture(width, height, Format.R16);
+        density = new Texture(width, height, Format.R16F);
+        density_prev = new Texture(width, height, Format.R16F);
+        u = new Texture(width, height, Format.R16F);
+        u_prev = new Texture(width, height, Format.R16F);
+        v = new Texture(width, height, Format.R16F);
+        v_prev = new Texture(width, height, Format.R16F);
 
 //        project=Shader.builder()
 //            .compute("assets/compute/project.glsl")
@@ -68,7 +68,7 @@ public class Simulation {
         v.bindAsImage(3);
         advect.setUniform("delta", delta);
         advect.setUniform("size", width);
-        advect.dispatch(width, height, 1);
+        advect.dispatch(width/8, height/8, 1);
         Utils.barrier(Utils.Barrier.IMAGE_ACCESS);
     }
 

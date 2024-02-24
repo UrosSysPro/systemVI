@@ -9,11 +9,8 @@ uniform sampler2D v_buffer;
 out vec4 FragColor;
 
 void main(){
-    FragColor=vec4(
-//        texture(t0,vTexCoord).x,
-        0.0,
-        texture(u_buffer,vTexCoord).x*0.5+0.5,
-        texture(v_buffer,vTexCoord).x*0.5+0.5,
-        1.0
-    );
+    float density=texture(t0,vTexCoord).r;
+    float u=texture(u_buffer,vTexCoord).r;
+    float v=texture(v_buffer,vTexCoord).r;
+    FragColor=vec4(0.0,u,0.0,1.0);
 }

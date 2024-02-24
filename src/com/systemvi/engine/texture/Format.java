@@ -15,6 +15,7 @@ public enum Format {
     RGB16(GL_RGB16,3),
     RG16(GL_RG16,2),
     R16(GL_R16,1),
+    R16F(GL_R16F,1),
     RGBA8(GL_RGBA8,4),
     RGB8(GL_RGB8,3),
     RG8(GL_RG8,2),

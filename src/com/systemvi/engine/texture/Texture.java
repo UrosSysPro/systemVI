@@ -97,7 +97,7 @@ public class Texture{
 
     public void bindAsImage(int i){
         glActiveTexture(GL_TEXTURE0+i);
-//        glBindTexture(GL_TEXTURE_2D,id);
+        glBindTexture(GL_TEXTURE_2D,id);
         glBindImageTexture(i, id, 0, false, 0, GL_READ_WRITE, format.id);
     }
 

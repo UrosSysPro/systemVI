@@ -18,7 +18,7 @@ public class Fluid extends Game {
 
     private Camera camera;
     private Shader klik;
-    private Shader shader;
+//    private Shader shader;
     private TextureRenderer renderer;
     private Simulation simulation;
     private int width, height;
@@ -38,17 +38,20 @@ public class Fluid extends Game {
         simulation = new Simulation(width, height);
 
         klik = Shader.builder().compute("assets/examples/compute/fluid/fill.glsl").build();
-
-        shader= Shader.builder()
-            .fragment("assets/examples/compute/fluid/fragment.glsl")
-            .vertex("assets/renderer/textureRenderer/vertex.glsl")
-            .build();
-        if(!shader.isCompiled()){
-            System.out.println(shader.getLog());
+        if(!klik.isCompiled()){
+            System.out.println(klik.getLog());
         }
+
+//        shader= Shader.builder()
+//            .fragment("assets/examples/compute/fluid/fragment.glsl")
+//            .vertex("assets/renderer/textureRenderer/vertex.glsl")
+//            .build();
+//        if(!shader.isCompiled()){
+//            System.out.println(shader.getLog());
+//        }
         renderer = new TextureRenderer();
-        renderer.setShader(shader);
         renderer.setCamera(camera);
+//        renderer.setShader(shader);
 
         mouseDown = false;
     }
@@ -66,24 +69,21 @@ public class Fluid extends Game {
             klik.setUniform("size", new Vector2i(width, height));
             klik.setUniform("deltaTime", delta);
             klik.setUniform("offset", new Vector2i(mouse).div((float) getWindow().getWidth()/simulation.width).sub(size/2,size/2));
-//            klik.setUniform("velocity", new Vector2f(previousMouse).sub(mouse.x,mouse.y).div(10));
-            klik.setUniform("velocity", new Vector2f(-1,-1));
+            klik.setUniform("velocity", new Vector2f(previousMouse).sub(mouse.x,mouse.y).div(10));
             klik.dispatch(size, size, 1);
             Utils.barrier(Utils.Barrier.IMAGE_ACCESS);
         }
 
-//        simulation.update(delta);
+        simulation.update(delta);
 
-        shader.use();
-        simulation.u.bind(1);
-        simulation.v.bind(2);
-
-        float scale=(float)getWindow().getWidth()/simulation.width;
-        renderer.draw(simulation.density, 0, 0, simulation.width*scale, simulation.height*scale);
+        renderer.draw(simulation.density, 0, 0, simulation.width, simulation.height);
+        renderer.flush();
+        renderer.draw(simulation.u, 256, 0, simulation.width, simulation.height);
+        renderer.flush();
+        renderer.draw(simulation.v, 256, 256, simulation.width, simulation.height);
         renderer.flush();
 
         System.out.print("\rFPS: " + getFPS());
-//        System.out.print("\rFPS: " + Math.round(1 / delta));
     }
     @Override
     public boolean mouseDown(int button, int mods, double x, double y) {
