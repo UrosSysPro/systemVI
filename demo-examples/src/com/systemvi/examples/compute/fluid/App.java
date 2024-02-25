@@ -12,7 +12,7 @@ import org.joml.Vector2i;
 public class App extends Game {
 
     public App() {
-        super(4, 6, 60,512,512,"Fluid");
+        super(4, 6, 60,800,800,"Fluid");
     }
 
     private Camera camera;
@@ -27,8 +27,8 @@ public class App extends Game {
         mouse=new Vector2i();
         previousMouse=new Vector2i();
 
-        width = 256;
-        height = 256;
+        width = window.getWidth();
+        height = window.getHeight();
 
         camera = Camera.default2d(window);
 
@@ -57,10 +57,6 @@ public class App extends Game {
         simulation.update(delta);
 
         renderer.draw(simulation.density, 0, 0, simulation.width, simulation.height);
-        renderer.flush();
-        renderer.draw(simulation.u, 256, 0, simulation.width, simulation.height);
-        renderer.flush();
-        renderer.draw(simulation.v, 256, 256, simulation.width, simulation.height);
         renderer.flush();
 
         System.out.print("\rFPS: " + getFPS());
