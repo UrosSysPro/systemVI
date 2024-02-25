@@ -12,12 +12,16 @@ case class RoundedRect(
                         var blur:Float,
                         var size:Vector2f
                       ){
-  def set( transofrm:Matrix4f,
-           color:Vector4f,
-           borderRadius:Float,
-           blur:Float,
-           size:Vector2f):Unit={
-
+  def set(transform:Matrix4f,
+          color:Vector4f,
+          borderRadius:Float,
+          blur:Float,
+          width:Float, height:Float):Unit={
+    this.transofrm.set(transform)
+    this.color.set(color)
+    this.borderRadius=borderRadius
+    this.blur=blur
+    this.size.set(width,height)
   }
 }
 class WidgetRenderer(window:Window){
