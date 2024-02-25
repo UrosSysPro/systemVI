@@ -45,7 +45,7 @@ public class App extends Game {
         Utils.clear(0f,0.3f,0.9f,1.0f, Utils.Buffer.COLOR_BUFFER);
 
         if (mouseDown) {
-            int size=20;
+            int size=50;
             int scale=1;
             int x=mouse.x/scale;
             int y=mouse.y/scale;

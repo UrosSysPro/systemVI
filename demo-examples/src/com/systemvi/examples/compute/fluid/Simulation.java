@@ -53,8 +53,7 @@ public class Simulation {
         Texture temp = density;
         density = density_prev;
         density_prev = temp;
-        advect(delta, helper, density_prev, u, v);
-        temp=density;density=helper;helper=temp;
+        advect(delta, density, density_prev, u, v);
 
         temp = u;u = u_prev;u_prev = temp;
         temp = v;v = v_prev;v_prev = temp;
@@ -100,7 +99,7 @@ public class Simulation {
         project1.dispatch(width/8,height/8,1);
         Utils.barrier(Utils.Barrier.IMAGE_ACCESS);
 
-        for(int i=0;i<10;i++){
+        for(int i=0;i<20;i++){
             project2.use();
             helper.bindAsImage(0);
             p.bindAsImage(1);

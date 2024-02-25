@@ -9,13 +9,12 @@ layout (r16f, binding = 3) uniform image2D v_texture;
 
 uniform float delta;
 
-float readPreviousDensity(ivec2 position){
-    int size=imageSize(v_texture).x;
-    if(position.x>size)position.x-=size;
-    if(position.x<0)position.x+=size;
-    if(position.y>size)position.y-=size;
-    if(position.y<0)position.y+=size;
-    return imageLoad(density_prev,position).x;
+float readPreviousDensity(in ivec2 position){
+    ivec2 size=imageSize(density_prev);
+    ivec2 p=ivec2(0);
+    p.x=int(mod(position.x+5*size.x,size.x));
+    p.y=int(mod(position.y+5*size.y,size.y));
+    return imageLoad(density_prev,p).x;
 }
 
 void main() {
@@ -28,12 +27,8 @@ void main() {
     int j = position.y;
     float x = float(i) - dt0 * u;
     float y = float(j) - dt0 * v;
-    if (x > float(size)) x = x - float(size);
-    if (x < 0.0) x = float(size) + x;
     int i0 = int(x);
     int i1 = 1 + i0;
-    if (y > float(size)) y = y - float(size);
-    if (y < 0.0) y = float(size) + y;
     int j0 = int(y);
     int j1 = 1 + j0;
     float s1 = x - float(i0);
