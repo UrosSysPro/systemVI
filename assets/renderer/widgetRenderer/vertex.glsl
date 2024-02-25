@@ -5,6 +5,7 @@ layout(location=1) in mat4 transform;
 layout(location=5) in vec4 color;
 layout(location=6) in float borderRadius;
 layout(location=7) in float blur;
+layout(location=8) in vec2 size;
 
 uniform mat4 view;
 uniform mat4 projection;
@@ -14,6 +15,7 @@ out VERTEX_OUT{
     vec4 color;
     float borderRadius;
     float blur;
+    vec2 size;
 }vertexOut;
 
 void main(){
@@ -21,5 +23,6 @@ void main(){
     vertexOut.color=color;
     vertexOut.borderRadius=borderRadius;
     vertexOut.blur=blur;
+    vertexOut.size=size;
     gl_Position=projection*view*transform*vec4(position,1.0);
 }

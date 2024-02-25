@@ -15,22 +15,14 @@ class WidgetTest extends Game(3,3,60,800,600,"Widget test"){
   override def setup(window: Window): Unit = {
     widget=Container(
       color=new Vector4f(0.3f,0.6f,0.9f,1.0f),
-      child=SizedBox(
-        child=Padding(
-        padding=EdgeInsets.all(20),
-        child=Column(
-          children = Array(
-            SizedBox(
-              size = new Vector2f(100,100),
-              child = Switch(true)
-            ),
-            SizedBox(
-              size = new Vector2f(100,100),
-              child = Switch(false)
-            )
+      child=Padding(
+        padding = EdgeInsets.all(150),
+        child=SizedBox(
+          size=new Vector2f(300,300),
+          child=Container(
+            color = new Vector4f(0.7f,0.5f,0.3f,1.0f)
           )
         )
-      )
       )
     )
     widget.calculateSize(new Vector2f(800,600))
@@ -41,7 +33,9 @@ class WidgetTest extends Game(3,3,60,800,600,"Widget test"){
 
   override def loop(delta: Float): Unit = {
     Utils.clear(0,0,0,0,Buffer.COLOR_BUFFER)
+    Utils.enableBlending()
     widget.draw(renderer)
     renderer.flush()
+    Utils.disableBlending()
   }
 }
