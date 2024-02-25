@@ -56,7 +56,7 @@
 #
 #   (3) This script is generated from the Groovy template
 #       https://github.com/gradle/gradle/blob/HEAD/subprojects/plugins/src/main/resources/org/gradle/api/internal/plugins/unixStartScript.txt
-#       within the Gradle project.glsl.
+#       within the Gradle project1.glsl.
 #
 #       You can find Gradle at https://github.com/gradle/gradle/.
 #

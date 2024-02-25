@@ -1,4 +1,4 @@
-# Ignore Gradle project.glsl-specific cache directory
+# Ignore Gradle project1.glsl-specific cache directory
 .gradle
 # Ignore Gradle build output directory
 build
