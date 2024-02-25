@@ -8,6 +8,7 @@ import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
+import org.lwjgl.glfw.GLFW;
 
 public class App extends Game {
 
@@ -20,7 +21,7 @@ public class App extends Game {
     private Simulation simulation;
     private int width, height;
     private Vector2i mouse,previousMouse;
-    boolean mouseDown;
+    boolean leftClick=false,rightClick=false;
 
     @Override
     public void setup(Window window) {
@@ -36,22 +37,21 @@ public class App extends Game {
 
         renderer = new TextureRenderer();
         renderer.setCamera(camera);
-
-        mouseDown = false;
     }
 
     @Override
     public void loop(float delta) {
         Utils.clear(0f,0.3f,0.9f,1.0f, Utils.Buffer.COLOR_BUFFER);
 
-        if (mouseDown) {
+        if (leftClick||rightClick) {
             int size=50;
             int scale=1;
             int x=mouse.x/scale;
             int y=mouse.y/scale;
             int px=previousMouse.x/scale;
             int py=previousMouse.y/scale;
-            simulation.add(x,y,px,py,delta,size);
+            simulation.add(x,y,px,py,delta,size,leftClick?1:0,1f);
+            simulation.project();
         }
 
         simulation.update(delta);
@@ -63,12 +63,14 @@ public class App extends Game {
     }
     @Override
     public boolean mouseDown(int button, int mods, double x, double y) {
-        mouseDown=true;
+        if(button== GLFW.GLFW_MOUSE_BUTTON_1)leftClick=true;
+        if(button== GLFW.GLFW_MOUSE_BUTTON_2)rightClick=true;
         return true;
     }
     @Override
     public boolean mouseUp(int button, int mods, double x, double y) {
-        mouseDown=false;
+        if(button== GLFW.GLFW_MOUSE_BUTTON_1)leftClick=false;
+        if(button== GLFW.GLFW_MOUSE_BUTTON_2)rightClick=false;
         return true;
     }
     @Override

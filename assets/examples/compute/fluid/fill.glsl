@@ -10,11 +10,15 @@ uniform ivec2 size;
 uniform float deltaTime;
 uniform ivec2 offset;
 uniform vec2 velocity;
+uniform float fill;
 
 void main() {
     ivec2 texelCoords = ivec2(gl_GlobalInvocationID.xy) + offset;
 
-    imageStore(density, texelCoords, vec4(1.0));
-    imageStore(u_texture, texelCoords, vec4(velocity.x));
-    imageStore(v_texture, texelCoords, vec4(velocity.y));
+    float d=imageLoad(density,texelCoords).x;
+    imageStore(density, texelCoords, vec4(mix(d,0.7,step(0.5,fill))));
+//    float u=imageLoad(u_texture,texelCoords).x;
+    imageStore(u_texture, texelCoords, vec4(velocity.x*deltaTime));
+//    float v=imageLoad(v_texture,texelCoords).x;
+    imageStore(v_texture, texelCoords, vec4(velocity.y*deltaTime));
 }

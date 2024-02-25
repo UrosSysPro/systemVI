@@ -90,7 +90,7 @@ public class Simulation {
         advectY.dispatch(width/8, height/8, 1);
         Utils.barrier(Utils.Barrier.IMAGE_ACCESS);
     }
-    private void project(){
+    public void project(){
         project1.use();
         u.bindAsImage(0);
         v.bindAsImage(1);
@@ -123,15 +123,16 @@ public class Simulation {
         Utils.barrier(Utils.Barrier.IMAGE_ACCESS);
     }
 
-    public void add(int x,int y,int px,int py,float delta,int size){
+    public void add(int x,int y,int px,int py,float delta,int size,float value,float velocity){
         density.bindAsImage(0);
         u.bindAsImage(1);
         v.bindAsImage(2);
         fill.use();
+        fill.setUniform("fill",value);
         fill.setUniform("size", new Vector2i(width, height));
         fill.setUniform("deltaTime", delta);
         fill.setUniform("offset", new Vector2i(x-size/2,y-size/2));
-        fill.setUniform("velocity", new Vector2f(x-px,y-py).div(10));
+        fill.setUniform("velocity", new Vector2f(x-px,y-py).mul(velocity));
         fill.dispatch(size, size, 1);
         Utils.barrier(Utils.Barrier.IMAGE_ACCESS);
     }
