@@ -50,23 +50,24 @@ public class Simulation {
     }
 
     public void update(float delta){
-        Texture temp = density;
-        density = density_prev;
-        density_prev = temp;
-        advect(delta, density, density_prev, u, v);
 
-        temp = u;u = u_prev;u_prev = temp;
-        temp = v;v = v_prev;v_prev = temp;
+        advect(delta);
+
         advectVelocity(delta);
 
+        project();
         project();
     }
 
 
-    private void advect(float delta, Texture d, Texture d0, Texture u, Texture v){
+    private void advect(float delta){
+        Texture temp = density;
+        density = density_prev;
+        density_prev = temp;
+
         advect.use();
-        d.bindAsImage(0);
-        d0.bindAsImage(1);
+        density.bindAsImage(0);
+        density_prev.bindAsImage(1);
         u.bindAsImage(2);
         v.bindAsImage(3);
         advect.setUniform("delta", delta);
@@ -74,6 +75,9 @@ public class Simulation {
         Utils.barrier(Utils.Barrier.IMAGE_ACCESS);
     }
     private void advectVelocity(float delta){
+        Texture temp;
+        temp = u;u = u_prev;u_prev = temp;
+        temp = v;v = v_prev;v_prev = temp;
         advectX.use();
         u.bindAsImage(0);
         u_prev.bindAsImage(1);
