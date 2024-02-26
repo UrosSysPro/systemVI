@@ -37,8 +37,8 @@ void main() {
     //    u[i][j] -= 0.5*(p[i+1][j]-p[i-1][j])/h;
     //    v[i][j] -= 0.5*(p[i][j+1]-p[i][j-1])/h;
 
-    u-=0.5*(readP(position+ivec2(1,0))-readP(position-ivec2(1,0)))/h;
-    v-=0.5*(readP(position+ivec2(0,1))-readP(position-ivec2(0,1)))/h;
+    u-=0.5*(readP(ivec2(i+1,j))-readP(ivec2(i-1,j)))/h;
+    v-=0.5*(readP(ivec2(i,j+1))-readP(ivec2(i,j-1)))/h;
     imageStore(u_texture,position,vec4(u));
     imageStore(v_texture,position,vec4(v));
 }

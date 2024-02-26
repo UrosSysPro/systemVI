@@ -21,7 +21,7 @@ public class App extends Game {
     private Simulation simulation;
     private int width, height;
     private Vector2i mouse,previousMouse;
-    boolean leftClick=false,rightClick=false;
+    boolean leftClick=false,rightClick=false,f3=false;
 
     @Override
     public void setup(Window window) {
@@ -56,8 +56,19 @@ public class App extends Game {
 
         simulation.update(delta);
 
-        renderer.draw(simulation.density, 0, 0, simulation.width, simulation.height);
-        renderer.flush();
+        if(f3){
+            renderer.draw(simulation.density, 0, 0, simulation.width/2, simulation.height/2);
+            renderer.flush();
+
+            renderer.draw(simulation.u, simulation.width/2, 0, simulation.width/2, simulation.height/2);
+            renderer.flush();
+
+            renderer.draw(simulation.v, 0, simulation.height/2, simulation.width/2, simulation.height/2);
+            renderer.flush();
+        }else{
+            renderer.draw(simulation.density, 0, 0, simulation.width, simulation.height);
+            renderer.flush();
+        }
 
         System.out.print("\rFPS: " + getFPS());
     }
@@ -79,4 +90,11 @@ public class App extends Game {
         mouse.set((int) x, (int) y);
         return true;
     }
+
+    @Override
+    public boolean keyDown(int key, int scancode, int mods) {
+        if(key==GLFW.GLFW_KEY_F3)f3=!f3;
+        return true;
+    }
+
 }
