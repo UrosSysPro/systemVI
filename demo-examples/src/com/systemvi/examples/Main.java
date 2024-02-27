@@ -7,7 +7,7 @@ import com.systemvi.examples.uitest.WidgetTest;
 public class Main {
     public static void main(String[] args){
         Utils.assetsFolder="../";
-//        new WidgetTest().run();
+        new WidgetTest().run();
 //        new Fluid(3,3,60).run();
 //        new Juliaset(3,3,60,800,600,"Julia set").run();
 //        new App(3,3,60).run();
@@ -15,6 +15,6 @@ public class Main {
 //        new App(3,3,60).run();
 //        new Gradient(4,6,60,800,600,"Gradient").run();
 //        new GameOfLife(4,6,60).run();
-        new App().run();
+//        new App().run();
     }
 }

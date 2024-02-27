@@ -6,15 +6,32 @@ import org.joml.Vector2f
 abstract class StatefulWidget extends Widget{
   var state:State=null
   var child:Widget=build()
-  override def build(): Widget = state.build()
-  override def calculateSize(maxParentSize: Vector2f): Vector2f = ???
-  override def calculatePosition(parentPosition: Vector2f): Unit = ???
-  override def draw(renderer: WidgetRenderer): Unit = ???
-  override def debugPrint(tabs: String): Unit = ???
+  override def build():Widget = state.build()
+  override def calculateSize(maxParentSize:Vector2f): Vector2f = {
+    size.set(maxParentSize)
+    if(child!=null){
+      child.calculateSize(maxParentSize)
+      size.set(child.size)
+    }
+    return size
+  }
+  override def calculatePosition(parentPosition:Vector2f): Unit = {
+    position.set(parentPosition)
+    if(child!=null){
+      child.calculatePosition(position)
+    }
+  }
+  override def draw(renderer: WidgetRenderer): Unit = {
+    if(child!=null)child.draw(renderer)
+  }
+  override def debugPrint(tabs: String): Unit = {
+    println(s"$tabs StatefulWidget")
+    if(child!=null)child.debugPrint(s"$tabs\t")
+  }
   def createState():State
 }
 
-class State{
+abstract class State{
   var widget:StatefulWidget=null;
   def build(): Widget = null
 

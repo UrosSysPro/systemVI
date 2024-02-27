@@ -25,6 +25,7 @@ case class RoundedRect(
   }
 }
 class WidgetRenderer(window:Window){
+
   val shader:Shader=Shader.builder()
     .fragment("assets/renderer/widgetRenderer/fragment.glsl")
     .vertex("assets/renderer/widgetRenderer/vertex.glsl")
