@@ -1,4 +1,5 @@
 package com.systemvi.engine.ui.widgets
+import com.systemvi.engine.ui.widgets.Switch.{padding, selectedColor, unselectedColor}
 import com.systemvi.engine.ui.{Widget, WidgetRenderer}
 import org.joml.{Vector2f, Vector4f}
 
@@ -10,28 +11,45 @@ class Switch(val value:Boolean) extends StatelessWidget {
     )
 
   override def draw(renderer: WidgetRenderer): Unit = {
-    val padding=5f
-    var x=position.x;
-    var y=position.y;
-    val size=this.size.y;
-    val color=new Vector4f(0.7f);
-    if(value){
-      color.set(0.2f,0.7f,0.3f,1.0f)
-      x=position.x+this.size.x-size
-    }
+    val circleSize:Float = size.y
+    val x:Float = if (value) position.x + this.size.x - circleSize else position.x
+    val y:Float = position.y
+    //background
     renderer.rect(
       position.x,
       position.y,
       this.size.x,
       this.size.y,
-      color
+      if(value)selectedColor else unselectedColor,
+      size.y/2
     )
+    val shadowBlur:Float=4
+    val shadowSize:Float=4
+    //shadow
     renderer.rect(
-      x+padding,y+padding,size-2*padding,size-2*padding,new Vector4f(1.0f)
+      x+padding-shadowSize,
+      y+padding-shadowSize,
+      circleSize-2*padding+shadowSize*2,
+      circleSize-2*padding+shadowSize*2,
+      new Vector4f(0.5f),
+      circleSize/2-padding+shadowSize,
+      shadowBlur
+    )
+    //circle
+    renderer.rect(
+      x+padding,
+      y+padding,
+      circleSize-2*padding,
+      circleSize-2*padding,
+      new Vector4f(1.0f),
+      (circleSize-2*padding)/2
     )
   }
 }
 
 object Switch{
+  val selectedColor=new Vector4f(0.2f,0.8f,0.5f,1.0f)
+  val unselectedColor=new Vector4f(0.8f,0.8f,0.8f,1.0f)
+  val padding=2
   def apply(value: Boolean): Switch = new Switch(value)
 }

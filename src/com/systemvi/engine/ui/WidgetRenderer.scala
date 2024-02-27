@@ -26,14 +26,14 @@ case class RoundedRect(
 }
 class WidgetRenderer(window:Window){
 
-  val shader:Shader=Shader.builder()
+  private val shader:Shader=Shader.builder()
     .fragment("assets/renderer/widgetRenderer/fragment.glsl")
     .vertex("assets/renderer/widgetRenderer/vertex.glsl")
     .build()
 
   val camera:Camera=Camera.default2d(window);
 
-  val mesh=new Mesh(
+  private val mesh=new Mesh(
     new VertexAttribute("position",3)
   )
   mesh.setVertexData(Array[Float](
@@ -46,9 +46,9 @@ class WidgetRenderer(window:Window){
     0,1,2,
     0,2,3
   ))
-  val maxRectsToDraw=1000
-  var rectsToDraw=0
-  val rects:Array[RoundedRect]=(0 until maxRectsToDraw).map((index:Int)=>RoundedRect(
+  private val maxRectsToDraw=1000
+  private var rectsToDraw=0
+  private val rects:Array[RoundedRect]=(0 until maxRectsToDraw).map((index:Int)=>RoundedRect(
     transofrm = new Matrix4f(),
     color = new Vector4f(),
     borderRadius = 0,
@@ -67,19 +67,23 @@ class WidgetRenderer(window:Window){
     new VertexAttribute("blur",1),
     new VertexAttribute("size",2)
   )
-
-  def circle(x:Float,y:Float,r:Float,color:Vector4f):Unit={
-
-  }
-  def rect(x:Float,y:Float,w:Float,h:Float,color:Vector4f):Unit={
+  def rect(x:Float,y:Float,w:Float,h:Float,color:Vector4f,borderRadius:Float,blur:Float):Unit={
+    if(rectsToDraw>maxRectsToDraw)flush()
     rects(rectsToDraw).transofrm.identity().translate(x+w/2,y+h/2,0).scale(w,h,1)
     rects(rectsToDraw).color.set(color)
     rects(rectsToDraw).size.set(w,h)
-    rects(rectsToDraw).borderRadius=20
+    rects(rectsToDraw).borderRadius=borderRadius
+    rects(rectsToDraw).blur=blur
     rectsToDraw+=1
   }
-  def roundedRect():Unit={
-
+  def rect(x:Float,y:Float,w:Float,h:Float,color:Vector4f):Unit={
+    rect(x,y,w,h,color,0,0)
+  }
+  def rect(x:Float,y:Float,w:Float,h:Float,color:Vector4f,borderRadius:Float):Unit={
+    rect(x,y,w,h,color,borderRadius,1)
+  }
+  def circle(x:Float,y:Float,r:Float,color:Vector4f):Unit={
+    rect(x-r,y-r,r*2,r*2,color,r,1)
   }
   def flush():Unit={
     val matrixSize:Int=16
