@@ -38,6 +38,10 @@ Projekat za 6.godinu 2023-2024 u terminu 13:30
 32. [Menger sponge]()
 33. [Mandelbrot i julia set]()
 34. [Compute shader]()
+35. [Widget Renderer]()
+36. [Widget Class, stateless widget]()
+37. [stateful widget, switch]()
+38. ----||----------
 
 ## Domaci
 1. + Napraviti `Stack` klasu. `Stack` je struktura podataka koja definise dve operacije 
@@ -55,6 +59,8 @@ se izvrsavaju konstantnom brzinom O(1). implementirati slicno kao `LinkedList`-u
    ```
    + Napisati test program koji napravi `PravougliTrougao[] p=new PravougliTrougao[100];`i popuni ga trouglovima random stranica.
    + Napraviti novi niz `float[] niz=new float[300]` i popuniti taj niz tako da za svaka 3 uzastopna clana niza budu a, b, hipotenuza tog trougla.
+1. 
+
 ## Korisni linkovi
 + [https://learnopengl.com/](https://learnopengl.com/)
 + [Git pull request](https://opensource.com/article/19/7/create-pull-request-github)

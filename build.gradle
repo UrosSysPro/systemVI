@@ -2,6 +2,16 @@ plugins {
 	id 'application'
 	id 'scala'
 	id 'com.github.johnrengelman.shadow' version '8.1.1'
+	id 'maven-publish'
+	id 'java-library'
+}
+
+group 'com.systempro.systemvi'
+version '0.7.0'
+
+java{
+	withJavadocJar()
+	withSourcesJar()
 }
 
 scala {
@@ -256,5 +266,29 @@ subprojects {
 		runtimeOnly "org.lwjgl:lwjgl-xxhash::$lwjglNatives"
 		runtimeOnly "org.lwjgl:lwjgl-yoga::$lwjglNatives"
 		runtimeOnly "org.lwjgl:lwjgl-zstd::$lwjglNatives"
+	}
+}
+
+publishing {
+	repositories {
+		maven {
+			name = "GitHubPackages"
+			url = uri("https://maven.pkg.github.com/OWNER/REPOSITORY")
+			credentials {
+				username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+				password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+			}
+		}
+	}
+	publications {
+		gpr(MavenPublication) {
+			from(components.java)
+		}
+	}
+}
+
+javadoc {
+	if(JavaVersion.current().isJava9Compatible()) {
+		options.addBooleanOption('html5', true)
 	}
 }
