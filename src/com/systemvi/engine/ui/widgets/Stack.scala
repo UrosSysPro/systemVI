@@ -3,6 +3,8 @@ package com.systemvi.engine.ui.widgets
 import com.systemvi.engine.ui.{Widget, WidgetRenderer}
 import org.joml.Vector2f
 
+import scala.collection.mutable
+
 class Stack(val children:Array[Widget]) extends StatelessWidget {
   override def build(): Widget = {
     null
@@ -45,6 +47,12 @@ class Stack(val children:Array[Widget]) extends StatelessWidget {
     val childTabs=s"$tabs\t"
     for(child<-children){
       child.debugPrint(childTabs)
+    }
+  }
+
+  override def findGestureDetectors(stack: mutable.Stack[GestureDetector], x: Float, y: Float): Unit = {
+    if(children!=null)for(child<-children){
+      child.findGestureDetectors(stack, x, y)
     }
   }
 }

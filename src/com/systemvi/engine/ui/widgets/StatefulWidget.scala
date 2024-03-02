@@ -3,6 +3,8 @@ package com.systemvi.engine.ui.widgets
 import com.systemvi.engine.ui.{Widget, WidgetRenderer}
 import org.joml.Vector2f
 
+import scala.collection.mutable
+
 abstract class StatefulWidget extends Widget{
   var state:State=createState()
   var child:Widget=build()
@@ -25,6 +27,10 @@ abstract class StatefulWidget extends Widget{
   override def debugPrint(tabs: String): Unit = {
     println(s"$tabs ${getClass.getSimpleName}")
     if(child!=null)child.debugPrint(s"$tabs\t")
+  }
+
+  override def findGestureDetectors(stack: mutable.Stack[GestureDetector], x: Float, y: Float): Unit = {
+    if(child!=null)child.findGestureDetectors(stack,x,y)
   }
   def createState():State
 }

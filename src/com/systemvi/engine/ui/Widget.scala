@@ -1,6 +1,9 @@
 package com.systemvi.engine.ui
 
+import com.systemvi.engine.ui.widgets.GestureDetector
 import org.joml.Vector2f
+
+import scala.collection.mutable
 
 //  ui=build(state)
 
@@ -13,4 +16,5 @@ abstract class Widget {
   def calculatePosition(parentPosition:Vector2f): Unit
   def draw(renderer:WidgetRenderer): Unit
   def debugPrint(tabs:String): Unit
+  def findGestureDetectors(stack:mutable.Stack[GestureDetector],x:Float,y:Float)
 }
