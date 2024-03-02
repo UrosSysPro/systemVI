@@ -37,18 +37,12 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
     false
   }
   override def mouseDown(button: Int, mods: Int, x: Double, y: Double): Boolean = {
-    val stack:mutable.Stack[GestureDetector]=new mutable.Stack[GestureDetector]();
+    val stack:mutable.Stack[GestureDetector]=new mutable.Stack[GestureDetector]()
     root.findGestureDetectors(stack,x.toFloat,y.toFloat)
-    stack.foreach(detector=>{
-      print(detector)
-    })
-
-    var detected=false
-    while(stack.nonEmpty && !detected){
+    while(stack.nonEmpty){
       val detector=stack.pop()
       if(detector.mouseDown(button,mods,x,y)){
         if(detector.focusable)focused=detector else focused=null
-        detected=true
       }
     }
     false

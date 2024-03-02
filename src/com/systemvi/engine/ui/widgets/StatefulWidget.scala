@@ -30,7 +30,7 @@ abstract class StatefulWidget extends Widget{
   }
 
   override def findGestureDetectors(stack: mutable.Stack[GestureDetector], x: Float, y: Float): Unit = {
-    if(child!=null)child.findGestureDetectors(stack,x,y)
+    if(child!=null&&child.contains(x,y))child.findGestureDetectors(stack,x,y)
   }
   def createState():State
 }

@@ -35,6 +35,6 @@ abstract class StatelessWidget extends Widget {
       case detector: GestureDetector=>stack.push(detector)
       case _=>
     }
-    if(child!=null)child.findGestureDetectors(stack,x,y)
+    if(child!=null&&child.contains(x,y))child.findGestureDetectors(stack,x,y)
   }
 }

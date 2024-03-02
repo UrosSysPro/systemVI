@@ -26,7 +26,7 @@ class WidgetTest extends Game(3,3,60,800,600,"Widget test"){
                   child=Switch(true),
                   mouseDown = (button,mod,x,y)=>{
                     println("klik na prvi switch")
-                    return true
+                    true
                   }
                 ),
                 SizedBox(size = new Vector2f(20,0)),
@@ -34,7 +34,7 @@ class WidgetTest extends Game(3,3,60,800,600,"Widget test"){
                   child=Switch(false),
                   mouseDown = (button,mod,x,y)=>{
                     println("klik na drugi switch")
-                    return true
+                    true
                   }
                 ),
                 SizedBox(size = new Vector2f(20,0))

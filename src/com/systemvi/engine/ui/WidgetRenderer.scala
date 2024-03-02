@@ -110,8 +110,8 @@ class WidgetRenderer(window:Window){
     }
     mesh.setInstanceData(instanceData)
     shader.use()
-    shader.setUniform("view",camera.getView())
-    shader.setUniform("projection",camera.getProjection())
+    shader.setUniform("view",camera.getView)
+    shader.setUniform("projection",camera.getProjection)
     mesh.drawInstancedElements(2,rectsToDraw)
     rectsToDraw=0
   }
