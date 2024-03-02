@@ -13,13 +13,14 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
   val renderer:WidgetRenderer=new WidgetRenderer(window)
   var focused:GestureDetector=null
   resize(window.getWidth,window.getHeight)
-  def resize(width:Int,height:Int): Unit = {
+  def resize(width:Int,height:Int): Boolean = {
     this.width=width
     this.height=height
     root.calculateSize(new Vector2f(width,height))
     root.calculatePosition(new Vector2f(0,0))
     renderer.camera.setScreenSize(width,height)
     renderer.camera.update()
+    true
   }
   def draw():Unit={
     Utils.enableBlending()
@@ -37,12 +38,17 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
   }
   override def mouseDown(button: Int, mods: Int, x: Double, y: Double): Boolean = {
     val stack:mutable.Stack[GestureDetector]=new mutable.Stack[GestureDetector]();
-    //pronadjem sve GestureDetector-e
-    while(stack.nonEmpty){
+    root.findGestureDetectors(stack,x.toFloat,y.toFloat)
+    stack.foreach(detector=>{
+      print(detector)
+    })
+
+    var detected=false
+    while(stack.nonEmpty && !detected){
       val detector=stack.pop()
       if(detector.mouseDown(button,mods,x,y)){
         if(detector.focusable)focused=detector else focused=null
-        return true
+        detected=true
       }
     }
     false

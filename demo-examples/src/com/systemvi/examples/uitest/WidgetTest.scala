@@ -22,9 +22,21 @@ class WidgetTest extends Game(3,3,60,800,600,"Widget test"){
             size=new Vector2f(300,300),
             child=Row(
               children = Array(
-                Switch(true),
+                GestureDetector(
+                  child=Switch(true),
+                  mouseDown = (button,mod,x,y)=>{
+                    println("klik na prvi switch")
+                    return true
+                  }
+                ),
                 SizedBox(size = new Vector2f(20,0)),
-                Switch(false),
+                GestureDetector(
+                  child=Switch(false),
+                  mouseDown = (button,mod,x,y)=>{
+                    println("klik na drugi switch")
+                    return true
+                  }
+                ),
                 SizedBox(size = new Vector2f(20,0))
               )
             )
@@ -32,6 +44,7 @@ class WidgetTest extends Game(3,3,60,800,600,"Widget test"){
         )
       )
     )
+    setInputProcessor(scene)
   }
 
   override def loop(delta: Float): Unit = {

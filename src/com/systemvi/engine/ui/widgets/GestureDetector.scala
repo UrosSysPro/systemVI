@@ -16,3 +16,18 @@ class GestureDetector(
 
   override def build(): Widget = child
 }
+
+object GestureDetector{
+  def apply(
+             child: Widget,
+             mouseDown:(Int,Int,Double,Double)=>Boolean=(_,_,_,_)=>false,
+             mouseUp:(Int,Int,Double,Double)=>Boolean=(_,_,_,_)=>false,
+             mouseMove:(Double,Double)=>Boolean=(_,_)=>false,
+             mouseEnter:()=>Boolean=()=>false,
+             mouseLeave:()=>Boolean=()=>false,
+             scroll:(Double,Double)=>Boolean=(_,_)=>false,
+             keyDown:(Int,Int,Int)=> Boolean=(_,_,_)=>false,
+             keyUp:(Int,Int,Int)=> Boolean=(_,_,_)=>false,
+             focusable:Boolean=true
+           ): GestureDetector = new GestureDetector(child, mouseDown, mouseUp, mouseMove, mouseEnter, mouseLeave, scroll, keyDown, keyUp, focusable)
+}
