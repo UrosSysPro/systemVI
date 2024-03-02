@@ -23,11 +23,6 @@ class Padding(child:Widget,var padding: EdgeInsets) extends StatelessWidget {
       child.calculatePosition(new Vector2f(parentPosition.x+padding.left,parentPosition.y+padding.top))
     }
   }
-
-  override def debugPrint(tabs: String): Unit = {
-    println(s"$tabs Padding size: ${size.x} ${size.y} position: ${position.x} ${position.y}")
-    super.debugPrint(tabs)
-  }
 }
 
 object Padding{

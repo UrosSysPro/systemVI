@@ -5,10 +5,6 @@ import org.joml.Vector2f
 
 class Positioned(child:Widget,val top:Float,val left:Float,val right:Float,val bottom:Float) extends StatelessWidget {
   override def build(): Widget = child
-  override def debugPrint(tabs: String): Unit = {
-    println(s"$tabs Positioned size: ${size.x} ${size.y} position: ${position.x} ${position.y}")
-    super.debugPrint(tabs)
-  }
 }
 
 object Positioned{

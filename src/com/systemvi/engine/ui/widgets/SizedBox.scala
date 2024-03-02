@@ -22,11 +22,6 @@ class SizedBox(child:Widget,var preferedSize:Vector2f) extends StatelessWidget {
     }
     return size
   }
-
-  override def debugPrint(tabs: String): Unit = {
-    println(s"$tabs SizedBox size: ${size.x} ${size.y} position: ${position.x} ${position.y}")
-    super.debugPrint(tabs)
-  }
 }
 
 object SizedBox{

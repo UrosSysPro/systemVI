@@ -14,11 +14,6 @@ class Container(child:Widget,val color:Vector4f) extends StatelessWidget{
     super.draw(renderer)
     //post processing
   }
-
-  override def debugPrint(tabs: String): Unit = {
-    println(s"$tabs Container size: ${size.x} ${size.y} position: ${position.x} ${position.y}")
-    super.debugPrint(tabs)
-  }
 }
 
 object Container{
