@@ -26,5 +26,20 @@ class Scene(val root:Widget,window:Window) {
 }
 
 object Scene{
-  def apply(root: Widget, window: Window): Scene = new Scene(root, window)
+//  var currentWidgetPath:String=""
+//  def pushPath(name:String): Unit = currentWidgetPath=currentWidgetPath+"/"+name
+//  def popPath():Unit={
+//    var count=0
+//    var i=currentWidgetPath.length
+//    var found=false
+//    while(!found){
+//      count+=1
+//      i-=1
+//      if(currentWidgetPath(i)=='/')found=true
+//    }
+//    currentWidgetPath=currentWidgetPath.substring(0,i)
+//  }
+  def apply(root: Widget, window: Window): Scene = {
+    new Scene(root, window)
+  }
 }

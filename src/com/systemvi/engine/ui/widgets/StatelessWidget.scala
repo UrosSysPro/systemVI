@@ -12,7 +12,7 @@ abstract class StatelessWidget extends Widget {
       child.calculateSize(maxParentSize)
       size.set(child.size)
     }
-    return size
+    size
   }
   override def calculatePosition(parentPosition:Vector2f): Unit = {
     position.set(parentPosition)

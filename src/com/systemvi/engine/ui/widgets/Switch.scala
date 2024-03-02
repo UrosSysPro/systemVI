@@ -3,23 +3,30 @@ import com.systemvi.engine.ui.widgets.Switch.{padding, selectedColor, unselected
 import com.systemvi.engine.ui.{Widget, WidgetRenderer}
 import org.joml.{Vector2f, Vector4f}
 
-class Switch(val value:Boolean) extends StatelessWidget {
+class Switch(val value:Boolean) extends StatefulWidget {
+  override def createState(): State = new SwitchState(this)
+}
 
+class SwitchState(w:Switch,var value: Boolean = false) extends State(w){
+  override def init(): Unit = widget match {
+    case switch:Switch=>value=switch.value
+  }
   override def build(): Widget =
     SizedBox(
       size=new Vector2f(55,30)
     )
-
   override def draw(renderer: WidgetRenderer): Unit = {
+    val size=widget.size
+    val position=widget.position
     val circleSize:Float = size.y
-    val x:Float = if (value) position.x + this.size.x - circleSize else position.x
+    val x:Float = if (value) position.x + size.x - circleSize else position.x
     val y:Float = position.y
     //background
     renderer.rect(
       position.x,
       position.y,
-      this.size.x,
-      this.size.y,
+      size.x,
+      size.y,
       if(value)selectedColor else unselectedColor,
       size.y/2
     )
