@@ -46,13 +46,7 @@ abstract class State(w:StatefulWidget){
   }
   def setState(e:()=>Unit): Unit = {
     e()
-//    widget.child
-//    val newChild=build()
-//    //uporedim oba stabla
-//      //za svaki statefull widget
-//        //ili napravi novi state i pozovi init
-//        //ili dodeli stari state
-//        //ili obrisi state i pozovi dispose
-//    widget.child=newChild
+    widget.child=widget.build()
+
   }
 }
