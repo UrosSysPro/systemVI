@@ -12,6 +12,7 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
   var height: Int =window.getHeight
   val renderer:WidgetRenderer=new WidgetRenderer(window)
   var focused:GestureDetector=null
+  val mouse=new Vector2f();
   resize(window.getWidth,window.getHeight)
   def resize(width:Int,height:Int): Boolean = {
     this.width=width
@@ -30,10 +31,11 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
   }
 
   override def keyDown(key: Int, scancode: Int, mods: Int): Boolean = {
-
+    if(focused!=null)return focused.keyDown(key,scancode,mods)
     false
   }
   override def keyUp(key: Int, scancode: Int, mods: Int): Boolean = {
+    if(focused!=null)return focused.keyUp(key,scancode,mods)
     false
   }
   override def mouseDown(button: Int, mods: Int, x: Double, y: Double): Boolean = {
@@ -48,12 +50,30 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
     false
   }
   override def mouseUp(button: Int, mods: Int, x: Double, y: Double): Boolean = {
+    if(focused!=null)return focused.mouseUp(button,mods,x,y)
     false
   }
   override def mouseMove(x: Double, y: Double): Boolean = {
+    mouse.set(x,y)
+    val stack:mutable.Stack[GestureDetector]=new mutable.Stack[GestureDetector]()
+    root.findGestureDetectors(stack,x.toFloat,y.toFloat)
+    while(stack.nonEmpty){
+      val detector=stack.pop()
+      if(detector.mouseMove(x,y)){
+        if(detector.focusable)focused=detector else focused=null
+      }
+    }
     false
   }
   override def scroll(offsetX: Double, offsetY: Double): Boolean = {
+    val stack:mutable.Stack[GestureDetector]=new mutable.Stack[GestureDetector]()
+    root.findGestureDetectors(stack,mouse.x,mouse.y)
+    while(stack.nonEmpty){
+      val detector=stack.pop()
+      if(detector.scroll(offsetX,offsetY)){
+        if(detector.focusable)focused=detector else focused=null
+      }
+    }
     false
   }
 }
