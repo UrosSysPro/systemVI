@@ -22,4 +22,5 @@ abstract class Widget {
     x<=position.x+size.x&&
     y>=position.y&&
     y<=position.y+size.y
+  def getChildren():Array[Widget]
 }

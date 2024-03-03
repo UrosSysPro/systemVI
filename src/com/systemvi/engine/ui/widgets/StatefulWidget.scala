@@ -33,6 +33,8 @@ abstract class StatefulWidget extends Widget{
     if(child!=null&&child.contains(x,y))child.findGestureDetectors(stack,x,y)
   }
   def createState():State
+
+  override def getChildren(): Array[Widget] = Array(child)
 }
 
 abstract class State(w:StatefulWidget){
@@ -47,6 +49,5 @@ abstract class State(w:StatefulWidget){
   def setState(e:()=>Unit): Unit = {
     e()
     widget.child=widget.build()
-
   }
 }

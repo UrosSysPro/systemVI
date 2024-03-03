@@ -29,7 +29,6 @@ abstract class StatelessWidget extends Widget {
     println(s"$tabs ${getClass.getSimpleName}")
     if(child!=null)child.debugPrint(s"$tabs\t")
   }
-
   override def findGestureDetectors(stack: mutable.Stack[GestureDetector], x: Float, y: Float): Unit = {
     this match {
       case detector: GestureDetector=>stack.push(detector)
@@ -37,4 +36,5 @@ abstract class StatelessWidget extends Widget {
     }
     if(child!=null&&child.contains(x,y))child.findGestureDetectors(stack,x,y)
   }
+  override def getChildren(): Array[Widget] = Array(child)
 }

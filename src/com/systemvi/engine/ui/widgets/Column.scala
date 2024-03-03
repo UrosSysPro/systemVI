@@ -69,6 +69,7 @@ class Column(val children:Array[Widget]) extends StatelessWidget {
       if(child.contains(x,y))child.findGestureDetectors(stack, x, y)
     }
   }
+  override def getChildren(): Array[Widget] = children
 }
 
 object Column{
