@@ -28,10 +28,6 @@ abstract class StatefulWidget extends Widget{
     println(s"$tabs ${getClass.getSimpleName}")
     if(child!=null)child.debugPrint(s"$tabs\t")
   }
-
-  override def findGestureDetectors(stack: mutable.Stack[GestureDetector], x: Float, y: Float): Unit = {
-    if(child!=null&&child.contains(x,y))child.findGestureDetectors(stack,x,y)
-  }
   def createState():State
 
   override def getChildren(): Array[Widget] = Array(child)

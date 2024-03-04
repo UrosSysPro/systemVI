@@ -16,7 +16,6 @@ abstract class Widget {
   def calculatePosition(parentPosition:Vector2f): Unit
   def draw(renderer:WidgetRenderer): Unit
   def debugPrint(tabs:String): Unit
-  def findGestureDetectors(stack:mutable.Stack[GestureDetector],x:Float,y:Float)
   def contains(x:Float,y:Float):Boolean=
     x>=position.x&&
     x<=position.x+size.x&&
