@@ -71,3 +71,6 @@ class RangeState(w:StatefulWidget) extends State(w) {
     )
   }
 }
+object Range{
+  def apply(value: Float=50, max: Float=100, min: Float=0, step: Float=1, onChange: Float => Unit=_=>{}): Range = new Range(value, max, min, step, onChange)
+}

@@ -1,11 +1,12 @@
 package com.systemvi.examples.uitest
 
 import com.systemvi.engine.application.Game
+import com.systemvi.engine.ui.utils.ThreeWalker
 import com.systemvi.engine.ui.widgets._
-import com.systemvi.engine.ui.{Scene, Widget, WidgetRenderer}
+import com.systemvi.engine.ui.{Scene, Widget, WidgetRenderer, utils}
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
-import com.systemvi.engine.window.Window
+import com.systemvi.engine.window.{InputMultiplexer, Window}
 import org.joml.{Vector2f, Vector4f}
 
 class WidgetTest extends Game(3,3,60,800,600,"Widget test"){
@@ -14,9 +15,9 @@ class WidgetTest extends Game(3,3,60,800,600,"Widget test"){
   override def setup(window: Window): Unit = {
     scene=Scene(
       window=window,
-      root=new App()
+      root=App()
     )
-    setInputProcessor(scene)
+    setInputProcessor(new InputMultiplexer(this,scene))
   }
 
   override def loop(delta: Float): Unit = {

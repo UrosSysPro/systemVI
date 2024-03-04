@@ -8,20 +8,26 @@ class App extends StatefulWidget {
   override def createState(): State = new AppState(this)
 }
 class AppState(app:StatefulWidget)extends State(app){
-  var value=30f
+  var value = 30f
   override def build(): Widget = {
     Container(
-      color=new Vector4f(0.3f,0.6f,0.9f,1.0f),
-      child=Padding(
+      color = new Vector4f(0.3f,0.6f,0.9f,1.0f),
+      child = Padding(
         padding = EdgeInsets.all(150),
-        child=SizedBox(
-          child=new Range(value,100,0,1,(value:Float)=>{
-            setState(()=>{
-              this.value=value
-            })
-          })
+        child = SizedBox(
+          child = Range(
+            value=value,
+            onChange=(value:Float)=>{
+              setState(()=>{
+                this.value=value
+              })
+            }
+          )
         )
       )
     )
   }
+}
+object App{
+  def apply(): App = new App()
 }
