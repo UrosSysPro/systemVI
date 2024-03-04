@@ -1,5 +1,6 @@
 package com.systemvi.engine.ui
 
+import com.systemvi.engine.ui.utils.EventListenerFinder
 import com.systemvi.engine.ui.widgets.GestureDetector
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.window.{InputProcessor, Window}
@@ -12,7 +13,8 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
   var height: Int =window.getHeight
   val renderer:WidgetRenderer=new WidgetRenderer(window)
   var focused:GestureDetector=null
-  val mouse=new Vector2f();
+  val mouse=new Vector2f()
+  val eventListenerFinder=new EventListenerFinder()
   resize(window.getWidth,window.getHeight)
   def resize(width:Int,height:Int): Boolean = {
     this.width=width
@@ -39,8 +41,8 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
     false
   }
   override def mouseDown(button: Int, mods: Int, x: Double, y: Double): Boolean = {
-    val stack:mutable.Stack[GestureDetector]=new mutable.Stack[GestureDetector]()
-    root.findGestureDetectors(stack,x.toFloat,y.toFloat)
+    mouse.set(x,y)
+    val stack=eventListenerFinder.find(root,mouse)
     while(stack.nonEmpty){
       val detector=stack.pop()
       if(detector.mouseDown(button,mods,x,y)){
@@ -55,8 +57,7 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
   }
   override def mouseMove(x: Double, y: Double): Boolean = {
     mouse.set(x,y)
-    val stack:mutable.Stack[GestureDetector]=new mutable.Stack[GestureDetector]()
-    root.findGestureDetectors(stack,x.toFloat,y.toFloat)
+    val stack=eventListenerFinder.find(root,mouse)
     while(stack.nonEmpty){
       val detector=stack.pop()
       if(detector.mouseMove(x,y)){
@@ -66,8 +67,7 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
     false
   }
   override def scroll(offsetX: Double, offsetY: Double): Boolean = {
-    val stack:mutable.Stack[GestureDetector]=new mutable.Stack[GestureDetector]()
-    root.findGestureDetectors(stack,mouse.x,mouse.y)
+    val stack=eventListenerFinder.find(root,mouse)
     while(stack.nonEmpty){
       val detector=stack.pop()
       if(detector.scroll(offsetX,offsetY)){

@@ -2,7 +2,7 @@ package com.systemvi.engine.ui.utils
 
 import com.systemvi.engine.ui.Widget
 
-class ThreeWalker(shouldVisit:Widget=>Boolean,process:Widget=>Unit) {
+abstract class ThreeWalker() {
   def walk(widget:Widget): Unit = {
     process(widget)
     val children=widget.getChildren()
@@ -10,4 +10,6 @@ class ThreeWalker(shouldVisit:Widget=>Boolean,process:Widget=>Unit) {
       if(child!=null && shouldVisit(child))walk(child)
     }
   }
+  def process(widget: Widget):Unit
+  def shouldVisit(widget: Widget):Boolean
 }

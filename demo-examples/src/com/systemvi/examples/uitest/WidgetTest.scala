@@ -14,12 +14,6 @@ import scala.collection.mutable
 class WidgetTest extends Game(3,3,60,800,600,"Widget test"){
 
   private var scene:Scene=null
-  private val mouse=new Vector2f(0)
-  private val stack=new mutable.Stack[GestureDetector]()
-  private val eventListenerFinder=new ThreeWalker(widget=>widget.contains(mouse.x,mouse.y),{
-    case detector: GestureDetector => stack.push(detector)
-    case _ =>
-  })
   override def setup(window: Window): Unit = {
     scene=Scene(
       window=window,
@@ -27,20 +21,9 @@ class WidgetTest extends Game(3,3,60,800,600,"Widget test"){
     )
     setInputProcessor(new InputMultiplexer(this,scene))
   }
-
   override def loop(delta: Float): Unit = {
     Utils.clear(0,0,0,0,Buffer.COLOR_BUFFER)
     scene.resize(800,600)
     scene.draw()
-  }
-
-  override def mouseMove(x: Double, y: Double): Boolean = {
-    mouse.set(x.toFloat,y.toFloat)
-    true
-  }
-
-  override def keyDown(key: Int, scancode: Int, mods: Int): Boolean = {
-
-    true
   }
 }
