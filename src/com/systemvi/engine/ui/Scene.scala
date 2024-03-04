@@ -40,17 +40,20 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
   }
   override def mouseDown(button: Int, mods: Int, x: Double, y: Double): Boolean = {
     mouse.set(x,y)
+    var eventAccepted=false
     val stack=eventListenerFinder.find(root,mouse)
-    while(stack.nonEmpty){
+    while(!eventAccepted&&stack.nonEmpty){
       val detector=stack.pop()
-      if(detector.mouseDown(button,mods,x,y)){
-        if(detector.focusable)focused=detector else focused=null
+      if(detector.mouseDown(button,mods,x-detector.position.x,y-detector.position.y)) {
+        if(detector.focusable)focused=detector
+        eventAccepted=true
       }
     }
-    false
+    if(!eventAccepted)focused=null
+    eventAccepted
   }
   override def mouseUp(button: Int, mods: Int, x: Double, y: Double): Boolean = {
-    if(focused!=null)return focused.mouseUp(button,mods,x,y)
+    if(focused!=null)return focused.mouseUp(button,mods,x-focused.position.x,y-focused.position.y)
     false
   }
   override def mouseMove(x: Double, y: Double): Boolean = {
@@ -74,24 +77,22 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
       }
     }
     //mouse move
+    var eventAccepted=false
     stack=eventListenerFinder.find(root,mouse)
-    while(stack.nonEmpty){
+    while(!eventAccepted&&stack.nonEmpty){
       val detector=stack.pop()
-      if(detector.mouseMove(x,y)){
-        if(detector.focusable)focused=detector else focused=null
-      }
+      if(detector.mouseMove(x-detector.position.x,y-detector.position.y))eventAccepted=true
     }
-    false
+    eventAccepted
   }
   override def scroll(offsetX: Double, offsetY: Double): Boolean = {
+    var eventAccepted=false
     val stack=eventListenerFinder.find(root,mouse)
-    while(stack.nonEmpty){
+    while(!eventAccepted&&stack.nonEmpty){
       val detector=stack.pop()
-      if(detector.scroll(offsetX,offsetY)){
-        if(detector.focusable)focused=detector else focused=null
-      }
+      if(detector.scroll(offsetX,offsetY))eventAccepted=true
     }
-    false
+    eventAccepted
   }
 }
 
