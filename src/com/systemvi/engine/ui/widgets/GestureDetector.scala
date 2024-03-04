@@ -11,7 +11,8 @@ class GestureDetector(
                        val scroll:(Double,Double)=>Boolean=(_,_)=>false,
                        val keyDown:(Int,Int,Int)=> Boolean=(_,_,_)=>false,
                        val keyUp:(Int,Int,Int)=> Boolean=(_,_,_)=>false,
-                       val focusable:Boolean=true
+                       val focusable:Boolean=true,
+                       var mouseOver:Boolean=false
                      ) extends StatelessWidget() {
 
   override def build(): Widget = child

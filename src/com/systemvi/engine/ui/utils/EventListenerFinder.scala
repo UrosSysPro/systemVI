@@ -14,7 +14,7 @@ class EventListenerFinder extends ThreeWalker{
     case detector: GestureDetector=>stack.push(detector)
     case _ =>
   }
-  override def shouldVisit(widget: Widget): Boolean = mustContainMouse||widget.contains(mouse.x,mouse.y)
+  override def shouldVisit(widget: Widget): Boolean = !mustContainMouse||widget.contains(mouse.x,mouse.y)
   def find(widget: Widget):Stack[GestureDetector]={
     mustContainMouse=false
     stack.clear()

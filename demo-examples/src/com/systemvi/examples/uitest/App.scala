@@ -1,7 +1,7 @@
 package com.systemvi.examples.uitest
 
 import com.systemvi.engine.ui.Widget
-import com.systemvi.engine.ui.widgets.{Container, EdgeInsets, Padding, Range, SizedBox, State, StatefulWidget}
+import com.systemvi.engine.ui.widgets.{Container, EdgeInsets, Padding, Range, Row, SizedBox, State, StatefulWidget}
 import org.joml.Vector4f
 
 class App extends StatefulWidget {
@@ -15,13 +15,12 @@ class AppState(app:StatefulWidget)extends State(app){
       child = Padding(
         padding = EdgeInsets.all(150),
         child = SizedBox(
-          child = Range(
-            value=value,
-            onChange=(value:Float)=>{
-              setState(()=>{
-                this.value=value
-              })
-            }
+          child = Row(
+            children=Array(
+              new Hover(),
+              new Hover(),
+              new Hover()
+            )
           )
         )
       )

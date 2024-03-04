@@ -6,8 +6,6 @@ import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.window.{InputProcessor, Window}
 import org.joml.Vector2f
 
-import scala.collection.mutable
-
 class Scene(val root:Widget,window:Window) extends InputProcessor{
   var width: Int =window.getWidth
   var height: Int =window.getHeight
@@ -57,7 +55,26 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
   }
   override def mouseMove(x: Double, y: Double): Boolean = {
     mouse.set(x,y)
-    val stack=eventListenerFinder.find(root,mouse)
+    //mouse enter
+    var stack=eventListenerFinder.find(root)
+    while (stack.nonEmpty){
+      val widget=stack.pop()
+      if(!widget.mouseOver&&widget.contains(mouse.x,mouse.y)){
+        widget.mouseOver=true
+        widget.mouseEnter()
+      }
+    }
+    //mouse leave
+    stack=eventListenerFinder.find(root)
+    while (stack.nonEmpty){
+      val widget=stack.pop()
+      if(widget.mouseOver&& !widget.contains(mouse.x,mouse.y)){
+        widget.mouseOver=false
+        widget.mouseLeave()
+      }
+    }
+    //mouse move
+    stack=eventListenerFinder.find(root,mouse)
     while(stack.nonEmpty){
       val detector=stack.pop()
       if(detector.mouseMove(x,y)){
