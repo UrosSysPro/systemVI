@@ -1,6 +1,6 @@
 package com.systemvi.engine.ui
 
-import com.systemvi.engine.ui.utils.EventListenerFinder
+import com.systemvi.engine.ui.utils.three.EventListenerFinder
 import com.systemvi.engine.ui.widgets.{GestureDetector, State}
 import com.systemvi.engine.utils.{ThreeBuilder, Utils}
 import com.systemvi.engine.window.{InputProcessor, Window}

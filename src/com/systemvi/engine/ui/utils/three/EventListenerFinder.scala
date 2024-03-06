@@ -1,7 +1,7 @@
-package com.systemvi.engine.ui.utils
+package com.systemvi.engine.ui.utils.three
 
 import com.systemvi.engine.ui.Widget
-import com.systemvi.engine.ui.widgets.{GestureDetector, StatefulWidget}
+import com.systemvi.engine.ui.widgets.GestureDetector
 import org.joml.Vector2f
 
 import scala.collection.mutable.Stack

@@ -1,7 +1,7 @@
 package com.systemvi.examples.uitest
 
 import com.systemvi.engine.application.Game
-import com.systemvi.engine.ui.utils.ThreeWalker
+import com.systemvi.engine.ui.utils.three.ThreeWalker
 import com.systemvi.engine.ui.widgets._
 import com.systemvi.engine.ui.{Scene, Widget, WidgetRenderer, utils}
 import com.systemvi.engine.utils.Utils

@@ -12,6 +12,7 @@ class AppState extends State{
   var switch1=true
   var switch2=true
   var switch3=true
+
   override def build(): Widget = {
     Container(
       color = new Vector4f(0.3f,0.6f,0.9f,1.0f),
