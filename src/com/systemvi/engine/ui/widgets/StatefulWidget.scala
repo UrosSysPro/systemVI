@@ -1,13 +1,12 @@
 package com.systemvi.engine.ui.widgets
 
 import com.systemvi.engine.ui.{Widget, WidgetRenderer}
+import com.systemvi.engine.utils.ThreeBuilder
 import org.joml.Vector2f
 
 import scala.collection.mutable
 
 abstract class StatefulWidget extends Widget{
-//  var state:State=createState()
-//  var child:Widget=build()
   var state:State=null
   var child:Widget=null
   override def build():Widget = state.build()
@@ -35,9 +34,10 @@ abstract class StatefulWidget extends Widget{
   override def getChildren(): Array[Widget] = Array(child)
 }
 
-abstract class State(){
+abstract class State{
   var widget:StatefulWidget=null
-  init()
+  var threePosition:String=null
+  var threeBuilder:ThreeBuilder=null
   def build(): Widget
   def init():Unit={}
   def dispose():Unit={}
@@ -46,6 +46,11 @@ abstract class State(){
   }
   def setState(e:()=>Unit): Unit = {
     e()
-    widget.child=widget.build()
+    threeBuilder.build(widget,threePosition)
+  }
+  def updateBeforeBuild(widget: StatefulWidget,threePosition:String,threeBuilder: ThreeBuilder): Unit = {
+    this.widget=widget
+    this.threePosition=threePosition
+    this.threeBuilder=threeBuilder
   }
 }
