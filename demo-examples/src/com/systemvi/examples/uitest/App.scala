@@ -9,6 +9,9 @@ class App extends StatefulWidget {
 }
 class AppState extends State{
   var value = 30f
+  var switch1=true
+  var switch2=true
+  var switch3=true
   override def build(): Widget = {
     Container(
       color = new Vector4f(0.3f,0.6f,0.9f,1.0f),
@@ -20,9 +23,9 @@ class AppState extends State{
               new Hover(),
               new Hover(),
               new Hover(),
-              Switch(true),
-              Switch(false),
-              Switch(true),
+              Switch(switch1,value=>setState(()=>switch1=value)),
+              Switch(switch2,value=>setState(()=>switch2=value)),
+              Switch(switch3,value=>setState(()=>switch3=value)),
               Range(value,onChange = value=> setState(()=>this.value=value))
             )
           )

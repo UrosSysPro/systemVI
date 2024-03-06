@@ -29,7 +29,7 @@ class RangeState extends State {
           val heigth=widget.size.y
           val r=heigth/2
           val lineWidth=width-2*r
-          val p=(x-r-widget.position.x)/lineWidth
+          val p=(x-r)/lineWidth
           val range=widget match {
             case range: Range=>range
           }

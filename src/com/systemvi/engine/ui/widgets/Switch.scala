@@ -3,14 +3,23 @@ import com.systemvi.engine.ui.widgets.Switch.{padding, selectedColor, unselected
 import com.systemvi.engine.ui.{Widget, WidgetRenderer}
 import org.joml.{Vector2f, Vector4f}
 
-class Switch(val value:Boolean) extends StatefulWidget {
+class Switch(val value:Boolean,val onChange:Boolean=>Unit) extends StatefulWidget {
   override def createState(): State = new SwitchState()
 }
 
 class SwitchState extends State{
   override def build(): Widget =
     SizedBox(
-      size=new Vector2f(55,30)
+      size=new Vector2f(55,30),
+      child = GestureDetector(
+        mouseDown = (_,_,_,_)=>{
+          val switch=widget match {
+            case switch: Switch=>switch
+          }
+          switch.onChange(!switch.value)
+          true
+        }
+      )
     )
   override def draw(renderer: WidgetRenderer): Unit = {
     val value=widget match {
@@ -58,5 +67,5 @@ object Switch{
   val selectedColor=new Vector4f(0.2f,0.8f,0.5f,1.0f)
   val unselectedColor=new Vector4f(0.8f,0.8f,0.8f,1.0f)
   val padding=2
-  def apply(value: Boolean): Switch = new Switch(value)
+  def apply(value: Boolean,onChange:Boolean=>Unit=_=>{}): Switch = new Switch(value,onChange)
 }

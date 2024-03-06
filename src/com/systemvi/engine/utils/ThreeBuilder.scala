@@ -6,11 +6,6 @@ import com.systemvi.engine.ui.widgets.{State, StatefulWidget, StatelessWidget}
 class ThreeBuilder(var states:Map[String,State]) {
 
   private def getState(widget:StatefulWidget,threePosition:String):State=
-//    if(states.contains(threePosition)){
-//      states.get(threePosition)
-//    }else{
-//
-//    }
     states.get(threePosition) match {
       case Some(state)=>state
       case None=>
@@ -31,11 +26,9 @@ class ThreeBuilder(var states:Map[String,State]) {
         case (null,_:Int)=>
       })
     case widget:StatefulWidget=>
-      //pronadjemo state
-      //postaviti paremetre za state
-      //build
       widget.state=getState(widget,threePosition)
       widget.state.updateBeforeBuild(widget,threePosition,this)
+
       widget.child=widget.build()
       widget.getChildren().zipWithIndex.foreach({
         case (child: Widget,index:Int)=>build(child,s"$threePosition/${child.getClass.getSimpleName}.$index")
