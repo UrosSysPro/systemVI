@@ -48,14 +48,16 @@ class Row(val children:Array[Widget]) extends StatelessWidget {
     if(children==null)return
     val currentPosition=new Vector2f(parentPosition)
     for(child<-children){
-      child.calculatePosition(currentPosition)
-      currentPosition.x+=child.size.x
+      if(child!=null){
+        child.calculatePosition(currentPosition)
+        currentPosition.x+=child.size.x
+      }
     }
   }
   override def draw(renderer: WidgetRenderer): Unit = {
     if(children==null)return
     for(child<-children){
-      child.draw(renderer)
+      if(child!=null)child.draw(renderer)
     }
   }
   override def debugPrint(tabs: String): Unit = {

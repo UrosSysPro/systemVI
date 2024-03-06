@@ -35,6 +35,7 @@ abstract class StatefulWidget extends Widget{
 }
 
 abstract class State{
+  var markedForDeletion:Boolean=false;
   var widget:StatefulWidget=null
   var threePosition:String=null
   var threeBuilder:ThreeBuilder=null

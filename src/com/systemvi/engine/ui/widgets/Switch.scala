@@ -8,6 +8,14 @@ class Switch(val value:Boolean,val onChange:Boolean=>Unit) extends StatefulWidge
 }
 
 class SwitchState extends State{
+
+  override def init(): Unit = {
+    println(s"init switch")
+  }
+
+  override def dispose(): Unit = {
+    println(s"dispose switch")
+  }
   override def build(): Widget =
     SizedBox(
       size=new Vector2f(55,30),
