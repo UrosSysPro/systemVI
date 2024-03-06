@@ -7,15 +7,15 @@ class Switch(val value:Boolean) extends StatefulWidget {
   override def createState(): State = new SwitchState()
 }
 
-class SwitchState(var value: Boolean = false) extends State{
-  override def init(): Unit = widget match {
-    case switch:Switch=>value=switch.value
-  }
+class SwitchState extends State{
   override def build(): Widget =
     SizedBox(
       size=new Vector2f(55,30)
     )
   override def draw(renderer: WidgetRenderer): Unit = {
+    val value=widget match {
+      case switch: Switch=>switch.value
+    }
     val size=widget.size
     val position=widget.position
     val circleSize:Float = size.y

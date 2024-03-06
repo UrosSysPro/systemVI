@@ -13,7 +13,7 @@ class AppState extends State{
     Container(
       color = new Vector4f(0.3f,0.6f,0.9f,1.0f),
       child = Padding(
-        padding = EdgeInsets.all(150),
+        padding = EdgeInsets.all(0),
         child = SizedBox(
           child = Row(
             children=Array(
