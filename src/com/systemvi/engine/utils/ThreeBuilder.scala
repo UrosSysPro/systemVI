@@ -12,6 +12,7 @@ class ThreeBuilder(var states:Map[String,State]) {
       case None=>
         val state=widget.createState()
         state.init()
+        state.markedForDeletion=false
         states=states+(threePosition->state)
         state
     }

@@ -47,7 +47,9 @@ abstract class State{
   }
   def setState(e:()=>Unit): Unit = {
     e()
+    threeBuilder.markForDeletion(widget,threePosition)
     threeBuilder.build(widget,threePosition)
+    threeBuilder.deleteMarked(threePosition)
   }
   def updateBeforeBuild(widget: StatefulWidget,threePosition:String,threeBuilder: ThreeBuilder): Unit = {
     this.widget=widget
