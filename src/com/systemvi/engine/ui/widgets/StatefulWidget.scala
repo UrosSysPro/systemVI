@@ -6,8 +6,10 @@ import org.joml.Vector2f
 import scala.collection.mutable
 
 abstract class StatefulWidget extends Widget{
-  var state:State=createState()
-  var child:Widget=build()
+//  var state:State=createState()
+//  var child:Widget=build()
+  var state:State=null
+  var child:Widget=null
   override def build():Widget = state.build()
   override def calculateSize(maxParentSize:Vector2f): Vector2f = {
     size.set(maxParentSize)
@@ -33,8 +35,8 @@ abstract class StatefulWidget extends Widget{
   override def getChildren(): Array[Widget] = Array(child)
 }
 
-abstract class State(w:StatefulWidget){
-  var widget:StatefulWidget=w
+abstract class State(){
+  var widget:StatefulWidget=null
   init()
   def build(): Widget
   def init():Unit={}

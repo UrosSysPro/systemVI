@@ -5,10 +5,10 @@ import com.systemvi.engine.ui.widgets.{Container, GestureDetector, SizedBox, Sta
 import org.joml.{Vector2f, Vector4f}
 
 class Hover extends StatefulWidget{
-  override def createState(): State = new HoverState(this)
+  override def createState(): State = new HoverState()
 }
 
-class HoverState(w:StatefulWidget) extends State(w){
+class HoverState extends State{
   val color = new Vector4f(0.2f, 0.7f, 0.3f, 1.0f)
   override def build(): Widget = GestureDetector(
     mouseEnter=()=>{

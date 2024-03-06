@@ -4,10 +4,10 @@ import com.systemvi.engine.ui.{Widget, WidgetRenderer}
 import org.joml.{Vector2f, Vector4f}
 
 class Switch(val value:Boolean) extends StatefulWidget {
-  override def createState(): State = new SwitchState(this)
+  override def createState(): State = new SwitchState()
 }
 
-class SwitchState(w:Switch,var value: Boolean = false) extends State(w){
+class SwitchState(var value: Boolean = false) extends State{
   override def init(): Unit = widget match {
     case switch:Switch=>value=switch.value
   }

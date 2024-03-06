@@ -9,9 +9,9 @@ class Range(
              val step:Float,
              val onChange:Float=>Unit
            ) extends StatefulWidget {
-  override def createState(): State = new RangeState(this)
+  override def createState(): State = new RangeState()
 }
-class RangeState(w:StatefulWidget) extends State(w) {
+class RangeState extends State {
   var mouseDown=false
   override def build(): Widget = {
     GestureDetector(

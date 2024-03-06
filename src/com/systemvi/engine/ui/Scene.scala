@@ -2,7 +2,7 @@ package com.systemvi.engine.ui
 
 import com.systemvi.engine.ui.utils.EventListenerFinder
 import com.systemvi.engine.ui.widgets.GestureDetector
-import com.systemvi.engine.utils.Utils
+import com.systemvi.engine.utils.{ThreeBuilder, Utils}
 import com.systemvi.engine.window.{InputProcessor, Window}
 import org.joml.Vector2f
 
@@ -13,6 +13,8 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
   var focused:GestureDetector=null
   val mouse=new Vector2f()
   val eventListenerFinder=new EventListenerFinder()
+  val threeBuilder=new ThreeBuilder()
+  threeBuilder.build(root,s"/${root.getClass.getSimpleName}")
   resize(window.getWidth,window.getHeight)
   def resize(width:Int,height:Int): Boolean = {
     this.width=width

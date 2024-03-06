@@ -6,7 +6,8 @@ import org.joml.Vector2f
 import scala.collection.mutable
 
 abstract class StatelessWidget extends Widget {
-  var child:Widget=build()
+  var child:Widget=null
+//  var child:Widget=build()
   override def build():Widget
   override def calculateSize(maxParentSize:Vector2f): Vector2f = {
     size.set(maxParentSize)

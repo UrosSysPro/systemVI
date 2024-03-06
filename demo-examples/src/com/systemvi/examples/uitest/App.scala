@@ -5,9 +5,9 @@ import com.systemvi.engine.ui.widgets.{Container, EdgeInsets, Padding, Range, Ro
 import org.joml.Vector4f
 
 class App extends StatefulWidget {
-  override def createState(): State = new AppState(this)
+  override def createState(): State = new AppState()
 }
-class AppState(app:StatefulWidget)extends State(app){
+class AppState extends State{
   var value = 30f
   override def build(): Widget = {
     Container(
