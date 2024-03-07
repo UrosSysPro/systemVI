@@ -55,17 +55,9 @@ class Row(val children:Array[Widget]) extends StatelessWidget {
     }
   }
   override def draw(renderer: WidgetRenderer): Unit = {
-    if(children==null)return
-    for(child<-children){
-      if(child!=null)child.draw(renderer)
-    }
-  }
-  override def debugPrint(tabs: String): Unit = {
-    println(s"$tabs Row size: ${size.x} ${size.y} position: ${position.x} ${position.y}")
-    if(children==null)return
-    val childTabs=s"$tabs\t"
-    for(child<-children){
-      child.debugPrint(childTabs)
+    if (children == null) return
+    for (child <- children) {
+      if (child != null) child.draw(renderer)
     }
   }
   override def getChildren(): Array[Widget] = children

@@ -15,7 +15,10 @@ abstract class Widget {
   def calculateSize(maxParentSize: Vector2f): Vector2f
   def calculatePosition(parentPosition:Vector2f): Unit
   def draw(renderer:WidgetRenderer): Unit
-  def debugPrint(tabs:String): Unit
+  def debugPrint(tabs:String): Unit={
+    println(s"$tabs${this.getClass.getSimpleName}")
+    for(child<-getChildren())if(child!=null)child.debugPrint(s"\t$tabs")
+  }
   def contains(x:Float,y:Float):Boolean=
     x>=position.x&&
     x<=position.x+size.x&&

@@ -41,14 +41,6 @@ class Stack(val children:Array[Widget]) extends StatelessWidget {
       child.draw(renderer)
     }
   }
-  override def debugPrint(tabs: String): Unit = {
-    println(s"$tabs Stack size: ${size.x} ${size.y} position: ${position.x} ${position.y}")
-    if(children==null)return
-    val childTabs=s"$tabs\t"
-    for(child<-children){
-      child.debugPrint(childTabs)
-    }
-  }
   override def getChildren(): Array[Widget] = children
 }
 

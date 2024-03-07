@@ -25,9 +25,5 @@ abstract class StatelessWidget extends Widget {
   override def draw(renderer: WidgetRenderer): Unit = {
     if(child!=null)child.draw(renderer)
   }
-  override def debugPrint(tabs: String): Unit = {
-    println(s"$tabs ${getClass.getSimpleName}")
-    if(child!=null)child.debugPrint(s"$tabs\t")
-  }
   override def getChildren(): Array[Widget] = Array(child)
 }
