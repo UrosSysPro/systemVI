@@ -27,15 +27,15 @@ class RangeState extends State {
       mouseMove=(x,y)=>{
         if(mouseDown){
           val width=widget.size.x
-          val heigth=widget.size.y
-          val r=heigth/2
+          val height=widget.size.y
+          val r=height/2
           val lineWidth=width-2*r
           val p=(x-r)/lineWidth
           val range=widget match {
             case range: Range=>range
           }
           val value=p*(range.max-range.min)+range.min
-          range.onChange(value.toFloat)
+          range.onChange(Math.max(Math.min(100,value.toFloat),0))
         }
         true
       },
