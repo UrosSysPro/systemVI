@@ -1,7 +1,7 @@
 package com.systemvi.engine.ui
 
 import com.systemvi.engine.ui.utils.context.{BuildContext, DrawContext}
-import com.systemvi.engine.ui.utils.three.{Animator, EventListenerFinder, ThreeBuilder}
+import com.systemvi.engine.ui.utils.tree.{Animator, EventListenerFinder, TreeBuilder}
 import com.systemvi.engine.ui.widgets.{GestureDetector, State}
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.window.{InputProcessor, Window}
@@ -19,7 +19,7 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
   val mouse=new Vector2f()
   //three utils
   val eventListenerFinder=new EventListenerFinder()
-  val threeBuilder=new ThreeBuilder(states)
+  val threeBuilder=new TreeBuilder(states)
   val context=new BuildContext()
   val drawContext=DrawContext(renderer)
   val animator:Animator=new Animator()

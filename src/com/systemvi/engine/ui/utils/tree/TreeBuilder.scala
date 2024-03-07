@@ -1,10 +1,10 @@
-package com.systemvi.engine.ui.utils.three
+package com.systemvi.engine.ui.utils.tree
 
 import com.systemvi.engine.ui.Widget
 import com.systemvi.engine.ui.utils.context.BuildContext
 import com.systemvi.engine.ui.widgets.{State, StatefulWidget, StatelessWidget}
 
-class ThreeBuilder(var states:Map[String,State]) {
+class TreeBuilder(var states:Map[String,State]) {
   private def getState(widget:StatefulWidget,threePosition:String):State=
     states.get(threePosition) match {
       case Some(state)=>

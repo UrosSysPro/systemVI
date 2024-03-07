@@ -1,6 +1,7 @@
 package com.systemvi.examples.uitest
 
 import com.systemvi.engine.ui.Widget
+import com.systemvi.engine.ui.utils.animation.AnimationStates.AnimationState
 import com.systemvi.engine.ui.utils.animation.{Animatable, AnimationController, AnimationStates}
 import com.systemvi.engine.ui.utils.context.BuildContext
 import com.systemvi.engine.ui.widgets.{Container, EdgeInsets, Padding, ProgressBar, Range, Row, SizedBox, State, StatefulWidget, Switch}
@@ -16,17 +17,20 @@ class AppState extends State with Animatable{
     controller=AnimationController(
       animatable=this,
       seconds = 10,
-      onStateChange=state=>println(state.toString),
+      onStateChange=stateChange,
       onValueChange = value=> {
         setState {
           () => {
-            println(value)
             this.value = value
           }
         }
       }
     )
+    controller.value=0.5f
     controller.setState(AnimationStates.running)
+  }
+  private def stateChange(state:AnimationState): Unit = {
+    println(state.toString)
   }
   override def build(context:BuildContext): Widget = {
     Container(

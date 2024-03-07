@@ -1,7 +1,7 @@
 package com.systemvi.engine.ui.widgets
 
 import com.systemvi.engine.ui.utils.context.{BuildContext, DrawContext}
-import com.systemvi.engine.ui.utils.three.ThreeBuilder
+import com.systemvi.engine.ui.utils.tree.TreeBuilder
 import com.systemvi.engine.ui.{Widget, WidgetRenderer}
 import org.joml.Vector2f
 
@@ -35,7 +35,7 @@ abstract class State{
   var markedForDeletion:Boolean=false;
   var widget:StatefulWidget=null
   var threePosition:String=null
-  var threeBuilder:ThreeBuilder=null
+  var threeBuilder:TreeBuilder=null
   var context:BuildContext=null
   def build(context: BuildContext): Widget
   def init():Unit={}
@@ -49,7 +49,7 @@ abstract class State{
     threeBuilder.build(widget,threePosition,context)
     threeBuilder.deleteMarked(threePosition)
   }
-  def updateBeforeBuild(widget: StatefulWidget,threePosition:String,threeBuilder: ThreeBuilder,context: BuildContext): Unit = {
+  def updateBeforeBuild(widget: StatefulWidget, threePosition:String, threeBuilder: TreeBuilder, context: BuildContext): Unit = {
     this.widget=widget
     this.threePosition=threePosition
     this.threeBuilder=threeBuilder
