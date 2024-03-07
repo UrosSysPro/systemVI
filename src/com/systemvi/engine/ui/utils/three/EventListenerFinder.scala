@@ -6,27 +6,38 @@ import org.joml.Vector2f
 
 import scala.collection.mutable
 import scala.collection.mutable.Stack
+import scala.util.control.Breaks
 
-class EventListenerFinder extends ThreeWalker{
+class EventListenerFinder{
   val stack=new mutable.Stack[GestureDetector]()
-  var mouse: Vector2f = null
-  private var mustContainMouse=true
-  override def process(widget: Widget): Unit = widget match {
-    case detector: GestureDetector=>stack.push(detector)
-    case _ =>
-  }
-  override def shouldVisit(widget: Widget): Boolean = !mustContainMouse||widget.contains(mouse.x,mouse.y)
   def find(widget: Widget):mutable.Stack[GestureDetector]={
-    mustContainMouse=false
     stack.clear()
-    walk(widget)
+    findR(widget)
     stack
+  }
+  private def findR(widget: Widget): Unit = widget match {
+    case detector: GestureDetector=>
+      stack.push(detector)
+      for(child<-detector.getChildren())findR(child)
+    case widget: Widget=>
+      for(child<-widget.getChildren())findR(child)
+    case null=>
   }
   def find(widget: Widget,mouse:Vector2f):mutable.Stack[GestureDetector]={
-    mustContainMouse=true
-    this.mouse=mouse
     stack.clear()
-    walk(widget)
+    findR(widget,mouse)
     stack
+  }
+  private def findR(widget: Widget,mouse:Vector2f): Unit = widget match {
+    case detector: GestureDetector=>
+      if(detector.contains(mouse.x,mouse.y)) {
+        stack.push(detector)
+        for (child <- detector.getChildren()) findR(child,mouse)
+      }
+    case widget: Widget=>
+      if(widget.contains(mouse.x,mouse.y)){
+        for(child<-widget.getChildren())findR(child,mouse)
+      }
+    case null=>
   }
 }

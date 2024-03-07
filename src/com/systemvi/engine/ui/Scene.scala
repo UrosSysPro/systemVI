@@ -19,7 +19,7 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
   //three utils
   val eventListenerFinder=new EventListenerFinder()
   val threeBuilder=new ThreeBuilder(states)
-
+  //initial build
   threeBuilder.build(root,s"/${root.getClass.getSimpleName}")
 
   resize(window.getWidth,window.getHeight)
