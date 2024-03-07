@@ -1,6 +1,7 @@
 package com.systemvi.examples.uitest
 
 import com.systemvi.engine.ui.Widget
+import com.systemvi.engine.ui.utils.context.BuildContext
 import com.systemvi.engine.ui.widgets.{Container, EdgeInsets, Padding, Range, Row, SizedBox, State, StatefulWidget, Switch}
 import org.joml.Vector4f
 
@@ -14,7 +15,7 @@ class AppState extends State{
   var switch3=true
   var switch4=true
 
-  override def build(): Widget = {
+  override def build(context:BuildContext): Widget = {
     Container(
       color = new Vector4f(0.3f,0.6f,0.9f,1.0f),
       child = Padding(

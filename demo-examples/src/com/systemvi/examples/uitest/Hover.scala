@@ -1,6 +1,7 @@
 package com.systemvi.examples.uitest
 
 import com.systemvi.engine.ui.Widget
+import com.systemvi.engine.ui.utils.context.BuildContext
 import com.systemvi.engine.ui.widgets.{Container, GestureDetector, SizedBox, State, StatefulWidget}
 import org.joml.{Vector2f, Vector4f}
 
@@ -10,7 +11,7 @@ class Hover extends StatefulWidget{
 
 class HoverState extends State{
   val color = new Vector4f(0.2f, 0.7f, 0.3f, 1.0f)
-  override def build(): Widget = GestureDetector(
+  override def build(context:BuildContext): Widget = GestureDetector(
     mouseEnter=()=>{
         println("enter")
         color.set(0.6f, 0.7f, 0.2f, 1.0f)

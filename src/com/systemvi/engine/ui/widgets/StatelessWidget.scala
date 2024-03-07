@@ -1,5 +1,6 @@
 package com.systemvi.engine.ui.widgets
 
+import com.systemvi.engine.ui.utils.context.BuildContext
 import com.systemvi.engine.ui.{Widget, WidgetRenderer}
 import org.joml.Vector2f
 
@@ -7,7 +8,7 @@ import scala.collection.mutable
 
 abstract class StatelessWidget extends Widget {
   var child:Widget=null
-  override def build():Widget
+  override def build(context:BuildContext):Widget
   override def calculateSize(maxParentSize:Vector2f): Vector2f = {
     size.set(maxParentSize)
     if(child!=null){

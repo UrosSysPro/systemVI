@@ -1,4 +1,5 @@
 package com.systemvi.engine.ui.widgets
+import com.systemvi.engine.ui.utils.context.BuildContext
 import com.systemvi.engine.ui.{Widget, WidgetRenderer}
 import org.joml.{Vector2f, Vector4f}
 
@@ -13,7 +14,7 @@ class Range(
 }
 class RangeState extends State {
   var mouseDown=false
-  override def build(): Widget = {
+  override def build(context:BuildContext): Widget = {
     GestureDetector(
       mouseDown=(button,mods,x,y)=>{
         mouseDown=true

@@ -1,10 +1,11 @@
 package com.systemvi.engine.ui.widgets
 
 import com.systemvi.engine.ui.Widget
+import com.systemvi.engine.ui.utils.context.BuildContext
 import org.joml.Vector2f
 
 class Padding(child:Widget,var padding: EdgeInsets) extends StatelessWidget {
-  override def build(): Widget = {
+  override def build(context:BuildContext): Widget = {
     return child
   }
 

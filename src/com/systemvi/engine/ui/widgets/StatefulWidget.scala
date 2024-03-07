@@ -1,7 +1,8 @@
 package com.systemvi.engine.ui.widgets
 
+import com.systemvi.engine.ui.utils.context.BuildContext
+import com.systemvi.engine.ui.utils.three.ThreeBuilder
 import com.systemvi.engine.ui.{Widget, WidgetRenderer}
-import com.systemvi.engine.utils.ThreeBuilder
 import org.joml.Vector2f
 
 import scala.collection.mutable
@@ -9,7 +10,7 @@ import scala.collection.mutable
 abstract class StatefulWidget extends Widget{
   var state:State=null
   var child:Widget=null
-  override def build():Widget = state.build()
+  override def build(context:BuildContext):Widget = state.build(context)
   override def calculateSize(maxParentSize:Vector2f): Vector2f = {
     size.set(maxParentSize)
     if(child!=null){
@@ -35,7 +36,8 @@ abstract class State{
   var widget:StatefulWidget=null
   var threePosition:String=null
   var threeBuilder:ThreeBuilder=null
-  def build(): Widget
+  var context:BuildContext=null
+  def build(context: BuildContext): Widget
   def init():Unit={}
   def dispose():Unit={}
   def draw(renderer: WidgetRenderer): Unit = {
@@ -44,12 +46,13 @@ abstract class State{
   def setState(e:()=>Unit): Unit = {
     e()
     threeBuilder.markForDeletion(widget,threePosition)
-    threeBuilder.build(widget,threePosition)
+    threeBuilder.build(widget,threePosition,context)
     threeBuilder.deleteMarked(threePosition)
   }
-  def updateBeforeBuild(widget: StatefulWidget,threePosition:String,threeBuilder: ThreeBuilder): Unit = {
+  def updateBeforeBuild(widget: StatefulWidget,threePosition:String,threeBuilder: ThreeBuilder,context: BuildContext): Unit = {
     this.widget=widget
     this.threePosition=threePosition
     this.threeBuilder=threeBuilder
+    this.context=context
   }
 }

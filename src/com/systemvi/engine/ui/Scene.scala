@@ -1,8 +1,9 @@
 package com.systemvi.engine.ui
 
-import com.systemvi.engine.ui.utils.three.EventListenerFinder
+import com.systemvi.engine.ui.utils.context.BuildContext
+import com.systemvi.engine.ui.utils.three.{EventListenerFinder, ThreeBuilder}
 import com.systemvi.engine.ui.widgets.{GestureDetector, State}
-import com.systemvi.engine.utils.{ThreeBuilder, Utils}
+import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.window.{InputProcessor, Window}
 import org.joml.Vector2f
 
@@ -19,8 +20,9 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
   //three utils
   val eventListenerFinder=new EventListenerFinder()
   val threeBuilder=new ThreeBuilder(states)
+  val context=new BuildContext()
   //initial build
-  threeBuilder.build(root,s"/${root.getClass.getSimpleName}")
+  threeBuilder.build(root,s"/${root.getClass.getSimpleName}",context)
 
   resize(window.getWidth,window.getHeight)
   def resize(width:Int,height:Int): Boolean = {

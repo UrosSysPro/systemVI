@@ -1,12 +1,13 @@
 package com.systemvi.engine.ui.widgets
 
+import com.systemvi.engine.ui.utils.context.BuildContext
 import com.systemvi.engine.ui.{Widget, WidgetRenderer}
 import org.joml.Vector2f
 
 import scala.collection.mutable
 
 class Column(val children:Array[Widget]) extends StatelessWidget {
-  override def build(): Widget = null
+  override def build(context:BuildContext): Widget = null
   override def calculateSize(maxParentSize: Vector2f): Vector2f = {
     if(children==null){
       size.set(maxParentSize)
