@@ -23,6 +23,7 @@ class WidgetTest extends Game(3,3,60,800,600,"Widget test"){
   }
   override def loop(delta: Float): Unit = {
     Utils.clear(0,0,0,0,Buffer.COLOR_BUFFER)
+    scene.animate(delta)
     scene.resize(800,600)
     scene.draw()
   }

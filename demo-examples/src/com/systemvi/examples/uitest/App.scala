@@ -10,22 +10,23 @@ class App extends StatefulWidget {
   override def createState(): State = new AppState()
 }
 class AppState extends State with Animatable{
-  var value = 0f
+  var value = 0.4f
   var controller:AnimationController=null
   override def init(): Unit = {
     controller=AnimationController(
       animatable=this,
       seconds = 10,
+      onStateChange=state=>println(state.toString),
       onValueChange = value=> {
         setState {
-          () => this.value = value
+          () => {
+            println(value)
+            this.value = value
+          }
         }
       }
     )
     controller.setState(AnimationStates.running)
-  }
-  override def dispose(): Unit = {
-
   }
   override def build(context:BuildContext): Widget = {
     Container(

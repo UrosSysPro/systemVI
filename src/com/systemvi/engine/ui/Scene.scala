@@ -1,7 +1,7 @@
 package com.systemvi.engine.ui
 
 import com.systemvi.engine.ui.utils.context.{BuildContext, DrawContext}
-import com.systemvi.engine.ui.utils.three.{EventListenerFinder, ThreeBuilder}
+import com.systemvi.engine.ui.utils.three.{Animator, EventListenerFinder, ThreeBuilder}
 import com.systemvi.engine.ui.widgets.{GestureDetector, State}
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.window.{InputProcessor, Window}
@@ -21,7 +21,8 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
   val eventListenerFinder=new EventListenerFinder()
   val threeBuilder=new ThreeBuilder(states)
   val context=new BuildContext()
-  val drawContext=new DrawContext(renderer)
+  val drawContext=DrawContext(renderer)
+  val animator:Animator=new Animator()
   //initial build
   threeBuilder.build(root,s"/${root.getClass.getSimpleName}",context)
 
@@ -34,6 +35,10 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
     renderer.camera.setScreenSize(width,height)
     renderer.camera.update()
     true
+  }
+
+  def animate(delta:Float): Unit = {
+    animator.animate(root,delta)
   }
   def draw():Unit={
     Utils.enableBlending()

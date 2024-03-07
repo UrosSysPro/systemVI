@@ -10,8 +10,8 @@ class AnimationController(val duration:Float,val onStateChange:AnimationState=>U
     state match {
       case AnimationStates.running=>
         value+=delta/duration
-        if(value>duration){
-          value=duration
+        if(value>1){
+          value=1
           state=AnimationStates.end
           onValueChange(value)
           onStateChange(state)
@@ -33,6 +33,11 @@ class AnimationController(val duration:Float,val onStateChange:AnimationState=>U
   }
   def setState(state:AnimationState): Unit = {
     this.state=state
+    state match {
+      case AnimationStates.start=>value=0
+      case AnimationStates.end=>value=1
+      case _=>
+    }
     onStateChange(state)
   }
 }

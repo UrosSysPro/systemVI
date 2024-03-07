@@ -8,7 +8,7 @@ class Animator {
   def animate(widget: Widget,delta:Float): Unit = {
     widget match {
       case statefulWidget: StatefulWidget=>
-        statefulWidget match {
+        statefulWidget.state match {
           case animatable: Animatable=>animatable.controllers.foreach{
             controller=>controller.update(delta)
           }
