@@ -1,6 +1,6 @@
 package com.systemvi.engine.ui.widgets
 
-import com.systemvi.engine.ui.utils.context.BuildContext
+import com.systemvi.engine.ui.utils.context.{BuildContext, DrawContext}
 import com.systemvi.engine.ui.{Widget, WidgetRenderer}
 import org.joml.Vector4f
 
@@ -10,9 +10,9 @@ class Container(child:Widget,val color:Vector4f) extends StatelessWidget{
     return child
   }
 
-  override def draw(renderer: WidgetRenderer): Unit = {
-    renderer.rect(position.x,position.y,size.x,size.y,color)
-    super.draw(renderer)
+  override def draw(context:DrawContext): Unit = {
+    context.renderer.rect(position.x,position.y,size.x,size.y,color)
+    super.draw(context)
     //post processing
   }
 }

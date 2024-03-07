@@ -1,6 +1,6 @@
 package com.systemvi.engine.ui
 
-import com.systemvi.engine.ui.utils.context.BuildContext
+import com.systemvi.engine.ui.utils.context.{BuildContext, DrawContext}
 import com.systemvi.engine.ui.widgets.GestureDetector
 import org.joml.Vector2f
 
@@ -15,7 +15,7 @@ abstract class Widget {
   def build(context:BuildContext): Widget
   def calculateSize(maxParentSize: Vector2f): Vector2f
   def calculatePosition(parentPosition:Vector2f): Unit
-  def draw(renderer:WidgetRenderer): Unit
+  def draw(context:DrawContext): Unit
   def debugPrint(tabs:String): Unit={
     println(s"$tabs${this.getClass.getSimpleName}")
     for(child<-getChildren())if(child!=null)child.debugPrint(s"\t$tabs")

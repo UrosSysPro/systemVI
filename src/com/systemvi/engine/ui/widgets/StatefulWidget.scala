@@ -1,6 +1,6 @@
 package com.systemvi.engine.ui.widgets
 
-import com.systemvi.engine.ui.utils.context.BuildContext
+import com.systemvi.engine.ui.utils.context.{BuildContext, DrawContext}
 import com.systemvi.engine.ui.utils.three.ThreeBuilder
 import com.systemvi.engine.ui.{Widget, WidgetRenderer}
 import org.joml.Vector2f
@@ -25,7 +25,7 @@ abstract class StatefulWidget extends Widget{
       child.calculatePosition(position)
     }
   }
-  override def draw(renderer: WidgetRenderer): Unit = state.draw(renderer)
+  override def draw(context:DrawContext): Unit = state.draw(context)
   def createState():State
 
   override def getChildren(): Array[Widget] = Array(child)
@@ -40,8 +40,8 @@ abstract class State{
   def build(context: BuildContext): Widget
   def init():Unit={}
   def dispose():Unit={}
-  def draw(renderer: WidgetRenderer): Unit = {
-    if(widget.child!=null)widget.child.draw(renderer)
+  def draw(context: DrawContext): Unit = {
+    if(widget.child!=null)widget.child.draw(context)
   }
   def setState(e:()=>Unit): Unit = {
     e()

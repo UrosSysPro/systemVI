@@ -1,5 +1,5 @@
 package com.systemvi.engine.ui.widgets
-import com.systemvi.engine.ui.utils.context.BuildContext
+import com.systemvi.engine.ui.utils.context.{BuildContext, DrawContext}
 import com.systemvi.engine.ui.{Widget, WidgetRenderer}
 import org.joml.{Vector2f, Vector4f}
 
@@ -44,14 +44,14 @@ class RangeState extends State {
       )
     )
   }
-  override def draw(renderer: WidgetRenderer): Unit = {
+  override def draw(context:DrawContext): Unit = {
     val width=widget.size.x
     val heigth=widget.size.y
     val r=heigth/2
     val lineWidth=width-2*r
     val lineHeight=10
     //line
-    renderer.rect(
+    context.renderer.rect(
       widget.position.x+r,
       widget.position.y+r-lineHeight/2,
       lineWidth,
@@ -64,7 +64,7 @@ class RangeState extends State {
     }
     val p=(range.value-range.min)/(range.max-range.min)
     //circle
-    renderer.rect(
+    context.renderer.rect(
       widget.position.x+p*lineWidth,
       widget.position.y,
       r*2,r*2,new Vector4f(1),

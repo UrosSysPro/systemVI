@@ -1,5 +1,5 @@
 package com.systemvi.engine.ui.widgets
-import com.systemvi.engine.ui.utils.context.BuildContext
+import com.systemvi.engine.ui.utils.context.{BuildContext, DrawContext}
 import com.systemvi.engine.ui.widgets.Switch.{padding, selectedColor, unselectedColor}
 import com.systemvi.engine.ui.{Widget, WidgetRenderer}
 import org.joml.{Vector2f, Vector4f}
@@ -22,7 +22,7 @@ class SwitchState extends State{
         }
       )
     )
-  override def draw(renderer: WidgetRenderer): Unit = {
+  override def draw(context:DrawContext): Unit = {
     val value=widget match {
       case switch: Switch=>switch.value
     }
@@ -32,7 +32,7 @@ class SwitchState extends State{
     val x:Float = if (value) position.x + size.x - circleSize else position.x
     val y:Float = position.y
     //background
-    renderer.rect(
+    context.renderer.rect(
       position.x,
       position.y,
       size.x,
@@ -43,7 +43,7 @@ class SwitchState extends State{
     val shadowBlur:Float=4
     val shadowSize:Float=4
     //shadow
-    renderer.rect(
+    context.renderer.rect(
       x+padding-shadowSize,
       y+padding-shadowSize,
       circleSize-2*padding+shadowSize*2,
@@ -53,7 +53,7 @@ class SwitchState extends State{
       shadowBlur
     )
     //circle
-    renderer.rect(
+    context.renderer.rect(
       x+padding,
       y+padding,
       circleSize-2*padding,

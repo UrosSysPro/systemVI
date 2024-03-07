@@ -1,6 +1,6 @@
 package com.systemvi.engine.ui.widgets
 
-import com.systemvi.engine.ui.utils.context.BuildContext
+import com.systemvi.engine.ui.utils.context.{BuildContext, DrawContext}
 import com.systemvi.engine.ui.{Widget, WidgetRenderer}
 import org.joml.Vector2f
 
@@ -36,10 +36,10 @@ class Stack(val children:Array[Widget]) extends StatelessWidget {
       }
     }
   }
-  override def draw(renderer: WidgetRenderer): Unit = {
+  override def draw(context:DrawContext): Unit = {
     if(children==null)return
     for(child<-children){
-      child.draw(renderer)
+      child.draw(context)
     }
   }
   override def getChildren(): Array[Widget] = children

@@ -1,6 +1,6 @@
 package com.systemvi.engine.ui.widgets
 
-import com.systemvi.engine.ui.utils.context.BuildContext
+import com.systemvi.engine.ui.utils.context.{BuildContext, DrawContext}
 import com.systemvi.engine.ui.{Widget, WidgetRenderer}
 import org.joml.Vector2f
 
@@ -23,8 +23,8 @@ abstract class StatelessWidget extends Widget {
       child.calculatePosition(position)
     }
   }
-  override def draw(renderer: WidgetRenderer): Unit = {
-    if(child!=null)child.draw(renderer)
+  override def draw(context:DrawContext): Unit = {
+    if(child!=null)child.draw(context)
   }
   override def getChildren(): Array[Widget] = Array(child)
 }
