@@ -4,7 +4,9 @@ import com.systemvi.engine.ui.Widget
 import com.systemvi.engine.ui.utils.animation.AnimationStates.AnimationState
 import com.systemvi.engine.ui.utils.animation.{Animatable, AnimationController, AnimationStates}
 import com.systemvi.engine.ui.utils.context.BuildContext
-import com.systemvi.engine.ui.widgets.{Container, EdgeInsets, Padding, ProgressBar, Range, Row, SizedBox, State, StatefulWidget, Switch}
+import com.systemvi.engine.ui.widgets.cupertino.Switch
+import com.systemvi.engine.ui.widgets.material.{ProgressBar, Range}
+import com.systemvi.engine.ui.widgets.{Container, EdgeInsets, Padding, Row, SizedBox, State, StatefulWidget}
 import org.joml.Vector4f
 
 class App extends StatefulWidget {

@@ -1,6 +1,8 @@
-package com.systemvi.engine.ui.widgets
+package com.systemvi.engine.ui.widgets.material
+
 import com.systemvi.engine.ui.Widget
 import com.systemvi.engine.ui.utils.context.BuildContext
+import com.systemvi.engine.ui.widgets.{Container, SizedBox, StatelessWidget}
 import org.joml.{Vector2f, Vector4f}
 
 class ProgressBar(val value:Float) extends StatelessWidget {

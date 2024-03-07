@@ -1,6 +1,8 @@
-package com.systemvi.engine.ui.widgets
+package com.systemvi.engine.ui.widgets.material
+
+import com.systemvi.engine.ui.Widget
 import com.systemvi.engine.ui.utils.context.{BuildContext, DrawContext}
-import com.systemvi.engine.ui.{Widget, WidgetRenderer}
+import com.systemvi.engine.ui.widgets.{GestureDetector, SizedBox, State, StatefulWidget}
 import org.joml.{Vector2f, Vector4f}
 
 class Range(

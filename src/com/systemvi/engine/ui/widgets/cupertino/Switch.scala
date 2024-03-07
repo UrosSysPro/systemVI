@@ -1,7 +1,9 @@
-package com.systemvi.engine.ui.widgets
+package com.systemvi.engine.ui.widgets.cupertino
+
+import com.systemvi.engine.ui.Widget
 import com.systemvi.engine.ui.utils.context.{BuildContext, DrawContext}
-import com.systemvi.engine.ui.widgets.Switch.{padding, selectedColor, unselectedColor}
-import com.systemvi.engine.ui.{Widget, WidgetRenderer}
+import com.systemvi.engine.ui.widgets.cupertino.Switch.{padding, selectedColor, unselectedColor}
+import com.systemvi.engine.ui.widgets.{GestureDetector, SizedBox, State, StatefulWidget}
 import org.joml.{Vector2f, Vector4f}
 
 class Switch(val value:Boolean,val onChange:Boolean=>Unit) extends StatefulWidget {
