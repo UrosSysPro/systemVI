@@ -1,6 +1,7 @@
 package com.systemvi.engine.ui
 
 import com.systemvi.engine.ui.utils.context.{BuildContext, DrawContext}
+import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.ui.utils.tree.{Animator, EventListenerFinder, TreeBuilder}
 import com.systemvi.engine.ui.widgets.{GestureDetector, State}
 import com.systemvi.engine.utils.Utils
@@ -25,6 +26,9 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
   val animator:Animator=new Animator()
   //initial build
   threeBuilder.build(root,s"/${root.getClass.getSimpleName}",context)
+
+  //load colors
+  Colors.load()
 
   resize(window.getWidth,window.getHeight)
   def resize(width:Int,height:Int): Boolean = {
