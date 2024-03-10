@@ -5,6 +5,9 @@ import com.systemvi.examples.compute.GameOfLife;
 import com.systemvi.examples.compute.fluid.App;
 import com.systemvi.examples.fractals.Juliaset;
 import com.systemvi.examples.uitest.WidgetTest;
+import org.lwjgl.system.MemoryStack;
+
+import java.nio.FloatBuffer;
 
 public class Main {
     public static void main(String[] args){

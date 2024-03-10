@@ -27,9 +27,6 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
   //initial build
   threeBuilder.build(root,s"/${root.getClass.getSimpleName}",context)
 
-  //load colors
-  Colors.load()
-
   resize(window.getWidth,window.getHeight)
   def resize(width:Int,height:Int): Boolean = {
     this.width=width

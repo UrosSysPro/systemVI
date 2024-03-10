@@ -4,7 +4,7 @@ import com.systemvi.engine.ui.Widget
 import com.systemvi.engine.ui.utils.animation.AnimationStates.AnimationState
 import com.systemvi.engine.ui.utils.animation.{Animatable, AnimationController, AnimationStates}
 import com.systemvi.engine.ui.utils.context.BuildContext
-import com.systemvi.engine.ui.utils.data.{BoxDecoration, BoxShadow}
+import com.systemvi.engine.ui.utils.data.{BoxDecoration, BoxShadow, Colors}
 import com.systemvi.engine.ui.widgets.cupertino.Switch
 import com.systemvi.engine.ui.widgets.material.{ProgressBar, Range}
 import com.systemvi.engine.ui.widgets.{Column, Container, EdgeInsets, Padding, Row, SizedBox, State, StatefulWidget}
@@ -61,7 +61,7 @@ class AppState extends State with Animatable{
   }
   override def build(context:BuildContext): Widget = {
     Container(
-      color = new Vector4f(0.3f,0.6f,0.9f,1.0f),
+      color = Colors.blue700,
       child = Padding(
         padding = EdgeInsets.all(100),
         child = SizedBox(
@@ -80,10 +80,10 @@ class AppState extends State with Animatable{
               Container(
                 child = SizedBox(size=new Vector2f(100,100)),
                 boxDecoration = BoxDecoration(
-                  color = new Vector4f(0.4f,0.6f,0.2f,1.0f),
+                  color = Colors.green500,
                   borderRadius = 20,
                   boxShadow = Array(
-                    BoxShadow(offset = new Vector2f(10,10),blur = 10)
+                    BoxShadow(offset = new Vector2f(10,10),blur = 10,color = Colors.slate800)
                   )
                 )
               )
