@@ -50,21 +50,21 @@ class AppState extends State with Animatable{
                 color = Colors.orange500,
                 child = Row(
                   crossAxisSize=AxisSize.fit,
-                  mainAxisAlignment=MainAxisAlignment.center,
+                  mainAxisAlignment=MainAxisAlignment.spaceAround,
                   crossAxisAlignment=CrossAxisAlignment.center,
                   children = Array(
                     SizedBox(
                       width=50,height=70,
                       child = Container(color = Colors.red500)
-                    ),
-                    SizedBox(
-                      width=50,height=40,
-                      child = Container(color = Colors.green500)
-                    ),
-                    SizedBox(
-                      width=50,height=50,
-                      child = Container(color = Colors.blue500)
                     )
+//                    SizedBox(
+//                      width=50,height=40,
+//                      child = Container(color = Colors.green500)
+//                    ),
+//                    SizedBox(
+//                      width=50,height=50,
+//                      child = Container(color = Colors.blue500)
+//                    )
                   )
                 )
               )

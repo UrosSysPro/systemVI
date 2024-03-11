@@ -104,9 +104,29 @@ class Row(
             }
             position.x+offsetFromStart+freeSpace/2
           case MainAxisAlignment.spaceAround=>
-            0
+            var offsetFromStart: Float = 0f
+            var i=0
+            val spacing=freeSpace/(children.length+1)
+            while(i<index) {
+              if(children(i)!=null)
+                offsetFromStart+=children(i).size.x+spacing
+              i+=1
+            }
+            position.x+offsetFromStart+spacing
           case MainAxisAlignment.spaceBetween=>
-            0
+            if(children.length>1){
+              var offsetFromStart: Float = 0f
+              var i=0
+              val spacing=freeSpace/(children.length-1)
+              while(i<index) {
+                if(children(i)!=null)
+                  offsetFromStart+=children(i).size.x+spacing
+                i+=1
+              }
+              position.x+offsetFromStart
+            }else{
+              position.x+freeSpace/2
+            }
         }
         child.calculatePosition(new Vector2f(x,y))
       }
