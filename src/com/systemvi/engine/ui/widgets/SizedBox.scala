@@ -4,27 +4,27 @@ import com.systemvi.engine.ui.Widget
 import com.systemvi.engine.ui.utils.context.BuildContext
 import org.joml.Vector2f
 
-class SizedBox(child:Widget,var preferedSize:Vector2f) extends StatelessWidget {
+class SizedBox(child:Widget,var width:Float,var height:Float) extends StatelessWidget {
   override def build(context:BuildContext): Widget = child
 
   override def calculateSize(maxParentSize: Vector2f): Vector2f = {
     size.set(
       Math.min(
         maxParentSize.x,
-        preferedSize.x
+        width
       ),
       Math.min(
         maxParentSize.y,
-        preferedSize.y
+        height
       )
     )
     if(child!=null){
       child.calculateSize(size)
     }
-    return size
+    size
   }
 }
 
 object SizedBox{
-  def apply(child: Widget=null, size: Vector2f=new Vector2f(Float.MaxValue,Float.MaxValue)): SizedBox = new SizedBox(child, size)
+  def apply(child: Widget=null, width:Float=Float.MaxValue,height:Float=Float.MaxValue): SizedBox = new SizedBox(child, width,height)
 }

@@ -26,8 +26,8 @@ object CrossAxisAlignment extends Enumeration {
   val end=Value(1,"end")
   val center=Value(2,"center")
 }
-object MainAxisSize extends Enumeration{
-  type MainAxisSize=Value
+object AxisSize extends Enumeration{
+  type AxisSize=Value
   val expand=Value(0,"expand")
   val fit=Value(1,"fit")
 }

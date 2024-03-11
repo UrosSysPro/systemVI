@@ -41,7 +41,7 @@ class HoverState extends State{
       true
     },
     child = SizedBox(
-      size = new Vector2f(100,100),
+      width=100,height=100,
       child = Container(
         color = color
       )

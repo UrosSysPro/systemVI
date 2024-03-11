@@ -13,7 +13,7 @@ class Switch(val value:Boolean,val onChange:Boolean=>Unit) extends StatefulWidge
 class SwitchState extends State{
   override def build(context:BuildContext): Widget =
     SizedBox(
-      size=new Vector2f(55,30),
+      width=55,height=30,
       child = GestureDetector(
         mouseDown = (_,_,_,_)=>{
           val switch=widget match {

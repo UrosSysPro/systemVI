@@ -13,7 +13,7 @@ class NavBar extends StatelessWidget{
       child=Padding(
         padding = EdgeInsets.only(bottom = 2),
         child=SizedBox(
-          size=new Vector2f(Float.MaxValue,70),
+          height = 70,
           child=Container(
             color = Colors.white
           )

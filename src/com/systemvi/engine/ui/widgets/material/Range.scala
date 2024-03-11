@@ -42,7 +42,7 @@ class RangeState extends State {
         true
       },
       child = SizedBox(
-        size = new Vector2f(200,40)
+        width=200,height=40
       )
     )
   }

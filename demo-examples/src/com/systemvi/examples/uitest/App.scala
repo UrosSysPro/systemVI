@@ -4,7 +4,7 @@ import com.systemvi.engine.ui.Widget
 import com.systemvi.engine.ui.utils.animation.AnimationStates.AnimationState
 import com.systemvi.engine.ui.utils.animation.{Animatable, AnimationController, AnimationStates}
 import com.systemvi.engine.ui.utils.context.BuildContext
-import com.systemvi.engine.ui.utils.data.{BoxDecoration, BoxShadow, Colors}
+import com.systemvi.engine.ui.utils.data.{AxisSize, BoxDecoration, BoxShadow, Colors, CrossAxisAlignment, MainAxisAlignment}
 import com.systemvi.engine.ui.widgets.cupertino.Switch
 import com.systemvi.engine.ui.widgets.material.{ProgressBar, Range}
 import com.systemvi.engine.ui.widgets.{Column, Container, EdgeInsets, Padding, Row, SizedBox, State, StatefulWidget, Text}
@@ -44,8 +44,30 @@ class AppState extends State with Animatable{
         child=Column(
           children = Array(
             NavBar(),
-            Container(
-
+            SizedBox(
+              width=300,height=100,
+              child = Container(
+                color = Colors.orange500,
+                child = Row(
+                  crossAxisSize=AxisSize.fit,
+                  mainAxisAlignment=MainAxisAlignment.center,
+                  crossAxisAlignment=CrossAxisAlignment.center,
+                  children = Array(
+                    SizedBox(
+                      width=50,height=70,
+                      child = Container(color = Colors.red500)
+                    ),
+                    SizedBox(
+                      width=50,height=40,
+                      child = Container(color = Colors.green500)
+                    ),
+                    SizedBox(
+                      width=50,height=50,
+                      child = Container(color = Colors.blue500)
+                    )
+                  )
+                )
+              )
             )
           )
         )
