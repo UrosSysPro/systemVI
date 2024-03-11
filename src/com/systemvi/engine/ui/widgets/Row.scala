@@ -54,15 +54,40 @@ class Row(
   override def calculatePosition(parentPosition: Vector2f): Unit = {
     position.set(parentPosition)
     if(children==null)return
-//    val currentPosition=new Vector2f(parentPosition)
-//    for(child<-children){
-//      if(child!=null){
-//        child.calculatePosition(currentPosition)
-//        currentPosition.x+=child.size.x
-//      }
-//    }
     var totalChildrenWidth=0
     for(child<-children)if(child!=null)totalChildrenWidth+=child.size.x
+    val freeSpace=size.x-totalChildrenWidth
+    for((child,index)<-children.zipWithIndex){
+      if(child!=null){
+        val y: Float = crossAxisAlignment match {
+          case start => position.y
+          case end => position.y + size.y - child.size.y
+          case center => position.y + (size.y - child.size.y) / 2f
+        }
+        val x:Float=mainAxisAlignment match {
+          case start=>
+            var offsetFromStart: Float = 0f
+            var i=children.length-1
+            while(i<index)if(children(i)!=null)offsetFromStart+=children(i).size.x;i+=1
+            position.x+offsetFromStart
+          case end=>
+            var offsetFromEnd: Float = 0f
+            var i=children.length-1
+            while(i>=index)if(children(i)!=null)offsetFromEnd+=children(i).size.x;i-=1
+            position.x+size.x-offsetFromEnd
+          case center=>
+            var offsetFromStart: Float = 0f
+            var i=children.length-1
+            while(i<index)if(children(i)!=null)offsetFromStart+=children(i).size.x;i+=1
+            position.x+offsetFromStart+freeSpace/2
+          case spaceAround=>
+            0
+          case spaceBetween=>
+            0
+        }
+        child.calculatePosition(new Vector2f(x,y))
+      }
+    }
   }
   override def draw(context:DrawContext): Unit = {
     if (children == null) return
