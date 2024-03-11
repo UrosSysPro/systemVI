@@ -50,7 +50,6 @@ class Row(
         case _=>
       }
     }
-//    size.set(totalWidth,maxHeigth)
     size.set(
       mainAxisSize match {
         case AxisSize.fit=>totalWidth
