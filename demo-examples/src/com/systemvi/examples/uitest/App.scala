@@ -54,7 +54,18 @@ class AppState extends State with Animatable{
             SizedBox(height = 30),
             Text("Press spacebar, enter a hexcode or change the\nHSL values to create a custom color scale",style=TextStyle(fontSize = 13,color = Colors.gray400)),
             SizedBox(height = 30),
-            ColorInput()
+            ColorInput(),
+            SizedBox(
+              width = 500,height=100,
+              child=Row(
+                mainAxisAlignment=MainAxisAlignment.spaceBetween,
+                children=Array(
+                  Text("Values"),
+                  Text("Colors")
+                )
+              )
+            ),
+            ColorPalete()
           )
         )
       )

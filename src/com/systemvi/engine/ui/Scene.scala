@@ -34,6 +34,7 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
     root.calculateSize(new Vector2f(width,height))
     root.calculatePosition(new Vector2f(0,0))
     renderer.camera.setScreenSize(width,height)
+    renderer.camera.setPosition(width/2,height/2,0)
     renderer.camera.update()
     true
   }

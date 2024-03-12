@@ -2,8 +2,9 @@ package com.systemvi.examples.uitest
 
 import com.systemvi.engine.ui.Widget
 import com.systemvi.engine.ui.utils.context.BuildContext
-import com.systemvi.engine.ui.utils.data.{BoxDecoration, Colors}
-import com.systemvi.engine.ui.widgets.{Container, EdgeInsets, Padding, SizedBox, StatelessWidget}
+import com.systemvi.engine.ui.utils.data.{BoxDecoration, BoxShadow, Colors, CrossAxisAlignment, MainAxisAlignment}
+import com.systemvi.engine.ui.widgets.{Container, EdgeInsets, Padding, Row, SizedBox, StatelessWidget, Text}
+import org.joml.Vector2f
 
 class ColorInput extends StatelessWidget{
   override def build(context: BuildContext): Widget = {
@@ -12,17 +13,36 @@ class ColorInput extends StatelessWidget{
       child=Container(
       decoration = BoxDecoration(
         color = Colors.gray400,
-        borderRadius = 25
+        borderRadius = 25,
+        boxShadow = Array(
+          BoxShadow(
+            offset = new Vector2f(0,5),
+            blur = 20,
+            size = 5,
+            color = Colors.slate300
+          )
+        )
       ),
       child=Padding(
-        padding = EdgeInsets.all(2),
+        padding = EdgeInsets.all(1),
         child=Container(
           decoration = BoxDecoration(
             color = Colors.white,
-            borderRadius = 23
+            borderRadius = 24
           ),
           child=Padding(
-
+            padding = EdgeInsets.all(10),
+            child = Row(
+              crossAxisAlignment = CrossAxisAlignment.center,
+              mainAxisAlignment = MainAxisAlignment.spaceBetween,
+              children = Array(
+                SizedBox(
+                  width = 30,height = 30,
+                  child=Container(decoration=BoxDecoration(color = Colors.pink500,borderRadius = 15))
+                ),
+                Text("A")
+              )
+            )
           )
         )
       )
