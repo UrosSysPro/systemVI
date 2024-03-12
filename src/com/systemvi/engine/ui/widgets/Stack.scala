@@ -46,5 +46,5 @@ class Stack(val children:Array[Widget]) extends StatelessWidget {
 }
 
 object Stack{
-  def apply(children: Array[Widget]=null): Stack = new Stack(children)
+  def apply(children: Array[Widget]=Array()): Stack = new Stack(children)
 }

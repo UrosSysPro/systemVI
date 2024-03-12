@@ -65,7 +65,12 @@ class AppState extends State with Animatable{
                 )
               )
             ),
-            ColorPalete()
+            ColorPalete(),
+            SizedBox(
+              width=500,
+              height = 300,
+              child=Row()
+            )
           )
         )
       )

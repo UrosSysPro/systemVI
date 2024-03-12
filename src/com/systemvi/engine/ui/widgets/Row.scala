@@ -142,7 +142,7 @@ class Row(
 
 object Row{
   def apply(
-             children: Array[Widget]=null,
+             children: Array[Widget]=Array(),
              mainAxisAlignment: MainAxisAlignment=MainAxisAlignment.start,
              crossAxisAlignment: CrossAxisAlignment=CrossAxisAlignment.center,
              mainAxisSize: AxisSize=AxisSize.expand,
