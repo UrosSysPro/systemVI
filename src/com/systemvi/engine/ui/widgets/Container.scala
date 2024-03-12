@@ -6,12 +6,12 @@ import com.systemvi.engine.ui.{Widget, WidgetRenderer}
 import org.joml.Vector4f
 
 
-class Container(child:Widget,val color:Vector4f,boxDecoration: BoxDecoration) extends StatelessWidget{
+class Container(child:Widget, val color:Vector4f, decoration: BoxDecoration) extends StatelessWidget{
   override def build(context:BuildContext): Widget = child
 
   override def draw(context:DrawContext): Unit = {
-    if(boxDecoration!=null){
-      boxDecoration match {
+    if(decoration!=null){
+      decoration match {
         case BoxDecoration(color, borderRadius, _, boxShadow)=>
           boxShadow.foreach{
             boxShadow=>context.renderer.rect(
@@ -34,6 +34,6 @@ class Container(child:Widget,val color:Vector4f,boxDecoration: BoxDecoration) ex
 }
 
 object Container{
-  def apply(child: Widget=null,color:Vector4f=null,boxDecoration: BoxDecoration=null): Container = new Container(child,color,boxDecoration)
+  def apply(child: Widget=null,color:Vector4f=null,decoration: BoxDecoration=null): Container = new Container(child,color,decoration)
 }
 

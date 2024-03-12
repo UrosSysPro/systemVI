@@ -1,13 +1,13 @@
 package com.systemvi.examples.uitest
 
-import com.systemvi.engine.ui.Widget
+import com.systemvi.engine.ui.{Widget, widgets}
 import com.systemvi.engine.ui.utils.animation.AnimationStates.AnimationState
 import com.systemvi.engine.ui.utils.animation.{Animatable, AnimationController, AnimationStates}
 import com.systemvi.engine.ui.utils.context.BuildContext
 import com.systemvi.engine.ui.utils.data.{AxisSize, BoxDecoration, BoxShadow, Colors, CrossAxisAlignment, MainAxisAlignment}
 import com.systemvi.engine.ui.widgets.cupertino.Switch
 import com.systemvi.engine.ui.widgets.material.{ProgressBar, Range}
-import com.systemvi.engine.ui.widgets.{Column, Container, EdgeInsets, Padding, Row, SizedBox, State, StatefulWidget, Text}
+import com.systemvi.engine.ui.widgets.{Column, Container, EdgeInsets, Padding, Row, SizedBox, State, StatefulWidget, Text, TextStyle}
 import org.joml.{Vector2f, Vector4f}
 
 /**
@@ -36,6 +36,9 @@ import org.joml.{Vector2f, Vector4f}
 class App extends StatefulWidget {
   override def createState(): State = new AppState()
 }
+object App{
+  def apply(): App = new App()
+}
 class AppState extends State with Animatable{
   override def build(context:BuildContext): Widget = {
     Container(
@@ -43,41 +46,18 @@ class AppState extends State with Animatable{
       child = SizedBox(
         child=Column(
           crossAxisAlignment=CrossAxisAlignment.center,
-          mainAxisAlignment=MainAxisAlignment.spaceBetween,
+          mainAxisAlignment=MainAxisAlignment.start,
           children = Array(
             NavBar(),
-            SizedBox(
-              width=100,height=300,
-              child = Container(
-                color = Colors.orange500,
-                child = Column(
-                  crossAxisSize=AxisSize.expand,
-                  mainAxisSize=AxisSize.expand,
-                  mainAxisAlignment=MainAxisAlignment.end,
-                  crossAxisAlignment=CrossAxisAlignment.end,
-                  children = Array(
-                    SizedBox(
-                      width=50,height=70,
-                      child = Container(color = Colors.red500)
-                    ),
-                    SizedBox(
-                      width=50,height=40,
-                      child = Container(color = Colors.green500)
-                    ),
-                    SizedBox(
-                      width=50,height=50,
-                      child = Container(color = Colors.blue500)
-                    )
-                  )
-                )
-              )
-            )
+            SizedBox(height = 40),
+            Text("Tailwind CSS\nColor Generator",style=TextStyle(fontSize = 20)),
+            SizedBox(height = 30),
+            Text("Press spacebar, enter a hexcode or change the\nHSL values to create a custom color scale",style=TextStyle(fontSize = 13,color = Colors.gray400)),
+            SizedBox(height = 30),
+            ColorInput()
           )
         )
       )
     )
   }
-}
-object App{
-  def apply(): App = new App()
 }
