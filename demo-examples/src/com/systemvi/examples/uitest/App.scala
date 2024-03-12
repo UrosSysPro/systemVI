@@ -42,6 +42,8 @@ class AppState extends State with Animatable{
       color=Colors.white,
       child = SizedBox(
         child=Column(
+          crossAxisAlignment=CrossAxisAlignment.center,
+          mainAxisAlignment=MainAxisAlignment.spaceBetween,
           children = Array(
             NavBar(),
             SizedBox(
@@ -49,9 +51,10 @@ class AppState extends State with Animatable{
               child = Container(
                 color = Colors.orange500,
                 child = Column(
-                  crossAxisSize=AxisSize.fit,
-                  mainAxisAlignment=MainAxisAlignment.spaceAround,
-                  crossAxisAlignment=CrossAxisAlignment.center,
+                  crossAxisSize=AxisSize.expand,
+                  mainAxisSize=AxisSize.expand,
+                  mainAxisAlignment=MainAxisAlignment.end,
+                  crossAxisAlignment=CrossAxisAlignment.end,
                   children = Array(
                     SizedBox(
                       width=50,height=70,
