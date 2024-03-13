@@ -1,40 +1,40 @@
 package com.systemvi.examples.inversekinematics;
 
 import com.systemvi.engine.application.Application;
+import com.systemvi.engine.application.Game;
 import com.systemvi.engine.camera.Camera;
+import com.systemvi.engine.camera.Camera3;
 import com.systemvi.engine.renderers.ShapeRenderer;
 import com.systemvi.engine.window.Window;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL33.*;
 
-public class Fabrik extends Application {
+public class Fabrik extends Game {
 
-    public Fabrik(int openglVersionMajor, int openglVersionMinor, int targetFPS) {
-        super(openglVersionMajor, openglVersionMinor, targetFPS);
+    public Fabrik() {
+        super(3,3,60,800,600,"Fabrik");
     }
-    public Window window;
 
     public int n;
     public ArrayList<Vector> points;
     public ArrayList<Float> lengths;
 
     public ShapeRenderer renderer;
-    public Camera camera;
+    public Camera3 camera;
     public float x,y;
 
     @Override
-    public void setup() {
-        window=new Window(800,600,"Fabrik");
+    public void setup(Window window) {
         renderer=new ShapeRenderer();
-        camera=new Camera();
-        camera.setScreenSize(800,600);
-        camera.setPosition(400,300,0);
-        camera.setScale(1,-1,1);
+        camera=new Camera3(new Vector3f(400,300,0),new Vector3f(0,0,0),new Vector3f(1,-1,1));
+        camera.orthographic(-400,400,-300,300,0,100);
         camera.update();
-        renderer.setCamera(camera);
+        renderer.setView(camera.view());
+        renderer.setProjection(camera.projection());
 
         n=10;
         points=new ArrayList<>(n);
@@ -46,16 +46,10 @@ public class Fabrik extends Application {
         for(int i=0;i<n-1;i++){
             lengths.add(length/n);
         }
-        window.addOnMouseMoveListener((x1, y1) -> {
-            x = (float) x1;
-            y = (float) y1;
-        });
     }
 
     @Override
     public void loop(float delta) {
-        if(window.shouldClose())close();
-        window.pollEvents();
         glClearColor(0,0,0,1);
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -103,7 +97,12 @@ public class Fabrik extends Application {
             );
         }
         renderer.flush();
+    }
 
-        window.swapBuffers();
+    @Override
+    public boolean mouseMove(double x, double y) {
+        this.x = (float) x;
+        this.y = (float) y;
+        return true;
     }
 }

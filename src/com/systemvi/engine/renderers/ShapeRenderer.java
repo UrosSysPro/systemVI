@@ -21,7 +21,7 @@ public class ShapeRenderer {
     private final int[] indices;
     int maxPoints;
     int maxTriangles;
-    private Camera camera;
+    private Matrix4f projection,view;
 
     public ShapeRenderer(int maxPoints,int maxTriangles){
         this.maxPoints=maxPoints;
@@ -103,9 +103,16 @@ public class ShapeRenderer {
     }
 
     public void setCamera(Camera camera) {
-        this.camera = camera;
+        view=camera.getView();
+        projection=camera.getProjection();
     }
 
+    public void setView(Matrix4f view){
+        this.view=view;
+    }
+    public void setProjection(Matrix4f projection){
+        this.projection=projection;
+    }
     public void polygon(Vector2f[] points, Vector4f color){
         if(pointsToDraw+points.length>maxPoints)flush();
         if(trianglesToDraw+pointsToDraw-2>maxTriangles)flush();
@@ -193,8 +200,8 @@ public class ShapeRenderer {
     public void flush(){
         Shader shader=customShader!=null?customShader:this.shader;
         shader.use();
-        shader.setUniform("view",camera.getView());
-        shader.setUniform("projection",camera.getProjection());
+        shader.setUniform("view",view);
+        shader.setUniform("projection",projection);
         mesh.setVertexData(vertexData);
         mesh.setIndices(indices);
         mesh.drawElements(trianglesToDraw);

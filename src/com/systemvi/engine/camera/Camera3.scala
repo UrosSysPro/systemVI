@@ -39,7 +39,10 @@ class Camera3(val position:Vector3f,val rotation:Vector3f,val scale:Vector3f) {
     this
   }
   def update(): Unit = {
-    view.identity().scale(scale).rotateXYZ(rotation).translate(position)
+    view.identity()
+      .scale(1f/scale.x,1f/scale.y,1f/scale.z)
+      .rotateXYZ(-rotation.x,-rotation.y,-rotation.z)
+      .translate(-position.x,-position.y,-position.z)
     combined.identity().mul(projection).mul(view)
   }
 }
