@@ -30,9 +30,13 @@ public class Fabrik extends Game {
     @Override
     public void setup(Window window) {
         renderer=new ShapeRenderer();
-        camera=new Camera3(new Vector3f(400,300,0),new Vector3f(0,0,0),new Vector3f(1,-1,1));
-        camera.orthographic(-400,400,-300,300,0,100);
-        camera.update();
+//        camera=new Camera3(new Vector3f(400,300,0),new Vector3f(0,0,0),new Vector3f(1,-1,1));
+//        camera.orthographic(-400,400,-300,300,0,100);
+//        camera.update();
+        camera=Camera3.builder2d()
+            .position(window.getWidth()/2,window.getHeight()/2)
+            .size(window.getWidth(),window.getHeight())
+            .build();
         renderer.setView(camera.view());
         renderer.setProjection(camera.projection());
 
@@ -103,6 +107,17 @@ public class Fabrik extends Game {
     public boolean mouseMove(double x, double y) {
         this.x = (float) x;
         this.y = (float) y;
+        return true;
+    }
+
+    @Override
+    public boolean resize(int width, int height) {
+        camera
+            .position(width/2,height/2,0)
+            .orthographic(-width/2,width/2,-height/2,height/2,0,1)
+            .update();
+        renderer.setView(camera.view());
+        renderer.setProjection(camera.projection());
         return true;
     }
 }
