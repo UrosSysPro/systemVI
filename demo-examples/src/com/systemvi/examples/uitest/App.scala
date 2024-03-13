@@ -7,7 +7,7 @@ import com.systemvi.engine.ui.utils.context.BuildContext
 import com.systemvi.engine.ui.utils.data.{AxisSize, BoxDecoration, BoxShadow, Colors, CrossAxisAlignment, MainAxisAlignment}
 import com.systemvi.engine.ui.widgets.cupertino.Switch
 import com.systemvi.engine.ui.widgets.material.{ProgressBar, Range}
-import com.systemvi.engine.ui.widgets.{Column, Container, EdgeInsets, Padding, Row, SizedBox, State, StatefulWidget, Text, TextStyle}
+import com.systemvi.engine.ui.widgets.{Column, Container, EdgeInsets, Expanded, Padding, Row, SizedBox, State, StatefulWidget, Text, TextStyle}
 import org.joml.{Vector2f, Vector4f}
 
 /**
@@ -67,9 +67,58 @@ class AppState extends State with Animatable{
             ),
             ColorPalete(),
             SizedBox(
-              width=500,
+              width=800,
               height = 300,
-              child=Row()
+              child=Row(
+                children=Array(
+                  Expanded(
+                    child=Padding(
+                      padding = EdgeInsets.all(5),
+                      child=Container(
+                        decoration = BoxDecoration(
+                          borderRadius = 15,
+                          color=Colors.pink300
+                        ),
+                        child=Padding(
+                          padding=EdgeInsets.only(top = 30,left = 15),
+                          child=SizedBox(
+                            child=Column(
+                              crossAxisAlignment=CrossAxisAlignment.start,
+                              children = Array(
+                                Text("Header1",style=TextStyle(fontSize = 20)),
+                                SizedBox(height = 20),
+                                Text("Header2",style=TextStyle(fontSize = 15,color=Colors.gray400))
+                              )
+                            )
+                          )
+                        )
+                      )
+                    )
+                  ),
+                  Expanded(
+                    child=Padding(
+                      padding = EdgeInsets.all(5),
+                      child=Container(
+                        decoration = BoxDecoration(
+                          borderRadius = 15,
+                          color=Colors.pink500
+                        )
+                      )
+                    )
+                  ),
+                  Expanded(
+                    child=Padding(
+                      padding = EdgeInsets.all(5),
+                      child=Container(
+                        decoration = BoxDecoration(
+                          borderRadius = 15,
+                          color=Colors.pink600
+                        )
+                      )
+                    )
+                  )
+                )
+              )
             )
           )
         )
