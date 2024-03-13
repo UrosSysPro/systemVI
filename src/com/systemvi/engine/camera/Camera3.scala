@@ -80,10 +80,42 @@ object Camera3{
         .update()
   }
   class Builder3D{
-    val position:Vector3f=new Vector3f(0)
-    val rotation:Vector3f=new Vector3f(0)
-    val scale:Vector3f=new Vector3f(0)
-    def build():Camera3=new Camera3(position,rotation, scale)
+    val camera=new Camera3(new Vector3f(0),new Vector3f(0),new Vector3f(1))
+    var near:Float=0.1f
+    var far:Float=100f
+    var fov:Float=(Math.PI/3f).toFloat
+    var aspect:Float=800f/600f
+    def position(x:Float,y:Float,z:Float):Builder3D={
+      camera.position(x,y,z)
+      this
+    }
+    def rotation(x:Float,y:Float,z:Float):Builder3D={
+      camera.rotation(x,y,z)
+      this
+    }
+    def scale(x:Float,y:Float,z:Float):Builder3D={
+      camera.scale(x,y,z)
+      this
+    }
+    def fov(fov:Float):Builder3D={
+      this.fov=fov
+      this
+    }
+    def far(far:Float):Builder3D={
+      this.far=far
+      this
+    }
+    def near(near:Float):Builder3D={
+      this.near=near
+      this
+    }
+    def aspect(aspect:Float):Builder3D={
+      this.aspect=aspect
+      this
+    }
+    def build():Camera3=camera
+      .perspective(near,far,aspect,fov)
+      .update()
   }
 
   def builder2d(): Builder2D = new Builder2D()
