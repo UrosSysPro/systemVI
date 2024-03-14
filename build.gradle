@@ -279,7 +279,7 @@ subprojects {
 publishing {
 	repositories {
 		maven {
-			name = "GitHubPackages"
+			name = "System_VI_Engine"
 			url = uri("https://maven.pkg.github.com/UrosSysPro/systemVI")
 			credentials {
 				username = System.getenv("GITHUB_USERNAME")
@@ -289,6 +289,7 @@ publishing {
 	}
 	publications {
 		gpr(MavenPublication) {
+			artifactId "system-vi"
 			from(components.java)
 		}
 	}
