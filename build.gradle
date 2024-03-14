@@ -70,6 +70,13 @@ sourceSets {
 	}
 }
 
+tasks.withType(ScalaCompile) {
+	scalaCompileOptions.forkOptions.with {
+		memoryMaximumSize = '1g'
+		jvmArgs = ['-XX:MaxMetaspaceSize=512m']
+	}
+}
+
 dependencies {
 	implementation 'org.jbox2d:jbox2d-library:2.2.1.1'
 	// https://mvnrepository.com/artifact/com.googlecode.lanterna/lanterna
