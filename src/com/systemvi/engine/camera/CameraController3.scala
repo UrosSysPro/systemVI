@@ -24,9 +24,13 @@ class CameraController3 extends InputProcessor{
     true
   }
   override def mouseMove(x: Double, y: Double): Boolean = {
+    if(focused){
+      println(x,y)
+    }
     true
   }
   override def scroll(offsetX: Double, offsetY: Double): Boolean = {
+    print(offsetX,offsetY)
     true
   }
   override def resize(width: Int, height: Int): Boolean = {
