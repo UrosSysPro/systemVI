@@ -4,6 +4,7 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import java.io.File;
+import java.net.URL;
 import java.util.Scanner;
 
 import static org.lwjgl.opengl.GL33.*;
@@ -97,9 +98,43 @@ public class Utils {
        glMemoryBarrier(mask);
     }
     public static String assetsFolder="";
+    public static ClassLoader loader;
     public static String readFile(String fileName){
+        return readExternal(fileName);
+//        return readInternal(fileName);
+    }
+    public static String readExternal(String fileName){
         fileName=assetsFolder+fileName;
         File file=new File(fileName);
+        try(Scanner scanner=new Scanner(file)){
+            StringBuilder text= new StringBuilder();
+            while(scanner.hasNextLine()){
+                text.append(scanner.nextLine()).append("\n");
+            }
+            return text.toString();
+        }catch (Exception ignored){
+            System.out.println("[ERROR] reading file "+file.getPath());
+            return "";
+        }
+    }
+    public static String readInternal(String fileName){
+        // get the file url, not working in JAR file.
+        File file;
+        try{
+            URL resource = loader.getResource(fileName);
+            if(resource!=null){
+                System.out.println(resource.getPath());
+                file=new File(resource.toURI());
+            }else{
+                System.out.println("[ERROR] resource is null");
+                return "";
+            }
+        }catch (Exception e){
+            System.out.println("[ERROR] reading file");
+            e.printStackTrace();
+            return "";
+        }
+
         try(Scanner scanner=new Scanner(file)){
             StringBuilder text= new StringBuilder();
             while(scanner.hasNextLine()){

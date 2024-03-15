@@ -13,6 +13,8 @@ import java.nio.FloatBuffer;
 public class Main {
     public static void main(String[] args){
         Utils.assetsFolder="../";
+        Utils.loader=Main.class.getClassLoader();
+        System.out.println(Main.class.getClassLoader().getName());
         new WidgetTest().run();
 //        new Fabrik().run();
 //        new Fluid(3,3,60).run();
