@@ -18,7 +18,7 @@ class WidgetTest extends Game(3,3,60,800,600,"Widget test"){
       window = window,
       root = App()
     )
-    scene.root.debugPrint("")
+//    scene.root.debugPrint("")
     setInputProcessor(new InputMultiplexer(this, scene))
   }
   override def loop(delta: Float): Unit = {

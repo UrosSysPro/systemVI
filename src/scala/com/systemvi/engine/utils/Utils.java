@@ -4,6 +4,7 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Scanner;
 
@@ -100,8 +101,8 @@ public class Utils {
     public static String assetsFolder="";
     public static ClassLoader loader;
     public static String readFile(String fileName){
-        return readExternal(fileName);
-//        return readInternal(fileName);
+//        return readExternal(fileName);
+        return readInternal(fileName);
     }
     public static String readExternal(String fileName){
         fileName=assetsFolder+fileName;
@@ -118,31 +119,16 @@ public class Utils {
         }
     }
     public static String readInternal(String fileName){
-        // get the file url, not working in JAR file.
-        File file;
-        try{
-            URL resource = loader.getResource(fileName);
-            if(resource!=null){
-                System.out.println(resource.getPath());
-                file=new File(resource.toURI());
-            }else{
-                System.out.println("[ERROR] resource is null");
-                return "";
-            }
-        }catch (Exception e){
-            System.out.println("[ERROR] reading file");
-            e.printStackTrace();
-            return "";
-        }
-
-        try(Scanner scanner=new Scanner(file)){
+        try(InputStream stream=Utils.class.getClassLoader().getResourceAsStream(fileName)){
+            Scanner scanner=new Scanner(stream);
             StringBuilder text= new StringBuilder();
             while(scanner.hasNextLine()){
                 text.append(scanner.nextLine()).append("\n");
             }
+            scanner.close();
             return text.toString();
-        }catch (Exception ignored){
-            System.out.println("[ERROR] reading file "+file.getPath());
+        }catch (Exception e){
+            e.printStackTrace();
             return "";
         }
     }
