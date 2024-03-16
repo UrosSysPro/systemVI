@@ -99,35 +99,36 @@ public class Utils {
        glMemoryBarrier(mask);
     }
     public static String assetsFolder="";
-    public static ClassLoader loader;
+   @Deprecated
     public static String readFile(String fileName){
 //        return readExternal(fileName);
         return readInternal(fileName);
     }
     public static String readExternal(String fileName){
-        fileName=assetsFolder+fileName;
-        File file=new File(fileName);
-        try(Scanner scanner=new Scanner(file)){
-            StringBuilder text= new StringBuilder();
-            while(scanner.hasNextLine()){
-                text.append(scanner.nextLine()).append("\n");
-            }
+        File file = new File(assetsFolder+fileName);
+        try(Scanner scanner = new Scanner(file)){
+            StringBuilder text = new StringBuilder();
+            while( scanner.hasNextLine() ) text.append(scanner.nextLine()).append("\n");
             return text.toString();
-        }catch (Exception ignored){
+        }catch (Exception e){
             System.out.println("[ERROR] reading file "+file.getPath());
+            e.printStackTrace();
             return "";
         }
     }
     public static String readInternal(String fileName){
-        try(InputStream stream=Utils.class.getClassLoader().getResourceAsStream(fileName)){
-            Scanner scanner=new Scanner(stream);
-            StringBuilder text= new StringBuilder();
-            while(scanner.hasNextLine()){
-                text.append(scanner.nextLine()).append("\n");
+        try{
+            InputStream stream = Utils.class.getClassLoader().getResourceAsStream(fileName);
+            if(stream == null){
+                throw new Exception("[ERROR] readInternal: stream is null");
             }
+            Scanner scanner = new Scanner(stream);
+            StringBuilder text = new StringBuilder();
+            while(scanner.hasNextLine())text.append(scanner.nextLine()).append("\n");
             scanner.close();
             return text.toString();
         }catch (Exception e){
+            System.out.println(e.getMessage());
             e.printStackTrace();
             return "";
         }

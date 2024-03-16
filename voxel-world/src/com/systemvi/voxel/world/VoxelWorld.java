@@ -6,7 +6,7 @@ import com.systemvi.engine.window.Window;
 
 public class VoxelWorld{
     public static void main(String[] args) {
-        Utils.assetsFolder="../";
+        Utils.assetsFolder="";
         new DebugApp(3,3,60).run();
     }
 }
