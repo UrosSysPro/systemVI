@@ -48,7 +48,7 @@ public class GameOfLife extends Application {
         renderer = new TextureRenderer();
         renderer.setCamera(camera);
         shader= Shader.builder()
-            .compute("assets/examples/compute/gameOfLife/compute.glsl")
+            .compute("examples/compute/gameOfLife/compute.glsl")
             .build();
     }
 

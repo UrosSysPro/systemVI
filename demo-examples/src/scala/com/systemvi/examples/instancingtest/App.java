@@ -67,8 +67,8 @@ public class App extends Application {
         camera.update();
 
         shader= Shader.builder()
-            .fragment("assets/examples/instancingTest/fragment.glsl")
-            .vertex("assets/examples/instancingTest/vertex.glsl")
+            .fragment("examples/instancingTest/fragment.glsl")
+            .vertex("examples/instancingTest/vertex.glsl")
             .build();
         if(!shader.isCompiled()){
             System.out.println(shader.getLog());

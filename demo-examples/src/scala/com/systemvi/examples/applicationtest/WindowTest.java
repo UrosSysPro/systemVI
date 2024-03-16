@@ -28,8 +28,8 @@ public class WindowTest {
              0.0f,   0.25f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
         });
         shader= Shader.builder()
-            .fragment("assets/applicationtest/fragment.glsl")
-            .vertex("assets/applicationtest/vertex.glsl")
+            .fragment("applicationtest/fragment.glsl")
+            .vertex("applicationtest/vertex.glsl")
             .build();
         if(!shader.isCompiled()){
             System.out.println(shader.getLog());

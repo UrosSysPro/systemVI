@@ -9,9 +9,9 @@ public class Material {
     public Material(){
         diffuse=new Texture("assets/examples/minecraft/textures/mc.png");
         diffuse.setSamplerFilter(GL_LINEAR_MIPMAP_NEAREST,GL_NEAREST);
-        specular=new Texture("assets/examples/test3d/rock/roughness.png");
+        specular=new Texture("examples/test3d/rock/roughness.png");
         specular.setSamplerFilter(GL_LINEAR_MIPMAP_NEAREST,GL_NEAREST);
-        normal=new Texture("assets/examples/test3d/rock/normal.png");
+        normal=new Texture("examples/test3d/rock/normal.png");
         normal.setSamplerFilter(GL_NEAREST_MIPMAP_NEAREST,GL_NEAREST);
     }
     public Material(String path){

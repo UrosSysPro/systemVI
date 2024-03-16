@@ -40,7 +40,7 @@ public class Mandelbrotset extends Game {
         renderer.setCamera(camera);
         texture=new Texture(1,1, Format.RGB);
         shader= Shader.builder()
-                .fragment("assets/examples/fractals/mandelbrot.glsl")
+                .fragment("examples/fractals/mandelbrot.glsl")
                 .vertex("assets/renderer/textureRenderer/vertex.glsl")
                 .build();
         if(!shader.isCompiled()){

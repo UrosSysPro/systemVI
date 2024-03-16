@@ -42,7 +42,7 @@ public class Juliaset extends Game {
         renderer.setCamera(camera);
         texture=new Texture(1,1, Format.RGB);
         shader= Shader.builder()
-                .fragment("assets/examples/fractals/juliaset.glsl")
+                .fragment("examples/fractals/juliaset.glsl")
                 .vertex("assets/renderer/textureRenderer/vertex.glsl")
                 .build();
         if(!shader.isCompiled()){
