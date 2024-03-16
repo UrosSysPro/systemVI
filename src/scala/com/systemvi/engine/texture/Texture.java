@@ -64,11 +64,10 @@ public class Texture{
     }
 
     public Texture loadFromFile(String fileName){
-        fileName= Utils.assetsFolder+fileName;
         glBindTexture(GL_TEXTURE_2D,id);
 
         int[] width=new int[1],height=new int[1],chanels=new int[1];
-        ByteBuffer buffer=STBImage.stbi_load(fileName,width,height,chanels,0);
+        ByteBuffer buffer=STBImage.stbi_load(Utils.assetsFolder+fileName,width,height,chanels,0);
         if(buffer==null){
             System.out.println("[ERROR] Loading Image");
             return this;
