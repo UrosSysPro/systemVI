@@ -26,8 +26,8 @@ public class CameraTest extends Application {
     public void setup() {
         window=new Window(800,600,"Camera Test");
         shader= Shader.builder()
-            .fragment("cameraTest/fragment.glsl")
-            .vertex("cameraTest/vertex.glsl")
+            .fragment("assets/cameraTest/fragment.glsl")
+            .vertex("assets/cameraTest/vertex.glsl")
             .build();
         if(!shader.isCompiled()){
             System.out.println(shader.getLog());

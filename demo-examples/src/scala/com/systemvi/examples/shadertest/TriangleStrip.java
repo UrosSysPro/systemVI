@@ -18,8 +18,8 @@ public class TriangleStrip extends Game {
     @Override
     public void setup(Window window) {
         shader= Shader.builder()
-            .fragment("examples/shadertest/triangleStrip/fragment.glsl")
-            .vertex("examples/shadertest/triangleStrip/vertex.glsl")
+            .fragment("assets/examples/shadertest/triangleStrip/fragment.glsl")
+            .vertex("assets/examples/shadertest/triangleStrip/vertex.glsl")
             .build();
         System.out.println(shader.getLog());
         mesh=new Mesh(new VertexAttribute("random",1));

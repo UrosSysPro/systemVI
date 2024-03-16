@@ -33,8 +33,8 @@ public class ApplicationTest extends Application {
             0.0f,   0.25f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
         });
         shader= Shader.builder()
-            .fragment("applicationtest/fragment.glsl")
-            .vertex("applicationtest/vertex.glsl")
+            .fragment("assets/applicationtest/fragment.glsl")
+            .vertex("assets/applicationtest/vertex.glsl")
             .build();
     }
 

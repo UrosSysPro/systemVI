@@ -30,10 +30,10 @@ public class Graph extends Game {
         texture=new Texture(window.getWidth(),window.getHeight(), Format.RGB);
         renderer=new TextureRenderer();
         renderer.setCamera(camera);
-        compute=Shader.builder().compute("examples/compute/graph/compute.glsl").build();
+        compute=Shader.builder().compute("assets/examples/compute/graph/compute.glsl").build();
         shader= Shader.builder()
             .vertex("assets/renderer/textureRenderer/vertex.glsl")
-            .fragment("examples/compute/graph/fragment.glsl")
+            .fragment("assets/examples/compute/graph/fragment.glsl")
             .build();
         renderer.setShader(shader);
         storage=new ShaderStorage(new float[800]);

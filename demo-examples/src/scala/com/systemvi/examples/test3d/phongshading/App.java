@@ -63,8 +63,8 @@ public class App extends Application {
         controller.camera=camera;
 
         shader= Shader.builder()
-            .vertex("examples/test3d/vertex.glsl")
-            .fragment("examples/test3d/fragment.glsl")
+            .vertex("assets/examples/test3d/vertex.glsl")
+            .fragment("assets/examples/test3d/fragment.glsl")
             .build();
         if(!shader.isCompiled()){
             System.out.println(shader.getLog());

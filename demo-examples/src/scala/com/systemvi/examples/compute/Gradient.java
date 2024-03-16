@@ -20,7 +20,7 @@ public class Gradient extends Game {
     @Override
     public void setup(Window window) {
         compute= Shader.builder()
-            .compute("examples/compute/gradient/compute.glsl")
+            .compute("assets/examples/compute/gradient/compute.glsl")
             .build();
         texture=new Texture(800,600, Format.RGBA32);
         renderer=new TextureRenderer();

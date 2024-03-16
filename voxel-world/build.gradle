@@ -11,10 +11,13 @@ application {
 sourceSets {
     main {
         java {
-            srcDirs = ['src']
+            srcDirs += ['src/java']
+        }
+        resources {
+            srcDirs += ['src/resources']
         }
     }
 }
 dependencies {
-    implementation rootProject
+//    implementation rootProject
 }

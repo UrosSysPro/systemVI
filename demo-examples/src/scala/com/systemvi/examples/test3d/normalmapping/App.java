@@ -65,8 +65,8 @@ public class App extends Application {
         controller.camera=camera;
 
         shader=Shader.builder()
-            .fragment("examples/test3d/normalmapping/fragment.glsl")
-            .vertex("examples/test3d/normalmapping/vertex.glsl")
+            .fragment("assets/examples/test3d/normalmapping/fragment.glsl")
+            .vertex("assets/examples/test3d/normalmapping/vertex.glsl")
             .build();
 
         if(!shader.isCompiled()){
