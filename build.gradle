@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'com.systempro.systemvi'
-version '0.7.0'
+version '0.7.2'
 
 java{
 	withJavadocJar()
@@ -291,9 +291,15 @@ publishing {
 		}
 	}
 	publications {
+//		gpr(MavenPublication) {
+//			artifactId "system-vi"
+//			from(components.java)
+//			artifact shadowJar
+//		}
 		gpr(MavenPublication) {
 			artifactId "system-vi"
-			from(components.java)
+			from components.java
+			artifact shadowJar
 		}
 	}
 }
