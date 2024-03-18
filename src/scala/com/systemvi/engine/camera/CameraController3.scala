@@ -86,9 +86,9 @@ class CameraController3(var camera:Camera3,
   }
   override def resize(width: Int, height: Int): Boolean = {
     aspect=width.toFloat/height.toFloat
-    focused
+    false
   }
-  def update(delta:Float): Unit = if(focused){
+  def update(delta:Float): Unit = {
     val dx:Float=mouseCurrent.x-mousePrevious.x
     val dy:Float=mouseCurrent.y-mousePrevious.y
     mousePrevious.set(mouseCurrent)
@@ -104,16 +104,17 @@ class CameraController3(var camera:Camera3,
       Math.cos(camera.rotation.y+Math.PI/2).toFloat*speed*delta
     )
 
-    if(forward)camera.position.add(forwardDir)
-    if(backward)camera.position.sub(forwardDir)
-    if(right)camera.position.add(rightDir)
-    if(left)camera.position.sub(rightDir)
-    if(up)camera.position.y+=delta*speed
-    if(down)camera.position.y-=delta*speed
+    if(focused) {
+      if (forward) camera.position.add(forwardDir)
+      if (backward) camera.position.sub(forwardDir)
+      if (right) camera.position.add(rightDir)
+      if (left) camera.position.sub(rightDir)
+      if (up) camera.position.y += delta * speed
+      if (down) camera.position.y -= delta * speed
 
-    camera.rotation.y+=dx*sensistivity*scaleX
-    camera.rotation.x+=dy*sensistivity*scaleY
-
+      camera.rotation.y += dx * sensistivity * scaleX
+      camera.rotation.x += dy * sensistivity * scaleY
+    }
     camera.perspective(near,far,aspect,fov)
     camera.update()
   }

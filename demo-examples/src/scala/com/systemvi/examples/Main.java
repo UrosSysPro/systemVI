@@ -5,7 +5,7 @@ import com.systemvi.examples.compute.GameOfLife;
 import com.systemvi.examples.fluid.Fluid;
 import com.systemvi.examples.fractals.Juliaset;
 import com.systemvi.examples.inversekinematics.Fabrik;
-import com.systemvi.examples.test3d.phongshading.App;
+import com.systemvi.examples.test3d.normalmapping.App;
 import com.systemvi.examples.uitest.WidgetTest;
 import org.lwjgl.system.MemoryStack;
 

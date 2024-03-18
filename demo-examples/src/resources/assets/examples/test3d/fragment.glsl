@@ -23,20 +23,17 @@ vec4 calculateLigting(vec3 normal,vec3 lightDirection,vec3 viewDirection){
     vec3 reflectedLightDir=reflect(-lightDirection,normal);
     vec3 specular=vec3(max(pow(dot(viewDirection,reflectedLightDir),128.0),0.0))*texture(specularTexture,vUV).rgb;
 
-    float ambientOclusion=texture(ambientTexture,vUV).r;
-    return vec4(ambient+(diffuse+specular)*ambientOclusion,1.0);
+    return vec4(ambient+(diffuse+specular),1.0);
 }
 
 void main(){
-    //dot(v1,v2);  x1*x2+y1*y2+z1*z2   |v1|*|v2|*cos(teta)
-    //cross(v1,v2);
-    //v1*v2;  vec3(x1*x2,y1*y2,z1*z2);
     vec3 lightDirection=normalize(lightPosition-worldPosition);
     vec3 viewDirection=normalize(cameraPosition-worldPosition);
 
-//    pixel=calculateLigting(vNormal,lightDirection,viewDirection)*texture(diffuseTexture,vUV);
-    pixel=texture(diffuseTexture,vUV);
+    pixel=calculateLigting(vNormal,lightDirection,viewDirection)*texture(diffuseTexture,vUV);
+//    pixel=texture(diffuseTexture,vUV);
 //    pixel=texture(specularTexture,vUV);
+//    pixel=texture(ambientTexture,vUV).rrrr;
 //    pixel=vec4(worldPosition,1.0);
 //    pixel=vec4(abs(vNormal),1.0);
 }

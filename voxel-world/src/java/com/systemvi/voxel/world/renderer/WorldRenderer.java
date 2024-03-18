@@ -1,6 +1,7 @@
 package com.systemvi.voxel.world.renderer;
 
 import com.systemvi.engine.camera.Camera;
+import com.systemvi.engine.camera.Camera3;
 import com.systemvi.engine.shader.Shader;
 import com.systemvi.engine.texture.Format;
 import com.systemvi.engine.texture.FrameBuffer;
@@ -33,7 +34,7 @@ public class WorldRenderer {
             .build();
     }
 
-    public void render(World world, Camera camera, Material material){
+    public void render(World world, Camera3 camera, Material material){
         Chunk[][][] chunks=world.getChunks();
 
         frameBuffer.begin();
@@ -42,8 +43,8 @@ public class WorldRenderer {
         Utils.enableFaceCulling();
 
         blockFaceShader.use();
-        blockFaceShader.setUniform("view",camera.getView());
-        blockFaceShader.setUniform("projection",camera.getProjection());
+        blockFaceShader.setUniform("view",camera.view());
+        blockFaceShader.setUniform("projection",camera.projection());
 
         material.normal.bind(0);
         blockFaceShader.setUniform("normalMap",0);

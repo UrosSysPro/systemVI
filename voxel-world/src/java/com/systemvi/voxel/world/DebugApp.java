@@ -2,7 +2,9 @@ package com.systemvi.voxel.world;
 
 import com.systemvi.engine.application.Game;
 import com.systemvi.engine.camera.Camera;
+import com.systemvi.engine.camera.Camera3;
 import com.systemvi.engine.camera.CameraController2;
+import com.systemvi.engine.camera.CameraController3;
 import com.systemvi.engine.renderers.TextureRenderer;
 import com.systemvi.engine.shader.Shader;
 import com.systemvi.engine.texture.Texture;
@@ -23,8 +25,8 @@ public class DebugApp extends Game {
     public DebugApp(int openglVersionMajor, int openglVersionMinor, int targetFPS) {
         super(openglVersionMajor, openglVersionMinor, targetFPS,1400,900,"Voxel world");
     }
-    public CameraController2 controller;
-    public Camera camera;
+    public CameraController3 controller;
+    public Camera3 camera;
     public World world;
     public WorldRenderer worldRenderer;
     public TextureRenderer renderer;
@@ -47,13 +49,16 @@ public class DebugApp extends Game {
         Block.STONE=new Block(regions[7][0],regions[7][0],regions[7][0]);
         Block.DIRT=new Block(regions[2][3],regions[1][2],regions[1][3]);
 
-        camera=Camera.default3d(window);
-
-        controller=CameraController2.builder()
-            .camera(camera)
-            .flip(false,true)
-            .speed(10)
+        controller=CameraController3.builder()
+            .camera(Camera3.builder3d()
+                .rotation(0,(float) Math.PI,0)
+                .build())
+            .aspect((float)window.getWidth()/window.getHeight())
+            .window(window)
+            .speed(5)
             .build();
+        camera=controller.camera();
+
         mainWindow.setInputProcessor(new InputMultiplexer( controller,this));
         world=new World();
 
@@ -137,16 +142,14 @@ public class DebugApp extends Game {
         finalGather.setUniform("diffuseTexture",4);
         finalGather.setUniform("specularTexture",5);
 
-        finalGather.setUniform("cameraPosition",new Vector3f(
-                controller.x,controller.y,controller.z
-        ));
+        finalGather.setUniform("cameraPosition",camera.position());
         finalGather.setUniform("lightPosition",new Vector3f(20,100,20));
         renderer.setShader(finalGather);
         renderer.draw(uv,0,0,width,height);
         renderer.flush();
         renderer.setShader(null);
 
-        player.draw(camera);
+//        player.draw(camera);
     }
     @Override
     public boolean resize(int width, int height) {
@@ -157,10 +160,6 @@ public class DebugApp extends Game {
     }
     @Override
     public boolean keyDown(int key, int scancode, int mods) {
-        if(key==GLFW_KEY_ESCAPE){
-            close();
-            return true;
-        }
         if(key==GLFW_KEY_F3){
             f3Pressed=!f3Pressed;
             return true;
