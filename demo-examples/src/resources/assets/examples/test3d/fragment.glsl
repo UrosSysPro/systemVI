@@ -34,7 +34,8 @@ void main(){
     vec3 lightDirection=normalize(lightPosition-worldPosition);
     vec3 viewDirection=normalize(cameraPosition-worldPosition);
 
-    pixel=calculateLigting(vNormal,lightDirection,viewDirection)*texture(diffuseTexture,vUV);
+//    pixel=calculateLigting(vNormal,lightDirection,viewDirection)*texture(diffuseTexture,vUV);
+    pixel=texture(diffuseTexture,vUV);
 //    pixel=texture(specularTexture,vUV);
 //    pixel=vec4(worldPosition,1.0);
 //    pixel=vec4(abs(vNormal),1.0);

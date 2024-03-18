@@ -1,8 +1,11 @@
 package com.systemvi.examples.test3d.phongshading;
 
 import com.systemvi.engine.application.Application;
+import com.systemvi.engine.application.Game;
 import com.systemvi.engine.camera.Camera;
+import com.systemvi.engine.camera.Camera3;
 import com.systemvi.engine.camera.CameraController;
+import com.systemvi.engine.camera.CameraController3;
 import com.systemvi.engine.model.Mesh;
 import com.systemvi.engine.model.VertexAttribute;
 import com.systemvi.engine.shader.Shader;
@@ -18,25 +21,23 @@ import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.opengl.GL33.GL_MULTISAMPLE;
 import static org.lwjgl.opengl.GL33.glEnable;
 
-public class App extends Application {
+public class App extends Game {
 
-    public App(int openglVersionMajor, int openglVersionMinor, int targetFPS) {
-        super(openglVersionMajor, openglVersionMinor, targetFPS);
+    public App() {
+        super(3,3,75,800,600,"Phong Shading");
     }
     public Mesh mesh;
     public Shader shader;
-    public Camera camera;
+//    public Camera camera;
+    public Camera3 camera;
+    public CameraController3 controller;
     public Texture diffuse,specular,ambient;
-    public CameraController controller;
-    public Window window;
+//    public CameraController controller;
     public float angle;
 
     @Override
-    public void setup() {
-
-        float width=800,height=600;
+    public void setup(Window window) {
         glfwWindowHint(GLFW_SAMPLES,3);
-        window=new Window(800,600,"Test 3d");
         mesh=new Mesh(
             new VertexAttribute("position",3),
             new VertexAttribute("normal", 3),
@@ -54,13 +55,25 @@ public class App extends Application {
             0,1,2,
             1,3,2,
         });
-        camera=new Camera();
-        camera.setPerspectiveProjection((float)Math.toRadians(60),width/height,0.1f,1000);
-//        camera.setOrthographicProjection(-width/height,width/height,height/height,-height/height,0.1f,100);
-        camera.update();
+//        camera=new Camera();
+//        camera.setPerspectiveProjection((float)Math.toRadians(60),width/height,0.1f,1000);
+////        camera.setOrthographicProjection(-width/height,width/height,height/height,-height/height,0.1f,100);
+//        camera.update();
+//
+//        controller=new CameraController(0,0,2,0,0,-(float)Math.PI/2);
+//        controller.camera=camera;
 
-        controller=new CameraController(0,0,2,0,0,-(float)Math.PI/2);
-        controller.camera=camera;
+        controller=CameraController3.builder()
+            .camera(Camera3.builder3d()
+                .position(0,0,10)
+                .build())
+            .aspect((float)window.getWidth()/window.getHeight())
+            .speed(10)
+            .window(window)
+            .build();
+        camera=controller.camera();
+
+        setInputProcessor(controller);
 
         shader= Shader.builder()
             .vertex("assets/examples/test3d/vertex.glsl")
@@ -69,11 +82,11 @@ public class App extends Application {
         if(!shader.isCompiled()){
             System.out.println(shader.getLog());
         }
-        window.addOnKeyPressListener((key, scancode, mods) -> controller.keyDown(key));
-        window.addOnKeyReleaseListener((key, scancode, mods) -> controller.keyUp(key));
-        window.addOnMouseMoveListener((x1, y1) -> controller.mouseMove((float) x1, 600-(float) y1));
-        window.addOnMouseDownListener((button, mods) -> controller.mouseDown());
-        window.addOnMouseUpListener((button, mods) -> controller.mouseUp());
+//        window.addOnKeyPressListener((key, scancode, mods) -> controller.keyDown(key));
+//        window.addOnKeyReleaseListener((key, scancode, mods) -> controller.keyUp(key));
+//        window.addOnMouseMoveListener((x1, y1) -> controller.mouseMove((float) x1, 600-(float) y1));
+//        window.addOnMouseDownListener((button, mods) -> controller.mouseDown());
+//        window.addOnMouseUpListener((button, mods) -> controller.mouseUp());
         angle=0;
 
         diffuse=new Texture("assets/examples/test3d/rock/diffuse.png");
@@ -84,13 +97,11 @@ public class App extends Application {
 
     @Override
     public void loop(float delta) {
-        if(window.shouldClose())close();
-        window.pollEvents();
 
         Utils.clear(0,0,0,1, Utils.Buffer.COLOR_BUFFER, Utils.Buffer.DEPTH_BUFFER);
 
         controller.update(delta);
-        angle+=0.01;
+        angle+=0.01f;
 
         Vector3f lightPosition=new Vector3f(2,2,2);
 
@@ -98,8 +109,9 @@ public class App extends Application {
         Utils.enableFaceCulling(Utils.Face.FRONT);
         glEnable(GL_MULTISAMPLE);
         shader.use();
-        shader.setUniform("view",camera.getView());
-        shader.setUniform("projection",camera.getProjection());
+//        camera.rotation(camera.rotation().x,angle,camera.rotation().z).update();
+        shader.setUniform("view",camera.view());
+        shader.setUniform("projection",camera.projection());
 
         diffuse.bind(0);
         specular.bind(1);
@@ -111,7 +123,7 @@ public class App extends Application {
 
         shader.setUniform("lightPosition",lightPosition);
         shader.setUniform("lightColor",new Vector3f(1,1,1));
-        shader.setUniform("cameraPosition",new Vector3f(controller.x,controller.y,controller.z));
+        shader.setUniform("cameraPosition",camera.position());
 
         drawCube(new Matrix4f().identity().translate(3,0,0).rotateXYZ(angle,angle,angle));
         drawCube(new Matrix4f().identity().translate(0,0,0));
@@ -119,8 +131,6 @@ public class App extends Application {
 //        drawCube(lightPosition.x,lightPosition.y,lightPosition.z);
         Utils.disableFaceCulling();
         Utils.disableDepthTest();
-
-        window.swapBuffers();
     }
 
     public void drawCube(float x,float y,float z) {
