@@ -6,6 +6,9 @@ layout(location=5) in vec4 color;
 layout(location=6) in float borderRadius;
 layout(location=7) in float blur;
 layout(location=8) in vec2 size;
+layout(location=9) in float borderWidth;
+layout(location=10) in float borderColor;
+layout(location=11) in float clipRect;
 
 uniform mat4 view;
 uniform mat4 projection;
