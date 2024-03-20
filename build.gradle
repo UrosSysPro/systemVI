@@ -279,6 +279,27 @@ subprojects {
 	}
 }
 
+
+
+abstract class PrintOSName extends DefaultTask {
+	@TaskAction
+	def lol() {
+		println(osName())
+	}
+	static def osName(){
+		switch (OperatingSystem.current()){
+			case OperatingSystem.WINDOWS:return 'windows'
+			case OperatingSystem.LINUX:return 'linux'
+			case OperatingSystem.MAC_OS:return 'macos'
+		}
+	}
+}
+
+// Create a task using the task type
+tasks.register('os-name', PrintOSName)
+
+
+
 publishing {
 	repositories {
 		maven {
@@ -291,12 +312,12 @@ publishing {
 		}
 	}
 	publications {
-//		gpr(MavenPublication) {
-//			artifactId "system-vi"
-//			from(components.java)
+//		shadow(MavenPublication) { publication ->
+//			artifactId 'system-vi'
+//			project.shadow.component(publication)
 //		}
 		shadow(MavenPublication) { publication ->
-			artifactId 'system-vi'
+			artifactId 'system-vi-'+PrintOSName.osName()
 			project.shadow.component(publication)
 		}
 	}
