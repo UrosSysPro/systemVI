@@ -1,6 +1,5 @@
 package com.systemvi.voxel.world.renderer;
 
-import com.systemvi.engine.camera.Camera;
 import com.systemvi.engine.camera.Camera3;
 import com.systemvi.engine.shader.Shader;
 import com.systemvi.engine.texture.Format;
@@ -19,7 +18,7 @@ public class WorldRenderer {
         uv=new Texture(width,height, Format.RG16);
         depth=new Texture(width,height,Format.DEPTH16);
         normal=new Texture(width,height,Format.RGB);
-        position=new Texture(width,height,Format.RGB32);
+        position=new Texture(width,height,Format.RGB32F);
 
         frameBuffer= FrameBuffer.builder()
             .color(uv)

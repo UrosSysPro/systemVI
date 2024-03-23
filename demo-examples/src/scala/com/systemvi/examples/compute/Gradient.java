@@ -22,7 +22,7 @@ public class Gradient extends Game {
         compute= Shader.builder()
             .compute("assets/examples/compute/gradient/compute.glsl")
             .build();
-        texture=new Texture(800,600, Format.RGBA32);
+        texture=new Texture(800,600, Format.RGBA32F);
         renderer=new TextureRenderer();
         camera=Camera.default2d(window);
         renderer.setCamera(camera);

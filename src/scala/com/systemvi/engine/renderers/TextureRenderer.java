@@ -24,7 +24,9 @@ public class TextureRenderer {
     private final int[] indices;
     int maxPoints;
     int maxTriangles;
-    private Camera camera;
+//    private Camera camera;
+    private Matrix4f view;
+    private Matrix4f projection;
 
     public TextureRenderer(int maxPoints,int maxTriangles){
         this.maxPoints=maxPoints;
@@ -155,16 +157,21 @@ public class TextureRenderer {
     }
 
     public void setCamera(Camera camera) {
-        this.camera = camera;
+        view=camera.getView();
+        projection=camera.getProjection();
     }
+    public Matrix4f view(){return view;}
+    public Matrix4f projection(){return projection;}
+    public TextureRenderer projection(Matrix4f projection){this.projection=projection;return this;}
+    public TextureRenderer view(Matrix4f view){this.view=view;return this;}
 
     public void flush(){
         Shader shader=customShader!=null?customShader:this.shader;
         texture.bind(0);
         shader.use();
         shader.setUniform("t0",0);
-        shader.setUniform("view",camera.getView());
-        shader.setUniform("projection",camera.getProjection());
+        shader.setUniform("view",view);
+        shader.setUniform("projection",projection);
         mesh.setVertexData(vertexData);
         mesh.setIndices(indices);
         mesh.drawElements(trianglesToDraw);

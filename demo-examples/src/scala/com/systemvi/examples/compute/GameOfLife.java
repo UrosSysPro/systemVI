@@ -37,9 +37,9 @@ public class GameOfLife extends Application {
                 data.setPixel4i(i, j, new Vector4i(r.nextInt(255), 0, 0, 0));
             }
         }
-        current = new Texture(800, 600, Format.RGBA32);
+        current = new Texture(800, 600, Format.RGBA32F);
         current.setData(data);
-        next = new Texture(800, 600, Format.RGBA32);
+        next = new Texture(800, 600, Format.RGBA32F);
         camera = new Camera();
         camera.setPosition(400, 300, 0);
         camera.setScreenSize(800, 600);
