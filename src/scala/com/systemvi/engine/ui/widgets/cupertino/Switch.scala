@@ -1,6 +1,8 @@
 package com.systemvi.engine.ui.widgets.cupertino
 
+import com.systemvi.engine.math.Bezier1f
 import com.systemvi.engine.ui.Widget
+import com.systemvi.engine.ui.utils.animation.{Animatable, AnimationController, AnimationStates}
 import com.systemvi.engine.ui.utils.context.{BuildContext, DrawContext}
 import com.systemvi.engine.ui.widgets.cupertino.Switch.{padding, selectedColor, unselectedColor}
 import com.systemvi.engine.ui.widgets.{GestureDetector, SizedBox, State, StatefulWidget}
@@ -10,7 +12,24 @@ class Switch(val value:Boolean,val onChange:Boolean=>Unit) extends StatefulWidge
   override def createState(): State = new SwitchState()
 }
 
-class SwitchState extends State{
+class SwitchState extends State with Animatable{
+
+  var controller:AnimationController=null
+  var value = 0f
+  var timing = new Bezier1f(Array(0,0.1f, 0.9f,1f))
+
+  override def init(): Unit = {
+    controller= AnimationController(
+      animatable = this,
+      milliseconds=500,
+      onValueChange = value => {
+        setState(()=>{
+          this.value=value
+        })
+
+      }
+    )
+  }
   override def build(context:BuildContext): Widget =
     SizedBox(
       width=55,height=30,
@@ -20,6 +39,9 @@ class SwitchState extends State{
             case switch: Switch=>switch
           }
           switch.onChange(!switch.value)
+
+          if(switch.value)controller.setState(AnimationStates.running)
+          else controller.setState(AnimationStates.reverse)
           true
         }
       )
@@ -28,10 +50,11 @@ class SwitchState extends State{
     val value=widget match {
       case switch: Switch=>switch.value
     }
+    val d = timing.get(this.value)
     val size=widget.size
     val position=widget.position
     val circleSize:Float = size.y
-    val x:Float = if (value) position.x + size.x - circleSize else position.x
+    val x:Float =  d*(position.x + size.x - circleSize)+ (1-d)*position.x
     val y:Float = position.y
     //background
     context.renderer.rect(
@@ -39,7 +62,9 @@ class SwitchState extends State{
       position.y,
       size.x,
       size.y,
-      if(value)selectedColor else unselectedColor,
+      new Vector4f()
+        .add(new Vector4f(selectedColor).mul(d))
+        .add(new Vector4f(unselectedColor).mul(1-d)),
       size.y/2
     )
     val shadowBlur:Float=4
