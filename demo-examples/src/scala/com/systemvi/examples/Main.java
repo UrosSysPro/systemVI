@@ -15,9 +15,9 @@ import java.nio.FloatBuffer;
 public class Main {
     public static void main(String[] args){
         Utils.assetsFolder="";
-        new App().run();
 //        new App().run();
-//        new WidgetTest().run();
+//        new App().run();
+        new WidgetTest().run();
 //        new Fabrik().run();
 //        new Fluid(3,3,60).run();
 //        new Juliaset(3,3,60,800,600,"Julia set").run();
