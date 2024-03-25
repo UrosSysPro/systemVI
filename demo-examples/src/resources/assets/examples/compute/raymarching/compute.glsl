@@ -123,31 +123,33 @@ vec3 getNormal(in vec3 p){
 
 void phongData( in vec2 uv,in vec2 size,in vec3 lightPosition,
                 out vec4 albedo,out vec3 cameraDirection,
-                out vec3 lightDirection,out vec3 normal,out float shadow
+                out vec3 lightDirection,out vec3 normal,out float shadow,out float cameraDistance,out float lightDistance
 ){
     //camera setup
     mat4 inverseView=inverse(view);
     vec4 helper;
     float f=2.0;
 
-    vec3 cameraPosition=-view[3].xyz;
+//    vec3 cameraPosition=-view[3].xyz;
     vec3 focusPoint=transform(inverseView,vec3(0.0,0.0,f));
     vec3 rayOrigin=transform(inverseView,vec3(uv,0.0));
     vec3 rayDirection=normalize(rayOrigin-focusPoint);
     cameraDirection=rayDirection;
 
-    float distance;
     vec3 firstHit,secondHit;
+    float distance;
     int numOfIterations;
     //ray march camra to scene
     rayMarch(distance,firstHit,numOfIterations,rayOrigin,rayDirection);
+    cameraDistance=distance;
     albedo=color(firstHit);
     normal=getNormal(firstHit);
-    lightDirection=normalize(firstHit-lightDirection);
+    lightDirection=normalize(firstHit-lightPosition);
     //ray march scene to light
     rayOrigin=firstHit-rayDirection*DELTA_EPSILON*2.0;
     rayDirection=normalize(lightPosition-rayOrigin);
     rayMarch(distance,secondHit,numOfIterations,rayOrigin,rayDirection);
+    lightDistance=distance;
     shadow=mix(1.0,0.4,float(distance<length(firstHit-lightPosition)));
 }
 void phongWithReflectionsData(in vec2 uv,in vec2 size){
@@ -156,12 +158,12 @@ void phongWithReflectionsData(in vec2 uv,in vec2 size){
 void pbrData(in vec2 uv,in vec2 size){
 
 }
-vec4 phong(vec4 lightColor,vec4 atenuation,vec4 albedo,vec3 cameraDirection,vec3 lightDirection,vec3 normal,float shadow){
+vec4 phong(vec4 lightColor,vec3 atenuation,vec4 albedo,vec3 cameraDirection,vec3 lightDirection,vec3 normal,float shadow,float cameraDistance,float lightDistance){
     float ambient=0.2;
     float diffuse=max(dot(normal,-lightDirection),0.0);
     float specular=pow(max(dot(-lightDirection,reflect(cameraDirection,normal)),0.0),64.0);
-
-    return albedo*(ambient+shadow*(diffuse+specular));
+    float fallOff=atenuation.x*lightDistance*lightDistance+atenuation.y*lightDistance+atenuation.z;
+    return albedo*(ambient+max(shadow*(diffuse+specular)/fallOff,0.0));
 }
 
 vec4 phongReflections(){
@@ -173,35 +175,13 @@ vec4 pbr(){
 }
 
 vec4 calculateColor(vec2 uv,vec2 size){
-    //rayDir rayOrigin
-    mat4 inverseView=inverse(view);
-    vec4 helper;
-    float f=2.0;
-
-    vec3 cameraPosition=-view[3].xyz;
-    vec3 focusPoint=transform(inverseView,vec3(0.0,0.0,f));
-    vec3 rayOrigin=transform(inverseView,vec3(uv,0.0));
-    vec3 rayDirection=normalize(rayOrigin-focusPoint);
-
-    float sceneToCameraDistance;
-    vec3 firstHit;
-    int numOfIterations;
-    rayMarch(sceneToCameraDistance,firstHit,numOfIterations,rayOrigin,rayDirection);
-
-    vec4 firstHitColor=color(firstHit);
-    vec3 normal=getNormal(firstHit);
-
-    vec3 lightPosition=vec3(2.0,10.0,-8.0);
-    rayOrigin=firstHit-rayDirection*DELTA_EPSILON*2.0;
-    rayDirection=normalize(lightPosition-rayOrigin);
-    float sceneToLightDistance;
-    float lightDistance=length(firstHit-lightPosition);
-    vec3 secondHit;
-    rayMarch(sceneToLightDistance,secondHit,numOfIterations,rayOrigin,rayDirection);
-
-    vec4 finalColor=vec4(firstHitColor.rgb*mix(1.0,0.4,float(sceneToLightDistance<lightDistance)),1.0);
-
-    return finalColor;
+    vec3 lightPosition=vec3(0.0,10.0,-10.0);
+    vec4 lightColor=vec4(1.0);
+    vec4 albedo;
+    vec3 cameraDirection, lightDirection, normal;
+    float shadow,cameraDistance,lightDistance;
+    phongData(uv,size,lightPosition,albedo,cameraDirection,lightDirection,normal,shadow,cameraDistance,lightDistance);
+    return phong(lightColor,vec3(0.0,0.0,1.0),albedo,cameraDirection,lightDirection,normal,shadow,cameraDistance,lightDistance);
 }
 
 
