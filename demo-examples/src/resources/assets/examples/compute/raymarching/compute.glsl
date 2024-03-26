@@ -166,36 +166,42 @@ void phongData( in vec2 uv,in vec2 size,in vec3 lightPosition,
 }
 
 void phongWithReflectionsData(
-    in vec2 uv,in vec2 size,in vec3 lightPosition,
-    out vec4 albedo,out vec3 cameraDirection,
-    out vec3 lightDirection,out vec3 normal,out float shadow,out float cameraDistance,out float lightDistance
+    vec2 uv,vec2 size,out RayOutput cameraToScene,out RayOutput sceneToLight,out RayOutput sceneReflection,vec3 lightPosition
 ){
     //camera setup
     mat4 inverseView=inverse(view);
-    vec4 helper;
     float f=2.0;
 
-    //    vec3 cameraPosition=-view[3].xyz;
     vec3 focusPoint=transform(inverseView,vec3(0.0,0.0,f));
     vec3 rayOrigin=transform(inverseView,vec3(uv,0.0));
     vec3 rayDirection=normalize(rayOrigin-focusPoint);
-    cameraDirection=rayDirection;
+    vec3 cameraDirection=rayDirection;
 
-    vec3 firstHit,secondHit;
-    float distance;
+    vec3 hitPoint;
+    float traveled;
     int numOfIterations;
-    //ray march camra to scene
-    rayMarch(distance,firstHit,numOfIterations,rayOrigin,rayDirection);
-    cameraDistance=distance;
-    albedo=getColor(firstHit);
-    normal=getNormal(firstHit);
-    lightDirection=normalize(firstHit-lightPosition);
-    //ray march scene to light
-    rayOrigin=firstHit-rayDirection*DELTA_EPSILON*2.0;
-    rayDirection=normalize(lightPosition-rayOrigin);
-    lightDistance=length(lightPosition-firstHit);
-    rayMarch(distance,secondHit,numOfIterations,rayOrigin,rayDirection);
-    shadow=mix(1.0,0.4,float(distance<length(firstHit-lightPosition)));
+
+    rayMarch(traveled,hitPoint,numOfIterations,rayOrigin,rayDirection);
+    cameraToScene.start=rayOrigin;
+    cameraToScene.traveled=traveled;
+    cameraToScene.end=hitPoint;
+
+
+    rayOrigin=hitPoint-2.0*DELTA_EPSILON*rayDirection;
+    rayDirection=normalize(lightPosition-hitPoint);
+    rayMarch(traveled,hitPoint,numOfIterations,rayOrigin,rayDirection);
+    sceneToLight.start=rayOrigin;
+    sceneToLight.traveled=traveled;
+    sceneToLight.end=lightPosition;
+
+    vec3 normal=getNormal(cameraToScene.end);
+    rayOrigin=cameraToScene.end+2.0*DELTA_EPSILON*normal;
+    rayDirection=reflect(cameraDirection,normal);
+
+    rayMarch(traveled,hitPoint,numOfIterations,rayOrigin,rayDirection);
+    sceneReflection.start=rayOrigin;
+    sceneReflection.traveled=traveled;
+    sceneReflection.end=hitPoint;
 }
 void pbrData(in vec2 uv,in vec2 size){
 
@@ -208,15 +214,48 @@ vec4 phong(vec4 lightColor,vec3 atenuation,vec4 albedo,vec3 cameraDirection,vec3
     return albedo*(ambient+max(shadow*(diffuse+specular)/fallOff,0.0));
 }
 
-vec4 phongReflections(
-    vec4 lightColor,vec3 atenuation,vec4 albedo,vec3 cameraDirection,
-    vec3 lightDirection,vec3 normal,float shadow,float cameraDistance,float lightDistance
+vec4 phongReflections(vec2 uv,vec2 size,
+    RayOutput cameraToScene,RayOutput sceneToLight,RayOutput sceneReflection,vec3 lightPosition,vec4 lightColor,vec3 atenuation
 ){
+
+//    mat4 inverseView=inverse(view);
+//    float f=2.0;
+//
+//    vec3 focusPoint=transform(inverseView,vec3(0.0,0.0,f));
+//    vec3 rayOrigin=transform(inverseView,vec3(uv,0.0));
+//    vec3 rayDirection=normalize(rayOrigin-focusPoint);
+//    vec3 cameraDirection=rayDirection;
+
+    vec3 normal=getNormal(cameraToScene.end);
+    vec3 lightDirection=normalize(sceneToLight.start-sceneToLight.end);
+    float lightDistance=length(sceneToLight.end-sceneToLight.start);
+    vec3 cameraDirection=normalize(cameraToScene.end-cameraToScene.start);
+    vec4 albedo=getColor(cameraToScene.end);
+    float shadow=mix(1.0,0.0,float(sceneToLight.traveled<lightDistance));
     float ambient=0.2;
     float diffuse=max(dot(normal,-lightDirection),0.0);
     float specular=pow(max(dot(-lightDirection,reflect(cameraDirection,normal)),0.0),64.0);
     float fallOff=atenuation.x*lightDistance*lightDistance+atenuation.y*lightDistance+atenuation.z;
-    return albedo*(ambient+max(shadow*(diffuse+specular)/fallOff,0.0));
+    vec4 normalColor=albedo*(ambient+(diffuse+specular)*shadow/fallOff);
+//    vec4 bounceAlbedo=getColor(sceneReflection.end);
+//    vec4 bounceColor=normalColor*bounceAlbedo;
+//    float rspec = 1.45*(dot(cameraDirection,normal)+1);
+//    return albedo*(ambient+(diffuse+specular)*shadow/fallOff)+(bounceAlbedo*rspec+0.0);
+    lightDirection=normalize(sceneReflection.end-lightPosition);
+    cameraDirection=normalize(sceneReflection.end-cameraToScene.start);
+    albedo=getColor(sceneReflection.end);
+    normal=getNormal(sceneReflection.end);
+    diffuse=max(dot(normal,-lightDirection),0.0);
+    specular=pow(max(dot(-lightDirection,reflect(cameraDirection,normal)),0.0),64.0);
+    vec4 bounceColor=albedo*(ambient+(diffuse+specular));
+
+    //    vec4 bounceAlbedo=getColor(sceneReflection.end);
+    //    vec4 bounceColor=normalColor*bounceAlbedo;
+    cameraDirection=normalize(cameraToScene.end-cameraToScene.start);
+    normal=getNormal(cameraToScene.end);
+        float rspec = 1.45 * (dot(cameraDirection,normal)+1);//1.45*(dot(cameraDirection,normal)+1);
+        return normalColor*(bounceColor*rspec+1.0);
+//    return bounceColor;
 }
 
 vec4 pbr(){
@@ -224,13 +263,24 @@ vec4 pbr(){
 }
 
 vec4 calculateColor(vec2 uv,vec2 size){
+//    vec3 lightPosition=vec3(5.0,5.0,-5.0);
+//    vec4 lightColor=vec4(2.0);
+//    vec4 albedo;
+//    vec3 cameraDirection, lightDirection, normal;
+//    float shadow,cameraDistance,lightDistance;
+//    phongData(uv,size,lightPosition,albedo,cameraDirection,lightDirection,normal,shadow,cameraDistance,lightDistance);
+//    return phong(lightColor,vec3(0.01,0.01,1.0),albedo,cameraDirection,lightDirection,normal,shadow,cameraDistance,lightDistance);
+
+    //RayOutput cameraToScene
+    //RayOutput sceneToLight
+    //RayOutput sceneReflection
     vec3 lightPosition=vec3(5.0,5.0,-5.0);
     vec4 lightColor=vec4(2.0);
-    vec4 albedo;
-    vec3 cameraDirection, lightDirection, normal;
-    float shadow,cameraDistance,lightDistance;
-    phongWithReflectionsData(uv,size,lightPosition,albedo,cameraDirection,lightDirection,normal,shadow,cameraDistance,lightDistance);
-    return phongReflections(lightColor,vec3(0.01,0.01,1.0),albedo,cameraDirection,lightDirection,normal,shadow,cameraDistance,lightDistance);
+    vec3 atenuation=vec3(0.01,0.01,1.0);
+    RayOutput cameraToScene,sceneToLight,sceneReflection;
+    phongWithReflectionsData(uv,size,cameraToScene,sceneToLight,sceneReflection,lightPosition);
+//    return vec4(0);
+    return phongReflections(uv,size,cameraToScene,sceneToLight,sceneReflection,lightPosition,lightColor,atenuation);
 }
 
 
