@@ -74,6 +74,17 @@ vec3 transform(in mat4 mat,in vec3 p){
     return helper.xyz;
 }
 
+struct RayOutput{
+    vec3 start;
+    vec3 end;
+    float traveled;
+};
+
+struct RayInput{
+    vec3 origin;
+    vec3 direction;
+};
+
 float map(in vec3 p){
     return unionSDF(
         unionSDF(
@@ -217,8 +228,8 @@ vec4 calculateColor(vec2 uv,vec2 size){
     vec4 albedo;
     vec3 cameraDirection, lightDirection, normal;
     float shadow,cameraDistance,lightDistance;
-    phongData(uv,size,lightPosition,albedo,cameraDirection,lightDirection,normal,shadow,cameraDistance,lightDistance);
-    return phong(lightColor,vec3(0.01,0.01,1.0),albedo,cameraDirection,lightDirection,normal,shadow,cameraDistance,lightDistance);
+    phongWithReflectionsData(uv,size,lightPosition,albedo,cameraDirection,lightDirection,normal,shadow,cameraDistance,lightDistance);
+    return phongReflections(lightColor,vec3(0.01,0.01,1.0),albedo,cameraDirection,lightDirection,normal,shadow,cameraDistance,lightDistance);
 }
 
 
