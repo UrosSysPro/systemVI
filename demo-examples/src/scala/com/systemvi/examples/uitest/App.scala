@@ -40,7 +40,10 @@ object App{
   def apply(): App = new App()
 }
 class AppState extends State with Animatable{
+  var value = true
   override def build(context:BuildContext): Widget = {
+
+
     Container(
       color=Colors.white,
       child = SizedBox(
@@ -48,6 +51,7 @@ class AppState extends State with Animatable{
           crossAxisAlignment=CrossAxisAlignment.center,
           mainAxisAlignment=MainAxisAlignment.start,
           children = Array(
+            Switch(value, onChange = value => setState{()=> this.value=value}),
             NavBar(),
             SizedBox(height = 40),
             Text("Tailwind CSS\nColor Generator",style=TextStyle(fontSize = 20)),

@@ -21,4 +21,21 @@ object Functions {
     }
     result
   }
+
+  def fakt(n:Int): Float = {
+    var result:Float=1
+    for(i<-1 to n)result*=i
+    result
+  }
+
+  def kombinacija(n:Int,k:Int): Float = {
+    var result:Float=fakt(n)/(fakt(k)*fakt(n-k))
+    result
+  }
+
+  def stepen(n:Float,m:Int): Float = {
+    var result:Float=1
+    for(i<- 1 to m)result*=n
+    result
+  }
 }

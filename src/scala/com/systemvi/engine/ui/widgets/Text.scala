@@ -1,4 +1,5 @@
 package com.systemvi.engine.ui.widgets
+
 import com.systemvi.engine.ui.Widget
 import com.systemvi.engine.ui.utils.context.{BuildContext, DrawContext}
 import org.joml.{Vector2f, Vector4f}
@@ -67,6 +68,7 @@ class Text(val text:String="",val style:TextStyle=TextStyle()) extends Stateless
   }
 }
 
-object Text{
-  def apply(text: String="", style: TextStyle=TextStyle()): Text = new Text(text, style)
+object Text {
+  def apply(text: String = "", style: TextStyle = TextStyle()): Text = new Text(text, style)
 }
+
