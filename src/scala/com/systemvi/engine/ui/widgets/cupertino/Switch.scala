@@ -1,6 +1,6 @@
 package com.systemvi.engine.ui.widgets.cupertino
 
-import com.systemvi.engine.math.Bezier1f
+import com.systemvi.engine.math.{Bezier1f, Bezier2f}
 import com.systemvi.engine.ui.Widget
 import com.systemvi.engine.ui.utils.animation.{Animatable, AnimationController, AnimationStates}
 import com.systemvi.engine.ui.utils.context.{BuildContext, DrawContext}
@@ -16,12 +16,18 @@ class SwitchState extends State with Animatable{
 
   var controller:AnimationController=null
   var value = 0f
-  var timing = new Bezier1f(Array(0,0.1f, 0.9f,1f))
+  var timing = new Bezier2f(Array(
+    new Vector2f(0f,0f),
+    new Vector2f(0.35f,.86f),
+    new Vector2f(0f,1.01f),
+    new Vector2f(1.0f)
+  ))
+//  var timing = new Bezier1f(Array(0,0.5f, 0.5f,1f))
 
   override def init(): Unit = {
     controller= AnimationController(
       animatable = this,
-      milliseconds=500,
+      milliseconds=200,
       onValueChange = value => {
         setState(()=>{
           this.value=value
@@ -50,7 +56,7 @@ class SwitchState extends State with Animatable{
     val value=widget match {
       case switch: Switch=>switch.value
     }
-    val d = timing.get(this.value)
+    val d = timing.get(this.value).y
     val size=widget.size
     val position=widget.position
     val circleSize:Float = size.y

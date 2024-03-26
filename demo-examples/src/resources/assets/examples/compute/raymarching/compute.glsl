@@ -164,6 +164,7 @@ void phongData( in vec2 uv,in vec2 size,in vec3 lightPosition,
     rayMarch(distance,secondHit,numOfIterations,rayOrigin,rayDirection);
     shadow=mix(1.0,0.4,float(distance<length(firstHit-lightPosition)));
 }
+
 void phongWithReflectionsData(
     in vec2 uv,in vec2 size,in vec3 lightPosition,
     out vec4 albedo,out vec3 cameraDirection,
