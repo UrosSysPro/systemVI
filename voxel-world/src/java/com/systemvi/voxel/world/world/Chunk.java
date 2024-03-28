@@ -12,14 +12,10 @@ import java.util.Random;
 
 public class Chunk {
     public static final int SIZE_X=16,SIZE_Y=16,SIZE_Z=16;
-
-
     public BlockState[][][] blockStates;
     public Mesh mesh;
     public int triangles;
     public int instancesToDraw;
-//    public ArrayList<BlockFace> cache;
-
     public Chunk(Vector3i chunkPosition, Perlin2d noise) {
         blockStates = new BlockState[SIZE_X][SIZE_Y][SIZE_Z];
         Random r = new Random();

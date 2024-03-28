@@ -5,7 +5,7 @@ plugins {
 }
 
 application {
-    mainClass = 'com.systemvi.voxel.world.VoxelWorld'
+    mainClass = 'com.systemvi.voxel.world.Main'
 }
 
 sourceSets {

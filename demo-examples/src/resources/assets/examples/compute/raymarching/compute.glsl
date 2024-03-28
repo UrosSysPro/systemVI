@@ -1,5 +1,5 @@
 #version 430 core
-#define RAY_ITERATIONS 300
+#define RAY_ITERATIONS 200
 #define DELTA_EPSILON 0.001
 #define MAX_DISTANCE 1000.0
 #define FIXED_MIN_TRAVEL_DISTANCE 0.2
@@ -91,6 +91,14 @@ float map(in vec3 p){
         plane(p,vec3(0.0,1.0,0.0),1.0)
     );
 }
+
+vec3 getNormal(in vec3 p){
+    return normalize(vec3(
+    map(p+vec3(DELTA_EPSILON,0.0,0.0))-map(p-vec3(DELTA_EPSILON,0.0,0.0)),
+    map(p+vec3(0.0,DELTA_EPSILON,0.0))-map(p-vec3(0.0,DELTA_EPSILON,0.0)),
+    map(p+vec3(0.0,0.0,DELTA_EPSILON))-map(p-vec3(0.0,0.0,DELTA_EPSILON))
+    ));
+}
 struct Material{
     vec4 color;
     float roughness;
@@ -104,10 +112,13 @@ Material materialOf(vec4 color,float roughness,float metalic){
     return m;
 }
 Material getMaterial(in vec3 p){
-    if(box(translate(p,vec3(0.0,0.0,-10.0)), vec3(1.0))<DELTA_EPSILON*2.0)return materialOf(vec4(0.3,0.6,0.9,1.0),1.0,0.5);
-    if(sphere(translate(p,vec3(2.0,0.0,-10.0)), 1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.9,0.6,0.3,1.0),0.3,0.7);
+//    if(box(translate(p,vec3(0.0,0.0,-10.0)), vec3(1.0))<DELTA_EPSILON*2.0)return materialOf(vec4(0.3,0.6,0.9,1.0),1.0,0.5);
+    if(box(translate(p,vec3(0.0,0.0,-10.0)), vec3(1.0))<DELTA_EPSILON*2.0)return materialOf(vec4(getNormal(p)*0.5+0.5,1.0),1.0,0.5);
+//    if(sphere(translate(p,vec3(2.0,0.0,-10.0)), 1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.9,0.6,0.3,1.0),0.3,0.7);
+    if(sphere(translate(p,vec3(2.0,0.0,-10.0)), 1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(getNormal(p)*0.5+0.5,1.0),0.3,0.7);
     if(plane(p,vec3(0.0,1.0,0.0),1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.6,0.8,0.3,1.0),1.0,0.0);
-    return materialOf(vec4(0.9,0.9,1.0,1.0),1.0,0.0);
+//    return materialOf(vec4(0.9,0.9,1.0,1.0),1.0,0.0);
+    return materialOf(vec4(1.0),1.0,0.0);
 //    return materialOf(vec4(0.0),1.0,0.0,1.0);
 }
 vec4 getColor(in vec3 p){
@@ -118,13 +129,6 @@ vec4 getColor(in vec3 p){
 }
 
 
-vec3 getNormal(in vec3 p){
-    return normalize(vec3(
-    map(p+vec3(DELTA_EPSILON,0.0,0.0))-map(p-vec3(DELTA_EPSILON,0.0,0.0)),
-    map(p+vec3(0.0,DELTA_EPSILON,0.0))-map(p-vec3(0.0,DELTA_EPSILON,0.0)),
-    map(p+vec3(0.0,0.0,DELTA_EPSILON))-map(p-vec3(0.0,0.0,DELTA_EPSILON))
-    ));
-}
 struct Ray{
     vec3 origin;
     vec3 direction;
@@ -358,7 +362,7 @@ vec4 calculateColor(vec2 uv,vec2 size){
 //    return phongReflections(uv,size,cameraToScene,sceneToLight,sceneReflection,lightPosition,lightColor,atenuation);
 
     vec3[MAX_BOUNCES] points;
-    int n=5;
+    int n=10;
     vec3 lightPosition=vec3(5.0,5.0,-5.0);
     vec4 lightColor=vec4(2.0);
     vec3 atenuation=vec3(0.01,0.01,1.0);

@@ -3,13 +3,10 @@ package com.systemvi.voxel.world.world;
 import org.joml.Vector3i;
 
 public class ChunkCache {
-    private Chunk chunk;
-
-
-    public void generate(){
-
+    public ChunkCache(World world,Vector3i chunkPosition){
+        regenerate(world,chunkPosition);
     }
-    public void update(Vector3i position){
+    public void regenerate(World world,Vector3i chunkPosition){
 
     }
 }

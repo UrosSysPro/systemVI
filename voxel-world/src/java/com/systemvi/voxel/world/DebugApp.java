@@ -22,8 +22,8 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_F3;
 
 public class DebugApp extends Game {
 
-    public DebugApp(int openglVersionMajor, int openglVersionMinor, int targetFPS) {
-        super(openglVersionMajor, openglVersionMinor, targetFPS,1400,900,"Voxel world");
+    public DebugApp() {
+        super(3,3,60,1400,900,"Voxel world");
     }
     public CameraController3 controller;
     public Camera3 camera;
