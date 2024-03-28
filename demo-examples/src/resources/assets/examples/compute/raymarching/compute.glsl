@@ -101,12 +101,34 @@ float map(in vec3 p){
         plane(p,vec3(0.0,1.0,0.0),1.0)
     );
 }
+struct Material{
+    vec4 color;
+    float roughness;
+    float metalic;
+    float emission;
+};
+Material materialOf(vec4 color,float roughness,float metalic,float emission){
+    Material m;
+    m.color=color;
+    m.roughness=roughness;
+    m.metalic=metalic;
+    m.emission=emission;
+    return m;
+}
+Material getMaterial(in vec3 p){
+    if(box(translate(p,vec3(0.0,0.0,-10.0)), vec3(1.0))<DELTA_EPSILON*2.0)return materialOf(vec4(0.3,0.6,0.9,1.0),1.0,0.5,1.0);
+    if(sphere(translate(p,vec3(2.0,0.0,-10.0)), 1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.9,0.6,0.3,1.0),0.3,0.7,1.0);
+    if(plane(p,vec3(0.0,1.0,0.0),1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.6,0.8,0.3,1.0),1.0,0.0,1.0);
+    return materialOf(vec4(0.3,0.6,0.9,1.0),1.0,0.0,1.0);
+//    return materialOf(vec4(0.0),1.0,0.0,1.0);
+}
 vec4 getColor(in vec3 p){
     if(box(translate(p,vec3(0.0,0.0,-10.0)), vec3(1.0))<DELTA_EPSILON*2.0)return vec4(0.3,0.6,0.9,1.0);
-    if(sphere(translate(p,vec3(2.0,0.0,-10.0)), 1.0)<DELTA_EPSILON*2.0)return vec4(0.9,0.6,0.3,1.0);
+    if(sphere(translate(p,vec3(2.0,0.0,-10.0)), 1.0)<DELTA_EPSILON*2.0)return vec4(0.9,0.6,0.3,1.4);
     if(plane(p,vec3(0.0,1.0,0.0),1.0)<DELTA_EPSILON*2.0)return vec4(0.6,0.8,0.3,1.0);
-    return vec4(0.0);
+    return vec4(0.3,0.6,0.9,1.0);
 }
+
 
 vec3 getNormal(in vec3 p){
     return normalize(vec3(
@@ -236,37 +258,17 @@ vec4 phong(vec4 lightColor,vec3 atenuation,vec4 albedo,vec3 cameraDirection,vec3
 }
 
 vec4 phongReflection(vec2 uv,vec2 size,vec3[MAX_BOUNCES] points,int n,vec3 lightPosition,vec4 lightColor,vec3 atenuation){
-    vec4 color=vec4(vec3(0.0),1.0);
-//    vec4 color=vec4(1.0);
+    vec4 color=vec4(1.0);
 
     mat4 inverseView=inverse(view);
     float f=2.0;
     vec3 focusPoint=transform(inverseView,vec3(0.0,0.0,f));
     vec3 cameraPosition=transform(inverseView,vec3(uv,0.0));
     vec3 cameraDirection=normalize(cameraPosition-focusPoint);
-//    return vec4(cameraDirection,1.0);
 
     for(int i=1;i<n;i++){
-        vec4 albedo=getColor(points[i]);
-        vec3 normal=getNormal(points[i]);
-//        cameraPosition=points[i-1];
-//        cameraDirection=normalize(points[i]-points[i-1]);
-//        return vec4(cameraDirection,1.0);
-        float ambient=0.2;
-        vec3 lightDirection=normalize(points[i]-lightPosition);
-        float lightDistance=length(points[i]-lightPosition);
-        float diffuse=max(dot(normal,-lightDirection),0.0);
-        float specular=pow(max(dot(-lightDirection,reflect(cameraDirection,normal)),0.0),64.0);
-        float fallOff=atenuation.x*lightDistance*lightDistance+atenuation.y*lightDistance+atenuation.z;
-        vec4 phong = albedo*(ambient+max((diffuse+specular)/fallOff,0.0));
-//        return phong;
-//        color+=vec4(phong.rgb,0.0);
-        color=vec4(
-            max(phong.r,color.r),
-            max(phong.g,color.g),
-            max(phong.b,color.b),
-            1.0
-        );
+        Material m=getMaterial(points[i]);
+        color*=m.color*m.emission;
     }
     return color;
 }
