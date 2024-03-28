@@ -75,16 +75,6 @@ vec3 transform(in mat4 mat,in vec3 p){
     return helper.xyz;
 }
 
-struct RayOutput{
-    vec3 start;
-    vec3 end;
-    float traveled;
-};
-
-struct RayInput{
-    vec3 origin;
-    vec3 direction;
-};
 
 float map(in vec3 p){
     return unionSDF(
@@ -135,7 +125,35 @@ vec3 getNormal(in vec3 p){
     map(p+vec3(0.0,0.0,DELTA_EPSILON))-map(p-vec3(0.0,0.0,DELTA_EPSILON))
     ));
 }
-
+struct Ray{
+    vec3 origin;
+    vec3 direction;
+};
+struct RayMarchResult{
+    vec3 point;
+    float distance;
+    int numOfIterations;
+};
+Ray rayOf(vec3 origin,vec3 direction){
+    Ray r;
+    r.origin=origin;
+    r.direction=direction;
+    return r;
+}
+RayMarchResult rayMarchResultOf(float distance,int numOfIterations,vec3 point){
+    RayMarchResult r;
+    r.distance=distance;
+    r.numOfIterations=numOfIterations;
+    r.point=point;
+    return r;
+}
+RayMarchResult rayMarchResultOf(){
+    return rayMarchResultOf(0.0,0,vec3(0.0));
+}
+RayMarchResult rayMarch(Ray ray){
+    RayMarchResult result=rayMarchResultOf();
+    return result;
+}
 void rayMarch(out float distance,out vec3 endPoint,out int numOfIterations,in vec3 rayOrigin,in vec3 rayDirection){
     distance=0;
     endPoint=vec3(rayOrigin);
