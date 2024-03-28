@@ -105,21 +105,19 @@ struct Material{
     vec4 color;
     float roughness;
     float metalic;
-    float emission;
 };
-Material materialOf(vec4 color,float roughness,float metalic,float emission){
+Material materialOf(vec4 color,float roughness,float metalic){
     Material m;
     m.color=color;
     m.roughness=roughness;
     m.metalic=metalic;
-    m.emission=emission;
     return m;
 }
 Material getMaterial(in vec3 p){
-    if(box(translate(p,vec3(0.0,0.0,-10.0)), vec3(1.0))<DELTA_EPSILON*2.0)return materialOf(vec4(0.3,0.6,0.9,1.0),1.0,0.5,1.0);
-    if(sphere(translate(p,vec3(2.0,0.0,-10.0)), 1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.9,0.6,0.3,1.0),0.3,0.7,1.0);
-    if(plane(p,vec3(0.0,1.0,0.0),1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.6,0.8,0.3,1.0),1.0,0.0,1.0);
-    return materialOf(vec4(0.3,0.6,0.9,1.0),1.0,0.0,1.0);
+    if(box(translate(p,vec3(0.0,0.0,-10.0)), vec3(1.0))<DELTA_EPSILON*2.0)return materialOf(vec4(0.3,0.6,0.9,1.0),1.0,0.5);
+    if(sphere(translate(p,vec3(2.0,0.0,-10.0)), 1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.9,0.6,0.3,1.0),0.3,0.7);
+    if(plane(p,vec3(0.0,1.0,0.0),1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.6,0.8,0.3,1.0),1.0,0.0);
+    return materialOf(vec4(0.9,0.9,1.0,1.0),1.0,0.0);
 //    return materialOf(vec4(0.0),1.0,0.0,1.0);
 }
 vec4 getColor(in vec3 p){
@@ -268,7 +266,7 @@ vec4 phongReflection(vec2 uv,vec2 size,vec3[MAX_BOUNCES] points,int n,vec3 light
 
     for(int i=1;i<n;i++){
         Material m=getMaterial(points[i]);
-        color*=m.color*m.emission;
+        color*=m.color;
     }
     return color;
 }
