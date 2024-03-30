@@ -1,6 +1,6 @@
-package com.systemvi.examples.noise;
+package com.systemvi.engine.noise;
 
-public class CheckerboardNoise extends NoiseFunction{
+public class CheckerboardNoise extends NoiseFunction {
     private final int width;
 
     public CheckerboardNoise(int width){

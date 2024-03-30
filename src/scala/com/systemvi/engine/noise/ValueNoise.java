@@ -1,8 +1,8 @@
-package com.systemvi.examples.noise;
+package com.systemvi.engine.noise;
 
 import java.util.Random;
 
-public class ValueNoise extends NoiseFunction{
+public class ValueNoise extends NoiseFunction {
     private final int size;
     private final int[] permutacije;
     private final float[] values;

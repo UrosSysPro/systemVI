@@ -1,8 +1,8 @@
-package com.systemvi.examples.noise;
+package com.systemvi.engine.noise;
 
 import java.util.Random;
 
-public class WhiteNoise extends NoiseFunction{
+public class WhiteNoise extends NoiseFunction {
     private final int seed;
     private final int width;
     private final int height;

@@ -1,4 +1,4 @@
-package com.systemvi.examples.noise;
+package com.systemvi.engine.noise;
 
 import org.joml.Vector2f;
 

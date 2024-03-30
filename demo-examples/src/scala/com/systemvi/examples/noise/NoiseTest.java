@@ -2,6 +2,7 @@ package com.systemvi.examples.noise;
 
 import com.systemvi.engine.application.Game;
 import com.systemvi.engine.camera.Camera;
+import com.systemvi.engine.noise.*;
 import com.systemvi.engine.renderers.TextureRenderer;
 import com.systemvi.engine.texture.Format;
 import com.systemvi.engine.texture.Texture;
@@ -44,8 +45,8 @@ public class NoiseTest extends Game {
 //                float value = ripple.get(i, j);
 //                float value = white.get(i, j);
 //                float value = val.get(i, j);
-                float value = worley.get(i, j);
-//                float value = NoiseFunction.Islands(i, j, val);
+//                float value = worley.get(i, j);
+                float value = NoiseFunction.Islands(i, j, val);
                 data.setPixel4f(i, j, new Vector4f(value, value, value, 1.0f));
             }
         }

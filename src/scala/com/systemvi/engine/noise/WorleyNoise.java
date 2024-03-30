@@ -1,8 +1,8 @@
-package com.systemvi.examples.noise;
+package com.systemvi.engine.noise;
 
 import java.util.Random;
 
-public class WorleyNoise extends NoiseFunction{
+public class WorleyNoise extends NoiseFunction {
     private final int points;
     private float grid[][];
     public WorleyNoise(int width, int height, int count, int seed){
@@ -23,6 +23,6 @@ public class WorleyNoise extends NoiseFunction{
             float dist = (float) Math.sqrt(dx * dx + dy * dy);
             minD = Math.min(minD, dist);
         }
-        return minD;
+        return minD/200;
     }
 }

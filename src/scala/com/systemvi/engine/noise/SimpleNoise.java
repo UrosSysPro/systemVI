@@ -1,10 +1,4 @@
-package com.systemvi.examples.noise;
-
-import org.joml.Matrix4f;
-import org.joml.Vector2f;
-import org.joml.Vector4f;
-
-import java.util.Random;
+package com.systemvi.engine.noise;
 
 public class SimpleNoise {
 //    public static float getCheckerboard(int x, int y, int width) {

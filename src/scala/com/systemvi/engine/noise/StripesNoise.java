@@ -1,9 +1,9 @@
-package com.systemvi.examples.noise;
+package com.systemvi.engine.noise;
 
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
 
-public class StripesNoise extends NoiseFunction{
+public class StripesNoise extends NoiseFunction {
 
     private final float angle;
     private final float width;

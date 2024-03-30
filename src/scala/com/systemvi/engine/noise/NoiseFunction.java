@@ -1,4 +1,4 @@
-package com.systemvi.examples.noise;
+package com.systemvi.engine.noise;
 
 public abstract class NoiseFunction {
     public abstract float get(float x, float y);
