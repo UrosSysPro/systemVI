@@ -18,7 +18,7 @@ public class Main {
 //        new App(3,3,60).run();
 //        new Gradient(4,6,60,800,600,"Gradient").run();
 //        new GameOfLife(4,6,60).run();
-//        new App().run();
-        new NoiseTest(3,3,60,800,600,"ref").run();
+        new App().run();
+//        new NoiseTest(3,3,60,800,600,"ref").run();
     }
 }
