@@ -362,7 +362,7 @@ vec4 calculateColor(vec2 uv,vec2 size){
 //    return phongReflections(uv,size,cameraToScene,sceneToLight,sceneReflection,lightPosition,lightColor,atenuation);
 
     vec3[MAX_BOUNCES] points;
-    int n=10;
+    int n=5;
     vec3 lightPosition=vec3(5.0,5.0,-5.0);
     vec4 lightColor=vec4(2.0);
     vec3 atenuation=vec3(0.01,0.01,1.0);
