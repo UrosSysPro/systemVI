@@ -3,7 +3,8 @@ package com.systemvi.examples.uitest
 import com.systemvi.engine.application.Game
 import com.systemvi.engine.ui.{Scene, Widget}
 import com.systemvi.engine.ui.utils.context.BuildContext
-import com.systemvi.engine.ui.widgets.{Container, StatelessWidget}
+import com.systemvi.engine.ui.utils.data.{Alignment, BoxDecoration, Colors}
+import com.systemvi.engine.ui.widgets.{Align, Container, SizedBox, StatelessWidget}
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.Window
@@ -28,8 +29,12 @@ class ContainerTest extends Game(3,3,60,800,600,"Container Test"){
 
 class ContainerTestWidget extends StatelessWidget{
   override def build(context: BuildContext): Widget = {
-    Container(
-
+    Align(
+      alignment=Alignment.bottomLeft,
+      child=Container(
+        decoration=BoxDecoration(color=Colors.red500,borderRadius=20),
+        child = SizedBox(width = 100,height = 100)
+      )
     )
   }
 }
