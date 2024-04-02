@@ -70,7 +70,7 @@ public class World {
     public Chunk[][][] getChunks() {
         return chunks;
     }
-
+    public ChunkCache[][][] getCaches() {return caches;}
     public BlockState getBlockState(int x, int y, int z){
         int chunkX=x/ Chunk.SIZE_X;
         int chunkY=y/ Chunk.SIZE_Y;

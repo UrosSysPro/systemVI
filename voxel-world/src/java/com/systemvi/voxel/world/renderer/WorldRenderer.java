@@ -8,6 +8,7 @@ import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.utils.Utils;
 import com.systemvi.voxel.world.materials.Material;
 import com.systemvi.voxel.world.world.Chunk;
+import com.systemvi.voxel.world.world.ChunkCache;
 import com.systemvi.voxel.world.world.World;
 
 public class WorldRenderer {
@@ -48,11 +49,12 @@ public class WorldRenderer {
         material.normal.bind(0);
         blockFaceShader.setUniform("normalMap",0);
 
-        for(int i=0;i<chunks.length;i++){
-            for(int j=0;j<chunks[i].length;j++){
-                for(int k=0;k<chunks[i][j].length;k++){
-                    Chunk chunk=chunks[i][j][k];
-                    chunk.mesh.drawInstancedElements(chunk.triangles,chunk.instancesToDraw);
+        ChunkCache[][][] caches=world.getCaches();
+
+        for(ChunkCache[][] i:caches){
+            for(ChunkCache[] j:i){
+                for(ChunkCache k:j){
+                    k.mesh.drawInstancedElements(k.triangles,k.instancesToDraw);
                 }
             }
         }
