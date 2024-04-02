@@ -5,27 +5,39 @@ import org.joml.Vector3i;
 
 public class World {
     private Chunk[][][] chunks;
+    private ChunkCache[][][] caches;
 
     private Perlin2d noise;
 
     public World(){
         noise=new Perlin2d((int)System.currentTimeMillis(),100,100);
-        chunks=new Chunk[8][8][8];
-        for(int i=0;i<chunks.length;i++){
-            for(int j=0;j<chunks[0].length;j++){
-                for(int k=0;k<chunks[0][0].length;k++){
+        Vector3i worldSize=new Vector3i(8,8,8);
+        chunks=new Chunk[worldSize.x][worldSize.y][worldSize.z];
+        caches=new ChunkCache[worldSize.x][worldSize.y][worldSize.z];
+
+        for(int i=0;i<worldSize.x;i++){
+            for(int j=0;j<worldSize.y;j++){
+                for(int k=0;k<worldSize.z;k++){
                     chunks[i][j][k]=new Chunk(new Vector3i(i,j,k),noise);
                 }
             }
         }
-        generateFractal();
-        for(int i=0;i<chunks.length;i++){
-            for(int j=0;j<chunks[0].length;j++){
-                for(int k=0;k<chunks[0][0].length;k++){
-                    chunks[i][j][k].generateCache(new Vector3i(i,j,k),this);
+        for(int i=0;i<worldSize.x;i++){
+            for(int j=0;j<worldSize.y;j++){
+                for(int k=0;k<worldSize.z;k++){
+                    caches[i][j][k]=new ChunkCache(this,new Vector3i(i,j,k));
                 }
             }
         }
+
+//        generateFractal();
+//        for(int i=0;i<chunks.length;i++){
+//            for(int j=0;j<chunks[0].length;j++){
+//                for(int k=0;k<chunks[0][0].length;k++){
+//                    chunks[i][j][k].generateCache(new Vector3i(i,j,k),this);
+//                }
+//            }
+//        }
     }
 
     public void generateFractal() {
