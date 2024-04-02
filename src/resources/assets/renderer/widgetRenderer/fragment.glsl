@@ -6,6 +6,9 @@ in VERTEX_OUT{
     float borderRadius;
     float blur;
     vec2 size;
+    float borderWidth;
+    vec4 borderColor;
+    vec4 clipRect;
 }vertexOut;
 
 out vec4 FragColor;

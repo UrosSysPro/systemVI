@@ -48,6 +48,9 @@ class Align(
   }
 }
 
+object Center{
+  def apply(child:Widget): Align = Align(child)
+}
 object Align{
   def apply(child: Widget=null, alignment: Alignment=Alignment.center, heightScale: Float= -1, widthScale: Float= -1): Align = new Align(child, alignment, heightScale, widthScale)
 }
