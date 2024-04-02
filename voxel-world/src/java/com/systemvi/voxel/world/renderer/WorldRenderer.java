@@ -35,8 +35,6 @@ public class WorldRenderer {
     }
 
     public void render(World world, Camera3 camera, Material material){
-        Chunk[][][] chunks=world.getChunks();
-
         frameBuffer.begin();
         Utils.clear(0,0,0,0, Utils.Buffer.COLOR_BUFFER, Utils.Buffer.DEPTH_BUFFER);
         Utils.enableDepthTest();

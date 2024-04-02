@@ -6,15 +6,12 @@ import org.joml.Vector3i;
 public class World {
     private Chunk[][][] chunks;
     private ChunkCache[][][] caches;
-
     private Perlin2d noise;
-
     public World(){
         noise=new Perlin2d((int)System.currentTimeMillis(),100,100);
         Vector3i worldSize=new Vector3i(8,8,8);
         chunks=new Chunk[worldSize.x][worldSize.y][worldSize.z];
         caches=new ChunkCache[worldSize.x][worldSize.y][worldSize.z];
-
         for(int i=0;i<worldSize.x;i++){
             for(int j=0;j<worldSize.y;j++){
                 for(int k=0;k<worldSize.z;k++){
@@ -29,17 +26,8 @@ public class World {
                 }
             }
         }
-
-//        generateFractal();
-//        for(int i=0;i<chunks.length;i++){
-//            for(int j=0;j<chunks[0].length;j++){
-//                for(int k=0;k<chunks[0][0].length;k++){
-//                    chunks[i][j][k].generateCache(new Vector3i(i,j,k),this);
-//                }
-//            }
-//        }
+        relight();
     }
-
     public void generateFractal() {
 //        getBlockState(50, 50, 50).block = Block.STONE;
         int maxSteps = 4;
@@ -66,7 +54,6 @@ public class World {
             }
         }
     }
-
     public Chunk[][][] getChunks() {
         return chunks;
     }
@@ -84,12 +71,22 @@ public class World {
 
         return chunks[chunkX][chunkY][chunkZ].blockStates[x][y][z];
     }
-
     public BlockState getBlockState(Vector3i pos){
         return getBlockState(pos.x, pos.y, pos.z);
     }
-
     public void setBlockState(BlockState state, int chunkX, int chunkY, int chunkZ, int x, int y, int z){
         chunks[chunkX][chunkY][chunkZ].blockStates[x][y][z]=state;
+    }
+    public void relight(){
+        Vector3i worldSize=new Vector3i(chunks.length*Chunk.SIZE_X,chunks[0].length*Chunk.SIZE_Y,chunks[0][0].length*Chunk.SIZE_Z);
+        for(int i=0;i<worldSize.x;i++){
+            for(int j=0;j<worldSize.y;j++){
+                for(int k=worldSize.z-1;k>=0;k--){
+                    BlockState state=getBlockState(i,j,k);
+                    if(state.block!=Block.AIR){break;}
+                    state.lightLevel=15;
+                }
+            }
+        }
     }
 }
