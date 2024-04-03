@@ -19,6 +19,8 @@ public class World {
                 }
             }
         }
+        generateFractal();
+        relight();
         for(int i=0;i<worldSize.x;i++){
             for(int j=0;j<worldSize.y;j++){
                 for(int k=0;k<worldSize.z;k++){
@@ -26,7 +28,6 @@ public class World {
                 }
             }
         }
-        relight();
     }
     public void generateFractal() {
 //        getBlockState(50, 50, 50).block = Block.STONE;

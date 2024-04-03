@@ -3,7 +3,6 @@ package com.systemvi.voxel.world;
 import com.systemvi.engine.application.Game;
 import com.systemvi.engine.camera.Camera;
 import com.systemvi.engine.camera.Camera3;
-import com.systemvi.engine.camera.CameraController2;
 import com.systemvi.engine.camera.CameraController3;
 import com.systemvi.engine.renderers.TextureRenderer;
 import com.systemvi.engine.shader.Shader;
@@ -11,13 +10,13 @@ import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.texture.TextureRegion;
 import com.systemvi.engine.window.InputMultiplexer;
 import com.systemvi.engine.window.Window;
+import com.systemvi.voxel.world.entities.Player;
 import com.systemvi.voxel.world.materials.Material;
 import com.systemvi.voxel.world.renderer.WorldRenderer;
 import com.systemvi.voxel.world.world.Block;
 import com.systemvi.voxel.world.world.World;
 import org.joml.Vector3f;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_F3;
 
 public class DebugApp extends Game {
@@ -35,10 +34,8 @@ public class DebugApp extends Game {
     public Material material;
     public Window mainWindow;
     public boolean f3Pressed;
-    public Player player;
     @Override
     public void setup(Window window) {
-        player=new Player(new Vector3f(50,50,50));
         f3Pressed=false;
 
         mainWindow=window;
@@ -148,8 +145,6 @@ public class DebugApp extends Game {
         renderer.draw(uv,0,0,width,height);
         renderer.flush();
         renderer.setShader(null);
-
-//        player.draw(camera);
     }
     @Override
     public boolean resize(int width, int height) {

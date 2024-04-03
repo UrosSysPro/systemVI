@@ -1,4 +1,4 @@
-package com.systemvi.voxel.world;
+package com.systemvi.voxel.world.entities;
 
 import com.systemvi.engine.camera.Camera;
 import com.systemvi.engine.shader.Primitive;

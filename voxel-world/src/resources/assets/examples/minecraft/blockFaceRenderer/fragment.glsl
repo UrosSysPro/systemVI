@@ -13,6 +13,7 @@ in struct VERTEX_OUT{
     vec3 tangent;
     vec3 bitangent;
     vec2 texCoords;
+    float lightLevel;
 }vertexOut;
 
 uniform sampler2D normalMap;
@@ -25,8 +26,8 @@ void main(){
     normal=TBN*normal;
     normal=normal*0.5+0.5;
 
-//    UvBuffer=vec4(vertexOut.texCoords,0.0,1.0);
-    UvBuffer=vertexOut.texCoords;
+//    UvBuffer=vertexOut.texCoords;
+    UvBuffer=vec2(vertexOut.lightLevel);
     NormalBuffer=vec4(normal,1.0);
     PositionBuffer=vec4(vertexOut.position,1.0);
 }

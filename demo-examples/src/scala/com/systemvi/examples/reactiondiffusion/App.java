@@ -10,8 +10,8 @@ import static org.lwjgl.opengl.GL33.*;
 
 public class App extends Application {
 
-    public App(int openglVersionMajor, int openglVersionMinor, int targetFPS) {
-        super(openglVersionMajor, openglVersionMinor, targetFPS);
+    public App() {
+        super(3,3,60);
     }
     public Window window;
     public Camera camera;

@@ -135,18 +135,18 @@ public class ChunkCache {
         int instanceSize=matrixSize+uvSize+lightLevelSize;
         float[] instanceData=new float[matrices.size()*instanceSize];
         float[] matrixData=new float[matrixSize];
-        float[] data=new float[uvSize];
         for(int i=0;i<matrices.size();i++){
             matrices.get(i).get(matrixData);
-            data[0]=uvs.get(i).x;
-            data[1]=uvs.get(i).y;
             for(int j=0;j<matrixSize;j++){
                 instanceData[i*instanceSize+j]=matrixData[j];
             }
-            for(int j=0;j<uvSize;j++){
-                instanceData[i*instanceSize+matrixSize+j]=data[j];
-            }
+            instanceData[i*instanceSize+matrixSize+0]=uvs.get(i).x;
+            instanceData[i*instanceSize+matrixSize+1]=uvs.get(i).y;
 
+            instanceData[i*instanceSize+matrixSize+uvSize+0]=lightLevels.get(i).x;
+            instanceData[i*instanceSize+matrixSize+uvSize+1]=lightLevels.get(i).y;
+            instanceData[i*instanceSize+matrixSize+uvSize+2]=lightLevels.get(i).z;
+            instanceData[i*instanceSize+matrixSize+uvSize+3]=lightLevels.get(i).w;
         }
         instancesToDraw=matrices.size();
         mesh.setInstanceData(instanceData);

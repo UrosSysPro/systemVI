@@ -8,6 +8,7 @@ layout(location=4)in vec2 texCoords;
 
 layout(location=5)in mat4 model;
 layout(location=9)in vec2 uv;
+layout(location=10)in vec4 lightLevel;
 
 uniform mat4 view;
 uniform mat4 projection;
@@ -18,6 +19,7 @@ out struct VERTEX_OUT{
     vec3 tangent;
     vec3 bitangent;
     vec2 texCoords;
+    float lightLevel;
 }vertexOut;
 
 vec2 spriteSize=vec2(16.0,16.0);
@@ -33,6 +35,7 @@ void main(){
     vertexOut.normal=modelRotation*normal;
     vertexOut.tangent=modelRotation*tangent;
     vertexOut.bitangent=modelRotation*bitangent;
+    vertexOut.lightLevel=lightLevel[0]/15.0;
     vec2 offset=vec2(1.0,0.0)/spriteSheetSize;
     vertexOut.texCoords=(uv+texCoords*spriteSize-offset)/spriteSheetSize;
 
