@@ -81,8 +81,8 @@ public class World {
     public void relight(){
         Vector3i worldSize=new Vector3i(chunks.length*Chunk.SIZE_X,chunks[0].length*Chunk.SIZE_Y,chunks[0][0].length*Chunk.SIZE_Z);
         for(int i=0;i<worldSize.x;i++){
-            for(int j=0;j<worldSize.y;j++){
-                for(int k=worldSize.z-1;k>=0;k--){
+            for(int k=0;k<worldSize.z;k++){
+                for(int j=worldSize.y-1;j>=0;j--){
                     BlockState state=getBlockState(i,j,k);
                     if(state.block!=Block.AIR){break;}
                     state.lightLevel=15;
