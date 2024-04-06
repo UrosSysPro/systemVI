@@ -2,11 +2,11 @@ package com.systemvi.examples;
 
 import com.systemvi.engine.utils.Utils;
 import com.systemvi.examples.compute.GameOfLife;
-import com.systemvi.examples.compute.fluid.App;
 import com.systemvi.examples.fluid.Fluid;
 import com.systemvi.examples.fractals.Juliaset;
 import com.systemvi.examples.inversekinematics.Fabrik;
 import com.systemvi.examples.noise.NoiseTest;
+import com.systemvi.examples.reactiondiffusion.App;
 import com.systemvi.examples.uitest.ContainerTest;
 import com.systemvi.examples.uitest.WidgetTest;
 
