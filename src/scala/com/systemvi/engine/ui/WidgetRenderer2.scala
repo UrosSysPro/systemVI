@@ -1,17 +1,20 @@
 package com.systemvi.engine.ui
 
 import com.systemvi.engine.model.{Mesh, VertexAttribute}
-import com.systemvi.engine.shader.Shader
+import com.systemvi.engine.shader.{ElementsDataType, Primitive, Shader}
 import org.joml.{Matrix4f, Vector4f}
 
-case class Rect(x:Float,y:Float,width:Float,height:Float,rotation:Float)
-case class Border(radius:Float,width:Float,color:Vector4f)
-case class Drawable(rect:Rect,color:Vector4f,border:Border,blur:Float,boundry:Rect,glyph:Rect,transform:Matrix4f){
-  def writeToArray(array:Array[Float]): Unit = {
+case class Rect(x:Float=0,y:Float=0,width:Float=0,height:Float=0,rotation:Float=0)
+case class Border(radius:Float=0,width:Float=0,color:Vector4f=new Vector4f())
+case class Drawable(rect:Rect=Rect(), color:Vector4f=new Vector4f(), border:Border=Border(), blur:Float=0, boundary:Rect=Rect(), glyph:Rect=Rect(), transform:Matrix4f=new Matrix4f()){
+  def writeToArray(array:Array[Float],index:Int): Unit = {
 
   }
 }
-class WidgetRenderer2 {
+object Drawable{
+  val size=40
+}
+class WidgetRenderer2(val view:Matrix4f,val projection:Matrix4f) {
   val mesh = new Mesh(
     new VertexAttribute("position",4)
   )
@@ -46,7 +49,20 @@ class WidgetRenderer2 {
     .vertex("assets/renderer/widgetRenderer2/vertex.glsl")
     .fragment("assets/renderer/widgetRenderer2/fragment.glsl")
     .build()
-  def draw(drawable: Drawable): Unit = {
 
+  val maxInstances=1000
+  var instancesToDraw=0
+  val instanceData:Array[Float]=Array.ofDim(Drawable.size*maxInstances)
+  def draw(drawable: Drawable): Unit = {
+    if(instancesToDraw>=maxInstances)flush()
+    drawable.writeToArray(instanceData,instancesToDraw)
+    instancesToDraw+=1
+  }
+  def flush():Unit={
+    shader.use()
+    mesh.bind()
+    mesh.setInstanceData(instanceData)
+//    shader.drawElementsInstanced(Primitive.TRIANGLES,0,ElementsDataType.UNSIGNED_INT,6,1)
+    mesh.drawInstancedElements(2,1)
   }
 }

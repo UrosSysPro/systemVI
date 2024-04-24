@@ -4,6 +4,8 @@ package com.systemvi.engine.ui.utils.font;
 import com.google.gson.Gson;
 import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.utils.Utils;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL33;
 
 public class Font {
     public class Config{
@@ -34,6 +36,8 @@ public class Font {
         Gson gson=new Gson();
         Font font=gson.fromJson(jsonData,Font.class);
         font.texture=texture;
+        texture.generateMipMaps();
+        texture.setSamplerFilter(GL33.GL_NEAREST_MIPMAP_LINEAR,GL33.GL_NEAREST);
         return font;
     }
 }
