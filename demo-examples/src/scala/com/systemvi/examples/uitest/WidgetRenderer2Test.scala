@@ -24,7 +24,7 @@ class WidgetRenderer2Test extends Game(3,3,60,800,600,"Widget renderer test"){
       .position(window.getWidth/2,window.getHeight/2)
       .scale(1,-1)
       .build()
-    widgetRenderer=new WidgetRenderer2(camera.view,camera.projection)
+
     font=Font.load(
       "assets/examples/widgetRenderer2Test/font.PNG",
       "assets/examples/widgetRenderer2Test/font.json"
@@ -38,6 +38,7 @@ class WidgetRenderer2Test extends Game(3,3,60,800,600,"Widget renderer test"){
     textureRenderer=new TextureRenderer()
     textureRenderer.view(camera.view)
     textureRenderer.projection(camera.projection)
+    widgetRenderer=new WidgetRenderer2(camera,font)
   }
   override def loop(delta: Float): Unit = {
     Utils.clear(0,0,0,1,Buffer.COLOR_BUFFER)
@@ -50,7 +51,8 @@ class WidgetRenderer2Test extends Game(3,3,60,800,600,"Widget renderer test"){
     widgetRenderer.draw(Drawable(
       rect = Rect(400,300,150,200,(Math.PI/12).toFloat),
       color = Colors.green500,
-      border = Border(20,10,Colors.green700)
+      border = Border(20,10,Colors.green700),
+      glyph = Rect(r.getTop,r.getLeft,r.getBottom,r.getRight)
     ))
     widgetRenderer.flush()
   }

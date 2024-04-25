@@ -1,7 +1,10 @@
 package com.systemvi.engine.ui
 
+import com.systemvi.engine.camera.Camera3
 import com.systemvi.engine.model.{Mesh, VertexAttribute}
 import com.systemvi.engine.shader.{ElementsDataType, Primitive, Shader}
+import com.systemvi.engine.texture.Texture
+import com.systemvi.engine.ui.utils.font.Font
 import org.joml.{Matrix4f, Vector4f}
 
 case class Rect(x:Float=0,y:Float=0,width:Float=0,height:Float=0,rotation:Float=0)
@@ -48,7 +51,7 @@ case class Drawable(rect:Rect=Rect(), color:Vector4f=new Vector4f(), border:Bord
 object Drawable{
   val size=40
 }
-class WidgetRenderer2(val view:Matrix4f,val projection:Matrix4f) {
+class WidgetRenderer2(var camera:Camera3,var font:Font) {
   val mesh = new Mesh(
     new VertexAttribute("position",4)
   )
@@ -94,8 +97,10 @@ class WidgetRenderer2(val view:Matrix4f,val projection:Matrix4f) {
   }
   def flush():Unit={
     shader.use()
-    shader.setUniform("view",view)
-    shader.setUniform("projection",projection)
+    shader.setUniform("view",camera.view)
+    shader.setUniform("projection",camera.projection)
+    font.texture.bind(0)
+    shader.setUniform("fontTexture",0)
     mesh.bind()
     mesh.setInstanceData(instanceData)
 //    shader.drawElementsInstanced(Primitive.TRIANGLES,0,ElementsDataType.UNSIGNED_INT,6,1)
