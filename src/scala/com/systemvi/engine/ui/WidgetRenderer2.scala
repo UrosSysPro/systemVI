@@ -8,7 +8,12 @@ case class Rect(x:Float=0,y:Float=0,width:Float=0,height:Float=0,rotation:Float=
 case class Border(radius:Float=0,width:Float=0,color:Vector4f=new Vector4f())
 case class Drawable(rect:Rect=Rect(), color:Vector4f=new Vector4f(), border:Border=Border(), blur:Float=0, boundary:Rect=Rect(), glyph:Rect=Rect(), transform:Matrix4f=new Matrix4f()){
   def writeToArray(array:Array[Float],index:Int): Unit = {
-
+    val offset=index*Drawable.size
+    array(offset+0)=rect.x
+    array(offset+1)=rect.y
+    array(offset+2)=rect.width
+    array(offset+3)=rect.height
+    array(offset+4)=rect.rotation
   }
 }
 object Drawable{
@@ -60,6 +65,8 @@ class WidgetRenderer2(val view:Matrix4f,val projection:Matrix4f) {
   }
   def flush():Unit={
     shader.use()
+    shader.setUniform("view",view)
+    shader.setUniform("projection",projection)
     mesh.bind()
     mesh.setInstanceData(instanceData)
 //    shader.drawElementsInstanced(Primitive.TRIANGLES,0,ElementsDataType.UNSIGNED_INT,6,1)

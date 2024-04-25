@@ -4,7 +4,7 @@ import com.systemvi.engine.application.Game
 import com.systemvi.engine.camera.Camera3
 import com.systemvi.engine.renderers.TextureRenderer
 import com.systemvi.engine.texture.{Texture, TextureRegion}
-import com.systemvi.engine.ui.{Drawable, WidgetRenderer2}
+import com.systemvi.engine.ui.{Drawable, Rect, WidgetRenderer2}
 import com.systemvi.engine.ui.utils.font.Font
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
@@ -46,7 +46,9 @@ class WidgetRenderer2Test extends Game(3,3,60,800,600,"Widget renderer test"){
     textureRenderer.draw(r,100,100,r.width/scale,r.height/scale)
     textureRenderer.flush()
     Utils.disableBlending()
-    widgetRenderer.draw(Drawable())
+    widgetRenderer.draw(Drawable(
+      rect = Rect(200,200,150,200,(Math.PI/12).toFloat)
+    ))
     widgetRenderer.flush()
   }
 }
