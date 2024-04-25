@@ -4,7 +4,8 @@ import com.systemvi.engine.application.Game
 import com.systemvi.engine.camera.Camera3
 import com.systemvi.engine.renderers.TextureRenderer
 import com.systemvi.engine.texture.{Texture, TextureRegion}
-import com.systemvi.engine.ui.{Drawable, Rect, WidgetRenderer2}
+import com.systemvi.engine.ui.utils.data.Colors
+import com.systemvi.engine.ui.{Border, Drawable, Rect, WidgetRenderer2}
 import com.systemvi.engine.ui.utils.font.Font
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
@@ -39,7 +40,7 @@ class WidgetRenderer2Test extends Game(3,3,60,800,600,"Widget renderer test"){
     textureRenderer.projection(camera.projection)
   }
   override def loop(delta: Float): Unit = {
-    Utils.clear(1,0,0,1,Buffer.COLOR_BUFFER)
+    Utils.clear(0,0,0,1,Buffer.COLOR_BUFFER)
     Utils.enableBlending()
     val scale=2
     val r=regions(font.symbols.indexOf(font.symbols.find(p=>p.id.toChar=='/').get))
@@ -47,7 +48,9 @@ class WidgetRenderer2Test extends Game(3,3,60,800,600,"Widget renderer test"){
     textureRenderer.flush()
     Utils.disableBlending()
     widgetRenderer.draw(Drawable(
-      rect = Rect(200,200,150,200,(Math.PI/12).toFloat)
+      rect = Rect(400,300,150,200,(Math.PI/12).toFloat),
+      color = Colors.green500,
+      border = Border(20,10,Colors.green700)
     ))
     widgetRenderer.flush()
   }

@@ -14,6 +14,35 @@ case class Drawable(rect:Rect=Rect(), color:Vector4f=new Vector4f(), border:Bord
     array(offset+2)=rect.width
     array(offset+3)=rect.height
     array(offset+4)=rect.rotation
+
+    array(offset+5)=color.x
+    array(offset+6)=color.y
+    array(offset+7)=color.z
+    array(offset+8)=color.w
+
+    array(offset+9)=border.radius
+    array(offset+10)=border.width
+    array(offset+11)=border.color.x
+    array(offset+12)=border.color.y
+    array(offset+13)=border.color.z
+    array(offset+14)=border.color.w
+
+    array(offset+15)=blur
+
+    array(offset+16)=glyph.x
+    array(offset+17)=glyph.y
+    array(offset+18)=glyph.width
+    array(offset+19)=glyph.height
+
+    val data:Array[Float]=Array.ofDim(16)
+    transform.get(data)
+    data.zipWithIndex.foreach{
+      case (value,index)=>array(offset+20+index)=value
+    }
+    array(offset+36)=boundary.x
+    array(offset+37)=boundary.y
+    array(offset+38)=boundary.width
+    array(offset+39)=boundary.height
   }
 }
 object Drawable{
