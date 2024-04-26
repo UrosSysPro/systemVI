@@ -11,17 +11,17 @@ import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.window.{InputProcessor, Window}
 import org.joml.{Matrix4f, Vector2f}
 
-class Scene(val root:Widget,window:Window) extends InputProcessor{
+class Scene(val root:Widget,initialWidth:Float=800,initialHeight:Float=600,font:Font) extends InputProcessor{
   //screen info
-  var width: Int =window.getWidth
-  var height: Int =window.getHeight
+  var width: Int =initialWidth.toInt
+  var height: Int =initialHeight.toInt
   //Scene state
   val states:Map[String, State]=Map[String,State]()
   val renderer:WidgetRenderer2=new WidgetRenderer2(
     Camera3.builder2d()
-      .size(window.getWidth,window.getHeight)
+      .size(initialWidth,initialHeight)
       .scale(1,-1)
-      .position(window.getWidth/2,window.getHeight/2)
+      .position(initialWidth/2,initialHeight/2)
       .build(),
     Font.load(
       "assets/examples/widgetRenderer2Test/font.PNG",
@@ -40,7 +40,7 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
   //initial build
   threeBuilder.build(root,s"/${root.getClass.getSimpleName}",context)
 
-  resize(window.getWidth,window.getHeight)
+  resize(initialWidth.toInt,initialHeight.toInt)
   def resize(width:Int,height:Int): Boolean = {
     this.width=width
     this.height=height
@@ -129,7 +129,7 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
 }
 
 object Scene{
-  def apply(root: Widget, window: Window): Scene = {
-    new Scene(root, window)
+  def apply(root: Widget, initialWidth:Float,initialHeight:Float,font:Font): Scene = {
+    new Scene(root, initialWidth, initialHeight, font)
   }
 }

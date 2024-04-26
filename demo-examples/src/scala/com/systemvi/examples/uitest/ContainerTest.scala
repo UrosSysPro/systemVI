@@ -4,6 +4,7 @@ import com.systemvi.engine.application.Game
 import com.systemvi.engine.ui.{Scene, Widget}
 import com.systemvi.engine.ui.utils.context.BuildContext
 import com.systemvi.engine.ui.utils.data.{Alignment, BoxDecoration, Colors}
+import com.systemvi.engine.ui.utils.font.Font
 import com.systemvi.engine.ui.widgets.{Align, Center, Container, SizedBox, StatelessWidget}
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
@@ -14,7 +15,12 @@ class ContainerTest extends Game(3,3,60,800,600,"Container Test"){
   override def setup(window: Window): Unit = {
     scene=new Scene(
       root=ContainerTestWidget(),
-      window=window
+      initialWidth = window.getWidth,
+      initialHeight = window.getHeight,
+      font = Font.load(
+        "assets/examples/widgetRenderer2Test/font.PNG",
+        "assets/examples/widgetRenderer2Test/font.json"
+      )
     )
     setInputProcessor(scene)
   }

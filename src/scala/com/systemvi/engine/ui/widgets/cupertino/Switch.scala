@@ -71,7 +71,7 @@ class SwitchState extends State with Animatable{
       new Vector4f()
         .add(new Vector4f(selectedColor).mul(d))
         .add(new Vector4f(unselectedColor).mul(1-d)),
-      size.y/2
+      size.y/2,blur = 1
     )
     val shadowBlur:Float=4
     val shadowSize:Float=4
@@ -92,7 +92,8 @@ class SwitchState extends State with Animatable{
       circleSize-2*padding,
       circleSize-2*padding,
       new Vector4f(1.0f),
-      (circleSize-2*padding)/2
+      (circleSize-2*padding)/2,
+      blur = 1
     )
   }
 }

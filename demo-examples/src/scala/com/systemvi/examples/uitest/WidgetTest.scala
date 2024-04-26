@@ -2,6 +2,7 @@
 package com.systemvi.examples.uitest
 
 import com.systemvi.engine.application.Game
+import com.systemvi.engine.ui.utils.font.Font
 import com.systemvi.engine.ui.widgets._
 import com.systemvi.engine.ui.{Scene, Widget, WidgetRenderer, utils}
 import com.systemvi.engine.utils.Utils
@@ -16,8 +17,13 @@ class WidgetTest extends Game(3,3,60,800,600,"Widget test"){
   private var scene:Scene=null
   override def setup(window: Window): Unit = {
     scene = Scene(
-      window = window,
-      root = App()
+      initialWidth=window.getWidth,
+      initialHeight=window.getHeight,
+      root = App(),
+      font = Font.load(
+        "assets/examples/widgetRenderer2Test/font.PNG",
+        "assets/examples/widgetRenderer2Test/font.json"
+      )
     )
 //    scene.root.debugPrint("")
     setInputProcessor(new InputMultiplexer(this, scene))
