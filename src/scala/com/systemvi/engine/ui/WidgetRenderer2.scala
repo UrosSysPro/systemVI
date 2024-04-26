@@ -103,7 +103,7 @@ class WidgetRenderer2(var camera:Camera3,var font:Font) {
     shader.setUniform("fontTexture",0)
     mesh.bind()
     mesh.setInstanceData(instanceData)
-//    shader.drawElementsInstanced(Primitive.TRIANGLES,0,ElementsDataType.UNSIGNED_INT,6,1)
-    mesh.drawInstancedElements(2,1)
+    mesh.drawInstancedElements(2,instancesToDraw)
+    instancesToDraw=0
   }
 }

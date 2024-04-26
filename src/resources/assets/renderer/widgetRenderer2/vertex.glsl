@@ -49,6 +49,8 @@ struct Border{
     vec4 color;
 };
 
+out vec2 uv;
+
 out struct{
     float x,y,width,height,rotation,blur;
     vec4 color,boundry;
@@ -57,7 +59,6 @@ out struct{
 }vertexOut;
 
 void main(){
-    vec2 uv=position.xy+0.5;
     vec4 worldPosition=translate(rect[0],rect[1])*rotate(rectRotation)*scale(rect[2],rect[3])*position;
     vec4 ndcPosition=projection*view*worldPosition;
 
@@ -71,11 +72,13 @@ void main(){
     vertexOut.border.width=borderWidth;
     vertexOut.border.radius=borderRadius;
     vertexOut.glyphUV=vec2(
-        mix(glyph[0],glyph[2],uv.x),
-        mix(glyph[1],glyph[3],uv.y)
+        mix(glyph[0],glyph[2],position.x+0.5),
+        mix(glyph[1],glyph[3],position.y+0.5)
     );
     vertexOut.boundry=boundry;
     vertexOut.blur=blur;
+
+    uv=position.xy+0.5;
 
     gl_Position=ndcPosition;
 }
