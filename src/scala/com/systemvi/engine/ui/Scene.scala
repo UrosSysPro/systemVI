@@ -1,13 +1,15 @@
 
 package com.systemvi.engine.ui
 
+import com.systemvi.engine.camera.Camera3
 import com.systemvi.engine.ui.utils.context.{BuildContext, DrawContext}
 import com.systemvi.engine.ui.utils.data.Colors
+import com.systemvi.engine.ui.utils.font.Font
 import com.systemvi.engine.ui.utils.tree.{Animator, EventListenerFinder, TreeBuilder}
 import com.systemvi.engine.ui.widgets.{GestureDetector, State}
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.window.{InputProcessor, Window}
-import org.joml.Vector2f
+import org.joml.{Matrix4f, Vector2f}
 
 class Scene(val root:Widget,window:Window) extends InputProcessor{
   //screen info
@@ -15,7 +17,17 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
   var height: Int =window.getHeight
   //Scene state
   val states:Map[String, State]=Map[String,State]()
-  val renderer:WidgetRenderer=new WidgetRenderer(window)
+  val renderer:WidgetRenderer2=new WidgetRenderer2(
+    Camera3.builder2d()
+      .size(window.getWidth,window.getHeight)
+      .scale(1,-1)
+      .position(window.getWidth/2,window.getHeight/2)
+      .build(),
+    Font.load(
+      "assets/examples/widgetRenderer2Test/font.PNG",
+      "assets/examples/widgetRenderer2Test/font.json"
+    )
+  )
   //event listeners
   var focused:GestureDetector=null
   val mouse=new Vector2f()
@@ -23,7 +35,7 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
   val eventListenerFinder=new EventListenerFinder()
   val threeBuilder=new TreeBuilder(states)
   val context=new BuildContext()
-  val drawContext=DrawContext(renderer)
+  val drawContext=DrawContext(renderer,new Matrix4f().identity())
   val animator:Animator=new Animator()
   //initial build
   threeBuilder.build(root,s"/${root.getClass.getSimpleName}",context)
@@ -34,8 +46,8 @@ class Scene(val root:Widget,window:Window) extends InputProcessor{
     this.height=height
     root.calculateSize(new Vector2f(width,height))
     root.calculatePosition(new Vector2f(0,0))
-    renderer.camera.setScreenSize(width,height)
-    renderer.camera.setPosition(width/2,height/2,0)
+    renderer.camera.orthographic(-width/2,width/2,-height/2,height/2,0,100)
+    renderer.camera.position(width/2,height/2,0)
     renderer.camera.update()
     true
   }
