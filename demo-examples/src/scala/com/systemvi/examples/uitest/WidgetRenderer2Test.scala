@@ -18,6 +18,7 @@ class WidgetRenderer2Test extends Game(3,3,60,800,600,"Widget renderer test"){
   var font:Font=null
   var textureRenderer:TextureRenderer=null
   var regions:Array[TextureRegion]=null
+  var time:Float=0
   override def setup(window: Window): Unit = {
     camera=Camera3.builder2d()
       .size(window.getWidth,window.getHeight)
@@ -41,6 +42,8 @@ class WidgetRenderer2Test extends Game(3,3,60,800,600,"Widget renderer test"){
     widgetRenderer=new WidgetRenderer2(camera,font)
   }
   override def loop(delta: Float): Unit = {
+    val radius=Math.sin(time).toFloat*30f+30
+    time+=delta
     Utils.clear(0.4f,0,0,1,Buffer.COLOR_BUFFER)
     Utils.enableBlending()
     val scale=2
@@ -49,14 +52,14 @@ class WidgetRenderer2Test extends Game(3,3,60,800,600,"Widget renderer test"){
     textureRenderer.flush()
     widgetRenderer.draw(Drawable(
       rect = Rect(400,300,150,200,(Math.PI/12).toFloat),
-      color = Colors.green500,
-      border = Border(20,10,Colors.green700),
-      glyph = Rect(r.getTop,r.getLeft,r.getBottom,r.getRight)
+      color = Colors.blue500,
+      border = Border(radius,20,Colors.blue700),
+      glyph = Rect(r.getTop,r.getLeft,r.getBottom,r.getRight),blur=1
     ))
     widgetRenderer.draw(Drawable(
       rect = Rect(100,100,100,100,0),
       color = Colors.green500,
-      border = Border(20,10,Colors.green700),
+      border = Border(10,10,Colors.green700),
       glyph = Rect(0,0,1,1),
       blur = 10
     ))
