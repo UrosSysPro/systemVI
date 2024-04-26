@@ -7,7 +7,6 @@ import com.systemvi.engine.shader.Shader;
 import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.texture.TextureRegion;
 import org.joml.Matrix4f;
-import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 public class TextureRenderer {
@@ -104,7 +103,7 @@ public class TextureRenderer {
         trianglesToDraw+=2;
     }
     public void draw(TextureRegion region,int x,int y,int width,int height){
-        this.texture=region.getTexture();
+        this.texture=region.texture();
         if(pointsToDraw+4>maxPoints||trianglesToDraw+2>maxTriangles)flush();
 
         int pointsOffset=pointsToDraw;
@@ -128,7 +127,7 @@ public class TextureRenderer {
         trianglesToDraw+=2;
     }
     public void draw(TextureRegion region,int x,int y,int width,int height,float angle){
-        this.texture=region.getTexture();
+        this.texture=region.texture();
         if(pointsToDraw+4>maxPoints||trianglesToDraw+2>maxTriangles)flush();
 
         helperMatrix.identity().translate((x+width/2),(y+height/2),0).rotateZ(angle).translate(-(x+width/2),-(y+height/2),0);

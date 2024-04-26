@@ -10,6 +10,7 @@ import com.systemvi.engine.ui.utils.font.Font
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.Window
+import org.joml.Vector4f
 
 
 class WidgetRenderer2Test extends Game(3,3,60,800,600,"Widget renderer test"){
@@ -19,6 +20,12 @@ class WidgetRenderer2Test extends Game(3,3,60,800,600,"Widget renderer test"){
   var textureRenderer:TextureRenderer=null
   var regions:Array[TextureRegion]=null
   var time:Float=0
+  var string:String="Hello World"
+  var colors:Array[Vector4f]=Array(
+    Colors.yellow300,Colors.yellow500,Colors.orange300,Colors.orange500,Colors.red300,
+    Colors.red500,Colors.purple300,Colors.purple500,Colors.blue300,
+    Colors.blue500,Colors.green300,Colors.green500
+  )
   override def setup(window: Window): Unit = {
     camera=Camera3.builder2d()
       .size(window.getWidth,window.getHeight)
@@ -46,23 +53,20 @@ class WidgetRenderer2Test extends Game(3,3,60,800,600,"Widget renderer test"){
     time+=delta
     Utils.clear(0.4f,0,0,1,Buffer.COLOR_BUFFER)
     Utils.enableBlending()
-    val scale=2
-    val r=regions(font.symbols.indexOf(font.symbols.find(p=>p.id.toChar=='/').get))
-    textureRenderer.draw(r,100,100,r.width/scale,r.height/scale)
-    textureRenderer.flush()
-    widgetRenderer.draw(Drawable(
-      rect = Rect(400,300,150,200,(Math.PI/12).toFloat),
-      color = Colors.blue500,
-      border = Border(radius,20,Colors.blue700),
-      glyph = Rect(r.getTop,r.getLeft,r.getBottom,r.getRight),blur=1
-    ))
-    widgetRenderer.draw(Drawable(
-      rect = Rect(100,100,100,100,0),
-      color = Colors.green500,
-      border = Border(10,10,Colors.green700),
-      glyph = Rect(0,0,1,1),
-      blur = 10
-    ))
+    var x=100
+    string.zipWithIndex.foreach{case (c,index)=>
+      val s=font.symbols.find(p=>p.id.toChar==c).get
+      val r=regions(font.symbols.indexOf(s))
+      val y=100
+//      textureRenderer.draw(r,x+s.xoffset,y+s.yoffset,s.width,s.height)
+      widgetRenderer.draw(Drawable(
+        color = colors(index),
+        glyph = Rect(r.getLeft,r.getTop,r.getRight,r.getBottom),
+        rect = Rect(x+s.xoffset/2,y+s.yoffset/2,s.width,s.height)
+      ))
+      x+=s.xadvance
+    }
+//    textureRenderer.flush()
     widgetRenderer.flush()
     Utils.disableBlending()
   }

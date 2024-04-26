@@ -31,5 +31,5 @@ void main(){
     r-=vertexOut.border.width;
     float content=box(p,b/2.0-r)-r;
     vec4 color=mix(vertexOut.color,vertexOut.border.color,smoothstep(0.0,blur,content));
-    FragColor=vec4(color.rgb,(1.0-smoothstep(0.0,blur,border)*color.a));
+    FragColor=vec4(color.rgb,(1.0-smoothstep(0.0,blur,border)*color.a))*texture(fontTexture,vertexOut.glyphUV);
 }

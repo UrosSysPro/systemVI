@@ -1,7 +1,7 @@
 package com.systemvi.engine.texture;
 
 public class TextureRegion {
-    private Texture texture;
+    public Texture texture;
     public int x,y, width, height;
     public TextureRegion(Texture texture,int x,int y,int width,int height){
         this.texture=texture;
@@ -23,7 +23,7 @@ public class TextureRegion {
         return (float)(x+width)/texture.getWidth();
     }
 
-    public Texture getTexture() {
+    public Texture texture() {
         return texture;
     }
 
