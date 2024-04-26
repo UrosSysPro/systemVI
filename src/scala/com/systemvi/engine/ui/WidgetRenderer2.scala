@@ -8,8 +8,9 @@ import com.systemvi.engine.ui.utils.font.Font
 import org.joml.{Matrix4f, Vector4f}
 
 case class Rect(x:Float=0,y:Float=0,width:Float=0,height:Float=0,rotation:Float=0)
+case class Glyph(left:Float= -1,top:Float= -1,right:Float= -1,bottom:Float= -1)
 case class Border(radius:Float=0,width:Float=0,color:Vector4f=new Vector4f())
-case class Drawable(rect:Rect=Rect(), color:Vector4f=new Vector4f(), border:Border=Border(), blur:Float=0, boundary:Rect=Rect(), glyph:Rect=Rect(), transform:Matrix4f=new Matrix4f()){
+case class Drawable(rect:Rect=Rect(), color:Vector4f=new Vector4f(), border:Border=Border(), blur:Float=0, boundary:Rect=Rect(), glyph:Glyph=Glyph(), transform:Matrix4f=new Matrix4f()){
   def writeToArray(array:Array[Float],index:Int): Unit = {
     val offset=index*Drawable.size
     array(offset+0)=rect.x
@@ -32,10 +33,10 @@ case class Drawable(rect:Rect=Rect(), color:Vector4f=new Vector4f(), border:Bord
 
     array(offset+15)=blur
 
-    array(offset+16)=glyph.x
-    array(offset+17)=glyph.y
-    array(offset+18)=glyph.width
-    array(offset+19)=glyph.height
+    array(offset+16)=glyph.left
+    array(offset+17)=glyph.top
+    array(offset+18)=glyph.right
+    array(offset+19)=glyph.bottom
 
     val data:Array[Float]=Array.ofDim(16)
     transform.get(data)

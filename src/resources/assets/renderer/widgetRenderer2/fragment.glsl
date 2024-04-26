@@ -22,14 +22,14 @@ in struct{
 }vertexOut;
 
 void main(){
-    float r=vertexOut.border.radius;
+    float r=vertexOut.border.radius-vertexOut.blur;
     float blur=vertexOut.blur;
     vec2 b=vec2(vertexOut.width,vertexOut.height);
     vec2 p=vec2(vertexOut.x,vertexOut.y)*b;
     float border=box(p,b/2.0-r-blur)-r;
     b-=vertexOut.border.width*2.0;
     r-=vertexOut.border.width;
-    float content=box(p,b/2.0-r)-r;
+    float content=box(p,b/2.0-r-blur)-r;
     vec4 color=mix(vertexOut.color,vertexOut.border.color,smoothstep(0.0,blur,content));
     FragColor=vec4(color.rgb,(1.0-smoothstep(0.0,blur,border)*color.a))*texture(fontTexture,vertexOut.glyphUV);
 }

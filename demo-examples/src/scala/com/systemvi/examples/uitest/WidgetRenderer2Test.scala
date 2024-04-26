@@ -5,7 +5,7 @@ import com.systemvi.engine.camera.Camera3
 import com.systemvi.engine.renderers.TextureRenderer
 import com.systemvi.engine.texture.{Texture, TextureRegion}
 import com.systemvi.engine.ui.utils.data.Colors
-import com.systemvi.engine.ui.{Border, Drawable, Rect, WidgetRenderer2}
+import com.systemvi.engine.ui.{Border, Drawable, Glyph, Rect, WidgetRenderer2}
 import com.systemvi.engine.ui.utils.font.Font
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
@@ -49,9 +49,9 @@ class WidgetRenderer2Test extends Game(3,3,60,800,600,"Widget renderer test"){
     widgetRenderer=new WidgetRenderer2(camera,font)
   }
   override def loop(delta: Float): Unit = {
-    val radius=Math.sin(time).toFloat*30f+30
+    val radius=Math.sin(time).toFloat*25+25
     time+=delta
-    Utils.clear(0.4f,0,0,1,Buffer.COLOR_BUFFER)
+    Utils.clear(0,0,1,1,Buffer.COLOR_BUFFER)
     Utils.enableBlending()
     var x=100
     string.zipWithIndex.foreach{case (c,index)=>
@@ -60,12 +60,21 @@ class WidgetRenderer2Test extends Game(3,3,60,800,600,"Widget renderer test"){
       val y=100
 //      textureRenderer.draw(r,x+s.xoffset,y+s.yoffset,s.width,s.height)
       widgetRenderer.draw(Drawable(
+        blur=1,
         color = colors(index),
-        glyph = Rect(r.getLeft,r.getTop,r.getRight,r.getBottom),
+//        border=Border(10,4,Colors.blue500),
+        glyph = Glyph(r.getLeft,r.getTop,r.getRight,r.getBottom),
         rect = Rect(x+s.xoffset/2,y+s.yoffset/2,s.width,s.height)
       ))
       x+=s.xadvance
     }
+
+    widgetRenderer.draw(Drawable(
+      rect = Rect(300,300,200,100),
+      border = Border(radius,20,Colors.green700),
+      color = new Vector4f(0),
+      blur=1
+    ))
 //    textureRenderer.flush()
     widgetRenderer.flush()
     Utils.disableBlending()
