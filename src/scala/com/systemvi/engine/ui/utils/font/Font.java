@@ -39,7 +39,7 @@ public class Font {
         texture.generateMipMaps();
         texture.setBorderColor(1,1,1,1);
         texture.setRepeat(GL33.GL_CLAMP_TO_BORDER,GL33.GL_CLAMP_TO_BORDER);
-        texture.setSamplerFilter(GL33.GL_NEAREST_MIPMAP_LINEAR,GL33.GL_NEAREST);
+        texture.setSamplerFilter(GL33.GL_LINEAR_MIPMAP_LINEAR,GL33.GL_NEAREST);
         return font;
     }
 }

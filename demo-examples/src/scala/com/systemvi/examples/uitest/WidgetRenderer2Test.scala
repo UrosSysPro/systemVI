@@ -10,7 +10,7 @@ import com.systemvi.engine.ui.utils.font.Font
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.Window
-import org.joml.Vector4f
+import org.joml.{Matrix4f, Vector4f}
 
 
 class WidgetRenderer2Test extends Game(3,3,60,800,600,"Widget renderer test"){
@@ -58,24 +58,31 @@ class WidgetRenderer2Test extends Game(3,3,60,800,600,"Widget renderer test"){
       val s=font.symbols.find(p=>p.id.toChar==c).get
       val r=regions(font.symbols.indexOf(s))
       val y=100
-//      textureRenderer.draw(r,x+s.xoffset,y+s.yoffset,s.width,s.height)
+      textureRenderer.draw(r,x+s.xoffset,y+s.yoffset,s.width,s.height)
       widgetRenderer.draw(Drawable(
         blur=1,
         color = colors(index),
 //        border=Border(10,4,Colors.blue500),
         glyph = Glyph(r.getLeft,r.getTop,r.getRight,r.getBottom),
-        rect = Rect(x+s.xoffset/2,y+s.yoffset/2,s.width,s.height)
+        rect = Rect(
+          x+s.width.toFloat/2+s.xoffset.toFloat,
+          y+s.height.toFloat/2+s.yoffset.toFloat,
+          s.width,
+          s.height
+        )
+//        transform = new Matrix4f().identity().translate(x,y,0).rotateZ(time).translate(-x,-y,0)
       ))
       x+=s.xadvance
     }
 
     widgetRenderer.draw(Drawable(
-      rect = Rect(300,300,200,100),
-      border = Border(radius,20,Colors.green700),
+      rect = Rect(400,350,200,100),
+      border = Border(50,20,Colors.green700),
       color = new Vector4f(0),
       blur=1
+//      transform = new Matrix4f().identity().translate(300,300,0).rotateZ(time).translate(-300,-300,0)
     ))
-//    textureRenderer.flush()
+    textureRenderer.flush()
     widgetRenderer.flush()
     Utils.disableBlending()
   }

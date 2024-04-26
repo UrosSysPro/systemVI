@@ -59,7 +59,7 @@ out struct{
 }vertexOut;
 
 void main(){
-    vec4 worldPosition=translate(rect[0],rect[1])*rotate(rectRotation)*scale(rect[2],rect[3])*position;
+    vec4 worldPosition=transform*translate(rect[0],rect[1])*rotate(rectRotation)*scale(rect[2],rect[3])*position;
     vec4 ndcPosition=projection*view*worldPosition;
 
     vertexOut.x=position.x;

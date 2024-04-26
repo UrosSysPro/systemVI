@@ -10,7 +10,15 @@ import org.joml.{Matrix4f, Vector4f}
 case class Rect(x:Float=0,y:Float=0,width:Float=0,height:Float=0,rotation:Float=0)
 case class Glyph(left:Float= -1,top:Float= -1,right:Float= -1,bottom:Float= -1)
 case class Border(radius:Float=0,width:Float=0,color:Vector4f=new Vector4f())
-case class Drawable(rect:Rect=Rect(), color:Vector4f=new Vector4f(), border:Border=Border(), blur:Float=0, boundary:Rect=Rect(), glyph:Glyph=Glyph(), transform:Matrix4f=new Matrix4f()){
+case class Drawable(
+                     rect:Rect=Rect(),
+                     color:Vector4f=new Vector4f(),
+                     border:Border=Border(),
+                     blur:Float=0,
+                     boundary:Rect=Rect(),
+                     glyph:Glyph=Glyph(),
+                     transform:Matrix4f=new Matrix4f().identity()
+                   ){
   def writeToArray(array:Array[Float],index:Int): Unit = {
     val offset=index*Drawable.size
     array(offset+0)=rect.x
@@ -57,6 +65,7 @@ class WidgetRenderer2(var camera:Camera3,var font:Font) {
     new VertexAttribute("position",4)
   )
   val size=0.5f
+  val drawable:Drawable=Drawable()
   mesh.setVertexData(Array(
      size,  size ,0,1,
      size, -size ,0,1,
@@ -91,11 +100,13 @@ class WidgetRenderer2(var camera:Camera3,var font:Font) {
   val maxInstances=1000
   var instancesToDraw=0
   val instanceData:Array[Float]=Array.ofDim(Drawable.size*maxInstances)
+
   def draw(drawable: Drawable): Unit = {
     if(instancesToDraw>=maxInstances)flush()
     drawable.writeToArray(instanceData,instancesToDraw)
     instancesToDraw+=1
   }
+
   def flush():Unit={
     shader.use()
     shader.setUniform("view",camera.view)
