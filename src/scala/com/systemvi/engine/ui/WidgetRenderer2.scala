@@ -7,14 +7,29 @@ import com.systemvi.engine.texture.Texture
 import com.systemvi.engine.ui.utils.font.Font
 import org.joml.{Matrix4f, Vector4f}
 
-case class Rect(x:Float=0,y:Float=0,width:Float=0,height:Float=0,rotation:Float=0)
-case class Glyph(left:Float= -1,top:Float= -1,right:Float= -1,bottom:Float= -1)
-case class Border(radius:Float=0,width:Float=0,color:Vector4f=new Vector4f())
+case class Rect(var x:Float=0, var y:Float=0,var width:Float=0,var height:Float=0,var rotation:Float=0){
+  def set(x:Float,y:Float,width:Float,height:Float,rotation:Float): Unit = {
+    this.x=x
+    this.y=y
+    this.width=width
+    this.height=height
+    this.rotation=rotation
+  }
+}
+case class Glyph(var left:Float= -1,var top:Float= -1,var right:Float= -1,var bottom:Float= -1){
+  def set(left:Float,top:Float,right:Float,bottom:Float): Unit = {
+    this.left=left
+    this.right=right
+    this.top=top
+    this.bottom=bottom
+  }
+}
+case class Border(var radius:Float=0,var width:Float=0,var color:Vector4f=new Vector4f())
 case class Drawable(
                      rect:Rect=Rect(),
                      color:Vector4f=new Vector4f(),
                      border:Border=Border(),
-                     blur:Float=0,
+                     var blur:Float=0,
                      boundary:Rect=Rect(),
                      glyph:Glyph=Glyph(),
                      transform:Matrix4f=new Matrix4f().identity()
@@ -105,6 +120,44 @@ class WidgetRenderer2(var camera:Camera3,var font:Font) {
     if(instancesToDraw>=maxInstances)flush()
     drawable.writeToArray(instanceData,instancesToDraw)
     instancesToDraw+=1
+  }
+
+  def rect(x:Float,y:Float,w:Float,h:Float,
+           color:Vector4f,borderRadius:Float,
+           blur:Float,clipRect:Vector4f,
+           borderWidth:Float,borderColor:Vector4f): Unit = {
+    drawable.rect.set(x+w/2,y+h/2,w,h,0)
+
+    drawable.border.color.set(borderColor)
+    drawable.border.width=borderWidth
+    drawable.border.radius=borderRadius
+
+    drawable.glyph.set(-1,-1,-1,-1)
+
+    drawable.blur=blur
+
+    drawable.boundary.set(clipRect.x,clipRect.y,clipRect.z,clipRect.w,0)
+
+    drawable.transform.identity()
+
+    drawable.color.set(color)
+    draw(drawable)
+  }
+  def rect(x:Float,y:Float,w:Float,h:Float,color:Vector4f,borderRadius:Float,blur:Float):Unit={
+    rect(x,y,w,h,
+      color,borderRadius,
+      blur,clipRect = new Vector4f(0,0,100000,100000),
+      borderWidth = 0,borderColor = new Vector4f(0)
+    )
+  }
+  def rect(x:Float,y:Float,w:Float,h:Float,color:Vector4f):Unit={
+    rect(x,y,w,h,color,0,0)
+  }
+  def rect(x:Float,y:Float,w:Float,h:Float,color:Vector4f,borderRadius:Float):Unit={
+    rect(x,y,w,h,color,borderRadius,1)
+  }
+  def circle(x:Float,y:Float,r:Float,color:Vector4f):Unit={
+    rect(x-r,y-r,r*2,r*2,color,r,1)
   }
 
   def flush():Unit={
