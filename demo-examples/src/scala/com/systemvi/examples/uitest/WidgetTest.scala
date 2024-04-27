@@ -16,14 +16,15 @@ class WidgetTest extends Game(3,3,60,800,600,"Widget test"){
 
   private var scene:Scene=null
   override def setup(window: Window): Unit = {
+    WidgetTest.font=Font.load(
+      "assets/examples/widgetRenderer2Test/font.PNG",
+      "assets/examples/widgetRenderer2Test/font.json"
+    )
     scene = Scene(
       initialWidth=window.getWidth,
       initialHeight=window.getHeight,
       root = App(),
-      font = Font.load(
-        "assets/examples/widgetRenderer2Test/font.PNG",
-        "assets/examples/widgetRenderer2Test/font.json"
-      )
+      font = WidgetTest.font
     )
 //    scene.root.debugPrint("")
     setInputProcessor(new InputMultiplexer(this, scene))
@@ -38,4 +39,8 @@ class WidgetTest extends Game(3,3,60,800,600,"Widget test"){
   override def resize(width: Int, height: Int): Boolean = {
     scene.resize(width,height)
   }
+}
+
+object WidgetTest{
+  var font:Font=null
 }

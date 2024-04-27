@@ -22,13 +22,13 @@ class NavBar extends StatelessWidget{
                 Row(
                   mainAxisSize = AxisSize.fit,
                   children = Array(
-                    Text("Prvi link"),
-                    Text("Drugi link"),
-                    Text("Treci link"),
-                    Text("Cetvrti link")
+                    Text("Prvi link",font= WidgetTest.font),
+                    Text("Drugi link",font=WidgetTest.font),
+                    Text("Treci link",font=WidgetTest.font),
+                    Text("Cetvrti link",font=WidgetTest.font)
                   )
                 ),
-                Text("Actions")
+                Text("Actions",font=WidgetTest.font)
               )
             )
           )

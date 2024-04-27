@@ -40,7 +40,7 @@ class ColorInput extends StatelessWidget{
                   width = 30,height = 30,
                   child=Container(decoration=BoxDecoration(color = Colors.pink500,borderRadius = 15))
                 ),
-                Text("A")
+                Text("A",font = WidgetTest.font)
               )
             )
           )
