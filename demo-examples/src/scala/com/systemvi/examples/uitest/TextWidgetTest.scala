@@ -4,7 +4,7 @@ import com.systemvi.engine.application.Game
 import com.systemvi.engine.ui.Scene
 import com.systemvi.engine.ui.utils.data.{BoxDecoration, Colors}
 import com.systemvi.engine.ui.utils.font.Font
-import com.systemvi.engine.ui.widgets.{Center, Container, EdgeInsets, Padding, Text}
+import com.systemvi.engine.ui.widgets.{Center, Container, EdgeInsets, Padding, Text, TextStyle}
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.Window
@@ -27,8 +27,13 @@ class TextWidgetTest extends Game(3,3,60,800,600,"Text Widget"){
             color = Colors.green500, borderRadius = 20
           ),
           child = Padding(
-            padding=EdgeInsets.all(10),
-            child=Text("Ovo je neki dugacak text\nOvo je neki dugacak text\nOvo je neki dugacak text\nOvo je neki dugacak text\n",font=font)
+            padding=EdgeInsets.symetric(horizontal = 20,vertical = 10),
+            child=Text(
+              "Ovo je neki dugacak text\nOvo je neki dugacak text\nOvo je neki dugacak text" +
+              "\nOvo je neki dugacak text\n",
+              font=font,
+              style = TextStyle(scale = 0.25f)
+            )
           )
         )
       )

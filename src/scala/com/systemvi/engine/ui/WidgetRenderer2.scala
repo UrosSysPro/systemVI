@@ -148,7 +148,7 @@ class WidgetRenderer2(var camera:Camera3,var font:Font) {
     rect(x,y,w,h,
       color,borderRadius,
       blur,clipRect = new Vector4f(0,0,100000,100000),
-      borderWidth = 0,borderColor = new Vector4f(0)
+      borderWidth = 0,borderColor = new Vector4f(1)
     )
   }
   def rect(x:Float,y:Float,w:Float,h:Float,color:Vector4f):Unit={
@@ -161,12 +161,12 @@ class WidgetRenderer2(var camera:Camera3,var font:Font) {
     rect(x-r,y-r,r*2,r*2,color,r,1)
   }
 
-  def drawSymbol(symbol: Font#Symbol,x:Float,y:Float,color:Vector4f): Unit = {
+  def drawSymbol(symbol: Font#Symbol,x:Float,y:Float,scale:Float,color:Vector4f): Unit = {
     drawable.rect.set(
-      x+symbol.xoffset+symbol.width.toFloat/2,
-      y+symbol.yoffset+symbol.height.toFloat/2,
-      symbol.width,
-      symbol.height,
+      x+(symbol.xoffset+symbol.width.toFloat/2)*scale,
+      y+(symbol.yoffset+symbol.height.toFloat/2)*scale,
+      symbol.width*scale,
+      symbol.height*scale,
       0
     )
 
