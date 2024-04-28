@@ -21,13 +21,14 @@ class Container(child:Widget, val color:Vector4f, decoration: BoxDecoration) ext
               size.y+boxShadow.size,
               boxShadow.color,
               borderRadius,
-              boxShadow.blur
+              boxShadow.blur,
+              context
             )
           }
-          context.renderer.rect(position.x,position.y,size.x,size.y,color,borderRadius,1)
+          context.renderer.rect(position.x,position.y,size.x,size.y,color,borderRadius,1,context)
       }
     }else if(color!=null){
-      context.renderer.rect(position.x,position.y,size.x,size.y,color)
+      context.renderer.rect(position.x,position.y,size.x,size.y,color,context)
     }
     super.draw(context)
   }

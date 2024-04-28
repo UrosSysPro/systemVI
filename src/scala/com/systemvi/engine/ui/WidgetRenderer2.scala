@@ -4,6 +4,7 @@ import com.systemvi.engine.camera.Camera3
 import com.systemvi.engine.model.{Mesh, VertexAttribute}
 import com.systemvi.engine.shader.{ElementsDataType, Primitive, Shader}
 import com.systemvi.engine.texture.Texture
+import com.systemvi.engine.ui.utils.context.DrawContext
 import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.ui.utils.font.Font
 import org.joml.{Matrix4f, Vector4f}
@@ -126,7 +127,7 @@ class WidgetRenderer2(var camera:Camera3,var font:Font) {
   def rect(x:Float,y:Float,w:Float,h:Float,
            color:Vector4f,borderRadius:Float,
            blur:Float,clipRect:Vector4f,
-           borderWidth:Float,borderColor:Vector4f): Unit = {
+           borderWidth:Float,borderColor:Vector4f,context:DrawContext): Unit = {
     drawable.rect.set(x+w/2,y+h/2,w,h,0)
 
     drawable.border.color.set(borderColor)
@@ -139,26 +140,26 @@ class WidgetRenderer2(var camera:Camera3,var font:Font) {
 
     drawable.boundary.set(clipRect.x,clipRect.y,clipRect.z,clipRect.w,0)
 
-    drawable.transform.identity()
+    drawable.transform.set(context.transform)
 
     drawable.color.set(color)
     draw(drawable)
   }
-  def rect(x:Float,y:Float,w:Float,h:Float,color:Vector4f,borderRadius:Float,blur:Float):Unit={
+  def rect(x:Float,y:Float,w:Float,h:Float,color:Vector4f,borderRadius:Float,blur:Float,context: DrawContext):Unit={
     rect(x,y,w,h,
       color,borderRadius,
       blur,clipRect = new Vector4f(0,0,100000,100000),
-      borderWidth = 0,borderColor = new Vector4f(1)
+      borderWidth = 0,borderColor = new Vector4f(1),context
     )
   }
-  def rect(x:Float,y:Float,w:Float,h:Float,color:Vector4f):Unit={
-    rect(x,y,w,h,color,0,0)
+  def rect(x:Float,y:Float,w:Float,h:Float,color:Vector4f,context: DrawContext):Unit={
+    rect(x,y,w,h,color,0,0,context)
   }
-  def rect(x:Float,y:Float,w:Float,h:Float,color:Vector4f,borderRadius:Float):Unit={
-    rect(x,y,w,h,color,borderRadius,1)
+  def rect(x:Float,y:Float,w:Float,h:Float,color:Vector4f,borderRadius:Float,context: DrawContext):Unit={
+    rect(x,y,w,h,color,borderRadius,1,context)
   }
-  def circle(x:Float,y:Float,r:Float,color:Vector4f):Unit={
-    rect(x-r,y-r,r*2,r*2,color,r,1)
+  def circle(x:Float,y:Float,r:Float,color:Vector4f,context: DrawContext):Unit={
+    rect(x-r,y-r,r*2,r*2,color,r,1,context)
   }
 
   def drawSymbol(symbol: Font#Symbol,x:Float,y:Float,scale:Float,color:Vector4f): Unit = {

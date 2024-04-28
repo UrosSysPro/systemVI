@@ -82,8 +82,8 @@ class WidgetRenderer2Test extends Game(3,3,60,800,600,"Widget renderer test"){
       blur=1
 //      transform = new Matrix4f().identity().translate(300,300,0).rotateZ(time).translate(-300,-300,0)
     ))
-    widgetRenderer.rect(100,300,50,60,Colors.amber600,20,1,new Vector4f(0),10,Colors.amber900)
-    widgetRenderer.circle(500,500,100,Colors.orange300)
+//    widgetRenderer.rect(100,300,50,60,Colors.amber600,20,1,new Vector4f(0),10,Colors.amber900,context = )
+//    widgetRenderer.circle(500,500,100,Colors.orange300)
     textureRenderer.flush()
     widgetRenderer.flush()
     Utils.disableBlending()
