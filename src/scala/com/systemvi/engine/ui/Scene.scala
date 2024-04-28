@@ -56,6 +56,7 @@ class Scene(val root:Widget,initialWidth:Float=800,initialHeight:Float=600,font:
     animator.animate(root,delta)
   }
   def draw():Unit={
+    drawContext.transform.identity()
     Utils.enableBlending()
     root.draw(drawContext)
     renderer.flush()

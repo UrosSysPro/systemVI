@@ -162,7 +162,7 @@ class WidgetRenderer2(var camera:Camera3,var font:Font) {
     rect(x-r,y-r,r*2,r*2,color,r,1,context)
   }
 
-  def drawSymbol(symbol: Font#Symbol,x:Float,y:Float,scale:Float,color:Vector4f): Unit = {
+  def drawSymbol(symbol: Font#Symbol,x:Float,y:Float,scale:Float,color:Vector4f,context: DrawContext): Unit = {
     drawable.rect.set(
       x+(symbol.xoffset+symbol.width.toFloat/2)*scale,
       y+(symbol.yoffset+symbol.height.toFloat/2)*scale,
@@ -186,7 +186,7 @@ class WidgetRenderer2(var camera:Camera3,var font:Font) {
 
     drawable.boundary.set(0,0,100000,100000,0)
 
-    drawable.transform.identity()
+    drawable.transform.set(context.transform)
 
     drawable.color.set(color)
     draw(drawable)

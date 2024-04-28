@@ -61,7 +61,7 @@ class Text(val text:String="",val style:TextStyle=TextStyle(),val font: Font) ex
           x+=s.xadvance*style.scale
         case char:Char=>
           val s=font.symbols.find(s=>s.id.toChar==char).get
-          context.renderer.drawSymbol(s,position.x+x,position.y+y,style.scale,style.color)
+          context.renderer.drawSymbol(s,position.x+x,position.y+y,style.scale,style.color,context)
           x+=s.xadvance*style.scale+charSpacing
       }
       if(x>size.x)newLine=true
