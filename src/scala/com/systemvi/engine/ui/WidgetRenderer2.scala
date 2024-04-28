@@ -4,6 +4,7 @@ import com.systemvi.engine.camera.Camera3
 import com.systemvi.engine.model.{Mesh, VertexAttribute}
 import com.systemvi.engine.shader.{ElementsDataType, Primitive, Shader}
 import com.systemvi.engine.texture.Texture
+import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.ui.utils.font.Font
 import org.joml.{Matrix4f, Vector4f}
 
@@ -158,6 +159,36 @@ class WidgetRenderer2(var camera:Camera3,var font:Font) {
   }
   def circle(x:Float,y:Float,r:Float,color:Vector4f):Unit={
     rect(x-r,y-r,r*2,r*2,color,r,1)
+  }
+
+  def drawSymbol(symbol: Font#Symbol,x:Float,y:Float,color:Vector4f): Unit = {
+    drawable.rect.set(
+      x+symbol.xoffset+symbol.width.toFloat/2,
+      y+symbol.yoffset+symbol.height.toFloat/2,
+      symbol.width,
+      symbol.height,
+      0
+    )
+
+    drawable.border.color.set(Colors.white)
+    drawable.border.width=0
+    drawable.border.radius=0
+
+    drawable.glyph.set(
+      symbol.x.toFloat/font.texture.getWidth.toFloat,
+      symbol.y.toFloat/font.texture.getHeight.toFloat,
+      (symbol.x.toFloat+symbol.width)/font.texture.getWidth.toFloat,
+      (symbol.y.toFloat+symbol.height)/font.texture.getHeight.toFloat
+    )
+
+    drawable.blur=0
+
+    drawable.boundary.set(0,0,100000,100000,0)
+
+    drawable.transform.identity()
+
+    drawable.color.set(color)
+    draw(drawable)
   }
 
   def flush():Unit={

@@ -16,6 +16,7 @@ class Text(val text:String="",val style:TextStyle=TextStyle(),val font: Font) ex
   override def calculateSize(maxParentSize: Vector2f): Vector2f = {
     val glyphHeight=font.config.charHeight
     val charSpacing=font.config.charSpacing
+    val lineSpacing=font.config.lineSpacing
     var x=0f
     var y=0f
     var width=0f
@@ -26,8 +27,8 @@ class Text(val text:String="",val style:TextStyle=TextStyle(),val font: Font) ex
       if(newLine){
         x=0
         lines+=1
-        y+=glyphHeight+font.config.lineSpacing
-        height+=glyphHeight+font.config.lineSpacing
+        y+=glyphHeight+lineSpacing
+        height+=glyphHeight+lineSpacing
         newLine=false
       }
       char match {
@@ -63,13 +64,14 @@ class Text(val text:String="",val style:TextStyle=TextStyle(),val font: Font) ex
           x+=s.xadvance
         case char:Char=>
           val s=font.symbols.find(s=>s.id.toChar==char).get
-          context.renderer.rect(
-            x+position.x+s.width.toFloat/2+s.xoffset,
-            y+position.y+s.height.toFloat/2+s.yoffset,
-            s.width,
-            s.height,
-            style.color
-          )
+//          context.renderer.rect(
+//            x+position.x+s.width.toFloat/2+s.xoffset,
+//            y+position.y+s.height.toFloat/2+s.yoffset,
+//            s.width,
+//            s.height,
+//            style.color
+//          )
+          context.renderer.drawSymbol(s,position.x+x,position.y+y,style.color)
           x+=s.xadvance+charSpacing
       }
       if(x>size.x)newLine=true

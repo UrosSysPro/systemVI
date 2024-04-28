@@ -9,8 +9,8 @@ import com.systemvi.examples.uitest.WidgetTest;
 public class Main {
     public static void main(String[] args){
         Utils.assetsFolder="";
-//        new WidgetTest().run();
-        new TextWidgetTest().run();
+        new WidgetTest().run();
+//        new TextWidgetTest().run();
 //        new ContainerTest().run();
 //        new WidgetTest().run();
 //        new App().run();
