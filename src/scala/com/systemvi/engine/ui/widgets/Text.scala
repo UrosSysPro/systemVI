@@ -5,11 +5,11 @@ import com.systemvi.engine.ui.utils.context.{BuildContext, DrawContext}
 import com.systemvi.engine.ui.utils.font.Font
 import org.joml.{Vector2f, Vector4f}
 case class TextStyle(
-                      fontSize:Float=16,
-                      fontWeight:Float=1,
-                      color:Vector4f=new Vector4f(0,0,0,1),
-                      charSpacing:Float=1,
-                      lineSpacing:Float=2
+//                      fontSize:Float=16,
+//                      fontWeight:Float=1,
+                      color:Vector4f=new Vector4f(0,0,0,1)
+//                      charSpacing:Float=1,
+//                      lineSpacing:Float=2
                     )
 class Text(val text:String="",val style:TextStyle=TextStyle(),val font: Font) extends StatelessWidget {
   override def build(context: BuildContext): Widget = null
@@ -53,7 +53,7 @@ class Text(val text:String="",val style:TextStyle=TextStyle(),val font: Font) ex
       if(newLine){
         x=0
         lines+=1
-        y+=glyphHeight+style.lineSpacing
+        y+=glyphHeight+lineSpacing
         newLine=false
       }
       char match {

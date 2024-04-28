@@ -54,9 +54,9 @@ class AppState extends State with Animatable{
             Switch(value, onChange = value => setState{()=> this.value=value}),
             NavBar(),
             SizedBox(height = 40),
-            Text("Tailwind CSS\nColor Generator",style=TextStyle(fontSize = 20),WidgetTest.font),
+            Text("Tailwind CSS\nColor Generator",font=WidgetTest.font),
             SizedBox(height = 30),
-            Text("Press spacebar, enter a hexcode or change the\nHSL values to create a custom color scale",style=TextStyle(fontSize = 13,color = Colors.gray400),WidgetTest.font),
+            Text("Press spacebar, enter a hexcode or change the\nHSL values to create a custom color scale",style=TextStyle(color = Colors.gray400),WidgetTest.font),
             SizedBox(height = 30),
             ColorInput(),
             SizedBox(
@@ -89,9 +89,9 @@ class AppState extends State with Animatable{
                             child=Column(
                               crossAxisAlignment=CrossAxisAlignment.start,
                               children = Array(
-                                Text("Header1",style=TextStyle(fontSize = 20),WidgetTest.font),
+                                Text("Header1",style=TextStyle(),WidgetTest.font),
                                 SizedBox(height = 20),
-                                Text("Header2",style=TextStyle(fontSize = 15,color=Colors.gray400),WidgetTest.font)
+                                Text("Header2",style=TextStyle(color=Colors.gray400),WidgetTest.font)
                               )
                             )
                           )
