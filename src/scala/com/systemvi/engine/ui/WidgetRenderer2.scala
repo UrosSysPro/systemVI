@@ -149,7 +149,7 @@ class WidgetRenderer2(var camera:Camera3,var font:Font) {
     rect(x,y,w,h,
       color,borderRadius,
       blur,clipRect = new Vector4f(0,0,100000,100000),
-      borderWidth = 0,borderColor = new Vector4f(1),context
+      borderWidth = 0,borderColor = color,context
     )
   }
   def rect(x:Float,y:Float,w:Float,h:Float,color:Vector4f,context: DrawContext):Unit={

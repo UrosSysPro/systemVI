@@ -2,8 +2,8 @@ package com.systemvi.engine.ui.widgets.material
 
 import com.systemvi.engine.ui.Widget
 import com.systemvi.engine.ui.utils.context.BuildContext
-import com.systemvi.engine.ui.utils.data.{AxisSize, BoxDecoration, BoxShadow, Colors}
-import com.systemvi.engine.ui.widgets.{Container, Expanded, Row, SizedBox, StatelessWidget}
+import com.systemvi.engine.ui.utils.data.{Alignment, AxisSize, BoxDecoration, BoxShadow, Colors}
+import com.systemvi.engine.ui.widgets.{Align, Container, Expanded, Row, SizedBox, StatelessWidget}
 import org.joml.{Vector2f, Vector4f}
 
 class AppBar(
@@ -24,7 +24,12 @@ class AppBar(
         height=height,
         child=Row(
           mainAxisSize=AxisSize.expand,
-          children = (Array(leading,Expanded(child=title))++actions).filter(p=>p!=null)
+          children = (Array(leading,Expanded(
+            child=Align(
+              alignment = Alignment.centerRight,
+              child=title
+            )
+          ))++actions).filter(p=>p!=null)
         )
       )
     )
