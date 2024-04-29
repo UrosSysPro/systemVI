@@ -34,5 +34,5 @@ object EdgeInsets{
   def all(value:Float):EdgeInsets=EdgeInsets(value,value,value,value)
   def only(top:Float=0,bottom:Float=0,right:Float=0,left:Float=0):EdgeInsets=
     EdgeInsets(top,bottom,right,left)
-  def symetric(horizontal:Float,vertical:Float):EdgeInsets=EdgeInsets(vertical,vertical,horizontal,horizontal)
+  def symetric(horizontal:Float=0,vertical:Float=0):EdgeInsets=EdgeInsets(vertical,vertical,horizontal,horizontal)
 }
