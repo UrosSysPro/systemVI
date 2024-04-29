@@ -110,7 +110,7 @@ class TransformsTestState extends State with Animatable{
         Center(
           child=Transform(
             rotate = controller.value,
-            scale = 1,
+            scale = new Vector2f(controller.value*2,1),
             translate = new Vector2f(controller.value*100,0),
             child=Container(
               decoration=BoxDecoration(
