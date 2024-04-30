@@ -4,6 +4,7 @@ import org.joml.Vector4f
 
 object Colors {
   val white=new Vector4f(1.0f,1.0f,1.0f,1)
+  val black=new Vector4f(0,0,0,1)
   val slate50=new Vector4f(0.9725490196078431f,0.9803921568627451f,0.9882352941176471f,1)
   val slate100=new Vector4f(0.9450980392156862f,0.9607843137254902f,0.9764705882352941f,1)
   val slate200=new Vector4f(0.8862745098039215f,0.9098039215686274f,0.9411764705882353f,1)

@@ -25,7 +25,18 @@ class Container(child:Widget, val color:Vector4f, decoration: BoxDecoration) ext
               context
             )
           }
-          context.renderer.rect(position.x,position.y,size.x,size.y,color,borderRadius,1,context)
+          context.renderer.rect(
+            position.x,
+            position.y,
+            size.x,
+            size.y,
+            color,
+            borderRadius,
+            1,
+            new Vector4f(0,0,100000,100000),
+            decoration.border.width,
+            decoration.border.color,
+            context)
       }
     }else if(color!=null){
       context.renderer.rect(position.x,position.y,size.x,size.y,color,context)

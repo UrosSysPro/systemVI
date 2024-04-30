@@ -9,7 +9,7 @@ case class BoxDecoration(
                           boxShadow:Array[BoxShadow]=Array()
                         )
 case class Border(
-                   color:Vector4f=new Vector4f(0,0,0,1),
+                   color:Vector4f=new Vector4f(0,0,0,0),
                    width:Float=2
                  )
 case class BoxShadow(

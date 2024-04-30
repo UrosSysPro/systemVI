@@ -3,7 +3,7 @@ package com.systemvi.engine.ui.widgets.material
 import com.systemvi.engine.ui.Widget
 import com.systemvi.engine.ui.utils.context.BuildContext
 import com.systemvi.engine.ui.utils.data.Colors
-import com.systemvi.engine.ui.widgets.{Column, Container, Positioned, Stack, State, StatefulWidget}
+import com.systemvi.engine.ui.widgets.{Column, Container, Expanded, Positioned, Stack, State, StatefulWidget}
 import org.joml.Vector4f
 
 object Scaffold{
@@ -31,11 +31,11 @@ class ScaffoldState extends State{
         Column(
           children = Array(
             scaffold.appBar,
-            scaffold.body
-          ).filter(c=>c!=null)
+            Expanded(child=scaffold.body)
+          )
         ),
         if(scaffold.floatingActionButton!=null)Positioned(
-          left = 10,
+          right = 10,
           bottom = 10,
           child = scaffold.floatingActionButton
         )else null,
