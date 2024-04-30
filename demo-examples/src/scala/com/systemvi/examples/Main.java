@@ -11,7 +11,7 @@ public class Main {
         Utils.assetsFolder="";
 //        new WidgetTest().run();
 //        new TextWidgetTest().run();
-        new App().run();
+        App.main();
 //        new ContainerTest().run();
 //        new WidgetTest().run();
 //        new App().run();

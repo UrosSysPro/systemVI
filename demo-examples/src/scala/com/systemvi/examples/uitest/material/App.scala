@@ -1,7 +1,7 @@
 package com.systemvi.examples.uitest.material
 
 import com.systemvi.engine.application.Game
-import com.systemvi.engine.ui.{Scene, Widget}
+import com.systemvi.engine.ui.{Scene, UIApplication, Widget, runApp}
 import com.systemvi.engine.ui.utils.context.BuildContext
 import com.systemvi.engine.ui.utils.data.{BoxDecoration, Colors}
 import com.systemvi.engine.ui.utils.font.Font
@@ -12,31 +12,12 @@ import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.Window
 
 object App{
-  val font=Font.load(
-    "assets/examples/widgetRenderer2Test/font.PNG",
-    "assets/examples/widgetRenderer2Test/font.json"
-  )
+  def main(): Unit = {
+    runApp("MyApp",MyApp())
+  }
 }
-class App extends Game(3,3,60,800,600,"Material App"){
-  var scene:Scene=null
-  override def setup(window: Window): Unit = {
-    scene=Scene(
-      initialWidth = window.getWidth,
-      initialHeight = window.getHeight,
-      font=App.font,
-      root = MyApp()
-    )
-    setInputProcessor(scene)
-  }
-  override def loop(delta: Float): Unit = {
-    Utils.clear(0,0,0,0,Buffer.COLOR_BUFFER)
-    scene.animate(delta)
-    scene.resize(scene.width,scene.height)
-    scene.draw()
-  }
 
-  override def resize(width: Int, height: Int): Boolean = scene.resize(width,height)
-}
+
 object MyApp{
   def apply(): MyApp = new MyApp()
 }
@@ -51,14 +32,14 @@ class MyAppState extends State{
       appBar=AppBar(
         leading = Padding(
           padding=EdgeInsets.symetric(horizontal = 20),
-          child=Text("<",font=App.font,style = TextStyle(scale = 0.5f))
+          child=Text("<",font=UIApplication.font,style = TextStyle(scale = 0.5f))
         ),
-        title = Text("AppBar",style = TextStyle(scale = 0.5f),font = App.font)
+        title = Text("AppBar",style = TextStyle(scale = 0.5f),font = UIApplication.font)
       ),
-      body=Center(child=Text(s"Clicks: $clicks",font=App.font)),
+      body=Center(child=Text(s"Clicks: $clicks",font=UIApplication.font)),
       floatingActionButton = FloatingActionButton(
         onTap = ()=>setState(()=>clicks+=1),
-        child = Text("+",font = App.font)
+        child = Text("+",font = UIApplication.font)
       )
     )
   }

@@ -1,6 +1,7 @@
 
 package com.systemvi.engine.ui
 
+import com.systemvi.engine.application.Game
 import com.systemvi.engine.camera.Camera3
 import com.systemvi.engine.ui.utils.context.{BuildContext, DrawContext}
 import com.systemvi.engine.ui.utils.data.Colors
@@ -8,6 +9,7 @@ import com.systemvi.engine.ui.utils.font.Font
 import com.systemvi.engine.ui.utils.tree.{Animator, EventListenerFinder, TreeBuilder}
 import com.systemvi.engine.ui.widgets.{GestureDetector, State}
 import com.systemvi.engine.utils.Utils
+import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.{InputProcessor, Window}
 import org.joml.{Matrix4f, Vector2f}
 
@@ -132,5 +134,40 @@ class Scene(val root:Widget,initialWidth:Float=800,initialHeight:Float=600,font:
 object Scene{
   def apply(root: Widget, initialWidth:Float,initialHeight:Float,font:Font): Scene = {
     new Scene(root, initialWidth, initialHeight, font)
+  }
+}
+
+object UIApplication{
+  var font:Font=null
+}
+class UIApplication(title:String,home:Widget) extends Game(3,3,60,800,600,title){
+  var scene:Scene=null
+  override def setup(window: Window): Unit = {
+    UIApplication.font=Font.load(
+      "assets/examples/widgetRenderer2Test/font.PNG",
+      "assets/examples/widgetRenderer2Test/font.json"
+    )
+    scene=new Scene(
+      initialWidth = window.getWidth,
+      initialHeight = window.getHeight,
+      root = home,
+      font = UIApplication.font
+    )
+    setInputProcessor(scene)
+  }
+  override def loop(delta: Float): Unit = {
+    Utils.clear(0,0,0,0,Buffer.COLOR_BUFFER)
+    scene.animate(delta)
+    scene.resize(scene.width,scene.height)
+    scene.draw()
+  }
+
+  override def resize(width: Int, height: Int): Boolean = scene.resize(width, height)
+}
+
+object runApp{
+  def apply(title:String,home:Widget): Unit = {
+
+    new UIApplication(title,home).run()
   }
 }
