@@ -35,7 +35,7 @@ class ScaffoldState extends State{
           ).filter(c=>c!=null)
         ),
         if(scaffold.floatingActionButton!=null)Positioned(
-          right = 10,
+          left = 10,
           bottom = 10,
           child = scaffold.floatingActionButton
         )else null,

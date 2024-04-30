@@ -1,10 +1,9 @@
 package com.systemvi.engine.ui.widgets
 
 import com.systemvi.engine.ui.utils.context.{BuildContext, DrawContext}
-import com.systemvi.engine.ui.{Widget, WidgetRenderer}
+import com.systemvi.engine.ui.{Widget}
 import org.joml.Vector2f
 
-import scala.collection.mutable
 
 class Stack(val children:Array[Widget]) extends StatelessWidget {
   override def build(context:BuildContext): Widget = {
@@ -16,8 +15,12 @@ class Stack(val children:Array[Widget]) extends StatelessWidget {
     for(child<-children){
       child match{
         case positioned:Positioned=>
-          val width=maxParentSize.x-positioned.right-positioned.left
-          val height=maxParentSize.y-positioned.top-positioned.bottom
+          val left=if(positioned.left == -1)0 else positioned.left
+          val right=if(positioned.right == -1)0 else positioned.right
+          val top=if(positioned.top == -1)0 else positioned.top
+          val bottom=if(positioned.bottom == -1) 0 else positioned.bottom
+          val width=maxParentSize.x-right-left
+          val height=maxParentSize.y-top-bottom
           positioned.calculateSize(new Vector2f(width,height))
         case widget:Widget=>widget.calculateSize(maxParentSize)
         case _=>
@@ -30,7 +33,14 @@ class Stack(val children:Array[Widget]) extends StatelessWidget {
     if(children==null)return
     for(child<-children){
       child match {
-        case positioned: Positioned=>positioned.calculatePosition(new Vector2f(parentPosition).add(positioned.left,positioned.top))
+        case positioned: Positioned=>
+          var x:Float=0
+          var y:Float=0
+          if(positioned.left != -1)x=positioned.left
+          if(positioned.top != -1)y=positioned.top
+          if(positioned.right!= -1)x=size.x-positioned.right-positioned.size.x
+          if(positioned.bottom!= -1)y=size.y-positioned.bottom-positioned.size.y
+          positioned.calculatePosition(new Vector2f(parentPosition).add(x,y))
         case widget: Widget=>widget.calculatePosition(parentPosition)
         case _=>
       }

@@ -9,6 +9,6 @@ class Positioned(child:Widget,val top:Float,val left:Float,val right:Float,val b
 }
 
 object Positioned{
-  def apply(child: Widget,top:Float=0,left:Float=0,right:Float=0,bottom:Float=0): Positioned =
+  def apply(child: Widget,top:Float= -1,left:Float= -1,right:Float= -1,bottom:Float= -1): Positioned =
     new Positioned(child,top,left,right,bottom)
 }

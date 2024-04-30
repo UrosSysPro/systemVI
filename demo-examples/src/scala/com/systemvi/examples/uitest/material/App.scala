@@ -45,62 +45,67 @@ class MyApp() extends StatefulWidget{
 
 class MyAppState extends State{
   override def build(context: BuildContext): Widget = {
-    Scaffold(appBar=AppBar(
-      leading=Padding(
-        padding = EdgeInsets.symetric(horizontal = 20),
-        child = SizedBox(
-          width = 40,
-          height = 40,
-          child = Container(
-            decoration = BoxDecoration(
-              borderRadius = 10,
-              color = Colors.green500
+    Scaffold(
+      appBar=AppBar(
+        leading=Padding(
+          padding = EdgeInsets.symetric(horizontal = 20),
+          child = SizedBox(
+            width = 40,
+            height = 40,
+            child = Container(
+              decoration = BoxDecoration(
+                borderRadius = 10,
+                color = Colors.green500
+              )
+            )
+          )
+        ),
+        title = Text("AppBar",style = TextStyle(scale = 0.5f),font = App.font),
+        actions = Array(
+          Padding(
+            padding = EdgeInsets.only(right = 20),
+            child = SizedBox(
+              width = 40,
+              height = 40,
+              child = Container(
+                decoration = BoxDecoration(
+                  borderRadius = 10,
+                  color = Colors.green500
+                )
+              )
+            )
+          ),
+          Padding(
+            padding = EdgeInsets.only(right = 20),
+            child = SizedBox(
+              width = 40,
+              height = 40,
+              child = Container(
+                decoration = BoxDecoration(
+                  borderRadius = 10,
+                  color = Colors.green500
+                )
+              )
+            )
+          ),
+          Padding(
+            padding = EdgeInsets.only(right = 20),
+            child = SizedBox(
+              width = 40,
+              height = 40,
+              child = Container(
+                decoration = BoxDecoration(
+                  borderRadius = 10,
+                  color = Colors.green500
+                )
+              )
             )
           )
         )
       ),
-      title = Text("AppBar",style = TextStyle(scale = 0.5f),font = App.font),
-      actions = Array(
-        Padding(
-          padding = EdgeInsets.only(right = 20),
-          child = SizedBox(
-            width = 40,
-            height = 40,
-            child = Container(
-              decoration = BoxDecoration(
-                borderRadius = 10,
-                color = Colors.green500
-              )
-            )
-          )
-        ),
-        Padding(
-          padding = EdgeInsets.only(right = 20),
-          child = SizedBox(
-            width = 40,
-            height = 40,
-            child = Container(
-              decoration = BoxDecoration(
-                borderRadius = 10,
-                color = Colors.green500
-              )
-            )
-          )
-        ),
-        Padding(
-          padding = EdgeInsets.only(right = 20),
-          child = SizedBox(
-            width = 40,
-            height = 40,
-            child = Container(
-              decoration = BoxDecoration(
-                borderRadius = 10,
-                color = Colors.green500
-              )
-            )
-          )
-        )
+      floatingActionButton = SizedBox(
+        width = 20,height = 20,child=Container(decoration = BoxDecoration(color = Colors.orange500))
       )
-    ))
+    )
   }
 }
