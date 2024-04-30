@@ -38,8 +38,8 @@ class Stack(val children:Array[Widget]) extends StatelessWidget {
   }
   override def draw(context:DrawContext): Unit = {
     if(children==null)return
-    for(child<-children){
-      child.draw(context)
+    for(child <-children){
+      if(child!=null)child.draw(context)
     }
   }
   override def getChildren(): Array[Widget] = children

@@ -5,7 +5,7 @@ import com.systemvi.engine.ui.{Scene, Widget}
 import com.systemvi.engine.ui.utils.context.BuildContext
 import com.systemvi.engine.ui.utils.data.{BoxDecoration, Colors}
 import com.systemvi.engine.ui.utils.font.Font
-import com.systemvi.engine.ui.widgets.material.AppBar
+import com.systemvi.engine.ui.widgets.material.{AppBar, Scaffold}
 import com.systemvi.engine.ui.widgets.{Container, EdgeInsets, Padding, SizedBox, State, StatefulWidget, Text, TextStyle}
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
@@ -33,6 +33,8 @@ class App extends Game(3,3,60,800,600,"Material App"){
     scene.resize(scene.width,scene.height)
     scene.draw()
   }
+
+  override def resize(width: Int, height: Int): Boolean = scene.resize(width,height)
 }
 object MyApp{
   def apply(): MyApp = new MyApp()
@@ -43,7 +45,7 @@ class MyApp() extends StatefulWidget{
 
 class MyAppState extends State{
   override def build(context: BuildContext): Widget = {
-    AppBar(
+    Scaffold(appBar=AppBar(
       leading=Padding(
         padding = EdgeInsets.symetric(horizontal = 20),
         child = SizedBox(
@@ -99,6 +101,6 @@ class MyAppState extends State{
           )
         )
       )
-    )
+    ))
   }
 }
