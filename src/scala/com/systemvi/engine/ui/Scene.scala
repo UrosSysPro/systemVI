@@ -4,7 +4,6 @@ package com.systemvi.engine.ui
 import com.systemvi.engine.application.Game
 import com.systemvi.engine.camera.Camera3
 import com.systemvi.engine.ui.utils.context.{BuildContext, DrawContext}
-import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.ui.utils.font.Font
 import com.systemvi.engine.ui.utils.tree.{Animator, EventListenerFinder, TreeBuilder}
 import com.systemvi.engine.ui.widgets.{GestureDetector, State}
