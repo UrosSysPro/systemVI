@@ -40,6 +40,7 @@ class AnimationController(val duration:Float,val onStateChange:AnimationState=>U
     }
     onStateChange(state)
   }
+  def getState: AnimationStates.Value =state
 }
 object AnimationController{
   def apply(

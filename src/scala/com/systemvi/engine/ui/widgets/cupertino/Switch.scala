@@ -1,6 +1,6 @@
 package com.systemvi.engine.ui.widgets.cupertino
 
-import com.systemvi.engine.math.{Bezier1f, Bezier2f}
+import com.systemvi.engine.math.Bezier2f
 import com.systemvi.engine.ui.Widget
 import com.systemvi.engine.ui.utils.animation.{Animatable, AnimationController, AnimationStates}
 import com.systemvi.engine.ui.utils.context.{BuildContext, DrawContext}
@@ -15,28 +15,25 @@ class Switch(val value:Boolean,val onChange:Boolean=>Unit) extends StatefulWidge
 class SwitchState extends State with Animatable{
 
   var controller:AnimationController=null
-  var value = 0f
   var timing = new Bezier2f(Array(
     new Vector2f(0f,0f),
     new Vector2f(0.35f,.86f),
     new Vector2f(0f,1.01f),
     new Vector2f(1.0f)
   ))
-//  var timing = new Bezier1f(Array(0,0.5f, 0.5f,1f))
 
   override def init(): Unit = {
     controller= AnimationController(
       animatable = this,
-      milliseconds=200,
-      onValueChange = value => {
-        setState(()=>{
-          this.value=value
-        })
-
-      }
+      milliseconds=200
     )
   }
-  override def build(context:BuildContext): Widget =
+  override def build(context:BuildContext): Widget = {
+    widget match {
+      case switch: Switch=>
+        if(!switch.value && controller.getState == AnimationStates.end)controller.setState(AnimationStates.reverse)
+        if( switch.value && controller.getState == AnimationStates.start)controller.setState(AnimationStates.running)
+    }
     SizedBox(
       width=55,height=30,
       child = GestureDetector(
@@ -45,18 +42,17 @@ class SwitchState extends State with Animatable{
             case switch: Switch=>switch
           }
           switch.onChange(!switch.value)
-
-          if(switch.value)controller.setState(AnimationStates.running)
-          else controller.setState(AnimationStates.reverse)
           true
         }
       )
     )
+  }
+
   override def draw(context:DrawContext): Unit = {
     val value=widget match {
       case switch: Switch=>switch.value
     }
-    val d = timing.get(this.value).y
+    val d = timing.get(controller.value).y
     val size=widget.size
     val position=widget.position
     val circleSize:Float = size.y

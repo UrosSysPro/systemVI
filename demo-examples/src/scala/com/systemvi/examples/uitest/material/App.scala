@@ -1,8 +1,8 @@
 package com.systemvi.examples.uitest.material
 
-import com.systemvi.engine.ui.{ UIApplication, Widget, runApp}
+import com.systemvi.engine.ui.{UIApplication, Widget, runApp}
 import com.systemvi.engine.ui.utils.context.BuildContext
-import com.systemvi.engine.ui.utils.data.{Colors}
+import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.ui.widgets.material.{AppBar, FloatingActionButton, Scaffold}
 import com.systemvi.engine.ui.widgets.{Center, EdgeInsets, Padding, State, StatefulWidget, Text, TextStyle}
 
