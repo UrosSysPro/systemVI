@@ -15,6 +15,7 @@ class Switch(val value:Boolean,val onChange:Boolean=>Unit) extends StatefulWidge
 class SwitchState extends State with Animatable{
 
   var controller:AnimationController=null
+
   var timing = new Bezier2f(Array(
     new Vector2f(0f,0f),
     new Vector2f(0.35f,.86f),
