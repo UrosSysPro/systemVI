@@ -9,7 +9,7 @@ import static org.lwjgl.assimp.Assimp.*;
 public class ModelLoader {
     public static Model load(ModelLoaderParams params){
         Model model = null;
-        try(AIScene aiScene = aiImportFile(params.fileName,0)){
+        try(AIScene aiScene = aiImportFile(params.fileName,aiProcess_JoinIdenticalVertices | aiProcess_Triangulate | aiProcess_FixInfacingNormals)){
 //            if(aiScene == null){
 //                System.out.println("error");
 //            }

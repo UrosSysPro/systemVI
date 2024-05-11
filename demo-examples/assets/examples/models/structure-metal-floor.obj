@@ -1,7 +1,5 @@
 # Created by Kenney (www.kenney.nl)
 
-mtllib structure-metal-floor.mtl
-
 g structure-metal-floor
 
 v -0.2 0.2 0.146525 1 1 1
@@ -205,7 +203,6 @@ vt 0.34375 0.1583333
 vt 0.34375 0.225
 vt 0.34375 0.025
 
-usemtl colormap
 
 f 3/2/1 2/1/1 1/1/1
 f 2/1/1 3/2/1 4/2/1
@@ -562,10 +559,6 @@ f 165/8/20 161/7/19 162/7/20
 
 g structure-metal-floor
 
-
-
-
-usemtl colormap
 
 f 3/2/1 2/1/1 1/1/1
 f 2/1/1 3/2/1 4/2/1
