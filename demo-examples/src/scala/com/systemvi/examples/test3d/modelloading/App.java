@@ -17,7 +17,7 @@ public class App extends Game {
     public void setup(Window window) {
         model = ModelLoader.load(
             ModelLoaderParams.builder()
-                .fileName("assets/examples/models/hatchback-sports.glb")
+                .fileName("assets/examples/models/structure-metal-floor.obj")
                 .build()
         );
         if(model==null){
