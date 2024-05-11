@@ -54,8 +54,6 @@ public class Texture{
         height=data.getHeight();
 
         glBindTexture(GL_TEXTURE_2D,id);
-
-        data.getBuffer().flip();
         glTexImage2D(GL_TEXTURE_2D,0,this.format.id,width,height,0,data.getFormat().id,GL_UNSIGNED_BYTE,data.getBuffer());
         glGenerateMipmap(GL_TEXTURE_2D);
 

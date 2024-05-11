@@ -10,7 +10,6 @@ import static org.lwjgl.assimp.Assimp.*;
 
 public class ModelLoader {
     public static Model load(ModelLoaderParams params){
-
         try(AIScene aiScene = aiImportFile(params.fileName,0)){
             if(aiScene == null){
                 throw new RuntimeException("Failed to load model");
@@ -29,7 +28,7 @@ public class ModelLoader {
                     System.out.printf("%f %f %f\n", position.x(),position.y(),position.z());
                 }
             }
-
+            AINode node=AINode.create(aiScene.mRootNode().mChildren().get(0));
 
             return new Model();
         }catch (Exception e){

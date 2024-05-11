@@ -133,7 +133,6 @@ public class TextureData {
     //set texture data using floats
     public TextureData setPixel4f(int x,int y,Vector4f color){
         int index=(x+y*width)*format.channels;
-
         buffer.put(index,(byte)(color.x*255));
         buffer.put(index+1,(byte)(color.y*255));
         buffer.put(index+2,(byte)(color.z*255));
