@@ -14,6 +14,11 @@ import org.joml.Random;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
 public class App extends Game {
     public App(int openglVersionMajor, int openglVersionMinor, int targetFPS, int windowWidth, int windowHeight, String title) {
         super(openglVersionMajor, openglVersionMinor, targetFPS, windowWidth, windowHeight, title);
@@ -155,6 +160,19 @@ public class App extends Game {
 
         texture = new Texture(800, 600, Format.RGBA);
         data = new TextureData(800, 600, Format.RGBA);
+
+        for(int i=6;i<32;i++){
+            int attempts=10;
+            float average=0;
+            for(int j=0;j<attempts;j++){
+                long startTime=System.nanoTime();
+                renderMultiThread(i);
+                long endTime=System.nanoTime();
+                average+=(endTime-startTime)/1000000f;
+            }
+            System.out.println(i+" Threads: "+(average/attempts));
+        }
+
         renderer = new TextureRenderer();
         renderer.view(camera.view());
         renderer.projection(camera.projection());
@@ -166,18 +184,57 @@ public class App extends Game {
         System.out.printf("%4d \r",getFPS());
         controller.update(delta);
 
-        for(int i=0;i<1000;i++){
-            int x=r.nextInt(800),y=r.nextInt(600);
-            try{
-                data.setPixel4f(x,y,calculatePixel(x,y));
-            }catch (Exception e){
-                System.out.println(x+" "+y);
-                close();
-                break;
-            }
-        }
+//        for(int i=0;i<1000;i++){
+//            int x=r.nextInt(800),y=r.nextInt(600);
+//            try{
+//                data.setPixel4f(x,y,calculatePixel(x,y));
+//            }catch (Exception e){
+//                System.out.println(x+" "+y);
+//                close();
+//                break;
+//            }
+//        }
         texture.setData(data);
         renderer.draw(texture, 0, 0, 800, 600);
         renderer.flush();
+    }
+
+    public void renderSingleThread(){
+        long startTime=System.nanoTime();
+        for(int i=0;i<800;i++){
+                    for(int j=0;j<600;j++){
+                        int x=i;
+                        int y=j;
+                        data.setPixel4f(x,y,calculatePixel(x,y));
+                    }
+                }
+        long endTime=System.nanoTime();
+        System.out.println((endTime-startTime)/1000_000f);
+    }
+    public void renderMultiThread(int threads){
+        long startTime=System.nanoTime();
+        ExecutorService service = Executors.newFixedThreadPool(threads);
+        Future[] futures=new Future[threads];
+        for(int k=0;k<threads;k++){
+            final int index=k;
+            futures[k]=service.submit(()->{
+                for(int i=0;i<800/threads;i++){
+                    for(int j=0;j<600;j++){
+                        int x=index*800/threads+i;
+                        int y=j;
+                        data.setPixel4f(x,y,calculatePixel(x,y));
+                    }
+                }
+            });
+        }
+        try{
+            for(int k=0;k<threads;k++){futures[k].get();}
+            service.shutdown();
+            service.awaitTermination(0, TimeUnit.MILLISECONDS);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        long endTime=System.nanoTime();
+        System.out.println((endTime-startTime)/1000_000f);
     }
 }
