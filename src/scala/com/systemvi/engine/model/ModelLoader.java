@@ -2,8 +2,6 @@ package com.systemvi.engine.model;
 
 import org.lwjgl.assimp.*;
 
-import java.io.File;
-
 import static org.lwjgl.assimp.Assimp.*;
 
 public class ModelLoader {
