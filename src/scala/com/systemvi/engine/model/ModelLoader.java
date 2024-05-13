@@ -25,33 +25,7 @@ public class ModelLoader {
 
             Model.Node root=loadNodes(aiScene,meshes);
 
-            //cameras
-            System.out.println("\tcameras");
-            PointerBuffer cameraBuffer=aiScene.mCameras();
-            if(cameraBuffer!=null){
-                while (cameraBuffer.remaining()>0){
-                    AICamera aiCamera=AICamera.create(cameraBuffer.get());
-                    System.out.println("\t\tcamera");
-                }
-            }else{
-                System.out.println("\tno cameras");
-            }
-
-            //lights
-            System.out.println("\tlights");
-            PointerBuffer lightBuffer=aiScene.mLights();
-            if(cameraBuffer!=null){
-                while (cameraBuffer.remaining()>0){
-                    AILight aiLight=AILight.create(lightBuffer.get());
-                    System.out.println("\t\tlight");
-                }
-            }else{
-                System.out.println("\tno lights");
-            }
-
-
-            model=new Model(meshes,materials,root);
-
+            model = new Model(meshes,materials,root);
         }catch (Exception e){
             e.printStackTrace();
         }
