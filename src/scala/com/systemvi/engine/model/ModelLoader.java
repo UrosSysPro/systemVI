@@ -19,29 +19,11 @@ public class ModelLoader {
                 System.out.println("[ERROR] failed to load model");
                 return model;
             }
-            ArrayList<Model.Mesh> meshes = loadMeshes(aiScene);
-
             ArrayList<Model.Material> materials=loadMaterials(aiScene);
 
+            ArrayList<Model.Mesh> meshes = loadMeshes(aiScene,materials);
+
             Model.Node root=loadNodes(aiScene,meshes);
-
-            //textures
-            System.out.println("\tTextures");
-            PointerBuffer textureBuffer=aiScene.mTextures();
-            if(textureBuffer!=null){
-                while(textureBuffer.remaining()>0){
-                    AITexture texture=AITexture.create(textureBuffer.get());
-                    AIString aiString=texture.mFilename();
-                    System.out.println(aiString.dataString());
-                }
-            }else{
-                System.out.println("\tno textures");
-            }
-
-            //node
-            System.out.println("\tnodes");
-            AINode aiNode=aiScene.mRootNode();
-            printNodes(aiNode,"\t\t");
 
             //cameras
             System.out.println("\tcameras");
@@ -97,7 +79,7 @@ public class ModelLoader {
         }
     }
 
-    private static ArrayList<Model.Mesh> loadMeshes(AIScene aiScene){
+    private static ArrayList<Model.Mesh> loadMeshes(AIScene aiScene,ArrayList<Model.Material> materials){
         ArrayList<Model.Mesh> meshes=new ArrayList<>();
         PointerBuffer meshesBuffer=aiScene.mMeshes();
         int meshCount=aiScene.mNumMeshes();
@@ -119,7 +101,10 @@ public class ModelLoader {
                 ));
             }
 
-            meshes.add(new Model.Mesh(vertices));
+            int materialIndex=aiMesh.mMaterialIndex();
+            Model.Material material=materials.get(materialIndex);
+
+            meshes.add(new Model.Mesh(vertices,material,materialIndex));
         }
         return meshes;
     }
@@ -133,8 +118,14 @@ public class ModelLoader {
             AIString aiString=AIString.calloc();
             AIMaterial aiMaterial=AIMaterial.create(aiScene.mMaterials().get(i));
 
+            aiGetMaterialTexture(aiMaterial,aiTextureType_SPECULAR,0,aiString,(IntBuffer) null,null,null,null,null,null);
+//            if(aiString != null && aiString.dataString() != null) System.out.println("specular: "+aiString.dataString());
+
             aiGetMaterialTexture(aiMaterial,aiTextureType_DIFFUSE,0,aiString,(IntBuffer) null,null,null,null,null,null);
-            if(aiString != null && aiString.dataString() != null) System.out.println(aiString.dataString());
+//            if(aiString != null && aiString.dataString() != null) System.out.println("diffuse: "+aiString.dataString());
+
+            aiGetMaterialTexture(aiMaterial,aiTextureType_NORMALS,0,aiString,(IntBuffer) null,null,null,null,null,null);
+//            if(aiString != null && aiString.dataString() != null) System.out.println("normals: "+aiString.dataString());
 
             result=aiGetMaterialColor(aiMaterial,AI_MATKEY_COLOR_AMBIENT,aiTextureType_NONE,0,aiColor);
             Vector4f ambient=new Vector4f(0.1f,0.1f,0.1f,1.0f);
@@ -158,6 +149,7 @@ public class ModelLoader {
     private static Model.Node loadNodes(AIScene aiScene,ArrayList<Model.Mesh> meshes){
         return loadNode(aiScene.mRootNode(),meshes);
     }
+
     private static Model.Node loadNode(AINode aiNode,ArrayList<Model.Mesh> modelMeshes){
         if(aiNode==null)return null;
         //name

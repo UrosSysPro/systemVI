@@ -18,8 +18,12 @@ public class Model {
     }
     public static class Mesh{
         public ArrayList<Vertex> vertices;
-        public Mesh(ArrayList<Vertex> vertices) {
+        public int materialIndex;
+        public Material material;
+        public Mesh(ArrayList<Vertex> vertices,Material material, int materialIndex) {
             this.vertices = vertices;
+            this.material = material;
+            this.materialIndex = materialIndex;
         }
     }
     public static class Material{
