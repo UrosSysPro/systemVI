@@ -1,5 +1,6 @@
 package com.systemvi.engine.model;
 
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -33,14 +34,27 @@ public class Model {
 
     }
     public static class Node{
-
+        public String name;
+        public ArrayList<Node> children;
+        public ArrayList<Integer> meshIndices;
+        public ArrayList<Mesh> meshes;
+        public Matrix4f transform;
+        public Node(String name, ArrayList<Node> children, ArrayList<Integer> meshIndices, ArrayList<Mesh> meshes,Matrix4f transform){
+            this.name = name;
+            this.children = children;
+            this.meshIndices = meshIndices;
+            this.meshes = meshes;
+            this.transform = transform;
+        }
     }
 
     public ArrayList<Mesh> meshes;
     public ArrayList<Material> materials;
+    public Node root;
 
-    public Model(ArrayList<Mesh> meshes,ArrayList<Material> materials) {
+    public Model(ArrayList<Mesh> meshes,ArrayList<Material> materials,Node root) {
         this.meshes = meshes;
         this.materials = materials;
+        this.root=root;
     }
 }

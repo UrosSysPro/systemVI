@@ -1,5 +1,6 @@
 package com.systemvi.engine.model;
 
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.PointerBuffer;
@@ -21,6 +22,8 @@ public class ModelLoader {
             ArrayList<Model.Mesh> meshes = loadMeshes(aiScene);
 
             ArrayList<Model.Material> materials=loadMaterials(aiScene);
+
+            Model.Node root=loadNodes(aiScene,meshes);
 
             //textures
             System.out.println("\tTextures");
@@ -65,7 +68,7 @@ public class ModelLoader {
             }
 
 
-            model=new Model(meshes,materials);
+            model=new Model(meshes,materials,root);
 
         }catch (Exception e){
             e.printStackTrace();
@@ -150,5 +153,47 @@ public class ModelLoader {
             ));
         }
         return materials;
+    }
+
+    private static Model.Node loadNodes(AIScene aiScene,ArrayList<Model.Mesh> meshes){
+        return loadNode(aiScene.mRootNode(),meshes);
+    }
+    private static Model.Node loadNode(AINode aiNode,ArrayList<Model.Mesh> modelMeshes){
+        if(aiNode==null)return null;
+        //name
+        AIString aiString=aiNode.mName();
+        String name = aiString.dataString();
+        //transform
+        AIMatrix4x4 t=aiNode.mTransformation();
+        Matrix4f transform=new Matrix4f(
+            t.a1(),t.a2(),t.a3(),t.a4(),
+            t.b1(),t.b2(),t.b3(),t.b4(),
+            t.c1(),t.c2(),t.c3(),t.c4(),
+            t.d1(),t.d2(),t.d3(),t.d4()
+        );
+//        Matrix4f transform=new Matrix4f(
+//            t.a1(),t.b1(),t.c1(),t.d1(),
+//            t.a2(),t.b2(),t.c2(),t.d2(),
+//            t.a3(),t.b3(),t.c3(),t.d3(),
+//            t.a4(),t.b4(),t.c4(),t.d4()
+//        );
+        //meshes
+        IntBuffer meshIndicesBuffer=aiNode.mMeshes();
+        ArrayList<Integer> meshIndices=new ArrayList<>();
+        while(meshIndicesBuffer.remaining()>0){
+            meshIndices.add(meshIndicesBuffer.get());
+        }
+        ArrayList<Model.Mesh> meshes=new ArrayList<>();
+        for (Integer meshIndex : meshIndices) {
+            meshes.add(modelMeshes.get(meshIndex));
+        }
+        //children
+        ArrayList<Model.Node> children=new ArrayList<>();
+        PointerBuffer childrenBuffer=aiNode.mChildren();
+        if(childrenBuffer!=null){
+            AINode aiChildNode=AINode.create(childrenBuffer.get());
+            children.add(loadNode(aiChildNode,modelMeshes));
+        }
+        return new Model.Node(name,children,meshIndices,meshes,transform);
     }
 }
