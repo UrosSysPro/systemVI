@@ -1,49 +1,26 @@
 package com.systemvi.engine.model;
 
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.assimp.*;
-
-import java.io.File;
+import java.nio.IntBuffer;
+import java.util.ArrayList;
 
 import static org.lwjgl.assimp.Assimp.*;
 
 public class ModelLoader {
     public static Model load(ModelLoaderParams params){
         Model model = null;
-        File file=new File(params.fileName);
-        System.out.println(file.exists());
         try{
             AIScene aiScene = aiImportFile(params.fileName,params.flags);
             if(aiScene == null){
                 System.out.println("[ERROR] failed to load model");
                 return model;
             }
-            System.out.println("aiScene");
-            //meshes
-            PointerBuffer meshesBuffer=aiScene.mMeshes();
-            int meshCount=aiScene.mNumMeshes();
-            for(int i=0; i<meshCount; i++){
-                AIMesh aiMesh=AIMesh.create(meshesBuffer.get(i));
-                System.out.println("\taiMesh");
-                AIVector3D.Buffer positions=aiMesh.mVertices();
-                while(positions.remaining()>0){
-                    AIVector3D position=positions.get();
-                    System.out.printf("\t\t%f, %f, %f\n",position.x(),position.y(),position.z());
-                }
-                AIVector3D.Buffer normals=aiMesh.mNormals();
-                while(normals.remaining()>0){
-                    AIVector3D normal=normals.get();
-                    System.out.printf("\t\t%f, %f, %f\n",normal.x(),normal.y(),normal.z());
-                }
-            }
+            ArrayList<Model.Mesh> meshes = loadMeshes(aiScene);
 
-            //materials
-            int materialCount=aiScene.mNumMaterials();
-            PointerBuffer materialsBuffer=aiScene.mMaterials();
-            for(int i=0; i<materialCount; i++){
-                AIMaterial aiMaterial=AIMaterial.create(materialsBuffer.get(i));
-                System.out.println("\taiMaterial");
-            }
+            ArrayList<Model.Material> materials=loadMaterials(aiScene);
 
             //textures
             System.out.println("\tTextures");
@@ -88,7 +65,7 @@ public class ModelLoader {
             }
 
 
-            model=new Model();
+            model=new Model(meshes,materials);
 
         }catch (Exception e){
             e.printStackTrace();
@@ -115,5 +92,63 @@ public class ModelLoader {
             AINode node=AINode.create(nodeBuffer.get());
             printNodes(node,prefix+"\t");
         }
+    }
+
+    private static ArrayList<Model.Mesh> loadMeshes(AIScene aiScene){
+        ArrayList<Model.Mesh> meshes=new ArrayList<>();
+        PointerBuffer meshesBuffer=aiScene.mMeshes();
+        int meshCount=aiScene.mNumMeshes();
+        for(int i=0; i < meshCount; i++){
+            ArrayList<Model.Vertex> vertices=new ArrayList<>();
+            AIMesh aiMesh=AIMesh.create(meshesBuffer.get(i));
+
+            int numVertices=aiMesh.mNumVertices();
+            for(int j=0; j<numVertices; j++){
+                AIVector3D position=aiMesh.mVertices().get(j);
+                AIVector3D normal=aiMesh.mNormals().get(j);
+                AIVector3D tangent=aiMesh.mTangents().get(j);
+                AIVector3D bitangent=aiMesh.mBitangents().get(j);
+                vertices.add(new Model.Vertex(
+                    new Vector3f(position.x(),position.y(),position.z()),
+                    new Vector3f(normal.x(),normal.y(),normal.z()),
+                    new Vector3f(tangent.x(),tangent.y(),tangent.z()),
+                    new Vector3f(bitangent.x(),bitangent.y(),bitangent.z())
+                ));
+            }
+
+            meshes.add(new Model.Mesh(vertices));
+        }
+        return meshes;
+    }
+
+    private static ArrayList<Model.Material> loadMaterials(AIScene aiScene){
+        ArrayList<Model.Material> materials=new ArrayList<>();
+        int materialCount=aiScene.mNumMaterials();
+        for (int i=0;i<materialCount;i++){
+            int result;
+            AIColor4D aiColor = AIColor4D.create();
+            AIString aiString=AIString.calloc();
+            AIMaterial aiMaterial=AIMaterial.create(aiScene.mMaterials().get(i));
+
+            aiGetMaterialTexture(aiMaterial,aiTextureType_DIFFUSE,0,aiString,(IntBuffer) null,null,null,null,null,null);
+            if(aiString != null && aiString.dataString() != null) System.out.println(aiString.dataString());
+
+            result=aiGetMaterialColor(aiMaterial,AI_MATKEY_COLOR_AMBIENT,aiTextureType_NONE,0,aiColor);
+            Vector4f ambient=new Vector4f(0.1f,0.1f,0.1f,1.0f);
+            if(result==0)ambient.set(aiColor.r(),aiColor.g(),aiColor.b(),aiColor.a());
+
+            result=aiGetMaterialColor(aiMaterial,AI_MATKEY_COLOR_DIFFUSE,aiTextureType_NONE,0,aiColor);
+            Vector4f diffuse=new Vector4f(0.1f,0.1f,0.1f,1.0f);
+            if(result==0)diffuse.set(aiColor.r(),aiColor.g(),aiColor.b(),aiColor.a());
+
+            result=aiGetMaterialColor(aiMaterial,AI_MATKEY_COLOR_SPECULAR,aiTextureType_NONE,0,aiColor);
+            Vector4f specular=new Vector4f(0.1f,0.1f,0.1f,1.0f);
+            if(result==0)specular.set(aiColor.r(),aiColor.g(),aiColor.b(),aiColor.a());
+
+            materials.add(new Model.Material(
+                ambient,diffuse,specular
+            ));
+        }
+        return materials;
     }
 }

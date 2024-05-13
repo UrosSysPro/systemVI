@@ -1,21 +1,46 @@
 package com.systemvi.engine.model;
 
+import org.joml.Vector3f;
+import org.joml.Vector4f;
+
+import java.util.ArrayList;
+
 public class Model {
-    class Vertex{
+    public static class Vertex{
+        public Vector3f position,normal,tangent,bitangent;
+        public Vertex(Vector3f position, Vector3f normal, Vector3f tangent, Vector3f bitangent){
+            this.position = position;
+            this.normal = normal;
+            this.tangent = tangent;
+            this.bitangent = bitangent;
+        }
+    }
+    public static class Mesh{
+        public ArrayList<Vertex> vertices;
+        public Mesh(ArrayList<Vertex> vertices) {
+            this.vertices = vertices;
+        }
+    }
+    public static class Material{
+        public Vector4f ambient,diffuse,specular;
+        public Material(Vector4f ambient, Vector4f diffuse, Vector4f specular){
+            this.ambient = ambient;
+            this.diffuse = diffuse;
+            this.specular = specular;
+        }
+    }
+    public static class Light{
 
     }
-    class Mesh{
-
-    }
-    class Material{
-
-    }
-    class Light{
-
-    }
-    class Node{
+    public static class Node{
 
     }
 
+    public ArrayList<Mesh> meshes;
+    public ArrayList<Material> materials;
 
+    public Model(ArrayList<Mesh> meshes,ArrayList<Material> materials) {
+        this.meshes = meshes;
+        this.materials = materials;
+    }
 }
