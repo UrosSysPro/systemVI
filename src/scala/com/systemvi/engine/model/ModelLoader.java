@@ -13,12 +13,13 @@ public class ModelLoader {
         File file=new File(params.fileName);
         System.out.println(file.exists());
         try{
-            AIScene aiScene = aiImportFile(params.fileName,aiProcess_JoinIdenticalVertices | aiProcess_Triangulate | aiProcess_FixInfacingNormals);
+            AIScene aiScene = aiImportFile(params.fileName,params.flags);
             if(aiScene == null){
                 System.out.println("[ERROR] failed to load model");
                 return model;
             }
             System.out.println("aiScene");
+            //meshes
             PointerBuffer meshesBuffer=aiScene.mMeshes();
             int meshCount=aiScene.mNumMeshes();
             for(int i=0; i<meshCount; i++){
@@ -36,12 +37,56 @@ public class ModelLoader {
                 }
             }
 
+            //materials
             int materialCount=aiScene.mNumMaterials();
             PointerBuffer materialsBuffer=aiScene.mMaterials();
             for(int i=0; i<materialCount; i++){
                 AIMaterial aiMaterial=AIMaterial.create(materialsBuffer.get(i));
                 System.out.println("\taiMaterial");
             }
+
+            //textures
+            System.out.println("\tTextures");
+            PointerBuffer textureBuffer=aiScene.mTextures();
+            if(textureBuffer!=null){
+                while(textureBuffer.remaining()>0){
+                    AITexture texture=AITexture.create(textureBuffer.get());
+                    AIString aiString=texture.mFilename();
+                    System.out.println(aiString.dataString());
+                }
+            }else{
+                System.out.println("\tno textures");
+            }
+
+            //node
+            System.out.println("\tnodes");
+            AINode aiNode=aiScene.mRootNode();
+            printNodes(aiNode,"\t\t");
+
+            //cameras
+            System.out.println("\tcameras");
+            PointerBuffer cameraBuffer=aiScene.mCameras();
+            if(cameraBuffer!=null){
+                while (cameraBuffer.remaining()>0){
+                    AICamera aiCamera=AICamera.create(cameraBuffer.get());
+                    System.out.println("\t\tcamera");
+                }
+            }else{
+                System.out.println("\tno cameras");
+            }
+
+            //lights
+            System.out.println("\tlights");
+            PointerBuffer lightBuffer=aiScene.mLights();
+            if(cameraBuffer!=null){
+                while (cameraBuffer.remaining()>0){
+                    AILight aiLight=AILight.create(lightBuffer.get());
+                    System.out.println("\t\tlight");
+                }
+            }else{
+                System.out.println("\tno lights");
+            }
+
 
             model=new Model();
 
@@ -50,5 +95,25 @@ public class ModelLoader {
         }
 
         return model;
+    }
+
+    public static void printNodes(AINode root,String prefix){
+        if(root==null){
+            System.out.println(prefix+"node end null");
+            return;
+        }
+        AIString aiString=root.mName();
+        String name=aiString.dataString();
+        System.out.println(prefix+"node: "+name);
+
+        PointerBuffer nodeBuffer=root.mChildren();
+        if(nodeBuffer==null){
+            System.out.println(prefix+"node end no children");
+            return;
+        }
+        while (nodeBuffer.remaining()>0){
+            AINode node=AINode.create(nodeBuffer.get());
+            printNodes(node,prefix+"\t");
+        }
     }
 }

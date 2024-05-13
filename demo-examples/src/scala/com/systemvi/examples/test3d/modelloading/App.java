@@ -18,6 +18,9 @@ public class App extends Game {
         model = ModelLoader.load(
             ModelLoaderParams.builder()
                 .fileName("assets/examples/models/castle/tower.glb")
+                .triangulate()
+                .fixInfacingNormals()
+                .joinIdenticalVertices()
                 .build()
         );
         if(model==null){
