@@ -23,6 +23,7 @@ public class App extends Game {
                 .joinIdenticalVertices()
                 .build()
         );
+        System.out.println(model.meshes.get(0).materialIndex);
         if(model==null){
             System.out.println("[Error] error loading model");
         }else{

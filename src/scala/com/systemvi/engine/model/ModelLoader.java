@@ -93,13 +93,28 @@ public class ModelLoader {
             AIMaterial aiMaterial=AIMaterial.create(aiScene.mMaterials().get(i));
 
             aiGetMaterialTexture(aiMaterial,aiTextureType_SPECULAR,0,aiString,(IntBuffer) null,null,null,null,null,null);
-//            if(aiString != null && aiString.dataString() != null) System.out.println("specular: "+aiString.dataString());
+            String specularMapFile=aiString.dataString();
+//            System.out.println(specularMapFile.isEmpty() ?"specular ne postoji":specularMapFile);
 
             aiGetMaterialTexture(aiMaterial,aiTextureType_DIFFUSE,0,aiString,(IntBuffer) null,null,null,null,null,null);
-//            if(aiString != null && aiString.dataString() != null) System.out.println("diffuse: "+aiString.dataString());
+            String diffuseMapFile=aiString.dataString();
+//            System.out.println(diffuseMapFile.isEmpty() ?"diffuse ne postoji":diffuseMapFile);
+
+            aiGetMaterialTexture(aiMaterial,aiTextureType_METALNESS,0,aiString,(IntBuffer) null,null,null,null,null,null);
+            String metalnessMapFile=aiString.dataString();
+//            System.out.println(metalnessMapFile.isEmpty() ?"metalness ne postoji":metalnessMapFile);
+
+            aiGetMaterialTexture(aiMaterial,aiTextureType_DISPLACEMENT,0,aiString,(IntBuffer) null,null,null,null,null,null);
+            String displacementMapFile=aiString.dataString();
+//            System.out.println(displacementMapFile.isEmpty() ?"displacement ne postoji":displacementMapFile);
+
+            aiGetMaterialTexture(aiMaterial,aiTextureType_DIFFUSE_ROUGHNESS,0,aiString,(IntBuffer) null,null,null,null,null,null);
+            String roughnessMapFile=aiString.dataString();
+//            System.out.println(roughnessMapFile.isEmpty() ?"roughness ne postoji":roughnessMapFile);
 
             aiGetMaterialTexture(aiMaterial,aiTextureType_NORMALS,0,aiString,(IntBuffer) null,null,null,null,null,null);
-//            if(aiString != null && aiString.dataString() != null) System.out.println("normals: "+aiString.dataString());
+            String normalMapFile=aiString.dataString();
+//            System.out.println(normalMapFile.isEmpty() ?"normals ne postoji":normalMapFile);
 
             result=aiGetMaterialColor(aiMaterial,AI_MATKEY_COLOR_AMBIENT,aiTextureType_NONE,0,aiColor);
             Vector4f ambient=new Vector4f(0.1f,0.1f,0.1f,1.0f);
