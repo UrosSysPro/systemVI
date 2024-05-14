@@ -61,24 +61,51 @@ public class ModelLoader {
             ArrayList<Model.Vertex> vertices=new ArrayList<>();
             AIMesh aiMesh=AIMesh.create(meshesBuffer.get(i));
 
+            String name=aiMesh.mName().dataString();
+
             int numVertices=aiMesh.mNumVertices();
+
             for(int j=0; j<numVertices; j++){
                 AIVector3D position=aiMesh.mVertices().get(j);
                 AIVector3D normal=aiMesh.mNormals().get(j);
                 AIVector3D tangent=aiMesh.mTangents().get(j);
                 AIVector3D bitangent=aiMesh.mBitangents().get(j);
+                ArrayList<Vector3f> texCoords=new ArrayList<>();
+                ArrayList<Vector4f> colors=new ArrayList<>();
+
+                AIVector3D.Buffer texCoordsBuffer=aiMesh.mTextureCoords(i);
+                AIColor4D.Buffer colorsBuffer=aiMesh.mColors(i);
+
+                if(texCoordsBuffer!=null) {
+                    for (int k = 0; k < texCoordsBuffer.sizeof(); k++) {
+                        AIVector3D texCoord = texCoordsBuffer.get(k);
+                        System.out.printf("vertex: %d id: %d %f %f %f\n", i, j, texCoord.x(), texCoord.y(), texCoord.z());
+                        texCoords.add(new Vector3f(texCoord.x(), texCoord.y(), texCoord.z()));
+                    }
+                }
+
+                if(colorsBuffer!=null){
+                    for(int k=0;k<colorsBuffer.sizeof();k++){
+                        AIColor4D color=colorsBuffer.get(k);
+                        System.out.printf("vertex: %d id:  %d %f %f %f\n",i,j,color.r(),color.g(),color.b());
+                        colors.add(new Vector4f(color.r(),color.g(),color.b(),color.a()));
+                    }
+                }
+
                 vertices.add(new Model.Vertex(
                     new Vector3f(position.x(),position.y(),position.z()),
                     new Vector3f(normal.x(),normal.y(),normal.z()),
                     new Vector3f(tangent.x(),tangent.y(),tangent.z()),
-                    new Vector3f(bitangent.x(),bitangent.y(),bitangent.z())
+                    new Vector3f(bitangent.x(),bitangent.y(),bitangent.z()),
+                    texCoords,
+                    colors
                 ));
             }
 
             int materialIndex=aiMesh.mMaterialIndex();
             Model.Material material=materials.get(materialIndex);
 
-            meshes.add(new Model.Mesh(vertices,material,materialIndex));
+            meshes.add(new Model.Mesh(name,vertices,material,materialIndex));
         }
         return meshes;
     }

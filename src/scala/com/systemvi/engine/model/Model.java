@@ -9,21 +9,27 @@ import java.util.ArrayList;
 public class Model {
     public static class Vertex{
         public Vector3f position,normal,tangent,bitangent;
-        public Vertex(Vector3f position, Vector3f normal, Vector3f tangent, Vector3f bitangent){
+        public ArrayList<Vector3f> texCoords;
+        public ArrayList<Vector4f> colors;
+        public Vertex(Vector3f position, Vector3f normal, Vector3f tangent, Vector3f bitangent, ArrayList<Vector3f> texCoords, ArrayList<Vector4f> colors){
             this.position = position;
             this.normal = normal;
             this.tangent = tangent;
             this.bitangent = bitangent;
+            this.texCoords = texCoords;
+            this.colors = colors;
         }
     }
     public static class Mesh{
         public ArrayList<Vertex> vertices;
         public int materialIndex;
         public Material material;
-        public Mesh(ArrayList<Vertex> vertices,Material material, int materialIndex) {
+        public String name;
+        public Mesh(String name,ArrayList<Vertex> vertices,Material material, int materialIndex) {
             this.vertices = vertices;
             this.material = material;
             this.materialIndex = materialIndex;
+            this.name = name;
         }
     }
     public static class Material{
