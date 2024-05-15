@@ -65,6 +65,13 @@ public class ModelLoader {
 
             int numVertices=aiMesh.mNumVertices();
 
+            AIFace.Buffer faces=aiMesh.mFaces();
+
+            while(faces.remaining()>0){
+                AIFace face=faces.get();
+
+            }
+
             for(int j=0; j<numVertices; j++){
                 AIVector3D position=aiMesh.mVertices().get(j);
                 AIVector3D normal=aiMesh.mNormals().get(j);
@@ -79,7 +86,7 @@ public class ModelLoader {
                 if(texCoordsBuffer!=null) {
                     for (int k = 0; k < texCoordsBuffer.sizeof(); k++) {
                         AIVector3D texCoord = texCoordsBuffer.get(k);
-                        System.out.printf("vertex: %d id: %d %f %f %f\n", i, j, texCoord.x(), texCoord.y(), texCoord.z());
+//                        System.out.printf("vertex: %d id: %d %f %f %f\n", i, j, texCoord.x(), texCoord.y(), texCoord.z());
                         texCoords.add(new Vector3f(texCoord.x(), texCoord.y(), texCoord.z()));
                     }
                 }
@@ -87,7 +94,7 @@ public class ModelLoader {
                 if(colorsBuffer!=null){
                     for(int k=0;k<colorsBuffer.sizeof();k++){
                         AIColor4D color=colorsBuffer.get(k);
-                        System.out.printf("vertex: %d id:  %d %f %f %f\n",i,j,color.r(),color.g(),color.b());
+//                        System.out.printf("vertex: %d id:  %d %f %f %f\n",i,j,color.r(),color.g(),color.b());
                         colors.add(new Vector4f(color.r(),color.g(),color.b(),color.a()));
                     }
                 }
