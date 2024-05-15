@@ -7,6 +7,7 @@ import com.systemvi.engine.renderers.TextureRenderer;
 import com.systemvi.engine.texture.Format;
 import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.texture.TextureData;
+import com.systemvi.engine.ui.utils.data.Colors;
 import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
 import org.joml.Matrix4f;
@@ -35,6 +36,14 @@ public class App extends Game {
     public Random r=new Random();
     public TextureData data;
     public CameraController3 controller;
+    public Material[] materials=new Material[]{
+        new Material(0,1, Colors.red500()),   //sphere red
+        new Material(0,1, Colors.green500()),   //sphere green
+        new Material(0,1, Colors.orange500()),   //floor orange
+        new Material(0,0, Colors.blue100())    //sky
+    };
+    ExecutorService service;// = Executors.newFixedThreadPool(threads);
+    Future[] futures;//=new Future[tasks];
 
     public float Map(Vector3f p){
         return SDF.Union(SDF.Sphere(
@@ -46,9 +55,9 @@ public class App extends Game {
             SDF.Plain(SDF.Translate(p, new Vector3f(0, -100, 0))));
     }
 
-    public Vector3f RayMarch(Vector3f ro, Vector3f rd){
+    public Vector3f RayMarch(Vector3f ro, Vector3f rd,int iterations){
         float d = 0;
-        for (int k = 0; k < 100; k++) {
+        for (int k = 0; k < iterations; k++) {
             Vector3f p = new Vector3f(
                 ro.x + rd.x * d,
                 ro.y + rd.y * d,
@@ -77,26 +86,25 @@ public class App extends Game {
         if (SDF.Sphere(
             SDF.Translate(p, new Vector3f(0, 0, -200)),
             100
-
         ) < Epsilon)
-            return new Material(0.3f, 1f, new Vector4f(0.7f, 0.4f, 0.4f, 0));
+            return materials[0];
 
         if (SDF.Sphere(
             SDF.Translate(p, new Vector3f(-100, 200, -300)),
             100
         ) < Epsilon)
-            return new Material(0.6f, 0f, new Vector4f(0.3f, 0.9f, 0.5f, 0));
+            return materials[1];
 
         if (SDF.Plain(SDF.Translate(p, new Vector3f(0, -100, 0))) < Epsilon)
-            return new Material(0.8f, 0f, new Vector4f(0.7f, 0.7f, 0.3f, 1.0f));
+            return materials[2];
 
-        return new Material(0f, 0f, new Vector4f(1f));
+        return materials[3];
     }
 
-    public Vector4f SimulatePhoton(float x, float y, int n, Random r){
+    public Vector4f SimulatePhoton(float x, float y, int bounces, Random r,int iterations){
         Vector4f color = new Vector4f(1);
-        Vector3f[] ro = new Vector3f[n + 1];
-        Vector3f[] rd = new Vector3f[n + 1];
+        Vector3f[] ro = new Vector3f[bounces + 1];
+        Vector3f[] rd = new Vector3f[bounces + 1];
 
         Matrix4f inverted=new Matrix4f(worldCamera.view()).invert();
         Vector4f focus=new Vector4f(0,0,0.7f,1).mul(inverted);
@@ -105,8 +113,8 @@ public class App extends Game {
         ro[0] = new Vector3f(focus.x,focus.y,focus.z);
         rd[0] = new Vector3f(point.x,point.y,point.z).sub(ro[0]).normalize();
 
-        for (int k = 0; k < n; k++) {
-            Vector3f p = RayMarch(ro[k], rd[k]);
+        for (int k = 0; k < bounces; k++) {
+            Vector3f p = RayMarch(ro[k], rd[k],iterations);
             Vector3f normal = getNormal(p);
             Material m = getMaterial(p);
             Vector4f c = m.color;
@@ -119,12 +127,14 @@ public class App extends Game {
 //            rd[k + 1] = new Vector3f(r.nextFloat() * 2 - 1, r.nextFloat() * 2 - 1, r.nextFloat() * 2 - 1).normalize();
 //            if (rd[k + 1].dot(normal) < 0)
 //                rd[k + 1].mul(-1);
-            if (r.nextFloat() < m.metallic || k == 0)
+
+//            if (r.nextFloat() < m.metallic || k == 0)
+            if (r.nextFloat() < m.metallic)
                 color.mul(c);
         }
         return color;
     }
-    public Vector4f calculatePixel(int i,int j){
+    public Vector4f calculatePixel(int i,int j,int bounces,int samples,int iterations){
         float x, y;
         x = i;
         x /= 800;
@@ -137,12 +147,10 @@ public class App extends Game {
 
         Vector4f color = new Vector4f(0);
 
-        int bounces = 7, photons = 10;
-
-        for (int k = 0; k < photons; k++) {
-            color.add(SimulatePhoton(x, y, bounces, r));
+        for (int k = 0; k < samples; k++) {
+            color.add(SimulatePhoton(x, y, bounces, r,iterations));
         }
-        color.div(photons);
+        color.div(samples);
         return color;
     }
 
@@ -155,27 +163,33 @@ public class App extends Game {
         controller = CameraController3.builder()
             .window(window)
             .camera(worldCamera)
+            .speed(10)
             .build();
         setInputProcessor(controller);
 
         texture = new Texture(800, 600, Format.RGBA);
         data = new TextureData(800, 600, Format.RGBA);
 
-        for(int i=6;i<32;i++){
-            int attempts=10;
-            float average=0;
-            for(int j=0;j<attempts;j++){
-                long startTime=System.nanoTime();
-                renderMultiThread(i);
-                long endTime=System.nanoTime();
-                average+=(endTime-startTime)/1000000f;
-            }
-            System.out.println(i+" Threads: "+(average/attempts));
-        }
+//        for(int i=6;i<32;i++){
+//            int attempts=10;
+//            float average=0;
+//            for(int j=0;j<attempts;j++){
+//                long startTime=System.nanoTime();
+//                renderMultiThread(i);
+//                long endTime=System.nanoTime();
+//                average+=(endTime-startTime)/1000000f;
+//            }
+//            System.out.println(i+" Threads: "+(average/attempts));
+//        }
+
+//        renderMultiThread(16,32,3,10,1000);
 
         renderer = new TextureRenderer();
         renderer.view(camera.view());
         renderer.projection(camera.projection());
+        int threads=32,tasks=32;
+        service = Executors.newFixedThreadPool(threads);
+        futures=new Future[tasks];
     }
 
     @Override
@@ -194,47 +208,79 @@ public class App extends Game {
 //                break;
 //            }
 //        }
+//        renderMultiThread(16,32,2,1,100);
+        renderMultiThread(1,1,100);
         texture.setData(data);
         renderer.draw(texture, 0, 0, 800, 600);
         renderer.flush();
     }
 
-    public void renderSingleThread(){
+    @Override
+    public void dispose() {
+        try{
+            service.shutdown();
+            service.awaitTermination(0, TimeUnit.MILLISECONDS);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void renderSingleThread(int bounces, int samples, int iterations){
         long startTime=System.nanoTime();
         for(int i=0;i<800;i++){
                     for(int j=0;j<600;j++){
                         int x=i;
                         int y=j;
-                        data.setPixel4f(x,y,calculatePixel(x,y));
+                        data.setPixel4f(x,y,calculatePixel(x,y,bounces,samples,iterations));
                     }
                 }
         long endTime=System.nanoTime();
         System.out.println((endTime-startTime)/1000_000f);
     }
-    public void renderMultiThread(int threads){
+    public void renderMultiThread(int threads,int tasks,int bounces,int samples,int iterations){
         long startTime=System.nanoTime();
         ExecutorService service = Executors.newFixedThreadPool(threads);
-        Future[] futures=new Future[threads];
-        for(int k=0;k<threads;k++){
+        Future[] futures=new Future[tasks];
+        for(int k=0;k<tasks;k++){
             final int index=k;
             futures[k]=service.submit(()->{
-                for(int i=0;i<800/threads;i++){
+                for(int i=0;i<800/tasks;i++){
                     for(int j=0;j<600;j++){
-                        int x=index*800/threads+i;
+                        int x=index*800/tasks+i;
                         int y=j;
-                        data.setPixel4f(x,y,calculatePixel(x,y));
+                        data.setPixel4f(x,y,calculatePixel(x,y,bounces,samples,iterations));
                     }
                 }
             });
         }
         try{
-            for(int k=0;k<threads;k++){futures[k].get();}
+            for(int k=0;k<tasks;k++){futures[k].get();}
             service.shutdown();
             service.awaitTermination(0, TimeUnit.MILLISECONDS);
         }catch (Exception e){
             e.printStackTrace();
         }
         long endTime=System.nanoTime();
-        System.out.println((endTime-startTime)/1000_000f);
+//        System.out.println((endTime-startTime)/1000_000f);
+    }
+    public void renderMultiThread(int bounces,int samples,int iterations){
+        int tasks=futures.length;
+        for(int k=0;k<tasks;k++){
+            final int index=k;
+            futures[k]=service.submit(()->{
+                for(int i=0;i<800/tasks;i++){
+                    for(int j=0;j<600;j++){
+                        int x=index*800/tasks+i;
+                        int y=j;
+                        data.setPixel4f(x,y,calculatePixel(x,y,bounces,samples,iterations));
+                    }
+                }
+            });
+        }
+        try{
+            for(int k=0;k<tasks;k++){futures[k].get();}
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
