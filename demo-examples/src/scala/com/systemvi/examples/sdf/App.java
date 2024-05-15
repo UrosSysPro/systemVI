@@ -37,10 +37,10 @@ public class App extends Game {
     public TextureData data;
     public CameraController3 controller;
     public Material[] materials=new Material[]{
-        new Material(0,1, Colors.red500()),   //sphere red
-        new Material(0,1, Colors.green500()),   //sphere green
-        new Material(0,1, Colors.orange500()),   //floor orange
-        new Material(0,0, Colors.blue100())    //sky
+        new Material(0,1f, Colors.red500()),   //sphere red
+        new Material(0,1f, Colors.green500()),   //sphere green
+        new Material(0,1f, Colors.orange500()),   //floor orange
+        new Material(0,1, Colors.blue100())    //sky
     };
     ExecutorService service;// = Executors.newFixedThreadPool(threads);
     Future[] futures;//=new Future[tasks];
@@ -107,7 +107,7 @@ public class App extends Game {
         Vector3f[] rd = new Vector3f[bounces + 1];
 
         Matrix4f inverted=new Matrix4f(worldCamera.view()).invert();
-        Vector4f focus=new Vector4f(0,0,0.7f,1).mul(inverted);
+        Vector4f focus=new Vector4f(0,0,2.2f,1).mul(inverted);
         Vector4f point=new Vector4f(x,y,0,1).mul(inverted);
 
         ro[0] = new Vector3f(focus.x,focus.y,focus.z);
@@ -163,7 +163,7 @@ public class App extends Game {
         controller = CameraController3.builder()
             .window(window)
             .camera(worldCamera)
-            .speed(10)
+            .speed(50)
             .build();
         setInputProcessor(controller);
 
@@ -209,7 +209,7 @@ public class App extends Game {
 //            }
 //        }
 //        renderMultiThread(16,32,2,1,100);
-        renderMultiThread(1,1,100);
+        renderMultiThread(4,1,100);
         texture.setData(data);
         renderer.draw(texture, 0, 0, 800, 600);
         renderer.flush();
@@ -263,6 +263,7 @@ public class App extends Game {
         long endTime=System.nanoTime();
 //        System.out.println((endTime-startTime)/1000_000f);
     }
+
     public void renderMultiThread(int bounces,int samples,int iterations){
         int tasks=futures.length;
         for(int k=0;k<tasks;k++){
