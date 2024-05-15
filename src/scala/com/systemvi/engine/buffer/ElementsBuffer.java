@@ -26,11 +26,11 @@ public class ElementsBuffer {
     }
     public void setSubData(int offset,int[] data){
         bind();
-        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, data);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset*4L, data);
     }
     public void setSubData(int offset,short[] data){
         bind();
-        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, data);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset*2L, data);
     }
     public void delete(){
         glDeleteBuffers(id);
