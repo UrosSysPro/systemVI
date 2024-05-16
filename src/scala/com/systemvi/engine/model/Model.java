@@ -57,7 +57,7 @@ public class Model {
             vertexBuffer.bind();
             elementsBuffer.bind();
 
-            int vertexSize=12;
+            int vertexSize=14;
             float[] vertexData=new float[vertices.size()*vertexSize];
             for(int i=0;i<vertices.size();i++){
                 Vertex vertex=vertices.get(i);
@@ -76,13 +76,17 @@ public class Model {
                 vertexData[i*vertexSize+9]=vertex.normal.x;
                 vertexData[i*vertexSize+10]=vertex.normal.y;
                 vertexData[i*vertexSize+11]=vertex.normal.z;
+
+                vertexData[i*vertexSize+12]=vertex.texCoords.get(0).x;
+                vertexData[i*vertexSize+13]=vertex.texCoords.get(0).y;
             }
             vertexBuffer.setData(vertexData);
             vertexBuffer.setVertexAttributes(new VertexAttribute[]{
                 new VertexAttribute("position",3),
                 new VertexAttribute("tangent",3),
                 new VertexAttribute("bitangent",3),
-                new VertexAttribute("normal",3)
+                new VertexAttribute("normal",3),
+                new VertexAttribute("texCoords",2),
             });
 
             int elementsPerFace=3;

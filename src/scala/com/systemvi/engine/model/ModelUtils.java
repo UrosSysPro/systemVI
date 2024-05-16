@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import static org.lwjgl.assimp.Assimp.*;
 
-public class ModelLoader {
+public class ModelUtils {
     public static Model load(ModelLoaderParams params){
         Model model = null;
         try{
@@ -241,5 +241,9 @@ public class ModelLoader {
             children.add(loadNode(aiChildNode,modelMeshes));
         }
         return new Model.Node(name,children,meshIndices,meshes,transform);
+    }
+
+    public static void export(Model model){
+
     }
 }

@@ -4,12 +4,14 @@ layout(location=0)in vec3 position;
 layout(location=1)in vec3 tangent;
 layout(location=2)in vec3 bitangent;
 layout(location=3)in vec3 normal;
+layout(location=4)in vec2 texCoords;
 
 uniform mat4 view;
 uniform mat4 projection;
 
 out VERTEX_OUT{
     vec3 tangent,bitangent,normal,modelPosition,worldPosition;
+    vec2 texCoords;
 }vertexOut;
 
 void main(){
@@ -21,4 +23,5 @@ void main(){
     vertexOut.normal=normal;
     vertexOut.modelPosition=position;
     vertexOut.worldPosition=worldPosition.xyz;
+    vertexOut.texCoords=texCoords;
 }

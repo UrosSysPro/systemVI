@@ -4,7 +4,7 @@ import com.systemvi.engine.application.Game;
 import com.systemvi.engine.camera.Camera3;
 import com.systemvi.engine.camera.CameraController3;
 import com.systemvi.engine.model.Model;
-import com.systemvi.engine.model.ModelLoader;
+import com.systemvi.engine.model.ModelUtils;
 import com.systemvi.engine.model.ModelLoaderParams;
 import com.systemvi.engine.shader.ElementsDataType;
 import com.systemvi.engine.shader.Primitive;
@@ -23,11 +23,12 @@ public class App extends Game {
 
     @Override
     public void setup(Window window) {
-        model = ModelLoader.load(
+        model = ModelUtils.load(
             ModelLoaderParams.builder()
                 .fileName("assets/examples/models/castle/tower.glb")
                 .triangulate()
-//                .fixInfacingNormals()
+                .fixInfacingNormals()
+                .genSmoothNormals()
                 .joinIdenticalVertices()
                 .build()
         );
@@ -51,13 +52,14 @@ public class App extends Game {
         Utils.clear(0,0,0,1, Utils.Buffer.COLOR_BUFFER, Utils.Buffer.DEPTH_BUFFER);
         controller.update(delta);
         Utils.enableDepthTest();
-        Utils.enableFaceCulling();
+        Utils.enableFaceCulling(Utils.Face.BACK);
         Model.Mesh mesh=model.meshes.get(0);
         mesh.bind();
         shader.use();
         shader.setUniform("view",controller.camera().view());
         shader.setUniform("projection",controller.camera().projection());
         shader.drawElements(Primitive.TRIANGLES,mesh.faces.size(), ElementsDataType.UNSIGNED_INT,3);
+//        shader.drawArrays(Primitive.TRIANGLES,0, mesh.vertices.size());
         Utils.disableDepthTest();
         Utils.disableFaceCulling();
     }
