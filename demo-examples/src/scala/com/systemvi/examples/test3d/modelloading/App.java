@@ -6,9 +6,7 @@ import com.systemvi.engine.camera.CameraController3;
 import com.systemvi.engine.model.Model;
 import com.systemvi.engine.model.ModelUtils;
 import com.systemvi.engine.model.ModelLoaderParams;
-import com.systemvi.engine.shader.ElementsDataType;
-import com.systemvi.engine.shader.Primitive;
-import com.systemvi.engine.shader.Shader;
+import com.systemvi.engine.renderers.PhongRenderer;
 import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
 
@@ -19,7 +17,7 @@ public class App extends Game {
 
     public Model model;
     public CameraController3 controller;
-    public Shader shader;
+    public PhongRenderer renderer;
 
     @Override
     public void setup(Window window) {
@@ -41,26 +39,13 @@ public class App extends Game {
             .window(window)
             .build();
         setInputProcessor(controller);
-        shader= Shader.builder()
-            .vertex("assets/models/vertex.glsl")
-            .fragment("assets/models/fragment.glsl")
-            .build();
+        renderer=new PhongRenderer(model);
     }
 
     @Override
     public void loop(float delta) {
         Utils.clear(0,0,0,1, Utils.Buffer.COLOR_BUFFER, Utils.Buffer.DEPTH_BUFFER);
         controller.update(delta);
-        Utils.enableDepthTest();
-        Utils.enableFaceCulling(Utils.Face.BACK);
-        Model.Mesh mesh=model.meshes.get(0);
-        mesh.bind();
-        shader.use();
-        shader.setUniform("view",controller.camera().view());
-        shader.setUniform("projection",controller.camera().projection());
-        shader.drawElements(Primitive.TRIANGLES,mesh.faces.size(), ElementsDataType.UNSIGNED_INT,3);
-//        shader.drawArrays(Primitive.TRIANGLES,0, mesh.vertices.size());
-        Utils.disableDepthTest();
-        Utils.disableFaceCulling();
+        renderer.render(controller.camera());
     }
 }
