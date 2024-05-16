@@ -59,17 +59,23 @@ public class ModelLoader {
         int meshCount=aiScene.mNumMeshes();
         for(int i=0; i < meshCount; i++){
             ArrayList<Model.Vertex> vertices=new ArrayList<>();
+            ArrayList<Model.Face> faces=new ArrayList<>();
             AIMesh aiMesh=AIMesh.create(meshesBuffer.get(i));
 
             String name=aiMesh.mName().dataString();
 
             int numVertices=aiMesh.mNumVertices();
 
-            AIFace.Buffer faces=aiMesh.mFaces();
+            AIFace.Buffer faceBuffer=aiMesh.mFaces();
 
-            while(faces.remaining()>0){
-                AIFace face=faces.get();
-
+            while(faceBuffer.remaining()>0){
+                AIFace face=faceBuffer.get();
+                IntBuffer indices=face.mIndices();
+                faces.add(new Model.Face(new int[]{
+                    indices.get(0),
+                    indices.get(1),
+                    indices.get(2)
+                }));
             }
 
             for(int j=0; j<numVertices; j++){
@@ -112,7 +118,7 @@ public class ModelLoader {
             int materialIndex=aiMesh.mMaterialIndex();
             Model.Material material=materials.get(materialIndex);
 
-            meshes.add(new Model.Mesh(name,vertices,material,materialIndex));
+            meshes.add(new Model.Mesh(name,vertices,material,materialIndex,faces));
         }
         return meshes;
     }

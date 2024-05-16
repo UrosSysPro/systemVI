@@ -6,6 +6,7 @@ import com.systemvi.engine.camera.CameraController3;
 import com.systemvi.engine.model.Model;
 import com.systemvi.engine.model.ModelLoader;
 import com.systemvi.engine.model.ModelLoaderParams;
+import com.systemvi.engine.shader.ElementsDataType;
 import com.systemvi.engine.shader.Primitive;
 import com.systemvi.engine.shader.Shader;
 import com.systemvi.engine.utils.Utils;
@@ -26,14 +27,14 @@ public class App extends Game {
             ModelLoaderParams.builder()
                 .fileName("assets/examples/models/castle/tower.glb")
                 .triangulate()
-                .fixInfacingNormals()
+//                .fixInfacingNormals()
                 .joinIdenticalVertices()
                 .build()
         );
         controller=CameraController3.builder()
             .camera(Camera3.builder3d()
                 .build())
-            .speed(10)
+            .speed(3)
             .window(window)
             .build();
         setInputProcessor(controller);
@@ -45,13 +46,18 @@ public class App extends Game {
 
     @Override
     public void loop(float delta) {
-        Utils.clear(0,0,0,1, Utils.Buffer.COLOR_BUFFER);
+        Utils.clear(0,0,0,1, Utils.Buffer.COLOR_BUFFER, Utils.Buffer.DEPTH_BUFFER);
         controller.update(delta);
+        Utils.enableDepthTest();
+        Utils.disableFaceCulling();
         Model.Mesh mesh=model.meshes.get(0);
         mesh.bind();
         shader.use();
         shader.setUniform("view",controller.camera().view());
         shader.setUniform("projection",controller.camera().projection());
-        shader.drawArrays(Primitive.TRIANGLES,mesh.vertices.size());
+//        shader.drawArrays(Primitive.TRIANGLES,mesh.vertices.size());
+        shader.drawElements(Primitive.TRIANGLES,mesh.vertices.size(), ElementsDataType.UNSIGNED_INT,mesh.faces.size()*3);
+        Utils.disableDepthTest();
+        Utils.disableFaceCulling();
     }
 }

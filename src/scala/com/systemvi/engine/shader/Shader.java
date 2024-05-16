@@ -225,8 +225,8 @@ public class Shader {
     public void drawArrays(Primitive primitive,int count){
         drawArrays(primitive,0,count);
     }
-    public void drawElements(Primitive primitive,int count, ElementsDataType type,int elementsToDraw){
-        glDrawElements(primitive.id,count,type.id,elementsToDraw);
+    public void drawElements(Primitive primitive,int vertexCount, ElementsDataType type,int elementsToDraw){
+        glDrawElements(primitive.id,vertexCount,type.id,elementsToDraw);
     }
     public void drawArraysInstanced(Primitive primitive,int first,int count,int instancesToDraw){
         glDrawArraysInstanced(primitive.id,first,count,instancesToDraw);

@@ -1,6 +1,7 @@
 package com.systemvi.engine.model;
 
 import com.systemvi.engine.buffer.ArrayBuffer;
+import com.systemvi.engine.buffer.ElementsBuffer;
 import com.systemvi.engine.buffer.VertexArray;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -22,28 +23,39 @@ public class Model {
             this.colors = colors;
         }
     }
+    public static class Face{
+        public int[] indices;
+        public Face(int[] indices){
+            this.indices = indices;
+        }
+    }
     public static class Mesh{
         public ArrayList<Vertex> vertices;
+        public ArrayList<Face> faces;
         public int materialIndex;
         public Material material;
         public String name;
 
-        private ArrayBuffer vertexBuffer;
-        private VertexArray vertexArray;
+        private final ArrayBuffer vertexBuffer;
+        private final VertexArray vertexArray;
+        private final ElementsBuffer elementsBuffer;
 
-        public Mesh(String name,ArrayList<Vertex> vertices,Material material, int materialIndex) {
+        public Mesh(String name,ArrayList<Vertex> vertices,Material material, int materialIndex,ArrayList<Face> faces) {
             this.vertices = vertices;
             this.material = material;
             this.materialIndex = materialIndex;
             this.name = name;
+            this.faces=faces;
             vertexArray=new VertexArray();
             vertexBuffer=new ArrayBuffer();
+            elementsBuffer=new ElementsBuffer();
             sendToGpu();
         }
 
         public void sendToGpu(){
             vertexArray.bind();
             vertexBuffer.bind();
+            elementsBuffer.bind();
 
             int vertexSize=12;
             float[] vertexData=new float[vertices.size()*vertexSize];
@@ -72,6 +84,17 @@ public class Model {
                 new VertexAttribute("bitangent",3),
                 new VertexAttribute("normal",3)
             });
+
+            int elementsPerFace=3;
+            int[] elementData=new int[faces.size()*elementsPerFace];
+            for(int i=0;i<faces.size();i++){
+                Face face=faces.get(i);
+                elementData[i*elementsPerFace+0]=face.indices[0];
+                elementData[i*elementsPerFace+1]=face.indices[1];
+                elementData[i*elementsPerFace+2]=face.indices[2];
+            }
+            elementsBuffer.setData(elementData);
+
             vertexArray.unbind();
         }
 
