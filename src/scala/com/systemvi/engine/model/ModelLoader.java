@@ -65,11 +65,12 @@ public class ModelLoader {
             String name=aiMesh.mName().dataString();
 
             int numVertices=aiMesh.mNumVertices();
+            int numFaces=aiMesh.mNumFaces();
 
             AIFace.Buffer faceBuffer=aiMesh.mFaces();
 
-            while(faceBuffer.remaining()>0){
-                AIFace face=faceBuffer.get();
+            for(int j=0;j<numFaces;j++){
+                AIFace face=faceBuffer.get(j);
                 IntBuffer indices=face.mIndices();
                 faces.add(new Model.Face(new int[]{
                     indices.get(0),
