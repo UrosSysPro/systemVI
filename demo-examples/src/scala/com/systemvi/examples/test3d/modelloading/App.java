@@ -36,6 +36,7 @@ public class App extends Game {
             .camera(Camera3.builder3d()
                 .build())
             .speed(3)
+            .aspect((float) window.getWidth() /window.getHeight())
             .window(window)
             .build();
         setInputProcessor(controller);
@@ -57,7 +58,7 @@ public class App extends Game {
         shader.setUniform("view",controller.camera().view());
         shader.setUniform("projection",controller.camera().projection());
 //        shader.drawArrays(Primitive.TRIANGLES,mesh.vertices.size());
-        shader.drawElements(Primitive.TRIANGLES,mesh.faces.size()*3, ElementsDataType.UNSIGNED_INT,0);
+        shader.drawElements(Primitive.TRIANGLES,mesh.faces.size(), ElementsDataType.UNSIGNED_INT,3);
         Utils.disableDepthTest();
         Utils.disableFaceCulling();
     }

@@ -225,9 +225,14 @@ public class Shader {
     public void drawArrays(Primitive primitive,int count){
         drawArrays(primitive,0,count);
     }
-    public void drawElements(Primitive primitive,int vertexCount, ElementsDataType type,int elementsToDraw){
-        glDrawElements(primitive.id,vertexCount,type.id,elementsToDraw);
+    /**
+     * @param elements number of faces,lines, whatever is being rendered
+     * @param indicesPerElement number of indices per face,line... 3 for triangles
+     * */
+    public void drawElements(Primitive primitive,int elements, ElementsDataType type,int indicesPerElement){
+        glDrawElements(primitive.id,elements*indicesPerElement,type.id,0);
     }
+
     public void drawArraysInstanced(Primitive primitive,int first,int count,int instancesToDraw){
         glDrawArraysInstanced(primitive.id,first,count,instancesToDraw);
     }
