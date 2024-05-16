@@ -34,8 +34,14 @@ public class App extends Game {
                 .build()
         );
         model.root.children.add(
-            new Model.Node("new node",new ArrayList<>(),new ArrayList<>(){{add(0);}},new ArrayList<>(),new Matrix4f().scale(0.3f).translate(1,1,1))
+            new Model.Node("new node",
+                new ArrayList<>(),
+                new ArrayList<>(){{add(0);}},
+                new ArrayList<>(){{add(model.meshes.get(0));}},
+                new Matrix4f().translate(1,1,1).scale(0.3f)
+            )
         );
+        model.root.transform.rotateXYZ(0.3f,0,0.4f);
         System.out.println("meshes: "+model.meshes.get(0).vertices.get(0).texCoords.size());
         controller=CameraController3.builder()
             .camera(Camera3.builder3d()

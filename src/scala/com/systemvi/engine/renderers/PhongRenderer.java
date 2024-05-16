@@ -119,7 +119,7 @@ public class PhongRenderer {
 
     private void render(Camera3 camera,Matrix4f transform,Matrix4f model,Model.Node node){
         Matrix4f nodeTransform=new Matrix4f(node.transform);
-        System.out.println(node.name);
+//        System.out.println(node.name);
         model.mul(nodeTransform);
         for(int i=0;i<node.meshes.size();i++){
             Model.Mesh mesh=node.meshes.get(i);
@@ -136,7 +136,7 @@ public class PhongRenderer {
         for(Model.Node child:node.children){
             render(camera,transform,model,child);
         }
-        model.mul(nodeTransform.invert());
+        model.mul(nodeTransform.invertAffine());
 
     }
 }
