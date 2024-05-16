@@ -9,13 +9,16 @@ uniform mat4 view;
 uniform mat4 projection;
 
 out VERTEX_OUT{
-    vec3 tangent,bitangent,normal;
+    vec3 tangent,bitangent,normal,modelPosition,worldPosition;
 }vertexOut;
 
 void main(){
+    vec4 worldPosition=vec4(position,1.0);
+    gl_Position=projection*view*worldPosition;
+
     vertexOut.tangent=tangent;
     vertexOut.bitangent=bitangent;
     vertexOut.normal=normal;
-
-    gl_Position=projection*view*vec4(position,1.0);
+    vertexOut.modelPosition=position;
+    vertexOut.worldPosition=worldPosition.xyz;
 }

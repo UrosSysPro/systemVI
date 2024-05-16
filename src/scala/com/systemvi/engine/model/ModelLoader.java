@@ -135,27 +135,24 @@ public class ModelLoader {
 
             aiGetMaterialTexture(aiMaterial,aiTextureType_SPECULAR,0,aiString,(IntBuffer) null,null,null,null,null,null);
             String specularMapFile=aiString.dataString();
-//            System.out.println(specularMapFile.isEmpty() ?"specular ne postoji":specularMapFile);
 
             aiGetMaterialTexture(aiMaterial,aiTextureType_DIFFUSE,0,aiString,(IntBuffer) null,null,null,null,null,null);
             String diffuseMapFile=aiString.dataString();
-//            System.out.println(diffuseMapFile.isEmpty() ?"diffuse ne postoji":diffuseMapFile);
 
             aiGetMaterialTexture(aiMaterial,aiTextureType_METALNESS,0,aiString,(IntBuffer) null,null,null,null,null,null);
             String metalnessMapFile=aiString.dataString();
-//            System.out.println(metalnessMapFile.isEmpty() ?"metalness ne postoji":metalnessMapFile);
 
             aiGetMaterialTexture(aiMaterial,aiTextureType_DISPLACEMENT,0,aiString,(IntBuffer) null,null,null,null,null,null);
             String displacementMapFile=aiString.dataString();
-//            System.out.println(displacementMapFile.isEmpty() ?"displacement ne postoji":displacementMapFile);
 
             aiGetMaterialTexture(aiMaterial,aiTextureType_DIFFUSE_ROUGHNESS,0,aiString,(IntBuffer) null,null,null,null,null,null);
             String roughnessMapFile=aiString.dataString();
-//            System.out.println(roughnessMapFile.isEmpty() ?"roughness ne postoji":roughnessMapFile);
 
             aiGetMaterialTexture(aiMaterial,aiTextureType_NORMALS,0,aiString,(IntBuffer) null,null,null,null,null,null);
             String normalMapFile=aiString.dataString();
-//            System.out.println(normalMapFile.isEmpty() ?"normals ne postoji":normalMapFile);
+
+            aiGetMaterialTexture(aiMaterial,aiTextureType_AMBIENT_OCCLUSION,0,aiString,(IntBuffer) null,null,null,null,null,null);
+            String ambientOclusionMapFile=aiString.dataString();
 
             result=aiGetMaterialColor(aiMaterial,AI_MATKEY_COLOR_AMBIENT,aiTextureType_NONE,0,aiColor);
             Vector4f ambient=new Vector4f(0.1f,0.1f,0.1f,1.0f);
@@ -169,9 +166,36 @@ public class ModelLoader {
             Vector4f specular=new Vector4f(0.1f,0.1f,0.1f,1.0f);
             if(result==0)specular.set(aiColor.r(),aiColor.g(),aiColor.b(),aiColor.a());
 
-            materials.add(new Model.Material(
-                ambient,diffuse,specular
-            ));
+            result=aiGetMaterialColor(aiMaterial,AI_MATKEY_COLOR_EMISSIVE,aiTextureType_NONE,0,aiColor);
+            Vector4f emissive=new Vector4f(0.1f,0.1f,0.1f,1.0f);
+            if(result==0)emissive.set(aiColor.r(),aiColor.g(),aiColor.b(),aiColor.a());
+
+            result=aiGetMaterialColor(aiMaterial,AI_MATKEY_COLOR_REFLECTIVE,aiTextureType_NONE,0,aiColor);
+            Vector4f reflective=new Vector4f(0.1f,0.1f,0.1f,1.0f);
+            if(result==0)reflective.set(aiColor.r(),aiColor.g(),aiColor.b(),aiColor.a());
+
+            result=aiGetMaterialColor(aiMaterial,AI_MATKEY_COLOR_TRANSPARENT,aiTextureType_NONE,0,aiColor);
+            Vector4f transparent=new Vector4f(0.1f,0.1f,0.1f,1.0f);
+            if(result==0)transparent.set(aiColor.r(),aiColor.g(),aiColor.b(),aiColor.a());
+
+
+            materials.add(
+                new Model.Material(
+                    ambient,
+                    diffuse,
+                    specular,
+                    emissive,
+                    reflective,
+                    transparent,
+                    diffuseMapFile,
+                    specularMapFile,
+                    ambientOclusionMapFile,
+                    metalnessMapFile,
+                    displacementMapFile,
+                    roughnessMapFile,
+                    normalMapFile
+                )
+            );
         }
         return materials;
     }

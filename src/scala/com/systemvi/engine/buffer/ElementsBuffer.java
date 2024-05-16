@@ -18,7 +18,6 @@ public class ElementsBuffer {
     }
     public void setData(int[] data){
         bind();
-//        glBufferData(GL_ELEMENT_ARRAY_BUFFER,data.length,GL_STATIC_DRAW);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, data, GL_STATIC_DRAW);
     }
     public void setData(short[] data){

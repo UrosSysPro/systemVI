@@ -110,11 +110,36 @@ public class Model {
         }
     }
     public static class Material{
-        public Vector4f ambient,diffuse,specular;
-        public Material(Vector4f ambient, Vector4f diffuse, Vector4f specular){
+        public final Vector4f ambient,diffuse,specular,emissive,reflective,transparent;
+        public final String diffuseFile,specularFile,ambientOclusionFile,metalnessFile,displacementFile,roughnessFile,normalFile;
+        public Material(
+            Vector4f ambient,
+            Vector4f diffuse,
+            Vector4f specular,
+            Vector4f emissive,
+            Vector4f reflective,
+            Vector4f transparent,
+            String diffuseFile,
+            String specularFile,
+            String ambientOclusionFile,
+            String metalnessFile,
+            String displacementFile,
+            String roughnessFile,
+            String normalFile
+            ){
             this.ambient = ambient;
             this.diffuse = diffuse;
             this.specular = specular;
+            this.emissive=emissive;
+            this.reflective=reflective;
+            this.transparent=transparent;
+            this.roughnessFile=roughnessFile;
+            this.displacementFile=displacementFile;
+            this.diffuseFile = diffuseFile;
+            this.specularFile = specularFile;
+            this.metalnessFile=metalnessFile;
+            this.ambientOclusionFile = ambientOclusionFile;
+            this.normalFile=normalFile;
         }
     }
     public static class Light{
