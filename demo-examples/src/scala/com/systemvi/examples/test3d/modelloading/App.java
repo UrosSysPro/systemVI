@@ -9,6 +9,9 @@ import com.systemvi.engine.model.ModelLoaderParams;
 import com.systemvi.engine.renderers.PhongRenderer;
 import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
+import org.joml.Matrix4f;
+
+import java.util.ArrayList;
 
 public class App extends Game {
     public App(){
@@ -30,6 +33,9 @@ public class App extends Game {
                 .joinIdenticalVertices()
                 .build()
         );
+        model.root.children.add(
+            new Model.Node("new node",new ArrayList<>(),new ArrayList<>(){{add(0);}},new ArrayList<>(),new Matrix4f().scale(0.3f).translate(1,1,1))
+        );
         System.out.println("meshes: "+model.meshes.get(0).vertices.get(0).texCoords.size());
         controller=CameraController3.builder()
             .camera(Camera3.builder3d()
@@ -46,6 +52,8 @@ public class App extends Game {
     public void loop(float delta) {
         Utils.clear(0,0,0,1, Utils.Buffer.COLOR_BUFFER, Utils.Buffer.DEPTH_BUFFER);
         controller.update(delta);
-        renderer.render(controller.camera());
+        renderer.render(controller.camera(),new Matrix4f().translate(2,0,0));
+        renderer.render(controller.camera(),new Matrix4f().translate(-2,0,0));
+        renderer.render(controller.camera(),new Matrix4f().translate(0,0,0));
     }
 }

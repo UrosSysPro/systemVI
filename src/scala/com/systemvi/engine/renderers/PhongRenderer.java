@@ -10,6 +10,7 @@ import com.systemvi.engine.shader.ElementsDataType;
 import com.systemvi.engine.shader.Primitive;
 import com.systemvi.engine.shader.Shader;
 import com.systemvi.engine.utils.Utils;
+import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 
@@ -108,19 +109,34 @@ public class PhongRenderer {
             .build();
     }
 
-    public void render(Camera3 camera){
+    public void render(Camera3 camera, Matrix4f transform){
         Utils.enableDepthTest();
         Utils.enableFaceCulling(Utils.Face.BACK);
-        for(int i=0;i<model.meshes.size();i++){
-            Model.Mesh mesh=model.meshes.get(i);
+        render(camera,transform,new Matrix4f(),model.root);
+        Utils.disableDepthTest();
+        Utils.disableFaceCulling();
+    }
+
+    private void render(Camera3 camera,Matrix4f transform,Matrix4f model,Model.Node node){
+        Matrix4f nodeTransform=new Matrix4f(node.transform);
+        System.out.println(node.name);
+        model.mul(nodeTransform);
+        for(int i=0;i<node.meshes.size();i++){
+            Model.Mesh mesh=node.meshes.get(i);
             MeshGpuData meshGpuData=this.meshGpuData.get(i);
             meshGpuData.bind();
             shader.use();
+            shader.setUniform("model", model);
+            shader.setUniform("transform",transform);
             shader.setUniform("view",camera.view());
             shader.setUniform("projection",camera.projection());
             shader.drawElements(Primitive.TRIANGLES,mesh.faces.size(), ElementsDataType.UNSIGNED_INT,3);
         }
-        Utils.disableDepthTest();
-        Utils.disableFaceCulling();
+
+        for(Model.Node child:node.children){
+            render(camera,transform,model,child);
+        }
+        model.mul(nodeTransform.invert());
+
     }
 }

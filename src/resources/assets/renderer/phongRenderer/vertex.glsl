@@ -8,6 +8,8 @@ layout(location=4)in vec2 texCoords;
 
 uniform mat4 view;
 uniform mat4 projection;
+uniform mat4 transform;
+uniform mat4 model;
 
 out VERTEX_OUT{
     vec3 tangent,bitangent,normal,modelPosition,worldPosition;
@@ -15,7 +17,7 @@ out VERTEX_OUT{
 }vertexOut;
 
 void main(){
-    vec4 worldPosition=vec4(position,1.0);
+    vec4 worldPosition=transform*model*vec4(position,1.0);
     gl_Position=projection*view*worldPosition;
 
     vertexOut.tangent=tangent;
