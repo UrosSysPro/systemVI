@@ -26,23 +26,14 @@ public class App extends Game {
     public void setup(Window window) {
         model = ModelUtils.load(
             ModelLoaderParams.builder()
-                .fileName("assets/examples/models/castle/tower.glb")
+                .fileName("assets/examples/models/cars/sedan-sports.glb")
                 .triangulate()
-                .fixInfacingNormals()
-                .genSmoothNormals()
-                .joinIdenticalVertices()
+//                .fixInfacingNormals()
+//                .genSmoothNormals()
+//                .joinIdenticalVertices()
                 .build()
         );
-        model.root.children.add(
-            new Model.Node("new node",
-                new ArrayList<>(),
-                new ArrayList<>(){{add(0);}},
-                new ArrayList<>(){{add(model.meshes.get(0));}},
-                new Matrix4f().translate(1,1,1).scale(0.3f)
-            )
-        );
-        model.root.transform.rotateXYZ(0.3f,0,0.4f);
-        System.out.println("meshes: "+model.meshes.get(0).vertices.get(0).texCoords.size());
+//        model.root.children.get(0).children.get(0).meshIndices.set(0,3);
         controller=CameraController3.builder()
             .camera(Camera3.builder3d()
                 .build())
@@ -52,6 +43,21 @@ public class App extends Game {
             .build();
         setInputProcessor(controller);
         renderer=new PhongRenderer(model);
+        System.out.println(model.meshes.size());
+        print(model.root,"");
+        System.out.println("meshes: "+model.meshes.size());
+        System.out.println("materials: "+model.materials.size());
+    }
+
+    public void print(Model.Node node,String prefix){
+        System.out.print(prefix+node.name+" "+node.children.size()+" ");
+        for(int i=0;i<node.meshIndices.size();i++){
+            System.out.print(node.meshIndices.get(i));
+        }
+        System.out.println();
+        for(int i=0;i<node.children.size();i++){
+            print(node.children.get(i),prefix+"\t");
+        }
     }
 
     @Override

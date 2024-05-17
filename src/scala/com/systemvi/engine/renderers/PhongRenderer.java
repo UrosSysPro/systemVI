@@ -11,6 +11,7 @@ import com.systemvi.engine.shader.Primitive;
 import com.systemvi.engine.shader.Shader;
 import com.systemvi.engine.utils.Utils;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 
@@ -54,8 +55,9 @@ public class PhongRenderer {
                 vertexData[i*vertexSize+10]=vertex.normal.y;
                 vertexData[i*vertexSize+11]=vertex.normal.z;
 
-                vertexData[i*vertexSize+12]=vertex.texCoords.get(0).x;
-                vertexData[i*vertexSize+13]=vertex.texCoords.get(0).y;
+                Vector3f texCoords = !vertex.texCoords.isEmpty() ? vertex.texCoords.get(0):new Vector3f(0,0,0);
+                vertexData[i*vertexSize+12]=texCoords.x;
+                vertexData[i*vertexSize+13]=texCoords.y;
             }
             vertexBuffer.setData(vertexData);
             vertexBuffer.setVertexAttributes(new VertexAttribute[]{
@@ -111,19 +113,20 @@ public class PhongRenderer {
 
     public void render(Camera3 camera, Matrix4f transform){
         Utils.enableDepthTest();
-        Utils.enableFaceCulling(Utils.Face.BACK);
+//        Utils.enableFaceCulling(Utils.Face.BACK);
         render(camera,transform,new Matrix4f(),model.root);
         Utils.disableDepthTest();
         Utils.disableFaceCulling();
     }
 
     private void render(Camera3 camera,Matrix4f transform,Matrix4f model,Model.Node node){
-        Matrix4f nodeTransform=new Matrix4f(node.transform);
+        Matrix4f nodeTransform=new Matrix4f().set(node.transform);
 //        System.out.println(node.name);
         model.mul(nodeTransform);
         for(int i=0;i<node.meshes.size();i++){
+            int meshIndex=node.meshIndices.get(i);
             Model.Mesh mesh=node.meshes.get(i);
-            MeshGpuData meshGpuData=this.meshGpuData.get(i);
+            MeshGpuData meshGpuData=this.meshGpuData.get(meshIndex);
             meshGpuData.bind();
             shader.use();
             shader.setUniform("model", model);

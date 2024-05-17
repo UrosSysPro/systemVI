@@ -33,26 +33,6 @@ public class ModelUtils {
         return model;
     }
 
-    public static void printNodes(AINode root,String prefix){
-        if(root==null){
-            System.out.println(prefix+"node end null");
-            return;
-        }
-        AIString aiString=root.mName();
-        String name=aiString.dataString();
-        System.out.println(prefix+"node: "+name);
-
-        PointerBuffer nodeBuffer=root.mChildren();
-        if(nodeBuffer==null){
-            System.out.println(prefix+"node end no children");
-            return;
-        }
-        while (nodeBuffer.remaining()>0){
-            AINode node=AINode.create(nodeBuffer.get());
-            printNodes(node,prefix+"\t");
-        }
-    }
-
     private static ArrayList<Model.Mesh> loadMeshes(AIScene aiScene,ArrayList<Model.Material> materials){
         ArrayList<Model.Mesh> meshes=new ArrayList<>();
         PointerBuffer meshesBuffer=aiScene.mMeshes();
@@ -211,23 +191,19 @@ public class ModelUtils {
         String name = aiString.dataString();
         //transform
         AIMatrix4x4 t=aiNode.mTransformation();
+
         Matrix4f transform=new Matrix4f(
-            t.a1(),t.a2(),t.a3(),t.a4(),
-            t.b1(),t.b2(),t.b3(),t.b4(),
-            t.c1(),t.c2(),t.c3(),t.c4(),
-            t.d1(),t.d2(),t.d3(),t.d4()
+            t.a1(),t.b1(),t.c1(),t.d1(),
+            t.a2(),t.b2(),t.c2(),t.d2(),
+            t.a3(),t.b3(),t.c3(),t.d3(),
+            t.a4(),t.b4(),t.c4(),t.d4()
         );
-//        Matrix4f transform=new Matrix4f(
-//            t.a1(),t.b1(),t.c1(),t.d1(),
-//            t.a2(),t.b2(),t.c2(),t.d2(),
-//            t.a3(),t.b3(),t.c3(),t.d3(),
-//            t.a4(),t.b4(),t.c4(),t.d4()
-//        );
         //meshes
+        int meshCount=aiNode.mNumMeshes();
         IntBuffer meshIndicesBuffer=aiNode.mMeshes();
         ArrayList<Integer> meshIndices=new ArrayList<>();
-        while(meshIndicesBuffer.remaining()>0){
-            meshIndices.add(meshIndicesBuffer.get());
+        for(int i=0;i<meshCount;i++){
+            meshIndices.add(meshIndicesBuffer.get(i));
         }
         ArrayList<Model.Mesh> meshes=new ArrayList<>();
         for (Integer meshIndex : meshIndices) {
