@@ -2,12 +2,15 @@ package com.systemvi.engine.math.sdf
 
 import org.joml.Vector3f
 
-class SDF {
-  def sphere(p:Vector3f, s: Float): Float = p.length()- s
-
-  def box(p: Vector3f, b: Vector3f): Float = {
-    val q = new Vector3f(p.absolute()).sub(b)
-    q.max(new Vector3f(0)).length()+Math.min(Math.max(q.x,Math.max(q.y,q.z)),0)
-  }
-  def union(d0:Float,d1:Float): Unit = Math.min(d0,d1)
+object Translate{
+  def apply(position:Vector3f,translate:Vector3f):Vector3f = new Vector3f(position).sub(translate)
+}
+object Sphere{
+  def apply(position:Vector3f, translate:Vector3f=new Vector3f(0), r:Float=1): Float = Translate(position,translate).length()-r
+}
+object Union{
+  def apply(d:Float*): Float = d.foldLeft(Float.MaxValue){(acc,d)=>Math.min(acc,d)}
+}
+object Box{
+  def apply(position:Vector3f, translate:Vector3f, rotation:Vector3f, scale:Vector3f): Float = 0
 }
