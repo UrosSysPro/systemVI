@@ -10,9 +10,11 @@ import com.systemvi.engine.model.VertexAttribute;
 import com.systemvi.engine.shader.ElementsDataType;
 import com.systemvi.engine.shader.Primitive;
 import com.systemvi.engine.shader.Shader;
+import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.utils.Utils;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import java.util.ArrayList;
 
@@ -36,7 +38,7 @@ public class PhongRenderer {
             ArrayList<Vertex> vertices=mesh.vertices;
             ArrayList<Face> faces=mesh.faces;
 
-            int vertexSize=14;
+            int vertexSize=18;
             float[] vertexData=new float[vertices.size()*vertexSize];
             for(int i=0;i<vertices.size();i++){
                 Vertex vertex=vertices.get(i);
@@ -59,6 +61,12 @@ public class PhongRenderer {
                 Vector3f texCoords = !vertex.texCoords.isEmpty() ? vertex.texCoords.get(0):new Vector3f(0,0,0);
                 vertexData[i*vertexSize+12]=texCoords.x;
                 vertexData[i*vertexSize+13]=texCoords.y;
+
+                Vector4f color=!vertex.colors.isEmpty()? vertex.colors.get(0):new Vector4f(1,1,1,1);
+                vertexData[i*vertexSize+14]=color.x;
+                vertexData[i*vertexSize+15]=color.y;
+                vertexData[i*vertexSize+16]=color.z;
+                vertexData[i*vertexSize+17]=color.w;
             }
             vertexBuffer.setData(vertexData);
             vertexBuffer.setVertexAttributes(new VertexAttribute[]{
@@ -67,6 +75,7 @@ public class PhongRenderer {
                 new VertexAttribute("bitangent",3),
                 new VertexAttribute("normal",3),
                 new VertexAttribute("texCoords",2),
+                new VertexAttribute("color",4)
             });
 
             int elementsPerFace=3;
@@ -98,6 +107,7 @@ public class PhongRenderer {
     public static class Builder{
         private Camera3 camera=null;
         private Model model=null;
+        private String texturesFolder="";
         public Builder camera(Camera3 camera){
             this.camera=camera;
             return this;
@@ -106,8 +116,12 @@ public class PhongRenderer {
             this.model=model;
             return this;
         }
+        public Builder texturesFolder(String texturesFolder){
+            this.texturesFolder=texturesFolder;
+            return this;
+        }
         public PhongRenderer build(){
-            return new PhongRenderer(model,camera);
+            return new PhongRenderer(model,camera,texturesFolder);
         }
     }
     public static Builder builder(){
@@ -118,10 +132,13 @@ public class PhongRenderer {
     private Shader shader;
     private Model model;
     private Camera3 camera;
+    private String texturesFolder;
 
-    public PhongRenderer(Model model,Camera3 camera){
+    public PhongRenderer(Model model,Camera3 camera,String texturesFolder){
         this.model = model;
         this.camera = camera;
+        this.texturesFolder=texturesFolder;
+
         meshGpuData=new ArrayList<>();
 
         if(model!=null) setModel(model);

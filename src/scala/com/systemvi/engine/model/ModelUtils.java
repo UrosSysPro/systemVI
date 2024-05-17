@@ -71,19 +71,13 @@ public class ModelUtils {
                 AIColor4D.Buffer colorsBuffer=aiMesh.mColors(i);
 
                 if(texCoordsBuffer!=null) {
-                    for (int k = 0; k < texCoordsBuffer.sizeof(); k++) {
-                        AIVector3D texCoord = texCoordsBuffer.get(k);
-//                        System.out.printf("vertex: %d id: %d %f %f %f\n", i, j, texCoord.x(), texCoord.y(), texCoord.z());
-                        texCoords.add(new Vector3f(texCoord.x(), texCoord.y(), texCoord.z()));
-                    }
+                    AIVector3D texCoord=texCoordsBuffer.get(0);
+                    texCoords.add(new Vector3f(texCoord.x(),texCoord.y(),texCoord.z()));
                 }
 
                 if(colorsBuffer!=null){
-                    for(int k=0;k<colorsBuffer.sizeof();k++){
-                        AIColor4D color=colorsBuffer.get(k);
-//                        System.out.printf("vertex: %d id:  %d %f %f %f\n",i,j,color.r(),color.g(),color.b());
-                        colors.add(new Vector4f(color.r(),color.g(),color.b(),color.a()));
-                    }
+                    AIColor4D color=colorsBuffer.get(0);
+                    colors.add(new Vector4f(color.r(),color.g(),color.b(),color.a()));
                 }
 
                 vertices.add(new Model.Vertex(
