@@ -33,14 +33,15 @@ public class App extends Game {
     Camera3 camera, worldCamera;
     TextureRenderer renderer;
     final float Epsilon = 0.001f;
+    final float focalLength=0.7f;
     public Random r=new Random();
     public TextureData data;
     public CameraController3 controller;
     public Material[] materials=new Material[]{
-        new Material(0,1f, Colors.red500()),   //sphere red
-        new Material(0,1f, Colors.green500()),   //sphere green
-        new Material(0,1f, Colors.orange500()),   //floor orange
-        new Material(0,1, Colors.blue100())    //sky
+        new Material(0.3f,1f, Colors.red500()),   //sphere red
+        new Material(0.3f,1f, Colors.green500()),   //sphere green
+        new Material(0.3f,1f, Colors.orange500()),   //floor orange
+        new Material(0.3f,1, Colors.blue100())    //sky
     };
     ExecutorService service;// = Executors.newFixedThreadPool(threads);
     Future[] futures;//=new Future[tasks];
@@ -107,7 +108,7 @@ public class App extends Game {
         Vector3f[] rd = new Vector3f[bounces + 1];
 
         Matrix4f inverted=new Matrix4f(worldCamera.view()).invert();
-        Vector4f focus=new Vector4f(0,0,2.2f,1).mul(inverted);
+        Vector4f focus=new Vector4f(0,0,focalLength,1).mul(inverted);
         Vector4f point=new Vector4f(x,y,0,1).mul(inverted);
 
         ro[0] = new Vector3f(focus.x,focus.y,focus.z);
@@ -198,18 +199,18 @@ public class App extends Game {
         System.out.printf("%4d \r",getFPS());
         controller.update(delta);
 
-//        for(int i=0;i<1000;i++){
-//            int x=r.nextInt(800),y=r.nextInt(600);
-//            try{
-//                data.setPixel4f(x,y,calculatePixel(x,y));
-//            }catch (Exception e){
-//                System.out.println(x+" "+y);
-//                close();
-//                break;
-//            }
-//        }
+        for(int i=0;i<1000;i++){
+            int x=r.nextInt(800),y=r.nextInt(600);
+            try{
+                data.setPixel4f(x,y,calculatePixel(x,y,10,20,500));
+            }catch (Exception e){
+                System.out.println(x+" "+y);
+                close();
+                break;
+            }
+        }
 //        renderMultiThread(16,32,2,1,100);
-        renderMultiThread(4,1,100);
+//        renderMultiThread(4,1,100);
         texture.setData(data);
         renderer.draw(texture, 0, 0, 800, 600);
         renderer.flush();
@@ -237,6 +238,7 @@ public class App extends Game {
         long endTime=System.nanoTime();
         System.out.println((endTime-startTime)/1000_000f);
     }
+
     public void renderMultiThread(int threads,int tasks,int bounces,int samples,int iterations){
         long startTime=System.nanoTime();
         ExecutorService service = Executors.newFixedThreadPool(threads);
