@@ -210,10 +210,11 @@ public class ModelUtils {
             meshes.add(modelMeshes.get(meshIndex));
         }
         //children
+        int childCount=aiNode.mNumChildren();
         ArrayList<Model.Node> children=new ArrayList<>();
         PointerBuffer childrenBuffer=aiNode.mChildren();
-        if(childrenBuffer!=null){
-            AINode aiChildNode=AINode.create(childrenBuffer.get());
+        for(int i=0;i<childCount;i++){
+            AINode aiChildNode=AINode.create(childrenBuffer.get(i));
             children.add(loadNode(aiChildNode,modelMeshes));
         }
         return new Model.Node(name,children,meshIndices,meshes,transform);
