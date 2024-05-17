@@ -3,6 +3,7 @@ package com.systemvi.engine.renderers;
 import com.systemvi.engine.buffer.ArrayBuffer;
 import com.systemvi.engine.buffer.ElementsBuffer;
 import com.systemvi.engine.buffer.VertexArray;
+import com.systemvi.engine.camera.Camera;
 import com.systemvi.engine.camera.Camera3;
 import com.systemvi.engine.model.Model;
 import com.systemvi.engine.model.VertexAttribute;
@@ -94,32 +95,75 @@ public class PhongRenderer {
     private static class MaterialGpuData{
 
     }
+    public static class Builder{
+        private Camera3 camera=null;
+        private Model model=null;
+        public Builder camera(Camera3 camera){
+            this.camera=camera;
+            return this;
+        }
+        public Builder model(Model model){
+            this.model=model;
+            return this;
+        }
+        public PhongRenderer build(){
+            return new PhongRenderer(model,camera);
+        }
+    }
+    public static Builder builder(){
+        return new Builder();
+    }
 
     private ArrayList<MeshGpuData> meshGpuData;
     private Shader shader;
     private Model model;
+    private Camera3 camera;
 
-    public PhongRenderer(Model model){
-        this.model=model;
+    public PhongRenderer(Model model,Camera3 camera){
+        this.model = model;
+        this.camera = camera;
         meshGpuData=new ArrayList<>();
-        for(Model.Mesh mesh:model.meshes){
-            meshGpuData.add(new MeshGpuData(mesh));
-        }
-        shader= Shader.builder()
+
+        if(model!=null) setModel(model);
+
+        shader = Shader.builder()
             .vertex("assets/renderer/phongRenderer/vertex.glsl")
             .fragment("assets/renderer/phongRenderer/fragment.glsl")
             .build();
     }
 
-    public void render(Camera3 camera, Matrix4f transform){
+    public void setModel(Model model){
+        deleteMeshGpuData();
+        meshGpuData=new ArrayList<>();
+        for(Model.Mesh mesh:model.meshes){
+            meshGpuData.add(new MeshGpuData(mesh));
+        }
+    }
+
+    private void deleteMeshGpuData(){
+        for(MeshGpuData meshGpuData:meshGpuData){
+            meshGpuData.delete();
+        }
+        meshGpuData.clear();
+    }
+
+    public void render(Matrix4f transform){
+        if(camera==null){
+            System.out.println("[ERROR] PhongRenderer: Camera can't be null!");
+            return;
+        }
+        if(model==null){
+            System.out.println("[ERROR] PhongRenderer: Model can't be null!");
+            return;
+        }
         Utils.enableDepthTest();
-//        Utils.enableFaceCulling(Utils.Face.BACK);
-        render(camera,transform,new Matrix4f(),model.root);
+        Utils.enableFaceCulling(Utils.Face.BACK);
+        render(transform,new Matrix4f(),model.root);
         Utils.disableDepthTest();
         Utils.disableFaceCulling();
     }
 
-    private void render(Camera3 camera,Matrix4f transform,Matrix4f model,Model.Node node){
+    private void render(Matrix4f transform,Matrix4f model,Model.Node node){
         Matrix4f nodeTransform=new Matrix4f().set(node.transform);
 //        System.out.println(node.name);
         model.mul(nodeTransform);
@@ -137,7 +181,7 @@ public class PhongRenderer {
         }
 
         for(Model.Node child:node.children){
-            render(camera,transform,model,child);
+            render(transform,model,child);
         }
         model.mul(nodeTransform.invertAffine());
 
