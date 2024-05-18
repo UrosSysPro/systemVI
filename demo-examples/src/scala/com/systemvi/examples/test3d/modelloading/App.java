@@ -58,6 +58,7 @@ public class App extends Game {
             renderer[i]= PhongRenderer.builder()
                 .camera(controller.camera())
                 .model(model[i])
+                .texturesFolder("assets/examples/models/cars")
                 .build();
         }
     }
