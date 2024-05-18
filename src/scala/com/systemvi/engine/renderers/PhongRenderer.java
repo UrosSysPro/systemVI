@@ -3,14 +3,12 @@ package com.systemvi.engine.renderers;
 import com.systemvi.engine.buffer.ArrayBuffer;
 import com.systemvi.engine.buffer.ElementsBuffer;
 import com.systemvi.engine.buffer.VertexArray;
-import com.systemvi.engine.camera.Camera;
 import com.systemvi.engine.camera.Camera3;
 import com.systemvi.engine.model.Model;
 import com.systemvi.engine.model.VertexAttribute;
 import com.systemvi.engine.shader.ElementsDataType;
 import com.systemvi.engine.shader.Primitive;
 import com.systemvi.engine.shader.Shader;
-import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.utils.Utils;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -58,11 +56,11 @@ public class PhongRenderer {
                 vertexData[i*vertexSize+10]=vertex.normal.y;
                 vertexData[i*vertexSize+11]=vertex.normal.z;
 
-                Vector3f texCoords = !vertex.texCoords.isEmpty() ? vertex.texCoords.get(0):new Vector3f(0,0,0);
+                Vector3f texCoords = !vertex.texCoords.isEmpty() ? vertex.texCoords.get(0):new Vector3f(0.5f);
                 vertexData[i*vertexSize+12]=texCoords.x;
                 vertexData[i*vertexSize+13]=texCoords.y;
 
-                Vector4f color=!vertex.colors.isEmpty()? vertex.colors.get(0):new Vector4f(1,1,1,1);
+                Vector4f color=!vertex.colors.isEmpty()? vertex.colors.get(0):new Vector4f(1);
                 vertexData[i*vertexSize+14]=color.x;
                 vertexData[i*vertexSize+15]=color.y;
                 vertexData[i*vertexSize+16]=color.z;

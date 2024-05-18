@@ -19,13 +19,14 @@ out VERTEX_OUT{
 }vertexOut;
 
 void main(){
-    vec4 worldPosition=transform*model*vec4(position,1.0);
+    vec4 modelPosition=model*vec4(position,1.0);
+    vec4 worldPosition=transform*modelPosition;
     gl_Position=projection*view*worldPosition;
 
     vertexOut.tangent=tangent;
     vertexOut.bitangent=bitangent;
     vertexOut.normal=normal;
-    vertexOut.modelPosition=position;
+    vertexOut.modelPosition=modelPosition.xyz;
     vertexOut.worldPosition=worldPosition.xyz;
     vertexOut.texCoords=texCoords;
     vertexOut.color=color;
