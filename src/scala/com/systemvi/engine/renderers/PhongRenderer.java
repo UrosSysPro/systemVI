@@ -59,11 +59,13 @@ public class PhongRenderer {
                 vertexData[i*vertexSize+10]=vertex.normal.y;
                 vertexData[i*vertexSize+11]=vertex.normal.z;
 
-                Vector3f texCoords = !vertex.texCoords.isEmpty() ? vertex.texCoords.get(0):new Vector3f(0.5f);
+                int texCoordChannel=0;
+                Vector3f texCoords = !vertex.texCoords.isEmpty() ? vertex.texCoords.get(texCoordChannel):new Vector3f(0.5f);
                 vertexData[i*vertexSize+12]=texCoords.x;
                 vertexData[i*vertexSize+13]=texCoords.y;
 
-                Vector4f color=!vertex.colors.isEmpty()? vertex.colors.get(0):new Vector4f(1);
+                int colorChannel=0;
+                Vector4f color=!vertex.colors.isEmpty()? vertex.colors.get(colorChannel):new Vector4f(1);
                 vertexData[i*vertexSize+14]=color.x;
                 vertexData[i*vertexSize+15]=color.y;
                 vertexData[i*vertexSize+16]=color.z;

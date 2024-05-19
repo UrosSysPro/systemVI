@@ -68,18 +68,25 @@ public class ModelUtils {
                 ArrayList<Vector3f> texCoords=new ArrayList<>();
                 ArrayList<Vector4f> colors=new ArrayList<>();
 
-                AIVector3D.Buffer texCoordsBuffer=aiMesh.mTextureCoords(i);
-                AIColor4D.Buffer colorsBuffer=aiMesh.mColors(i);
+                for(int k=0;k<8;k++){
+                    AIVector3D.Buffer texCoordsBuffer=aiMesh.mTextureCoords(k);
+                    AIColor4D.Buffer colorsBuffer=aiMesh.mColors(k);
 
-                if(texCoordsBuffer!=null) {
-                    AIVector3D texCoord=texCoordsBuffer.get(0);
-                    texCoords.add(new Vector3f(texCoord.x(),texCoord.y(),texCoord.z()));
+                    if(texCoordsBuffer!=null) {
+                        AIVector3D texCoord=texCoordsBuffer.get(i);
+                        texCoords.add(new Vector3f(texCoord.x(),texCoord.y(),texCoord.z()));
+                    }else{
+                        texCoords.add(new Vector3f(0.5f));
+                    }
+
+                    if(colorsBuffer!=null){
+                        AIColor4D color=colorsBuffer.get(i);
+                        colors.add(new Vector4f(color.r(),color.g(),color.b(),color.a()));
+                    }else{
+                        colors.add(new Vector4f(1,0,1,1));
+                    }
                 }
 
-                if(colorsBuffer!=null){
-                    AIColor4D color=colorsBuffer.get(0);
-                    colors.add(new Vector4f(color.r(),color.g(),color.b(),color.a()));
-                }
 
                 vertices.add(new Model.Vertex(
                     new Vector3f(position.x(),position.y(),position.z()),
