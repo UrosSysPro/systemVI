@@ -11,8 +11,6 @@ import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
 import org.joml.Matrix4f;
 
-import java.util.ArrayList;
-
 public class App extends Game {
     public App(){
         super(3,3,60,800,600,"Model Loading");
@@ -23,6 +21,9 @@ public class App extends Game {
     public PhongRenderer[] renderer;
     public String[] modelFiles=new String[]{
         "assets/examples/models/cars/sedan-sports.glb",
+        "assets/examples/models/cars/hatchback-sports.glb",
+        "assets/examples/models/cars/suv.glb",
+        "assets/examples/models/cars/suv-luxury.glb",
         "assets/examples/models/castle/tower.glb",
         "assets/examples/models/castle/bridge-draw.glb",
         "assets/examples/models/castle/bridge-straight-pillar.obj",
@@ -61,6 +62,7 @@ public class App extends Game {
                 .texturesFolder("assets/examples/models/cars")
                 .build();
         }
+        model[model.length-1].root.transform.scale(0.01f);
     }
 
     @Override
@@ -68,9 +70,7 @@ public class App extends Game {
         Utils.clear(0,0,0,1, Utils.Buffer.COLOR_BUFFER, Utils.Buffer.DEPTH_BUFFER);
         controller.update(delta);
         for(int i=0;i<renderer.length;i++){
-            float scale=1;
-            if(i==renderer.length-1)scale=0.01f;
-            renderer[i].render(new Matrix4f().translate(i*2,0,0).scale(scale));
+            renderer[i].render(new Matrix4f().translate(i*2,0,0));
         }
     }
 }

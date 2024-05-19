@@ -26,6 +26,7 @@ public class ModelUtils {
             Model.Node root=loadNodes(aiScene,meshes);
 
             model = new Model(meshes,materials,root);
+            aiReleaseImport(aiScene);
         }catch (Exception e){
             e.printStackTrace();
         }
