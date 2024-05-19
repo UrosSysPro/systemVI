@@ -12,6 +12,14 @@ uniform sampler2D diffuseTexture;
 
 uniform vec4 materialDiffuse;
 
+layout (std140) uniform Colors
+{
+    int number;
+    float value;
+    vec4 color1;
+    vec4 color2;
+};
+
 void main(){
     //    FragColor=vec4(0.9764,0.4509,0.0862,1);
     //    FragColor=vec4(normalize(vertexIn.normal),1);

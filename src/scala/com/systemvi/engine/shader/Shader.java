@@ -1,4 +1,5 @@
 package com.systemvi.engine.shader;
+import com.systemvi.engine.buffer.UniformBuffer;
 import com.systemvi.engine.utils.Utils;
 import org.joml.*;
 
@@ -217,6 +218,10 @@ public class Shader {
     public void setUniform(String name, float value){
         int uniformId=glGetUniformLocation(id,name);
         glUniform1f(uniformId,value);
+    }
+
+    public void bindUniformBuffer(String name, UniformBuffer buffer){
+        int index=glGetUniformBlockIndex(id,name);
     }
 
     public void drawArrays(Primitive primitive,int first,int count){
