@@ -59,7 +59,7 @@ public class PhongRenderer {
                 vertexData[i*vertexSize+10]=vertex.normal.y;
                 vertexData[i*vertexSize+11]=vertex.normal.z;
 
-                int texCoordChannel=0;
+                int texCoordChannel=7;
                 Vector3f texCoords = !vertex.texCoords.isEmpty() ? vertex.texCoords.get(texCoordChannel):new Vector3f(0.5f);
                 vertexData[i*vertexSize+12]=texCoords.x;
                 vertexData[i*vertexSize+13]=texCoords.y;

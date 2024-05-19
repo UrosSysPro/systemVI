@@ -17,8 +17,8 @@ void main(){
     //    FragColor=vec4(normalize(vertexIn.normal),1);
     //        FragColor=vec4(vertexIn.modelPosition,1.0);
     //        FragColor=vec4(vertexIn.texCoords,0.0,1.0);
-            FragColor=vertexIn.color;
-//    FragColor=texture(diffuseTexture,vertexIn.texCoords);
+//            FragColor=vertexIn.color;
+    FragColor=texture(diffuseTexture,vertexIn.texCoords);
     //        FragColor=texture(diffuseTexture,vertexIn.modelPosition.xz);
     //    FragColor=materialDiffuse;
 }
