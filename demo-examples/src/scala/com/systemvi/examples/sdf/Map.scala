@@ -7,7 +7,7 @@ import org.joml.Vector3f
 import scala.util.Random
 
 object Map {
-  val Epsilon: Float = 0.01f
+  val Epsilon: Float = 0.001f
   val random = new Random()
 
   val materials: Array[Material] = Array[Material](
@@ -18,19 +18,19 @@ object Map {
   ) //sky
 
   val spawnRadius=300
+  val sphereCount=150
   case class Ball(center:Vector3f,radius:Float)
-  var spheres: Array[Ball] = (0 until 50).map{_=>
+  var spheres: Array[Ball] = (0 until sphereCount).map{_=>
     var insideCircle=false
     var x=0f
     var y=0f
     var z=0f
     var r=0f
     while(!insideCircle) {
-      x = random.nextInt(spawnRadius)-spawnRadius/2
-      z = random.nextInt(spawnRadius)-spawnRadius/2
+      x = random.nextInt(spawnRadius*2)-spawnRadius
+      z = random.nextInt(spawnRadius*2)-spawnRadius
       val d=Math.sqrt(x*x+y*y).toFloat
-//      r = (spawnRadius-d)*30f+10f
-      r = 10f
+      r = (spawnRadius-d)/spawnRadius*10f+3f
       y = r
       if(d<spawnRadius)insideCircle=true
     }

@@ -24,7 +24,7 @@ public class App extends Game {
     }
 
     public App(){
-        this(3, 3, 60, 800, 600, "SDFs");
+        this(3, 3, 60, 1800, 1600, "SDFs");
     }
 
     Texture texture;
@@ -35,10 +35,8 @@ public class App extends Game {
     public Random r=new Random();
     public TextureData data;
     public CameraController3 controller;
-    ExecutorService service;// = Executors.newFixedThreadPool(threads);
-    Future[] futures;//=new Future[tasks];
-    Vector2i[] indices;
-    int current = 0;
+    ExecutorService service;
+    Future[] futures;
 
     public Vector3f RayMarch(Vector3f ro, Vector3f rd,int iterations){
         float d = 0;
@@ -90,11 +88,6 @@ public class App extends Game {
 
             ro[k + 1] = new Vector3f(p).add(normal.x * 2 * Epsilon, normal.y * 2 * Epsilon, normal.z * 2 * Epsilon);
             rd[k + 1] = new Vector3f(rd[k]).reflect(normal).add(new Vector3f(r.nextFloat() * 2 - 1, r.nextFloat() * 2 - 1, r.nextFloat() * 2 - 1).mul(m.roughness)).normalize();
-//            rd[k + 1] = new Vector3f(r.nextFloat() * 2 - 1, r.nextFloat() * 2 - 1, r.nextFloat() * 2 - 1).normalize();
-//            if (rd[k + 1].dot(normal) < 0)
-//                rd[k + 1].mul(-1);
-
-//            if (r.nextFloat() < m.metallic || k == 0)
             if (r.nextFloat() < m.metallic)
                 color.mul(c);
         }
@@ -103,11 +96,11 @@ public class App extends Game {
     public Vector4f calculatePixel(int i,int j,int bounces,int samples,int iterations){
         float x, y;
         x = i;
-        x /= 800;
+        x /= texture.getWidth();
         x = x*2-1;
-        x *= 800f / 600f;
+        x *= (float)texture.getWidth() / (float)texture.getHeight();
         y = j;
-        y /= 600;
+        y /= texture.getHeight();
         y = 2*y-1;
         y *= -1;
 
@@ -122,20 +115,13 @@ public class App extends Game {
 
     @Override
     public void setup(Window window) {
-        indices = new Vector2i[window.getHeight()* window.getWidth()];
-        for (int i = 0; i < indices.length; i++) {
-            indices[i] = new Vector2i(i % window.getWidth(), i / window.getWidth());
-        }
-        for (int i = 0; i < indices.length; i++) {
-            int index = r.nextInt(indices.length);
-            Vector2i temp = indices[i];
-            indices[i] = indices[index];
-            indices[index] = temp;
-        }
-        camera = Camera3.builder2d().size(800, 600).position(400, 300).scale(1, -1).build();
+        camera = Camera3.builder2d()
+            .size(window.getWidth(), window.getHeight())
+            .position(window.getWidth()/2, window.getHeight()/2)
+            .scale(1, -1)
+            .build();
 
         worldCamera = Camera3.builder3d()
-//                .position(0, 200, -200).rotation((float) -Math.PI/6, 0, 0)
             .position(0,100,-400)
             .rotation(-0.3f,(float)Math.PI,0)
             .build();
@@ -144,10 +130,10 @@ public class App extends Game {
             .camera(worldCamera)
             .speed(50)
             .build();
-        setInputProcessor(controller);
+//        setInputProcessor(controller);
 
-        texture = new Texture(800, 600, Format.RGBA);
-        data = new TextureData(800, 600, Format.RGBA);
+        texture = new Texture(window.getWidth(), window.getHeight(), Format.RGBA);
+        data = new TextureData(window.getWidth(), window.getHeight(), Format.RGBA32F);
 
         renderer = new TextureRenderer();
         renderer.view(camera.view());
@@ -166,7 +152,7 @@ public class App extends Game {
         controller.update(delta);
 
         texture.setData(data);
-        renderer.draw(texture, 0, 0, 800, 600);
+        renderer.draw(texture, 0, 0, texture.getWidth(), texture.getHeight());
         renderer.flush();
     }
 
@@ -185,9 +171,9 @@ public class App extends Game {
         for(int k=0;k<tasks;k++){
             final int index=k;
             futures[k]=service.submit(()->{
-                for(int i=0;i<800/tasks;i++){
-                    for(int j=0;j<600;j++){
-                        int x=index*800/tasks+i;
+                for(int i=0;i<texture.getWidth()/tasks;i++){
+                    for(int j=0;j<texture.getHeight();j++){
+                        int x=index*texture.getHeight()/tasks+i;
                         int y=j;
                         data.setPixel4f(x,y,calculatePixel(x,y,bounces,samples,iterations));
                     }
