@@ -117,7 +117,7 @@ public class App extends Game {
     public void setup(Window window) {
         camera = Camera3.builder2d()
             .size(window.getWidth(), window.getHeight())
-            .position(window.getWidth()/2, window.getHeight()/2)
+            .position((float)window.getWidth()/2,(float)window.getHeight()/2)
             .scale(1, -1)
             .build();
 
@@ -133,7 +133,7 @@ public class App extends Game {
 //        setInputProcessor(controller);
 
         texture = new Texture(window.getWidth(), window.getHeight(), Format.RGBA);
-        data = new TextureData(window.getWidth(), window.getHeight(), Format.RGBA32F);
+        data = new TextureData(window.getWidth(), window.getHeight(), Format.RGBA);
 
         renderer = new TextureRenderer();
         renderer.view(camera.view());
@@ -173,7 +173,7 @@ public class App extends Game {
             futures[k]=service.submit(()->{
                 for(int i=0;i<texture.getWidth()/tasks;i++){
                     for(int j=0;j<texture.getHeight();j++){
-                        int x=index*texture.getHeight()/tasks+i;
+                        int x=index*texture.getWidth()/tasks+i;
                         int y=j;
                         data.setPixel4f(x,y,calculatePixel(x,y,bounces,samples,iterations));
                     }
