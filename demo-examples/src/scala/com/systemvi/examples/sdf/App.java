@@ -24,7 +24,7 @@ public class App extends Game {
     }
 
     public App(){
-        this(3, 3, 60, 1800, 1600, "SDFs");
+        this(3, 3, 60, 1600, 900, "SDFs");
     }
 
     Texture texture;
@@ -35,6 +35,7 @@ public class App extends Game {
     public Random r=new Random();
     public TextureData data;
     public CameraController3 controller;
+    public final int tasks=8,threads=8;
     ExecutorService service;
     Future[] futures;
 
@@ -138,7 +139,7 @@ public class App extends Game {
         renderer = new TextureRenderer();
         renderer.view(camera.view());
         renderer.projection(camera.projection());
-        int threads=32,tasks=32;
+
         service = Executors.newFixedThreadPool(threads);
         futures=new Future[tasks];
 
@@ -171,12 +172,23 @@ public class App extends Game {
         for(int k=0;k<tasks;k++){
             final int index=k;
             futures[k]=service.submit(()->{
-                for(int i=0;i<texture.getWidth()/tasks;i++){
-                    for(int j=0;j<texture.getHeight();j++){
-                        int x=index*texture.getWidth()/tasks+i;
-                        int y=j;
-                        data.setPixel4f(x,y,calculatePixel(x,y,bounces,samples,iterations));
-                    }
+                int width=texture.getWidth()/tasks;
+                int height=texture.getHeight();
+                Vector2i[] indices=new Vector2i[width*height];
+                java.util.Random random=new java.util.Random();
+                for(int j=0;j<width*height;j++){
+                    indices[j]=new Vector2i(j%width,j/width);
+                }
+                for(int j=0;j<width*height;j++){
+                    int t=random.nextInt(width*height);
+                    Vector2i tmp=indices[t];
+                    indices[t]=indices[j];
+                    indices[j]=tmp;
+                }
+                for(int j=0;j<width*height;j++){
+                    int x=index*width+indices[j].x;
+                    int y=indices[j].y;
+                    data.setPixel4f(x,y,calculatePixel(x,y,bounces,samples,iterations));
                 }
             });
         }
