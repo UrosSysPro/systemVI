@@ -17,8 +17,8 @@ object Map {
     new Material(0.3f, 1, Colors.blue100)
   ) //sky
 
-  val spawnRadius=300
-  val sphereCount=150
+  val spawnRadius=100
+  val sphereCount=5
   case class Ball(center:Vector3f,radius:Float)
   var spheres: Array[Ball] = (0 until sphereCount).map{_=>
     var insideCircle=false

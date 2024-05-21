@@ -7,7 +7,6 @@ import com.systemvi.engine.renderers.TextureRenderer;
 import com.systemvi.engine.texture.Format;
 import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.texture.TextureData;
-import com.systemvi.engine.ui.utils.data.Colors;
 import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
 import org.joml.*;
@@ -24,7 +23,7 @@ public class App extends Game {
     }
 
     public App(){
-        this(3, 3, 60, 1600, 900, "SDFs");
+        this(3, 3, 60, 800, 600, "Ray Marching");
     }
 
     Texture texture;
