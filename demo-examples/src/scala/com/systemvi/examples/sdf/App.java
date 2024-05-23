@@ -9,6 +9,7 @@ import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.texture.TextureData;
 import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
+import com.systemvi.examples.sdf.maps.Map2;
 import org.joml.*;
 
 import java.lang.Math;
@@ -27,10 +28,9 @@ public class App extends Game {
     }
 
     Texture texture;
-    Camera3 camera, worldCamera;
+    Camera3 camera;
     TextureRenderer renderer;
     public TextureData data;
-    public CameraController3 controller;
     public final int tasks=8,threads=8;
     ExecutorService service;
     Future[] futures;
@@ -44,17 +44,6 @@ public class App extends Game {
             .scale(1, -1)
             .build();
 
-        worldCamera = Camera3.builder3d()
-            .position(0,100,-400)
-            .rotation(-0.3f,(float)Math.PI,0)
-            .build();
-        controller = CameraController3.builder()
-            .window(window)
-            .camera(worldCamera)
-            .speed(50)
-            .build();
-//        setInputProcessor(controller);
-
         texture = new Texture(window.getWidth(), window.getHeight(), Format.RGBA);
         data = new TextureData(window.getWidth(), window.getHeight(), Format.RGBA);
 
@@ -65,16 +54,15 @@ public class App extends Game {
         service = Executors.newFixedThreadPool(threads);
         futures=new Future[tasks];
 
-        rayMarchRenderer=Map2.renderer(worldCamera);
+        rayMarchRenderer= Map2.renderer();
 
-        startRender(10,10,500);
+        startRender(10,10,1000);
     }
 
     @Override
     public void loop(float delta) {
         Utils.clear(0.4f, 0, 0, 0, Utils.Buffer.COLOR_BUFFER);
         System.out.printf("%4d \r",getFPS());
-        controller.update(delta);
 
         texture.setData(data);
         renderer.draw(texture, 0, 0, texture.getWidth(), texture.getHeight());

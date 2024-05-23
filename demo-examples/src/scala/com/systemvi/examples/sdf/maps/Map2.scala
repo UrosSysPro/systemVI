@@ -1,8 +1,9 @@
-package com.systemvi.examples.sdf
+package com.systemvi.examples.sdf.maps
 
 import com.systemvi.engine.camera.Camera3
 import com.systemvi.engine.math.sdf.{Plane, Sphere, Union}
 import com.systemvi.engine.ui.utils.data.Colors
+import com.systemvi.examples.sdf.{Material, RayMarchRenderer}
 import org.joml.Vector3f
 
 
@@ -30,13 +31,12 @@ object Map2 {
     )
   }
 
-  def renderer(camera:Camera3):RayMarchRenderer = {
-    camera.rotation(0,0,0).position(0,100,500).update()
+  def renderer():RayMarchRenderer = {
     new RayMarchRenderer(
       Map2.getDistance,
       Map2.getMaterial,
-      camera,
-      maxDistance = 100000,
+      Camera3.builder3d().rotation(0,0,0).position(0,100,500).build(),
+      maxDistance = 10000,
       epsilon=epsilon
     )
   }

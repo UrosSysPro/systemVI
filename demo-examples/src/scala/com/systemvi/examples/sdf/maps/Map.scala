@@ -1,12 +1,13 @@
-package com.systemvi.examples.sdf
+package com.systemvi.examples.sdf.maps
 
 import com.systemvi.engine.camera.Camera3
-import scala.util.control.Breaks._
 import com.systemvi.engine.math.sdf.{Plane, Sphere, Union}
 import com.systemvi.engine.ui.utils.data.Colors
+import com.systemvi.examples.sdf.{Material, RayMarchRenderer}
 import org.joml.Vector3f
 
 import scala.util.Random
+import scala.util.control.Breaks._
 
 object Map {
   val epsilon=0.001f
@@ -61,11 +62,11 @@ object Map {
     )
   }
 
-  def renderer(camera:Camera3):RayMarchRenderer = {
+  def renderer():RayMarchRenderer = {
     new RayMarchRenderer(
       Map.getDistance,
       Map.getMaterial,
-      camera,
+      Camera3.builder3d().position(0, 100, -400).rotation(-0.3f, Math.PI.toFloat, 0).build(),
       epsilon = epsilon,
       maxDistance = 100000
     )

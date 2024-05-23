@@ -20,9 +20,11 @@ class RayMarchRenderer(
                       ){
   private val random=new Random(seed)
 
-  def RayMarch(ro: Vector3f, rd: Vector3f, iterations: Int): Vector3f = {
+  private case class RayOutput(p:Vector3f,d:Float,outOfRange:Boolean,normal:Vector3f,material:Material)
+  private def RayMarch(ro: Vector3f, rd: Vector3f, iterations: Int): RayOutput = {
     var d:Float = 0
     val p=new Vector3f()
+    var outOfRange=false
     breakable{
       for (_ <- 0 until iterations) {
         p.set(
@@ -32,10 +34,18 @@ class RayMarchRenderer(
         )
         val min = distance(p)
         d += min
-        if (d > maxDistance || min < epsilon) break()
+        if (d > maxDistance){
+          outOfRange=true
+          break()
+        }
+        if(d<epsilon){
+          outOfRange=false
+          break()
+        }
       }
     }
     p.set(ro.x + rd.x * d, ro.y + rd.y * d, ro.z + rd.z * d)
+    RayOutput(p,d,outOfRange,getNormal(p),material(p))
   }
 
   def getNormal(p: Vector3f): Vector3f = {
@@ -47,7 +57,7 @@ class RayMarchRenderer(
     ).normalize
   }
 
-  def SimulatePhoton(x: Float, y: Float, bounces: Int, iterations: Int): Vector4f = {
+  private def SimulatePhoton(x: Float, y: Float, bounces: Int, iterations: Int): Vector4f = {
     val color = new Vector4f(1)
     val rayOrigin = new Vector3f()
     val rayDirection = new Vector3f()
@@ -61,33 +71,31 @@ class RayMarchRenderer(
     val diffusedDirection = new Vector3f()
     val randomVector = new Vector3f()
 
-    for (_ <- 0 until bounces) {
-      val p = RayMarch(rayOrigin, rayDirection, iterations)
-      val traveled = p.distance(rayOrigin)
-      val normal = getNormal(p)
-      val m = material(p)
-      rayOrigin.set(p).add(normal.x * 2 * epsilon, normal.y * 2 * epsilon, normal.z * 2 * epsilon)
-      reflectedDirection.set(rayDirection).reflect(normal).add(
-        randomVector.set(
-          random.nextFloat()*2-1,
-          random.nextFloat()*2-1,
-          random.nextFloat()*2-1
-        ).normalize().mul(m.roughness)
-      ).normalize()
-      diffusedDirection.set(normal).add(
-        randomVector.set(
-          random.nextFloat()*2-1,
-          random.nextFloat()*2-1,
-          random.nextFloat()*2-1
+    for (_ <- 0 until bounces) RayMarch(rayOrigin,rayDirection,iterations) match{
+      case RayOutput(p, d, outOfRange, normal, material)=>
+        rayOrigin.set(p).add(normal.x * 2 * epsilon, normal.y * 2 * epsilon, normal.z * 2 * epsilon)
+        reflectedDirection.set(rayDirection).reflect(normal).add(
+          randomVector.set(
+            random.nextFloat()*2-1,
+            random.nextFloat()*2-1,
+            random.nextFloat()*2-1
+          ).normalize().mul(material.roughness)
         ).normalize()
-      ).normalize()
-//      rayDirection.set(reflectedDirection.mul(m.metallic)).add(diffusedDirection.mul(1-m.metallic))
-      rayDirection.set(reflectedDirection.mul(m.metallic)).add(diffusedDirection.mul(1-m.metallic))
-      color.mul(m.color)
-      if (p.distance(point.x, point.y, point.z) > maxDistance && traveled>maxDistance) return color
+        diffusedDirection.set(normal).add(
+          randomVector.set(
+            random.nextFloat()*2-1,
+            random.nextFloat()*2-1,
+            random.nextFloat()*2-1
+          ).normalize()
+        ).normalize()
+        rayDirection.set(reflectedDirection.mul(material.metallic)).add(diffusedDirection.mul(1-material.metallic))
+        color.mul(material.color)
+        if (outOfRange) return color
     }
     color
   }
+
+
 
   def calculatePixel(i: Int, j: Int, width:Int, height:Int, bounces: Int, samples: Int, iterations: Int): Vector4f = {
     var x = .0f
