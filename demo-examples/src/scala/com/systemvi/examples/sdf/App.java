@@ -9,7 +9,9 @@ import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.texture.TextureData;
 import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
+import com.systemvi.examples.sdf.maps.Map;
 import com.systemvi.examples.sdf.maps.Map2;
+import com.systemvi.examples.sdf.maps.Map3;
 import org.joml.*;
 
 import java.lang.Math;
@@ -54,9 +56,9 @@ public class App extends Game {
         service = Executors.newFixedThreadPool(threads);
         futures=new Future[tasks];
 
-        rayMarchRenderer= Map2.renderer();
+        rayMarchRenderer = Map.renderer();
 
-        startRender(10,10,1000);
+        startRender(4,10,1000);
     }
 
     @Override
@@ -100,7 +102,7 @@ public class App extends Game {
                 for(int j=0;j<width*height;j++){
                     int x=index*width+indices[j].x;
                     int y=indices[j].y;
-                    data.set(x,y,rayMarchRenderer.calculatePixel(x,y,texture.getWidth(),texture.getHeight(),bounces,samples,iterations));
+                    data.set(x,y,rayMarchRenderer.calculatePixel(x,y,texture.getWidth(),texture.getHeight(),bounces,samples,iterations).min(new Vector4f(1,1,1,1)));
                 }
             });
         }
