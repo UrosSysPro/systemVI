@@ -2,16 +2,20 @@ package com.systemvi.examples.sdf
 
 import com.systemvi.engine.camera.Camera3
 import com.systemvi.engine.ui.utils.data.Colors
-import com.systemvi.examples.sdf.RayMarchRenderer.epsilon
 import org.joml.{Matrix4f, Random, Vector3f, Vector4f}
 
 import scala.util.control.Breaks._
 
 case class Material(roughness:Float=0.3f, metallic:Float=1.0f, color:Vector4f = Colors.blue500)
 
-class RayMarchRenderer(val distance:Vector3f=>Float, val material:Vector3f=>Material, val camera:Camera3){
-
-  private val random=new Random()
+class RayMarchRenderer(
+                        val distance:Vector3f=>Float,
+                        val material:Vector3f=>Material,
+                        val camera:Camera3,
+                        val seed:Int=System.currentTimeMillis().toInt,
+                        val epsilon:Float=0.001f
+                      ){
+  private val random=new Random(seed)
 
   def RayMarch(ro: Vector3f, rd: Vector3f, iterations: Int): Vector3f = {
     var d:Float = 0
@@ -75,8 +79,4 @@ class RayMarchRenderer(val distance:Vector3f=>Float, val material:Vector3f=>Mate
     color
   }
 
-}
-
-object RayMarchRenderer{
-  val epsilon:Float=0.001f
 }

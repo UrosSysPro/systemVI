@@ -15,5 +15,5 @@ object Box{
   def apply(position:Vector3f, translate:Vector3f, rotation:Vector3f, scale:Vector3f): Float = 0
 }
 object Plane{
-  def apply(position:Vector3f,translate:Vector3f):Float=Translate(position,translate).y
+  def apply(position:Vector3f,translate:Vector3f=new Vector3f()):Float=Translate(position,translate).y
 }
