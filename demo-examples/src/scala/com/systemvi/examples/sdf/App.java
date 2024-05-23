@@ -66,9 +66,9 @@ public class App extends Game {
         service = Executors.newFixedThreadPool(threads);
         futures=new Future[tasks];
 
-        rayMarchRenderer=Map.renderer(worldCamera);
+        rayMarchRenderer=Map2.renderer(worldCamera);
 
-        startRender(4,10,500);
+        startRender(10,3,500);
     }
 
     @Override
