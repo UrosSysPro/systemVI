@@ -11,6 +11,7 @@ import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
 import org.joml.Random;
 import org.joml.Vector2i;
+import org.joml.Vector4f;
 import org.joml.Vector4i;
 
 import static org.lwjgl.opengl.GL43.*;
@@ -34,7 +35,7 @@ public class GameOfLife extends Application {
         Random r = new Random();
         for (int i = 0; i < data.getWidth(); i++) {
             for (int j = 0; j < data.getHeight(); j++) {
-                data.setPixel4i(i, j, new Vector4i(r.nextInt(255), 0, 0, 0));
+                data.set(i, j, new Vector4f(r.nextFloat(), 0, 0, 0));
             }
         }
         current = new Texture(800, 600, Format.RGBA32F);

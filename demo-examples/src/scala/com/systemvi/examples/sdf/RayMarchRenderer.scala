@@ -79,7 +79,4 @@ class RayMarchRenderer(val distance:Vector3f=>Float, val material:Vector3f=>Mate
 
 object RayMarchRenderer{
   val epsilon:Float=0.001f
-  def apply(camera:Camera3):RayMarchRenderer = {
-    new RayMarchRenderer(Map.getDistance,Map.getMaterial,camera);
-  }
 }

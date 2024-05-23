@@ -114,21 +114,21 @@ public class PhongRenderer {
             if(material.diffuseFile!=null&&!material.diffuseFile.isEmpty()){
                 diffuseTexture=new Texture(texturesFolder+"/"+material.diffuseFile);
             }else{
-                data.setPixel4f(0,0,new Vector4f(1));
+                data.set(0,0,new Vector4f(1));
                 diffuseTexture=new Texture(1,1,Format.RGBA);
                 diffuseTexture.setData(data);
             }
             if(material.specularFile!=null&&!material.specularFile.isEmpty()){
                 specularTexture=new Texture(texturesFolder+"/"+material.specularFile);
             }else{
-                data.setPixel4f(0,0,new Vector4f(1));
+                data.set(0,0,new Vector4f(1));
                 specularTexture=new Texture(1,1,Format.RGBA);
                 specularTexture.setData(data);
             }
             if(material.normalFile!=null&&!material.normalFile.isEmpty()){
                 normalTexture=new Texture(texturesFolder+"/"+material.normalFile);
             }else{
-                data.setPixel4f(0,0,new Vector4f(0.5f,0.5f,1.0f,1.0f));
+                data.set(0,0,new Vector4f(0.5f,0.5f,1.0f,1.0f));
                 normalTexture=new Texture(1,1,Format.RGBA);
                 normalTexture.setData(data);
             }

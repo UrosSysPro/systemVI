@@ -47,7 +47,7 @@ public class NoiseTest extends Game {
 //                float value = val.get(i, j);
 //                float value = worley.get(i, j);
                 float value = NoiseFunction.Islands(i, j, val);
-                data.setPixel4f(i, j, new Vector4f(value, value, value, 1.0f));
+                data.set(i, j, new Vector4f(value, value, value, 1.0f));
             }
         }
         texture.setData(data);

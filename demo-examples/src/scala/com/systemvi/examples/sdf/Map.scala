@@ -1,5 +1,6 @@
 package com.systemvi.examples.sdf
 
+import com.systemvi.engine.camera.Camera3
 import com.systemvi.engine.math.sdf.{Plane, Sphere, Union}
 import com.systemvi.engine.ui.utils.data.Colors
 import org.joml.Vector3f
@@ -49,5 +50,9 @@ object Map {
     Union(
       spheres.map { s => Sphere(p, s.center, s.radius)} :+ Plane(p, new Vector3f(0, 0, 0)):_*
     )
+  }
+
+  def renderer(camera:Camera3):RayMarchRenderer = {
+    new RayMarchRenderer(Map.getDistance,Map.getMaterial,camera);
   }
 }
