@@ -37,6 +37,7 @@ public class App extends Game {
     public final int tasks=8,threads=8;
     ExecutorService service;
     Future[] futures;
+    public RayMarchRenderer rayMarchRenderer;
 
     public Vector3f RayMarch(Vector3f ro, Vector3f rd,int iterations){
         float d = 0;
@@ -81,14 +82,14 @@ public class App extends Game {
             Vector3f p = RayMarch(ro[k], rd[k],iterations);
             Vector3f normal = getNormal(p);
             Material m = Map.getMaterial(p);
-            Vector4f c = m.color;
+            Vector4f c = m.color();
 
             if (p.distance(ro[k]) > 1000)
                 break;
 
             ro[k + 1] = new Vector3f(p).add(normal.x * 2 * Epsilon, normal.y * 2 * Epsilon, normal.z * 2 * Epsilon);
-            rd[k + 1] = new Vector3f(rd[k]).reflect(normal).add(new Vector3f(r.nextFloat() * 2 - 1, r.nextFloat() * 2 - 1, r.nextFloat() * 2 - 1).mul(m.roughness)).normalize();
-            if (r.nextFloat() < m.metallic)
+            rd[k + 1] = new Vector3f(rd[k]).reflect(normal).add(new Vector3f(r.nextFloat() * 2 - 1, r.nextFloat() * 2 - 1, r.nextFloat() * 2 - 1).mul(m.roughness())).normalize();
+            if (r.nextFloat() < m.metallic())
                 color.mul(c);
         }
         return color;
@@ -142,6 +143,8 @@ public class App extends Game {
         service = Executors.newFixedThreadPool(threads);
         futures=new Future[tasks];
 
+        rayMarchRenderer=RayMarchRenderer.apply(camera);
+
         startRender(4,10,500);
     }
 
@@ -187,7 +190,7 @@ public class App extends Game {
                 for(int j=0;j<width*height;j++){
                     int x=index*width+indices[j].x;
                     int y=indices[j].y;
-                    data.setPixel4f(x,y,calculatePixel(x,y,bounces,samples,iterations));
+                    data.setPixel4f(x,y,rayMarchRenderer.calculatePixel(x,y,texture.getWidth(),texture.getHeight(),bounces,samples,iterations));
                 }
             });
         }

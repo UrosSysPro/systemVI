@@ -11,10 +11,10 @@ object Map {
   val random = new Random()
 
   val materials: Array[Material] = Array[Material](
-    new Material(0.3f, 1f, Colors.red500), //sphere red
-    new Material(0.3f, 1f, Colors.green500), //sphere green
-    new Material(0.3f, 1f, Colors.orange500), //floor orange
-    new Material(0.3f, 1, Colors.blue100)
+    Material(0.3f, 1f, Colors.red500), //sphere red
+    Material(0.3f, 1f, Colors.green500), //sphere green
+    Material(0.3f, 1f, Colors.orange500), //floor orange
+    Material(0.3f, 1, Colors.blue100)
   ) //sky
 
   val spawnRadius=100
@@ -41,7 +41,7 @@ object Map {
     for (i <- 0 until spheres.length) {
       if (Sphere(p, spheres(i).center, spheres(i).radius) < Epsilon) return materials(i % (materials.length - 1))
     }
-    if (Plane(p, new Vector3f(0, 0, 0)) < Epsilon) return new Material(0.3f, 1f, Colors.yellow400)
+    if (Plane(p, new Vector3f(0, 0, 0)) < Epsilon) return Material(0.3f, 1f, Colors.yellow400)
     materials(3)
   }
 

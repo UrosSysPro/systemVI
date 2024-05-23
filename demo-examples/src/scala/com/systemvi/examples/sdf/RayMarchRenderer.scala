@@ -9,12 +9,12 @@ import scala.util.control.Breaks._
 
 case class Material(roughness:Float=0.3f, metallic:Float=1.0f, color:Vector4f = Colors.blue500)
 
-class RayMarchRenderer(val distance:Vector3f=>Float,val material:Vector3f=>Material,val camera:Camera3){
+class RayMarchRenderer(val distance:Vector3f=>Float, val material:Vector3f=>Material, val camera:Camera3){
 
-  val random=new Random()
+  private val random=new Random()
 
   def RayMarch(ro: Vector3f, rd: Vector3f, iterations: Int): Vector3f = {
-    var d = 0
+    var d:Float = 0
     breakable{
       for (k <- 0 until iterations) {
         val p = new Vector3f(ro.x + rd.x * d, ro.y + rd.y * d, ro.z + rd.z * d)
@@ -79,4 +79,7 @@ class RayMarchRenderer(val distance:Vector3f=>Float,val material:Vector3f=>Mater
 
 object RayMarchRenderer{
   val epsilon:Float=0.001f
+  def apply(camera:Camera3):RayMarchRenderer = {
+    new RayMarchRenderer(Map.getDistance,Map.getMaterial,camera);
+  }
 }
