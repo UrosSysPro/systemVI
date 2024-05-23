@@ -2,8 +2,9 @@ package com.systemvi.examples.sdf
 
 import com.systemvi.engine.camera.Camera3
 import com.systemvi.engine.ui.utils.data.Colors
-import org.joml.{Matrix4f, Random, Vector3f, Vector4f}
+import org.joml.{Matrix4f, Vector3f, Vector4f}
 
+import scala.util.Random
 import scala.util.control.Breaks._
 
 case class Material(roughness:Float=0.3f, metallic:Float=1.0f, color:Vector4f = Colors.blue500)
@@ -37,13 +38,16 @@ class RayMarchRenderer(
     p.set(ro.x + rd.x * d, ro.y + rd.y * d, ro.z + rd.z * d)
   }
 
-  def getNormal(p: Vector3f): Vector3f = new Vector3f(
-    Map.getDistance(new Vector3f(p.x + epsilon, p.y, p.z)) - Map.getDistance(new Vector3f(p.x - epsilon, p.y, p.z)),
-    Map.getDistance(new Vector3f(p.x, p.y + epsilon, p.z)) - Map.getDistance(new Vector3f(p.x, p.y - epsilon, p.z)),
-    Map.getDistance(new Vector3f(p.x, p.y, p.z + epsilon)) - Map.getDistance(new Vector3f(p.x, p.y, p.z - epsilon))
-  ).normalize
+  def getNormal(p: Vector3f): Vector3f = {
+    val delta=epsilon
+    new Vector3f(
+      distance(new Vector3f(p.x + delta, p.y, p.z)) - distance(new Vector3f(p.x - delta, p.y, p.z)),
+      distance(new Vector3f(p.x, p.y + delta, p.z)) - distance(new Vector3f(p.x, p.y - delta, p.z)),
+      distance(new Vector3f(p.x, p.y, p.z + delta)) - distance(new Vector3f(p.x, p.y, p.z - delta))
+    ).normalize
+  }
 
-  def SimulatePhoton(x: Float, y: Float, bounces: Int, r: Random, iterations: Int): Vector4f = {
+  def SimulatePhoton(x: Float, y: Float, bounces: Int, iterations: Int): Vector4f = {
     val color = new Vector4f(1)
     val rayOrigin = new Vector3f()
     val rayDirection = new Vector3f()
@@ -54,35 +58,20 @@ class RayMarchRenderer(
     rayDirection.set(point.x, point.y, point.z).sub(rayOrigin).normalize()
 
     val reflectedDirection = new Vector3f()
-//    val diffusedDirection = new Vector3f()
+    val diffusedDirection = new Vector3f()
     val randomVector = new Vector3f()
 
     for (_ <- 0 until bounces) {
       val p = RayMarch(rayOrigin, rayDirection, iterations)
-//      val traveled = p.distance(rayOrigin)
+      val traveled = p.distance(rayOrigin)
       val normal = getNormal(p)
       val m = material(p)
       rayOrigin.set(p).add(normal.x * 2 * epsilon, normal.y * 2 * epsilon, normal.z * 2 * epsilon)
-      reflectedDirection.set(rayDirection).reflect(normal).add(
-        randomVector.set(
-          random.nextFloat() * 2 - 1,
-          random.nextFloat() * 2 - 1,
-          random.nextFloat() * 2 - 1
-        ).mul(m.roughness)
-      ).normalize()
-      //        diffusedDirection.set(normal).add(
-      //          randomVector.set(
-      //            random.nextFloat()*2-1,
-      //            random.nextFloat()*2-1,
-      //            random.nextFloat()*2-1
-      //          ).normalize().mul(m.roughness)
-      //        ).normalize()
-      //        rayDirection.set(0).add(diffusedDirection.mul(1-m.metallic)).add(reflectedDirection.mul(m.metallic)).normalize()
-      rayDirection.set(reflectedDirection)
-      color.mul(m.color)
-      if (p.distance(point.x, point.y, point.z) > maxDistance) return color
-    }
 
+      rayDirection.reflect(normal)
+      color.mul(m.color)
+      if (p.distance(point.x, point.y, point.z) > maxDistance && traveled>maxDistance) return color
+    }
     color
   }
 
@@ -99,7 +88,7 @@ class RayMarchRenderer(
     y *= -1
     val color = new Vector4f(0)
     for (_ <- 0 until samples) {
-      color.add(SimulatePhoton(x, y, bounces, random, iterations))
+      color.add(SimulatePhoton(x, y, bounces, iterations))
     }
     color.div(samples)
     color

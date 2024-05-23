@@ -18,6 +18,7 @@ object Map2 {
     if (Sphere(p,new Vector3f(-100,100,0),100)<epsilon) return red
     if (Sphere(p,new Vector3f( 100,100,0),100)<epsilon) return blue
     if (Plane(p) < epsilon) return floor
+    if (-Plane(p,new Vector3f(0,200,0)) < epsilon) return floor
     sky
   }
 
@@ -25,7 +26,8 @@ object Map2 {
     Union(
       Sphere(p,new Vector3f(-100,100,0),100),
       Sphere(p,new Vector3f( 100,100,0),100),
-      Plane(p)
+      Plane(p),
+      -Plane(p,new Vector3f(0,200,0))
     )
   }
 

@@ -29,7 +29,6 @@ public class App extends Game {
     Texture texture;
     Camera3 camera, worldCamera;
     TextureRenderer renderer;
-    public Random r = new Random();
     public TextureData data;
     public CameraController3 controller;
     public final int tasks=8,threads=8;
@@ -68,7 +67,7 @@ public class App extends Game {
 
         rayMarchRenderer=Map2.renderer(worldCamera);
 
-        startRender(10,3,500);
+        startRender(2,1,500);
     }
 
     @Override
