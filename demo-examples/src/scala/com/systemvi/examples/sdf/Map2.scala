@@ -8,7 +8,7 @@ import org.joml.Vector3f
 
 object Map2 {
   val epsilon=0.001f
-  val roughness=0
+  val roughness=0.01f
   val red=Material(roughness,1f,Colors.red500)
   val blue=Material(roughness,1f,Colors.blue500)
   val floor=Material(roughness,1f,Colors.orange300)
