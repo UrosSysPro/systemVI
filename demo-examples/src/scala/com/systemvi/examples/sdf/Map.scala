@@ -13,15 +13,15 @@ object Map {
   val random = new Random()
 
   val materials: Array[Material] = Array[Material](
-    Material(0.3f, 1f, Colors.red500), //sphere red
+    Material(0.3f, 0f, Colors.red500), //sphere red
     Material(0.3f, 1f, Colors.green500), //sphere green
-    Material(0.3f, 1f, Colors.orange500),
+    Material(0.3f, 0f, Colors.orange500),
     Material(0.3f, 1f, Colors.blue500),
-    Material(0.3f, 1f, Colors.yellow500),
+    Material(0.3f, 0f, Colors.yellow500),
     Material(0.3f, 1f, Colors.fuchsia500)
   )
-  val floor=Material(0.1f,1f,Colors.orange300)
-  val sky=Material(0,1,Colors.blue100)
+  val floor=Material(0.1f,0.5f,Colors.orange300)
+  val sky=Material(0,0,Colors.blue100)
 
   val spawnRadius=100
   val sphereCount=5

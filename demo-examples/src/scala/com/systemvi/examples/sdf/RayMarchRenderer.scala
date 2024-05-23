@@ -14,7 +14,8 @@ class RayMarchRenderer(
                         val camera:Camera3,
                         val seed:Int=System.currentTimeMillis().toInt,
                         val epsilon:Float=0.001f,
-                        val maxDistance:Float=1000
+                        val maxDistance:Float=1000,
+                        val focalLength:Float=2.2f
                       ){
   private val random=new Random(seed)
 
@@ -70,10 +71,14 @@ class RayMarchRenderer(
     val rayOrigin=new Vector3f()
     val rayDirection=new Vector3f()
     val inverted = new Matrix4f(camera.view).invert
-    val focus = new Vector4f(0, 0, 2.2f, 1).mul(inverted)
+    val focus = new Vector4f(0, 0, focalLength, 1).mul(inverted)
     val point = new Vector4f(x, y, 0, 1).mul(inverted)
     rayOrigin.set(focus.x,focus.y,focus.z)
     rayDirection.set(point.x,point.y,point.z).sub(rayOrigin).normalize()
+
+    val reflectedDirection = new Vector3f()
+    val diffusedDirection = new Vector3f()
+    val randomVector=new Vector3f()
 
     breakable {
       for (_ <- 0 until bounces) {
@@ -83,11 +88,21 @@ class RayMarchRenderer(
         val m = material(p)
         val c = m.color
         rayOrigin.set(p).add(normal.x*2*epsilon,normal.y*2*epsilon,normal.z*2*epsilon)
-        rayDirection.reflect(normal).add(
-          (r.nextFloat()*2-1)*m.roughness,
-          (r.nextFloat()*2-1)*m.roughness,
-          (r.nextFloat()*2-1)*m.roughness
+        reflectedDirection.set(rayDirection).reflect(normal).add(
+          randomVector.set(
+            random.nextFloat()*2-1,
+            random.nextFloat()*2-1,
+            random.nextFloat()*2-1
+          ).normalize().mul(m.roughness)
         ).normalize()
+        diffusedDirection.set(normal).add(
+          randomVector.set(
+            random.nextFloat()*2-1,
+            random.nextFloat()*2-1,
+            random.nextFloat()*2-1
+          ).normalize()
+        ).normalize()
+        rayDirection.set(0).add(diffusedDirection.mul(1-m.metallic)).add(reflectedDirection.mul(m.metallic)).normalize()
         color.mul(c)
         if (p.distance(point.x,point.y,point.z) > maxDistance||traveled>maxDistance) break()
       }
