@@ -67,7 +67,7 @@ public class App extends Game {
 
         rayMarchRenderer=Map2.renderer(worldCamera);
 
-        startRender(2,1,500);
+        startRender(10,10,500);
     }
 
     @Override

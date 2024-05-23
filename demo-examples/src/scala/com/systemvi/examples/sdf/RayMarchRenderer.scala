@@ -18,7 +18,7 @@ class RayMarchRenderer(
                         val maxDistance:Float=1000,
                         val focalLength:Float=2.2f
                       ){
-  private val random=new Random()
+  private val random=new Random(seed)
 
   def RayMarch(ro: Vector3f, rd: Vector3f, iterations: Int): Vector3f = {
     var d:Float = 0
@@ -67,8 +67,22 @@ class RayMarchRenderer(
       val normal = getNormal(p)
       val m = material(p)
       rayOrigin.set(p).add(normal.x * 2 * epsilon, normal.y * 2 * epsilon, normal.z * 2 * epsilon)
-
-      rayDirection.reflect(normal)
+      reflectedDirection.set(rayDirection).reflect(normal).add(
+        randomVector.set(
+          random.nextFloat()*2-1,
+          random.nextFloat()*2-1,
+          random.nextFloat()*2-1
+        ).normalize().mul(m.roughness)
+      ).normalize()
+      diffusedDirection.set(normal).add(
+        randomVector.set(
+          random.nextFloat()*2-1,
+          random.nextFloat()*2-1,
+          random.nextFloat()*2-1
+        ).normalize()
+      ).normalize()
+//      rayDirection.set(reflectedDirection.mul(m.metallic)).add(diffusedDirection.mul(1-m.metallic))
+      rayDirection.set(reflectedDirection.mul(m.metallic)).add(diffusedDirection.mul(1-m.metallic))
       color.mul(m.color)
       if (p.distance(point.x, point.y, point.z) > maxDistance && traveled>maxDistance) return color
     }

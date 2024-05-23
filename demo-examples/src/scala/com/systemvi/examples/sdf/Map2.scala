@@ -8,17 +8,16 @@ import org.joml.Vector3f
 
 object Map2 {
   val epsilon=0.001f
-  val roughness=0.01f
-  val red=Material(roughness,1f,Colors.red500)
-  val blue=Material(roughness,1f,Colors.blue500)
-  val floor=Material(roughness,1f,Colors.orange300)
+  val red=Material(0.2f,1,Colors.red500)
+  val blue=Material(1,0,Colors.blue500)
+  val floor=Material(0.1f,0.5f,Colors.orange300)
   val sky=Material(1,1,Colors.blue100)
 
   def getMaterial(p: Vector3f): Material = {
     if (Sphere(p,new Vector3f(-100,100,0),100)<epsilon) return red
     if (Sphere(p,new Vector3f( 100,100,0),100)<epsilon) return blue
     if (Plane(p) < epsilon) return floor
-    if (-Plane(p,new Vector3f(0,200,0)) < epsilon) return floor
+//    if (-Plane(p,new Vector3f(0,200,0)) < epsilon) return floor
     sky
   }
 
@@ -26,8 +25,8 @@ object Map2 {
     Union(
       Sphere(p,new Vector3f(-100,100,0),100),
       Sphere(p,new Vector3f( 100,100,0),100),
-      Plane(p),
-      -Plane(p,new Vector3f(0,200,0))
+      Plane(p)
+//      -Plane(p,new Vector3f(0,200,0))
     )
   }
 
