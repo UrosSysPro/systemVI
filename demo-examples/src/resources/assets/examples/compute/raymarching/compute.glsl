@@ -1,9 +1,10 @@
 #version 430 core
-#define RAY_ITERATIONS 200
-#define DELTA_EPSILON 0.001
+#define RAY_ITERATIONS 100
+#define SAMPLES 5
+#define DELTA_EPSILON 0.01
 #define MAX_DISTANCE 1000.0
-#define FIXED_MIN_TRAVEL_DISTANCE 0.2
-#define MAX_BOUNCES 20
+#define MAX_BOUNCES 5
+
 //in uvec3 gl_NumWorkGroups;
 //in uvec3 gl_WorkGroupID;
 //in uvec3 gl_LocalInvocationID;
@@ -13,7 +14,6 @@
 layout (local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
 uniform layout(binding=0,rgba32f) writeonly image2D outputTexture;
 uniform mat4 view;
-
 
 float sphere( vec3 p, float s )
 {
@@ -75,7 +75,24 @@ vec3 transform(in mat4 mat,in vec3 p){
     return helper.xyz;
 }
 
-
+struct Material{
+    vec4 color;
+    float roughness;
+    float metalic;
+};
+Material materialOf(vec4 color,float roughness,float metalic){
+    Material m;
+    m.color=color;
+    m.roughness=roughness;
+    m.metalic=metalic;
+    return m;
+}
+Material getMaterial(in vec3 p){
+    if(box(translate(p,vec3(0.0,0.0,-10.0)), vec3(1.0))<DELTA_EPSILON*2.0)return materialOf(vec4(0.3,0.6,0.9,1.0),0.05,1.0);
+    if(sphere(translate(p,vec3(2.0,0.0,-10.0)), 1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.9,0.6,0.3,1.0),0.3,0.0);
+    if(plane(p,vec3(0.0,1.0,0.0),1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.6,0.8,0.3,1.0),0.0,0.0);
+    return materialOf(vec4(0.9,0.9,1.0,1.0),1.0,0.0);
+}
 float map(in vec3 p){
     return unionSDF(
         unionSDF(
@@ -99,70 +116,10 @@ vec3 getNormal(in vec3 p){
     map(p+vec3(0.0,0.0,DELTA_EPSILON))-map(p-vec3(0.0,0.0,DELTA_EPSILON))
     ));
 }
-struct Material{
-    vec4 color;
-    float roughness;
-    float metalic;
-};
-Material materialOf(vec4 color,float roughness,float metalic){
-    Material m;
-    m.color=color;
-    m.roughness=roughness;
-    m.metalic=metalic;
-    return m;
-}
-Material getMaterial(in vec3 p){
-    if(box(translate(p,vec3(0.0,0.0,-10.0)), vec3(1.0))<DELTA_EPSILON*2.0)return materialOf(vec4(0.3,0.6,0.9,1.0),1.0,0.5);
-//    if(box(translate(p,vec3(0.0,0.0,-10.0)), vec3(1.0))<DELTA_EPSILON*2.0)return materialOf(vec4(getNormal(p)*0.5+0.5,1.0),1.0,0.5);
-    if(sphere(translate(p,vec3(2.0,0.0,-10.0)), 1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.9,0.6,0.3,1.0),0.3,0.7);
-//    if(sphere(translate(p,vec3(2.0,0.0,-10.0)), 1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(getNormal(p)*0.5+0.5,1.0),0.3,0.7);
-    if(plane(p,vec3(0.0,1.0,0.0),1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.6,0.8,0.3,1.0),1.0,0.0);
-    return materialOf(vec4(0.9,0.9,1.0,1.0),1.0,0.0);
-//    return materialOf(vec4(1.0),1.0,0.0);
-//    return materialOf(vec4(0.0),1.0,0.0,1.0);
-}
-vec4 getColor(in vec3 p){
-    if(box(translate(p,vec3(0.0,0.0,-10.0)), vec3(1.0))<DELTA_EPSILON*2.0)return vec4(0.3,0.6,0.9,1.0);
-    if(sphere(translate(p,vec3(2.0,0.0,-10.0)), 1.0)<DELTA_EPSILON*2.0)return vec4(0.9,0.6,0.3,1.4);
-    if(plane(p,vec3(0.0,1.0,0.0),1.0)<DELTA_EPSILON*2.0)return vec4(0.6,0.8,0.3,1.0);
-    return vec4(0.3,0.6,0.9,1.0);
-}
 
-
-struct Ray{
-    vec3 origin;
-    vec3 direction;
-};
-struct RayMarchResult{
-    vec3 point;
-    float distance;
-    int numOfIterations;
-};
-Ray rayOf(vec3 origin,vec3 direction){
-    Ray r;
-    r.origin=origin;
-    r.direction=direction;
-    return r;
-}
-RayMarchResult rayMarchResultOf(float distance,int numOfIterations,vec3 point){
-    RayMarchResult r;
-    r.distance=distance;
-    r.numOfIterations=numOfIterations;
-    r.point=point;
-    return r;
-}
-RayMarchResult rayMarchResultOf(){
-    return rayMarchResultOf(0.0,0,vec3(0.0));
-}
-RayMarchResult rayMarch(Ray ray){
-    RayMarchResult result=rayMarchResultOf();
-    return result;
-}
 void rayMarch(out float distance,out vec3 endPoint,out int numOfIterations,in vec3 rayOrigin,in vec3 rayDirection){
     distance=0;
-    endPoint=vec3(rayOrigin);
     for(int i=0;i<RAY_ITERATIONS;i++){
-        numOfIterations=i;
         float d=map(rayOrigin+distance*rayDirection);
         distance+=d;
         if(distance>MAX_DISTANCE||d<DELTA_EPSILON){
@@ -175,7 +132,11 @@ void rayMarch(out float distance,out vec3 endPoint,out int numOfIterations,in ve
     endPoint=rayOrigin+distance*rayDirection;
 }
 
-vec4 calculateColor(vec2 uv,vec2 size){
+float rand(float co) { return abs(fract(sin(co*(91.3458)) * 47453.5453)); }
+float rand(vec2 co){ return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453); }
+float rand(vec3 co){ return rand(co.xy+rand(co.z)); }
+
+vec4 simulatePhoton(vec2 uv,vec2 size,int sampleID){
 
     vec4 color=vec4(1.0);
     mat4 inverted=inverse(view);
@@ -193,60 +154,48 @@ vec4 calculateColor(vec2 uv,vec2 size){
         vec3 normal=getNormal(p);
         Material material=getMaterial(p);
         rayOrigin=p+3.0*DELTA_EPSILON*normal;
-        rayDirection=reflect(rayDirection,normal);
+        vec3 reflectedDirection=normalize(
+        reflect(rayDirection,normal)+
+        normalize(vec3(
+        rand(vec3(uv,float(sampleID+3*i+1)))*2.0-1.0,
+        rand(vec3(uv,float(sampleID+3*i+2)))*2.0-1.0,
+        rand(vec3(uv,float(sampleID+3*i+3)))*2.0-1.0
+        ))*material.roughness
+        );
+        vec3 diffuseDirection=normalize(
+        normal+normalize(vec3(
+        rand(vec3(uv,float(sampleID+3*i+1)))*2.0-1.0,
+        rand(vec3(uv,float(sampleID+3*i+2)))*2.0-1.0,
+        rand(vec3(uv,float(sampleID+3*i+3)))*2.0-1.0
+        ))
+        );
+        rayDirection=mix(diffuseDirection,reflectedDirection,material.metalic);
         color*=material.color;
     }
     return color;
-//    val color = new Vector4f(1)
-//    val rayOrigin = new Vector3f()
-//    val rayDirection = new Vector3f()
-//    val inverted = new Matrix4f(camera.view).invert
-//    val focus = new Vector4f(0, 0, focalLength, 1).mul(inverted)
-//    val point = new Vector4f(x, y, 0, 1).mul(inverted)
-//    rayOrigin.set(focus.x, focus.y, focus.z)
-//    rayDirection.set(point.x, point.y, point.z).sub(rayOrigin).normalize()
-//
-//    val reflectedDirection = new Vector3f()
-//    val diffusedDirection = new Vector3f()
-//    val randomVector = new Vector3f()
-//
-//    for (_ <- 0 until bounces) RayMarch(rayOrigin,rayDirection,iterations) match{
-//        case RayOutput(p, d, outOfRange, normal, material)=>
-//        rayOrigin.set(p).add(normal.x * 2 * epsilon, normal.y * 2 * epsilon, normal.z * 2 * epsilon)
-//        reflectedDirection.set(rayDirection).reflect(normal).add(
-//        randomVector.set(
-//        random.nextFloat()*2-1,
-//        random.nextFloat()*2-1,
-//        random.nextFloat()*2-1
-//        ).normalize().mul(material.roughness)
-//        ).normalize()
-//        diffusedDirection.set(normal).add(
-//        randomVector.set(
-//        random.nextFloat()*2-1,
-//        random.nextFloat()*2-1,
-//        random.nextFloat()*2-1
-//        ).normalize()
-//        ).normalize()
-//        rayDirection.set(reflectedDirection.mul(material.metallic)).add(diffusedDirection.mul(1-material.metallic))
-//        color.mul(material.color)//.add(material.emission)
-//        if (outOfRange) return color
-//    }
-//    color
 }
 
-
-
+vec4 calculateColor(vec2 uv,vec2 size){
+    vec4 color;
+    for(int i=0;i<SAMPLES;i++){
+        color+=simulatePhoton(uv,size,i);
+    }
+    color/=float(SAMPLES);
+    float gamma=1.0/2.2;
+    return vec4(
+        pow(color.r,gamma),
+        pow(color.g,gamma),
+        pow(color.b,gamma),
+        1.0
+    );
+}
 
 void main() {
     ivec2 texelCoord=ivec2(gl_GlobalInvocationID.xy);
     ivec2 textureSize=imageSize(outputTexture);
 
     vec2 size=vec2(textureSize);
-    vec2 uv=vec2(texelCoord)/size;
-    uv-=vec2(0.5);
-    float aspect=size.x/size.y;
-    uv.x*=aspect;
-    //uv size
+    vec2 uv=(vec2(texelCoord)/size-vec2(0.5))*vec2(size.x/size.y,1.0);
 
     imageStore(outputTexture,texelCoord,calculateColor(uv,size));
 }

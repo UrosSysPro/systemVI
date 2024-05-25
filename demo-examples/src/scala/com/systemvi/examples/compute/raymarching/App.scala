@@ -9,7 +9,7 @@ import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.{Barrier, Buffer}
 import com.systemvi.engine.window.Window
 
-class App extends Game(4,3,60,800,600,"Ray Marching"){
+class App extends Game(4,3,10,800,600,"Ray Marching"){
   var texture:Texture=null
   var controller:CameraController3=null
   var rendererCamera:Camera3=null
@@ -42,5 +42,6 @@ class App extends Game(4,3,60,800,600,"Ray Marching"){
     Utils.barrier(Barrier.IMAGE_ACCESS)
     textureRenderer.draw(texture,0,0,texture.getWidth,texture.getHeight)
     textureRenderer.flush()
+    print(s"\r$getFPS    $getFrameTime")
   }
 }
