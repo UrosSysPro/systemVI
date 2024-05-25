@@ -7,7 +7,7 @@ import org.joml.{Matrix4f, Vector3f, Vector4f}
 import scala.util.Random
 import scala.util.control.Breaks._
 
-case class Material(roughness:Float=0.3f, metallic:Float=1.0f, color:Vector4f = Colors.blue500)
+case class Material(roughness:Float=0.3f, metallic:Float=1.0f, color:Vector4f = Colors.blue500,emission:Vector4f=new Vector4f(0,0,0,0))
 
 class RayMarchRenderer(
                         val distance:Vector3f=>Float,
@@ -89,7 +89,7 @@ class RayMarchRenderer(
           ).normalize()
         ).normalize()
         rayDirection.set(reflectedDirection.mul(material.metallic)).add(diffusedDirection.mul(1-material.metallic))
-        color.mul(material.color)
+        color.mul(material.color)//.add(material.emission)
         if (outOfRange) return color
     }
     color

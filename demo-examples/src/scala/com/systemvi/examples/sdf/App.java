@@ -56,7 +56,7 @@ public class App extends Game {
         service = Executors.newFixedThreadPool(threads);
         futures=new Future[tasks];
 
-        rayMarchRenderer = Map.renderer();
+        rayMarchRenderer = Map2.renderer();
 
         startRender(4,10,1000);
     }
@@ -102,7 +102,12 @@ public class App extends Game {
                 for(int j=0;j<width*height;j++){
                     int x=index*width+indices[j].x;
                     int y=indices[j].y;
-                    data.set(x,y,rayMarchRenderer.calculatePixel(x,y,texture.getWidth(),texture.getHeight(),bounces,samples,iterations).min(new Vector4f(1,1,1,1)));
+                    Vector4f color=rayMarchRenderer.calculatePixel(x,y,texture.getWidth(), texture.getHeight(), bounces,samples,iterations);
+                    float gamma=2.2f;
+                    color.x=(float)Math.pow(color.x,1/gamma);
+                    color.y=(float)Math.pow(color.y,1/gamma);
+                    color.z=(float)Math.pow(color.z,1/gamma);
+                    data.set(x,y,color);
                 }
             });
         }
