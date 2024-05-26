@@ -1,9 +1,9 @@
 #version 430 core
-#define RAY_ITERATIONS 200
-#define SAMPLES 10
+#define RAY_ITERATIONS 1000
+#define SAMPLES 30
 #define DELTA_EPSILON 0.01
-#define MAX_DISTANCE 100.0
-#define MAX_BOUNCES 10
+#define MAX_DISTANCE 10000.0
+#define MAX_BOUNCES 30
 
 //in uvec3 gl_NumWorkGroups;
 //in uvec3 gl_WorkGroupID;
@@ -36,6 +36,14 @@ float plane( vec3 p, vec3 n, float h )
 float unionSDF( float d1, float d2 )
 {
     return min(d1,d2);
+}
+float unionSDF( float d1, float d2, float d3 )
+{
+    return unionSDF(d1,unionSDF(d2,d3));
+}
+float unionSDF( float d1, float d2, float d3, float d4)
+{
+    return unionSDF(d1,unionSDF(d2,unionSDF(d3,d4)));
 }
 float subtraction( float d1, float d2 )
 {
@@ -89,31 +97,42 @@ Material materialOf(float roughness,float metalic,vec4 color,vec4 emissive){
     m.emission=emissive;
     return m;
 }
+struct Sphere{
+    vec3 position;
+    float radius;
+    Material material;
+};
+Sphere sphereOf(vec3 position,Material material,float radius){
+    Sphere b;
+    b.position=position;
+    b.material=material;
+    b.radius=radius;
+    return b;
+}
+#define SPHERES 3
+Sphere[SPHERES] spheres={
+    sphereOf(vec3( 0.0,0.0,-10.0),materialOf(0.0,0.0,vec4(1.0),vec4(0.7,0.2,0.1,1.0)),1.0),
+    sphereOf(vec3( 3.0,0.0,-10.0),materialOf(0.0,0.0,vec4(1.0,0.2,0.3,1.0),vec4(0.0)),1.0),
+    sphereOf(vec3( -3.0,0.0,-10.0),materialOf(1.0,1.0,vec4(0.2,0.4,0.9,1.0),vec4(0.0)),1.0)
+};
+
 Material getMaterial(in vec3 p){
-//    if(box(translate(p,vec3(0.0,0.0,-10.0)), vec3(1.0))<DELTA_EPSILON*2.0)return materialOf(vec4(0.3,0.6,0.9,1.0),0.05,1.0);
-//    if(sphere(translate(p,vec3(2.0,0.0,-10.0)), 1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.9,0.6,0.3,1.0),0.3,0.0);
-//    if(plane(p,vec3(0.0,1.0,0.0),1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.6,0.8,0.3,1.0),0.0,0.0);
-    if(sphere(translate(p,vec3(0.0,0.0,-10.0)), 1.0)<DELTA_EPSILON*2.0)return materialOf(0.0,0.0,vec4(0.5),vec4(0.5));
-    if(plane(p,vec3(0.0,1.0,0.0),1.0)<DELTA_EPSILON*2.0)return materialOf(0.0,0.0,vec4(0.5),vec4(0.0));
-//    return materialOf(1.0,0.0,vec4(0.7,0.8,1.0,1.0),vec4(0.0));
-    return materialOf(1.0,0.0,vec4(0.0),vec4(0.0));
+    Material gray=materialOf(0,0,vec4(0.5),vec4(0.0));
+    Material sky=materialOf(0,0,vec4(0.01),vec4(0.0));
+    for(int i=0;i<SPHERES;i++){
+        if(sphere(translate(p,spheres[i].position),spheres[i].radius)<DELTA_EPSILON)return spheres[i].material;
+    }
+    if(plane(p,vec3(0.0,1.0,0.0),1.0)<DELTA_EPSILON)return gray;
+    return sky;
 }
 float map(in vec3 p){
-    return unionSDF(
-//        unionSDF(
-//            box(
-//                translate(p,vec3(0.0,0.0,-10.0)),
-//                vec3(1)
-//            ),
-//            sphere(
-//                translate(p,vec3(2.0,0.0,-10.0)),
-//                1.0
-//            )
-//        ),
-//    plane(p,vec3(0.0,1.0,0.0),1.0)
-        sphere(translate(p,vec3(0.0,0.0,-10.0)), 1.0),
-        plane(p,vec3(0.0,1.0,0.0),1.0)
-    );
+    float d=MAX_DISTANCE;
+    for(int i=0;i<SPHERES;i++){
+        d=unionSDF(
+            d, sphere(translate(p,spheres[i].position),spheres[i].radius)
+        );
+    }
+    return unionSDF(d,plane(p,vec3(0.0,1.0,0.0),1.0));
 }
 
 vec3 getNormal(in vec3 p){
@@ -204,7 +223,6 @@ vec4 calculateColor(vec2 uv,vec2 size){
         pow(color.b,gamma),
         1.0
     );
-//    return color;
 }
 
 void main() {
