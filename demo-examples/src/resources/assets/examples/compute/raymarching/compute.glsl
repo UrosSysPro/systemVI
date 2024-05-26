@@ -1,6 +1,6 @@
 #version 430 core
 #define RAY_ITERATIONS 200
-#define SAMPLES 20
+#define SAMPLES 5
 #define DELTA_EPSILON 0.01
 #define MAX_DISTANCE 100.0
 #define MAX_BOUNCES 5
@@ -76,24 +76,27 @@ vec3 transform(in mat4 mat,in vec3 p){
 }
 
 struct Material{
-    vec4 color;
     float roughness;
     float metalic;
+    vec4 color;
+    vec4 emission;
 };
-Material materialOf(vec4 color,float roughness,float metalic){
+Material materialOf(float roughness,float metalic,vec4 color,vec4 emissive){
     Material m;
     m.color=color;
     m.roughness=roughness;
     m.metalic=metalic;
+    m.emission=emissive;
     return m;
 }
 Material getMaterial(in vec3 p){
 //    if(box(translate(p,vec3(0.0,0.0,-10.0)), vec3(1.0))<DELTA_EPSILON*2.0)return materialOf(vec4(0.3,0.6,0.9,1.0),0.05,1.0);
 //    if(sphere(translate(p,vec3(2.0,0.0,-10.0)), 1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.9,0.6,0.3,1.0),0.3,0.0);
 //    if(plane(p,vec3(0.0,1.0,0.0),1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.6,0.8,0.3,1.0),0.0,0.0);
-    if(sphere(translate(p,vec3(0.0,0.0,-10.0)), 1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.5,0.5,0.5,1.0),0.0,0.0);
-    if(plane(p,vec3(0.0,1.0,0.0),1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.5,0.5,0.5,1.0),0.0,0.0);
-    return materialOf(vec4(0.7,0.8,1.0,1.0),1.0,0.0);
+    if(sphere(translate(p,vec3(0.0,0.0,-10.0)), 1.0)<DELTA_EPSILON*2.0)return materialOf(0.0,0.0,vec4(0.5),vec4(0.5));
+    if(plane(p,vec3(0.0,1.0,0.0),1.0)<DELTA_EPSILON*2.0)return materialOf(0.0,0.0,vec4(0.5),vec4(0.0));
+//    return materialOf(1.0,0.0,vec4(0.7,0.8,1.0,1.0),vec4(0.0));
+    return materialOf(1.0,0.0,vec4(0.0),vec4(0.0));
 }
 float map(in vec3 p){
     return unionSDF(
@@ -142,14 +145,15 @@ float rand(vec3 co){ return rand(co.xy+rand(co.z)); }
 
 vec4 simulatePhoton(vec2 uv,vec2 size,int sampleID){
 
-    vec4 color=vec4(1.0);
     mat4 inverted=inverse(view);
     vec4 focus=inverted*vec4(0.0,0.0,2.2,1.0);
     vec4 point=inverted*vec4(uv,0.0,1.0);
     vec3 rayOrigin=vec3(focus.xyz);
     vec3 rayDirection=normalize(vec3(point.xyz)-rayOrigin);
 
-    for(int i=0;i<MAX_BOUNCES;i++){
+    Material[MAX_BOUNCES] materials;
+    int i;
+    for(i=0;i<MAX_BOUNCES;i++){
         float d;
         vec3 p;
         int n;
@@ -173,9 +177,16 @@ vec4 simulatePhoton(vec2 uv,vec2 size,int sampleID){
             ))
         );
         rayDirection=mix(diffuseDirection,reflectedDirection,material.metalic);
-        color*=material.color;
+//        color*=material.color;
+
+        materials[i]=material;
 
         if(d>MAX_DISTANCE)break;
+    }
+    vec4 color=vec4(1.0);
+    for(int j=0;j<=i;j++){
+        color*=materials[i-j].color;
+        color+=materials[i-j].emission;
     }
     return color;
 }
