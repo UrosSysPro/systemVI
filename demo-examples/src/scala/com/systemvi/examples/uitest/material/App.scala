@@ -32,10 +32,13 @@ class MyAppState extends State{
         title = Text("AppBar",
           style = TextStyle(scale = 0.5f, color = Colors.white),
           font = UIApplication.font
+        ),
+        actions = Array(
+
         )
       ),
       body = Center(
-        child = Text(s"Clicked: $clicks",
+        child = Text(s"$clicks",
           font = UIApplication.font,
           style = TextStyle()
         )

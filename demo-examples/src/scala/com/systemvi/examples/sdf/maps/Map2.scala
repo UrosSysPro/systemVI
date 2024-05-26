@@ -9,10 +9,10 @@ import org.joml.{Vector3f, Vector4f}
 
 object Map2 {
   val epsilon=0.001f
-  val red=Material(0.4f,1,new Vector4f(Colors.red500),emission = Colors.red700)
+  val red=Material(0.4f,0,new Vector4f(Colors.red500),emission = Colors.red300)
   val blue=Material(1,0,new Vector4f(Colors.blue500))
-  val floor=Material(0.1f,1f,new Vector4f(Colors.orange300))
-  val sky=Material(1,1,Colors.blue50)
+  val floor=Material(0.5f,0.5f,new Vector4f(Colors.orange300))
+  val sky=Material(1,1,Colors.black)
 
   def getMaterial(p: Vector3f): Material = {
     if (Sphere(p,new Vector3f(-100,100,0),100)<epsilon) return red

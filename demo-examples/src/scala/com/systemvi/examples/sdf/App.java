@@ -56,9 +56,9 @@ public class App extends Game {
         service = Executors.newFixedThreadPool(threads);
         futures=new Future[tasks];
 
-        rayMarchRenderer = Map2.renderer();
+        rayMarchRenderer = Map3.renderer();
 
-        startRender(4,10,1000);
+        startRender(10,10,1000);
     }
 
     @Override
@@ -107,6 +107,7 @@ public class App extends Game {
                     color.x=(float)Math.pow(color.x,1/gamma);
                     color.y=(float)Math.pow(color.y,1/gamma);
                     color.z=(float)Math.pow(color.z,1/gamma);
+                    color.min(new Vector4f(1));
                     data.set(x,y,color);
                 }
             });

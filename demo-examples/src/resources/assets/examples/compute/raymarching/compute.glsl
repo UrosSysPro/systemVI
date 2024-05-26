@@ -1,8 +1,8 @@
 #version 430 core
-#define RAY_ITERATIONS 100
-#define SAMPLES 5
+#define RAY_ITERATIONS 200
+#define SAMPLES 20
 #define DELTA_EPSILON 0.01
-#define MAX_DISTANCE 1000.0
+#define MAX_DISTANCE 100.0
 #define MAX_BOUNCES 5
 
 //in uvec3 gl_NumWorkGroups;
@@ -88,23 +88,27 @@ Material materialOf(vec4 color,float roughness,float metalic){
     return m;
 }
 Material getMaterial(in vec3 p){
-    if(box(translate(p,vec3(0.0,0.0,-10.0)), vec3(1.0))<DELTA_EPSILON*2.0)return materialOf(vec4(0.3,0.6,0.9,1.0),0.05,1.0);
-    if(sphere(translate(p,vec3(2.0,0.0,-10.0)), 1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.9,0.6,0.3,1.0),0.3,0.0);
-    if(plane(p,vec3(0.0,1.0,0.0),1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.6,0.8,0.3,1.0),0.0,0.0);
-    return materialOf(vec4(0.9,0.9,1.0,1.0),1.0,0.0);
+//    if(box(translate(p,vec3(0.0,0.0,-10.0)), vec3(1.0))<DELTA_EPSILON*2.0)return materialOf(vec4(0.3,0.6,0.9,1.0),0.05,1.0);
+//    if(sphere(translate(p,vec3(2.0,0.0,-10.0)), 1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.9,0.6,0.3,1.0),0.3,0.0);
+//    if(plane(p,vec3(0.0,1.0,0.0),1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.6,0.8,0.3,1.0),0.0,0.0);
+    if(sphere(translate(p,vec3(0.0,0.0,-10.0)), 1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.5,0.5,0.5,1.0),0.0,0.0);
+    if(plane(p,vec3(0.0,1.0,0.0),1.0)<DELTA_EPSILON*2.0)return materialOf(vec4(0.5,0.5,0.5,1.0),0.0,0.0);
+    return materialOf(vec4(0.7,0.8,1.0,1.0),1.0,0.0);
 }
 float map(in vec3 p){
     return unionSDF(
-        unionSDF(
-            box(
-                translate(p,vec3(0.0,0.0,-10.0)),
-                vec3(1)
-            ),
-            sphere(
-                translate(p,vec3(2.0,0.0,-10.0)),
-                1.0
-            )
-        ),
+//        unionSDF(
+//            box(
+//                translate(p,vec3(0.0,0.0,-10.0)),
+//                vec3(1)
+//            ),
+//            sphere(
+//                translate(p,vec3(2.0,0.0,-10.0)),
+//                1.0
+//            )
+//        ),
+//    plane(p,vec3(0.0,1.0,0.0),1.0)
+        sphere(translate(p,vec3(0.0,0.0,-10.0)), 1.0),
         plane(p,vec3(0.0,1.0,0.0),1.0)
     );
 }
@@ -150,27 +154,28 @@ vec4 simulatePhoton(vec2 uv,vec2 size,int sampleID){
         vec3 p;
         int n;
         rayMarch(d,p,n,rayOrigin,rayDirection);
-        if(d>MAX_DISTANCE)break;
         vec3 normal=getNormal(p);
         Material material=getMaterial(p);
         rayOrigin=p+3.0*DELTA_EPSILON*normal;
         vec3 reflectedDirection=normalize(
         reflect(rayDirection,normal)+
-        normalize(vec3(
-        rand(vec3(uv,float(sampleID+3*i+1)))*2.0-1.0,
-        rand(vec3(uv,float(sampleID+3*i+2)))*2.0-1.0,
-        rand(vec3(uv,float(sampleID+3*i+3)))*2.0-1.0
-        ))*material.roughness
+            normalize(vec3(
+                rand(vec3(uv,float(sampleID+3*i+1)))*2.0-1.0,
+                rand(vec3(uv,float(sampleID+3*i+2)))*2.0-1.0,
+                rand(vec3(uv,float(sampleID+3*i+3)))*2.0-1.0
+            ))*material.roughness
         );
         vec3 diffuseDirection=normalize(
-        normal+normalize(vec3(
-        rand(vec3(uv,float(sampleID+3*i+1)))*2.0-1.0,
-        rand(vec3(uv,float(sampleID+3*i+2)))*2.0-1.0,
-        rand(vec3(uv,float(sampleID+3*i+3)))*2.0-1.0
-        ))
+            normal+normalize(vec3(
+                rand(vec3(uv,float(sampleID+3*i+1)))*2.0-1.0,
+                rand(vec3(uv,float(sampleID+3*i+2)))*2.0-1.0,
+                rand(vec3(uv,float(sampleID+3*i+3)))*2.0-1.0
+            ))
         );
         rayDirection=mix(diffuseDirection,reflectedDirection,material.metalic);
         color*=material.color;
+
+        if(d>MAX_DISTANCE)break;
     }
     return color;
 }
@@ -188,6 +193,7 @@ vec4 calculateColor(vec2 uv,vec2 size){
         pow(color.b,gamma),
         1.0
     );
+//    return color;
 }
 
 void main() {
