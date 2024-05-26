@@ -1,9 +1,9 @@
 #version 430 core
 #define RAY_ITERATIONS 200
-#define SAMPLES 5
+#define SAMPLES 10
 #define DELTA_EPSILON 0.01
 #define MAX_DISTANCE 100.0
-#define MAX_BOUNCES 5
+#define MAX_BOUNCES 10
 
 //in uvec3 gl_NumWorkGroups;
 //in uvec3 gl_WorkGroupID;
@@ -118,24 +118,24 @@ float map(in vec3 p){
 
 vec3 getNormal(in vec3 p){
     return normalize(vec3(
-    map(p+vec3(DELTA_EPSILON,0.0,0.0))-map(p-vec3(DELTA_EPSILON,0.0,0.0)),
-    map(p+vec3(0.0,DELTA_EPSILON,0.0))-map(p-vec3(0.0,DELTA_EPSILON,0.0)),
-    map(p+vec3(0.0,0.0,DELTA_EPSILON))-map(p-vec3(0.0,0.0,DELTA_EPSILON))
+        map(p+vec3(DELTA_EPSILON,0.0,0.0))-map(p-vec3(DELTA_EPSILON,0.0,0.0)),
+        map(p+vec3(0.0,DELTA_EPSILON,0.0))-map(p-vec3(0.0,DELTA_EPSILON,0.0)),
+        map(p+vec3(0.0,0.0,DELTA_EPSILON))-map(p-vec3(0.0,0.0,DELTA_EPSILON))
     ));
 }
 
-void rayMarch(out float distance,out vec3 endPoint,out int numOfIterations,in vec3 rayOrigin,in vec3 rayDirection){
+void rayMarch(out float distance,out vec3 endPoint,out int n,in vec3 rayOrigin,in vec3 rayDirection){
     distance=0;
     for(int i=0;i<RAY_ITERATIONS;i++){
         float d=map(rayOrigin+distance*rayDirection);
         distance+=d;
         if(distance>MAX_DISTANCE||d<DELTA_EPSILON){
-            numOfIterations=i;
+            n=i;
             endPoint=rayOrigin+distance*rayDirection;
             return;
         }
     }
-    numOfIterations=RAY_ITERATIONS;
+    n=RAY_ITERATIONS;
     endPoint=rayOrigin+distance*rayDirection;
 }
 

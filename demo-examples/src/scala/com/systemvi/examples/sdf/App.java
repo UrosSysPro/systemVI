@@ -56,7 +56,7 @@ public class App extends Game {
         service = Executors.newFixedThreadPool(threads);
         futures=new Future[tasks];
 
-        rayMarchRenderer = Map3.renderer();
+        rayMarchRenderer = Map2.renderer();
 
         startRender(10,10,1000);
     }
