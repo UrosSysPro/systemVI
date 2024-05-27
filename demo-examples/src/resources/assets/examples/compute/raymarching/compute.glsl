@@ -1,9 +1,9 @@
 #version 430 core
-#define RAY_ITERATIONS 1000
-#define SAMPLES 30
+#define RAY_ITERATIONS 200
+#define SAMPLES 1
 #define DELTA_EPSILON 0.01
-#define MAX_DISTANCE 10000.0
-#define MAX_BOUNCES 30
+#define MAX_DISTANCE 1000.0
+#define MAX_BOUNCES 5
 
 //in uvec3 gl_NumWorkGroups;
 //in uvec3 gl_WorkGroupID;
@@ -111,7 +111,7 @@ Sphere sphereOf(vec3 position,Material material,float radius){
 }
 #define SPHERES 3
 Sphere[SPHERES] spheres={
-    sphereOf(vec3( 0.0,0.0,-10.0),materialOf(0.0,0.0,vec4(1.0),vec4(0.7,0.2,0.1,1.0)),1.0),
+    sphereOf(vec3( 0.0,0.0,-10.0),materialOf(0.0,0.0,vec4(0.0),vec4(0.7,0.2,0.1,1.0)),1.0),
     sphereOf(vec3( 3.0,0.0,-10.0),materialOf(0.0,0.0,vec4(1.0,0.2,0.3,1.0),vec4(0.0)),1.0),
     sphereOf(vec3( -3.0,0.0,-10.0),materialOf(1.0,1.0,vec4(0.2,0.4,0.9,1.0),vec4(0.0)),1.0)
 };

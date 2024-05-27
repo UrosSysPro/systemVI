@@ -10,7 +10,6 @@ import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.texture.TextureRegion;
 import com.systemvi.engine.window.InputMultiplexer;
 import com.systemvi.engine.window.Window;
-import com.systemvi.voxel.world.entities.Player;
 import com.systemvi.voxel.world.materials.Material;
 import com.systemvi.voxel.world.renderer.WorldRenderer;
 import com.systemvi.voxel.world.world.Block;
