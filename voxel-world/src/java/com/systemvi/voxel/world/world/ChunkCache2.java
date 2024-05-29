@@ -13,6 +13,8 @@ public class ChunkCache2 {
     private final ArrayBuffer vertexBuffer;
     private final ArrayBuffer instanceBuffer;
     private final ElementsBuffer elementsBuffer;
+
+
     public ChunkCache2(World world, Vector3i chunkId){
         this.world=world;
         this.chunkId=chunkId;
