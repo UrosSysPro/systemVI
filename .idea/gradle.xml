@@ -10,6 +10,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/demo-examples" />
+            <option value="$PROJECT_DIR$/jni-lib" />
             <option value="$PROJECT_DIR$/voxel-world" />
           </set>
         </option>
