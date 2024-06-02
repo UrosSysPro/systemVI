@@ -1,1 +1,2 @@
 src/main/include/jni_*.h
+cmake-build-debug
