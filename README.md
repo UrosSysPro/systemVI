@@ -1,6 +1,6 @@
 # systemVI
 Projekat za 6.godinu 2023-2024 u terminu 13:30
-
+ 
 ## Casovi
 1. [Git, Gradle](GitGradle.md)
 2. [Data structures: ArrayList, LinkedList](src/com/systemvi/examples/datastructures/Lists.md)
