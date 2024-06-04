@@ -1,9 +1,9 @@
 #version 430 core
-#define RAY_ITERATIONS 200
+#define RAY_ITERATIONS 500
 #define SAMPLES 1
 #define DELTA_EPSILON 0.01
 #define MAX_DISTANCE 1000.0
-#define MAX_BOUNCES 5
+#define MAX_BOUNCES 100
 
 //in uvec3 gl_NumWorkGroups;
 //in uvec3 gl_WorkGroupID;
@@ -12,8 +12,9 @@
 //in uint  gl_LocalInvocationIndex;
 
 layout (local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
-uniform layout(binding=0,rgba32f) writeonly image2D outputTexture;
+uniform layout(binding=0,rgba32f) image2D outputTexture;
 uniform mat4 view;
+uniform float time;
 
 float sphere( vec3 p, float s )
 {
@@ -111,14 +112,14 @@ Sphere sphereOf(vec3 position,Material material,float radius){
 }
 #define SPHERES 3
 Sphere[SPHERES] spheres={
-    sphereOf(vec3( 0.0,0.0,-10.0),materialOf(0.0,0.0,vec4(0.0),vec4(0.7,0.2,0.1,1.0)),1.0),
-    sphereOf(vec3( 3.0,0.0,-10.0),materialOf(0.0,0.0,vec4(1.0,0.2,0.3,1.0),vec4(0.0)),1.0),
-    sphereOf(vec3( -3.0,0.0,-10.0),materialOf(1.0,1.0,vec4(0.2,0.4,0.9,1.0),vec4(0.0)),1.0)
+    sphereOf(vec3( 0.0,0.0,-10.0),materialOf(0.0,0.0,vec4(0.0),vec4(1.0)),1.0),
+    sphereOf(vec3( 2.5,0.0,-10.0),materialOf(0.7,1.0,vec4(1.0,0.2,0.3,1.0),vec4(0.0)),1.0),
+    sphereOf(vec3( -2.5,0.0,-10.0),materialOf(1.0,1.0,vec4(0.2,0.4,0.9,1.0),vec4(0.0)),1.0)
 };
 
 Material getMaterial(in vec3 p){
-    Material gray=materialOf(0,0,vec4(0.5),vec4(0.0));
-    Material sky=materialOf(0,0,vec4(0.01),vec4(0.0));
+    Material gray=materialOf(0.9,1.0,vec4(0.5),vec4(0.0));
+    Material sky=materialOf(0,0,vec4(0.0),vec4(0.0));
     for(int i=0;i<SPHERES;i++){
         if(sphere(translate(p,spheres[i].position),spheres[i].radius)<DELTA_EPSILON)return spheres[i].material;
     }
@@ -158,7 +159,7 @@ void rayMarch(out float distance,out vec3 endPoint,out int n,in vec3 rayOrigin,i
     endPoint=rayOrigin+distance*rayDirection;
 }
 
-float rand(float co) { return abs(fract(sin(co*(91.3458)) * 47453.5453)); }
+float rand(float co) { return abs(fract(sin((co+time)*(91.3458)) * 47453.5453)); }
 float rand(vec2 co){ return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453); }
 float rand(vec3 co){ return rand(co.xy+rand(co.z)); }
 
@@ -231,6 +232,6 @@ void main() {
 
     vec2 size=vec2(textureSize);
     vec2 uv=(vec2(texelCoord)/size-vec2(0.5))*vec2(size.x/size.y,1.0);
-
-    imageStore(outputTexture,texelCoord,calculateColor(uv,size));
+    vec4 value=imageLoad(outputTexture,texelCoord);
+    imageStore(outputTexture,texelCoord,mix(calculateColor(uv,size),value,0.99));
 }

@@ -15,6 +15,8 @@ class App extends Game(4,3,60,800,600,"Ray Marching"){
   var rendererCamera:Camera3=null
   var textureRenderer:TextureRenderer=null
   var shader:Shader=null
+  var time:Float=0
+
   override def setup(window: Window): Unit = {
     texture=new Texture(window.getWidth,window.getHeight,Format.RGBA32F)
     textureRenderer=new TextureRenderer()
@@ -35,7 +37,9 @@ class App extends Game(4,3,60,800,600,"Ray Marching"){
   override def loop(delta: Float): Unit = {
     controller.update(delta);
     Utils.clear(0.3f,0.6f,0.9f,1.0f,Buffer.COLOR_BUFFER)
+    time+=delta
     shader.use()
+    shader.setUniform("time",time)
     shader.setUniform("view",controller.camera.view)
     texture.bindAsImage(0)
     shader.dispatch(800/8,600/8,1)
