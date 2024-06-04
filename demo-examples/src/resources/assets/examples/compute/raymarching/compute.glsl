@@ -110,15 +110,16 @@ Sphere sphereOf(vec3 position,Material material,float radius){
     b.radius=radius;
     return b;
 }
-#define SPHERES 3
+#define SPHERES 4
 Sphere[SPHERES] spheres={
-    sphereOf(vec3( 0.0,0.0,-10.0),materialOf(0.0,0.0,vec4(0.0),vec4(1.0)),1.0),
+    sphereOf(vec3( 0.0,0.0,-10.0),materialOf(0.0,0.0,vec4(0.0),vec4(0.4,0.7,1.0,1.0)),1.0),
     sphereOf(vec3( 2.5,0.0,-10.0),materialOf(0.7,1.0,vec4(1.0,0.2,0.3,1.0),vec4(0.0)),1.0),
-    sphereOf(vec3( -2.5,0.0,-10.0),materialOf(1.0,1.0,vec4(0.2,0.4,0.9,1.0),vec4(0.0)),1.0)
+    sphereOf(vec3( -2.5,0.0,-10.0),materialOf(1.0,1.0,vec4(0.2,0.4,0.9,1.0),vec4(0.0)),1.0),
+    sphereOf(vec3( 10.0,5.0,-10.0),materialOf(0.0,0.0,vec4(0.0),vec4(4.0,7.0,10.0,1.0)),2.0)
 };
 
 Material getMaterial(in vec3 p){
-    Material gray=materialOf(0.9,1.0,vec4(0.5),vec4(0.0));
+    Material gray=materialOf(0.9,0.0,vec4(0.5),vec4(0.0));
     Material sky=materialOf(0,0,vec4(0.0),vec4(0.0));
     for(int i=0;i<SPHERES;i++){
         if(sphere(translate(p,spheres[i].position),spheres[i].radius)<DELTA_EPSILON)return spheres[i].material;
@@ -233,5 +234,5 @@ void main() {
     vec2 size=vec2(textureSize);
     vec2 uv=(vec2(texelCoord)/size-vec2(0.5))*vec2(size.x/size.y,1.0);
     vec4 value=imageLoad(outputTexture,texelCoord);
-    imageStore(outputTexture,texelCoord,mix(calculateColor(uv,size),value,0.99));
+    imageStore(outputTexture,texelCoord,mix(calculateColor(uv,size),value,0.95));
 }
