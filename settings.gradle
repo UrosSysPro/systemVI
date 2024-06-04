@@ -8,4 +8,4 @@
 rootProject.name = 'systemVI'
 include 'voxel-world'
 include 'demo-examples'
-include "jni-lib"
+//include "jni-lib"

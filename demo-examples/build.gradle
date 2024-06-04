@@ -25,5 +25,5 @@ sourceSets {
 }
 
 dependencies {
-    implementation project(":jni-lib")
+//    implementation project(":jni-lib")
 }

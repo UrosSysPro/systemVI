@@ -16,6 +16,7 @@ public class LibraryLoader {
 
     public static Boolean load(Class<?> cls, String name) {
         String path = "/lib" + name + "." + getExt();
+        System.out.println(path);
         URL url = cls.getResource(path);
 
         Boolean success = false;
