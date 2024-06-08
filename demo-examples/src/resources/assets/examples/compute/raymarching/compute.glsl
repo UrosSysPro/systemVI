@@ -234,5 +234,5 @@ void main() {
     vec2 size=vec2(textureSize);
     vec2 uv=(vec2(texelCoord)/size-vec2(0.5))*vec2(size.x/size.y,1.0);
     vec4 value=imageLoad(outputTexture,texelCoord);
-    imageStore(outputTexture,texelCoord,mix(calculateColor(uv,size),value,0.95));
+    imageStore(outputTexture,texelCoord,mix(calculateColor(uv,size),value,0.99));
 }

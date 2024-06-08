@@ -81,6 +81,7 @@ sourceSets {
 //}
 
 dependencies {
+	implementation 'dev.dominion.ecs:dominion-ecs:0.9.0-SNAPSHOT'
 	implementation 'com.google.code.gson:gson:2.10.1'
 	implementation 'org.jbox2d:jbox2d-library:2.2.1.1'
 	// https://mvnrepository.com/artifact/com.googlecode.lanterna/lanterna
@@ -186,6 +187,7 @@ subprojects {
 	}
 	dependencies {
 		implementation rootProject
+		implementation 'dev.dominion.ecs:dominion-ecs:0.9.0-SNAPSHOT'
 		implementation 'com.google.code.gson:gson:2.10.1'
 		implementation 'org.jbox2d:jbox2d-library:2.2.1.1'
 		// https://mvnrepository.com/artifact/com.googlecode.lanterna/lanterna
