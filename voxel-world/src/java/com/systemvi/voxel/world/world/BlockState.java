@@ -4,6 +4,7 @@ public class BlockState {
     public Block block;
     public int lightLevel;
 
+
     public BlockState(Block block){
         this(block,0);
     }

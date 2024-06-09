@@ -21,7 +21,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_F3;
 public class DebugApp extends Game {
 
     public DebugApp() {
-        super(3,3,60,1400,900,"Voxel world");
+        super(3,3,60,800,600,"Voxel world");
     }
     public CameraController3 controller;
     public Camera3 camera;
@@ -41,9 +41,9 @@ public class DebugApp extends Game {
         material=new Material("assets/examples/minecraft/textures");
 
         TextureRegion[][] regions=TextureRegion.split(material.diffuse,16,16);
-        Block.AIR=new Block(null,null,null);
-        Block.STONE=new Block(regions[7][0],regions[7][0],regions[7][0]);
-        Block.DIRT=new Block(regions[2][3],regions[1][2],regions[1][3]);
+        Block.AIR=new Block(null,null,null,false);
+        Block.STONE=new Block(regions[7][0],regions[7][0],regions[7][0],true);
+        Block.DIRT=new Block(regions[2][3],regions[1][2],regions[1][3],true);
 
         controller=CameraController3.builder()
             .camera(Camera3.builder3d()
