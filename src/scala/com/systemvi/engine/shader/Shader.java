@@ -224,9 +224,18 @@ public class Shader {
         int index=glGetUniformBlockIndex(id,name);
     }
 
+    /**
+     * @param primitive type of primitive to draw
+     * @param count number of vertices, so 3 for one triangle or 2 for a line
+     * @param first vertex offset from the beginning of array buffer
+     * */
     public void drawArrays(Primitive primitive,int first,int count){
         glDrawArrays(primitive.id,first,count);
     }
+    /**
+     * @param primitive type of primitive to draw
+     * @param count number of vertices, so 3 for one triangle or 2 for a line
+     * */
     public void drawArrays(Primitive primitive,int count){
         drawArrays(primitive,0,count);
     }
