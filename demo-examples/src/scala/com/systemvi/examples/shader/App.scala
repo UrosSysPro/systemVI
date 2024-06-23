@@ -8,13 +8,14 @@ import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.Window
-import org.joml.Vector2i
+import org.joml.{Matrix4f, Vector2i}
 
 class App extends Game(4,6,60,800,600,"Shader"){
-  var shader:Shader=null
-  var vertexArray:VertexArray=null
-  var controller:CameraController3=null
-  val grid=new Vector2i(10,10)
+  private var shader:Shader=null
+  private var vertexArray:VertexArray=null
+  private var controller:CameraController3=null
+  private val grid=new Vector2i(100,100)
+  private val model =new Matrix4f().rotateXYZ(Math.PI.toFloat/2,0,0).scale(10)
 
   override def setup(window: Window): Unit = {
     vertexArray=new VertexArray()
@@ -38,6 +39,7 @@ class App extends Game(4,6,60,800,600,"Shader"){
     vertexArray.bind()
     shader.setUniform("grid",grid)
     shader.setUniform("view",controller.camera.view)
+    shader.setUniform("model",model)
     shader.setUniform("projection",controller.camera.projection)
     shader.drawArrays(Primitive.TIRANGLE_STRIP,(grid.x*2+2)*(grid.y-1))
   }
