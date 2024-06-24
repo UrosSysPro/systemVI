@@ -14,8 +14,10 @@ class App extends Game(4,6,60,800,600,"Shader"){
   private var shader:Shader=null
   private var vertexArray:VertexArray=null
   private var controller:CameraController3=null
-  private val grid=new Vector2i(100,100)
-  private val model =new Matrix4f().rotateXYZ(Math.PI.toFloat/2,0,0).scale(10)
+  private val grid=new Vector2i(1000,1000)
+  private val model =new Matrix4f().identity()
+    .rotateXYZ(Math.PI.toFloat/2,0,0)
+    .scale(10)
 
   override def setup(window: Window): Unit = {
     vertexArray=new VertexArray()
@@ -32,8 +34,9 @@ class App extends Game(4,6,60,800,600,"Shader"){
   }
 
   override def loop(delta: Float): Unit = {
-    Utils.clear(Colors.blue500,Buffer.COLOR_BUFFER)
-    Utils.enableLines(2)
+    Utils.clear(Colors.blue500,Buffer.COLOR_BUFFER,Buffer.DEPTH_BUFFER)
+    Utils.enableDepthTest();
+//    Utils.enableLines(2)
     controller.update(delta)
     shader.use()
     vertexArray.bind()
