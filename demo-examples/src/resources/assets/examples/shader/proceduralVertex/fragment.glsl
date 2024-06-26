@@ -6,9 +6,9 @@ in struct VERTEX_DATA{
     vec2 uv;
     vec3 worldPosition;
     vec3 modelPosition;
-}fragmentIn;
+}vertexOut;
 
 void main(){
 
-    FragColor=vec4(fragmentIn.uv,0.9,1.0);
+    FragColor=vec4(vertexOut.uv,0.9,1.0);
 }
