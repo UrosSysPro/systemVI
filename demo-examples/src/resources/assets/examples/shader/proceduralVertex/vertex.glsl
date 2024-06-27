@@ -67,14 +67,16 @@ void main(){
 
     vec4 point=vec4(gridPos,0,1);
     point/=vec4(grid-1,1,1);
-    vertexOut.uv=point.xy;
+    vec2 uv=point.xy;
     point-=vec4(0.5,0.5,0.0,0.0);
-    point.z+=noise(vertexOut.uv,10)*0.3;
+    point.z+=noise(uv,10)*0.3;
     vertexOut.modelPosition=point.xyz;
 
     vec4 worldPosition=model*point;
 
     vertexOut.worldPosition=worldPosition.xyz;
+
+    vertexOut.uv=uv;
 
     gl_Position=projection*view*worldPosition;
 }
