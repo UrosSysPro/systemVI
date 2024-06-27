@@ -22,8 +22,11 @@ class App extends Game(4,6,60,800,600,"Shader"){
   override def setup(window: Window): Unit = {
     vertexArray=new VertexArray()
     shader=Shader.builder()
-      .vertex("assets/examples/shader/proceduralVertex/vertex.glsl")
-      .fragment("assets/examples/shader/proceduralVertex/fragment.glsl")
+//      .vertex("assets/examples/shader/proceduralVertex/vertex.glsl")
+//      .fragment("assets/examples/shader/proceduralVertex/fragment.glsl")
+      .fragment("assets/examples/shader/geometryShader/fragment.glsl")
+      .vertex("assets/examples/shader/geometryShader/vertex.glsl")
+      .geometry("assets/examples/shader/geometryShader/geometry.glsl")
       .build()
     controller=CameraController3.builder()
       .window(window)
