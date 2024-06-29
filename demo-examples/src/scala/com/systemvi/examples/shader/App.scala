@@ -11,7 +11,8 @@ import com.systemvi.engine.window.Window
 import org.joml.{Matrix4f, Vector2i}
 
 class App extends Game(4,6,60,800,600,"Shader"){
-  private var shader:Shader=null
+  private var vertexShader:Shader=null
+  private var geometryShader:Shader=null
   private var vertexArray:VertexArray=null
   private var controller:CameraController3=null
   private val grid=new Vector2i(10,10)
@@ -21,13 +22,18 @@ class App extends Game(4,6,60,800,600,"Shader"){
 
   override def setup(window: Window): Unit = {
     vertexArray=new VertexArray()
-    shader=Shader.builder()
-//      .vertex("assets/examples/shader/proceduralVertex/vertex.glsl")
-//      .fragment("assets/examples/shader/proceduralVertex/fragment.glsl")
+
+    vertexShader=Shader.builder()
+      .vertex("assets/examples/shader/proceduralVertex/vertex.glsl")
+      .fragment("assets/examples/shader/proceduralVertex/fragment.glsl")
+      .build()
+
+    geometryShader=Shader.builder()
       .fragment("assets/examples/shader/geometryShader/fragment.glsl")
       .vertex("assets/examples/shader/geometryShader/vertex.glsl")
       .geometry("assets/examples/shader/geometryShader/geometry.glsl")
       .build()
+
     controller=CameraController3.builder()
       .window(window)
       .camera(Camera3.builder3d().build())
@@ -39,14 +45,24 @@ class App extends Game(4,6,60,800,600,"Shader"){
   override def loop(delta: Float): Unit = {
     Utils.clear(Colors.blue500,Buffer.COLOR_BUFFER,Buffer.DEPTH_BUFFER)
     Utils.enableDepthTest();
-//    Utils.enableLines(2)
+    //    Utils.enableLines(2)
     controller.update(delta)
-    shader.use()
     vertexArray.bind()
-    shader.setUniform("grid",grid)
-    shader.setUniform("view",controller.camera.view)
-    shader.setUniform("model",model)
-    shader.setUniform("projection",controller.camera.projection)
-    shader.drawArrays(Primitive.TIRANGLE_STRIP,(grid.x*2+2)*(grid.y-1))
+
+    vertexShader.use()
+    vertexShader.setUniform("grid",grid)
+    vertexShader.setUniform("view",controller.camera.view)
+    vertexShader.setUniform("model",model)
+    vertexShader.setUniform("projection",controller.camera.projection)
+    vertexShader.drawArrays(Primitive.TIRANGLE_STRIP,(grid.x*2+2)*(grid.y-1))
+
+
+
+    geometryShader.use()
+    geometryShader.setUniform("grid",grid)
+    geometryShader.setUniform("view",controller.camera.view)
+    geometryShader.setUniform("model",model)
+    geometryShader.setUniform("projection",controller.camera.projection)
+    geometryShader.drawArrays(Primitive.TIRANGLE_STRIP,(grid.x*2+2)*(grid.y-1))
   }
 }
