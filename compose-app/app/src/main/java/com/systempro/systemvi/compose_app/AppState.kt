@@ -8,15 +8,14 @@ import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 
 class AppState : ViewModel() {
-    private var _counter by mutableIntStateOf(0)
+    var counter by mutableIntStateOf(0)
     val httpClient: HttpClient = HttpClient(CIO)
-    fun counter(): Int = _counter
 
     init {
-        _counter = 10
+        counter = 10
     }
 
     fun add() {
-        _counter++
+        counter++
     }
 }

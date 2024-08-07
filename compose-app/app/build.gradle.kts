@@ -72,4 +72,6 @@ dependencies {
     //ktor
     implementation("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-cio:$ktor_version")
+    //dotenv
+    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
 }

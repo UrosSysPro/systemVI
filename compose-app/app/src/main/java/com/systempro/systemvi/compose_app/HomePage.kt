@@ -33,6 +33,8 @@ fun HomePage(
     var clicks by rememberSaveable{ mutableIntStateOf(0) }
     var customState by remember { mutableStateOf(State(0,"hello")) }
     val appState=viewModel<AppState>()
+
+
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Theme.Typography
@@ -86,9 +88,15 @@ fun HomePage(
                             customState=State(customState.a+1,"hello")
                             println("customState: ${customState.a}")
                         }) {
+                            SideEffect {
+                                Logger.debug("side effect print")
+                            }
+                            LaunchedEffect(Unit){
+                                Logger.debug("launched effect print")
+                            }
                             Text(text = "add to custom state")
                         }
-                        Text(text = "appState.counter: ${appState.counter()}")
+                        Text(text = "appState.counter: ${appState.counter}")
                         Button(onClick = {
                             appState.add()
                         }) {
