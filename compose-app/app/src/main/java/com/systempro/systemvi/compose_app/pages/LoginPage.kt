@@ -1,4 +1,4 @@
-package com.systempro.systemvi.compose_app
+package com.systempro.systemvi.compose_app.pages
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -1,6 +1,5 @@
-package com.systempro.systemvi.compose_app
+package com.systempro.systemvi.compose_app.pages
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -15,10 +14,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.systempro.systemvi.compose_app.composables.SettingView
+import com.systempro.systemvi.compose_app.utils.AppState
+import com.systempro.systemvi.compose_app.utils.Theme
 import kotlinx.coroutines.launch
 
 data class NavigationLocation(
-    val id:Int,
     val name:String,
     val builder:@Composable ()->Unit,
     val icon:ImageVector
@@ -26,9 +27,9 @@ data class NavigationLocation(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomePage(appState:AppState = viewModel()) {
-    val lightTheme=appState.useLightTheme
-    val dynamicTheme=appState.useDynamicTheme
+fun HomePage(appState: AppState = viewModel()) {
+    val lightTheme = appState.useLightTheme
+    val dynamicTheme = appState.useDynamicTheme
     val colorScheme=when{
         dynamicTheme  &&  lightTheme -> dynamicLightColorScheme(LocalContext.current)
         dynamicTheme  && !lightTheme -> dynamicDarkColorScheme(LocalContext.current)
@@ -39,10 +40,7 @@ fun HomePage(appState:AppState = viewModel()) {
     val scope = rememberCoroutineScope()
 
     val navigationItems:List<NavigationLocation> = listOf(
-        NavigationLocation(0,"Theme",{ Box(modifier = Modifier){Text("settings page")} },Icons.Rounded.Settings),
-        NavigationLocation(1,"Theme",{ Box(modifier = Modifier)},Icons.Rounded.Settings),
-        NavigationLocation(2,"Theme",{ Box(modifier = Modifier)},Icons.Rounded.Settings),
-        NavigationLocation(3,"Theme",{ Box(modifier = Modifier)},Icons.Rounded.Settings),
+        NavigationLocation("Settings",{ SettingView() },Icons.Rounded.Settings),
     )
 
     var pageIndex by rememberSaveable { mutableIntStateOf(0) }
@@ -57,11 +55,11 @@ fun HomePage(appState:AppState = viewModel()) {
                     Text(text = "Navigation Drawer", style = MaterialTheme.typography.headlineMedium)
                 }
                 LazyColumn(modifier = Modifier.padding(horizontal = 10.dp)) {
-                    items(navigationItems.size, key = {navigationItems[it].id}){
+                    items(navigationItems.size, key = {it}){
                         val navigationItem=navigationItems[it]
                         NavigationDrawerItem(
                             label = {Text(navigationItem.name)},
-                            selected = navigationItem.id==pageIndex,
+                            selected = it==pageIndex,
                             onClick = {pageIndex=it}
                         )
                     }
@@ -85,10 +83,6 @@ fun HomePage(appState:AppState = viewModel()) {
                                 content = { Icon(Icons.Rounded.MoreVert, contentDescription = "Menu") }
                             )
                         },
-//                        colors = TopAppBarDefaults.topAppBarColors(
-//                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-//                            titleContentColor = MaterialTheme.colorScheme.primary,
-//                        ),
                         title = { Text(text = "App Bar ") }
                     )
                 },
@@ -100,16 +94,7 @@ fun HomePage(appState:AppState = viewModel()) {
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text("dynamic mode")
-                        Switch(
-                            checked = appState.useDynamicTheme,
-                            onCheckedChange = {value->appState.useDynamicTheme = value}
-                        )
-                        Text("light mode")
-                        Switch(
-                            checked = appState.useLightTheme,
-                            onCheckedChange = {value->appState.useLightTheme = value}
-                        )
+                        navigationItems[pageIndex].builder()
                     }
                 }
             )

@@ -1,4 +1,4 @@
-package com.systempro.systemvi.compose_app
+package com.systempro.systemvi.compose_app.utils
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
