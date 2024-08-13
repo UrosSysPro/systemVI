@@ -9,21 +9,14 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.systempro.systemvi.compose_app.composables.SettingView
 import com.systempro.systemvi.compose_app.utils.AppState
 import com.systempro.systemvi.compose_app.utils.Theme
+import com.systempro.systemvi.compose_app.utils.navigationItems
 import kotlinx.coroutines.launch
-
-data class NavigationLocation(
-    val name:String,
-    val builder:@Composable ()->Unit,
-    val icon:ImageVector
-)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,10 +31,6 @@ fun HomePage(appState: AppState = viewModel()) {
     }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-
-    val navigationItems:List<NavigationLocation> = listOf(
-        NavigationLocation("Settings",{ SettingView() },Icons.Rounded.Settings),
-    )
 
     var pageIndex by rememberSaveable { mutableIntStateOf(0) }
 
@@ -60,7 +49,10 @@ fun HomePage(appState: AppState = viewModel()) {
                         NavigationDrawerItem(
                             label = {Text(navigationItem.name)},
                             selected = it==pageIndex,
-                            onClick = {pageIndex=it}
+                            onClick = {scope.launch {
+                                pageIndex=it
+                                drawerState.close()
+                            }}
                         )
                     }
                 }
