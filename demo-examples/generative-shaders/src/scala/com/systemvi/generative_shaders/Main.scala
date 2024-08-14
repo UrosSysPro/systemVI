@@ -57,14 +57,12 @@ class Main extends Game(4,6,60,800,600,"Shader"){
     vertexShader.setUniform("projection",controller.camera.projection)
     vertexShader.drawArrays(Primitive.TIRANGLE_STRIP,(grid.x*2+2)*(grid.y-1))
 
-
-
     geometryShader.use()
     geometryShader.setUniform("grid",grid)
     geometryShader.setUniform("view",controller.camera.view)
     geometryShader.setUniform("model",model)
     geometryShader.setUniform("projection",controller.camera.projection)
-    geometryShader.drawArrays(Primitive.TIRANGLE_STRIP,(grid.x*2+2)*(grid.y-1))
+    geometryShader.drawArrays(Primitive.POINTS,grid.x*grid.y)
   }
 }
 
