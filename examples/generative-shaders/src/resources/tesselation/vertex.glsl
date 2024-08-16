@@ -12,8 +12,8 @@ void main(){
     int index=gl_VertexID;
 
     vec2 point=vec2(
-        float(index%grid.x),
-        float(index/grid.x)
+    float(index%grid.x),
+    float(index/grid.x)
     );
     point/=vec2(grid);
     point-=vec2(0.5);
