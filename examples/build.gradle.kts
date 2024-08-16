@@ -1,4 +1,4 @@
-git plugins {
+plugins {
     id("application")
     id("scala")
     id("com.github.johnrengelman.shadow") version("8.1.1")
