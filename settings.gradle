@@ -9,5 +9,5 @@ rootProject.name = 'systemVI'
 include 'voxel-world'
 include 'examples'
 include 'examples:generative-shaders'
+include 'engine'
 //include "jni-lib"
-//include 'engine'
