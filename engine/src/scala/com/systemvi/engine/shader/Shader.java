@@ -20,7 +20,7 @@ public class Shader {
     }
 
     public static class Builder{
-        private String fragment,vertex,geometry,compute;
+        private String fragment,vertex,geometry,compute,tesselationEvaluation,tesselationControl;
 
         public Builder(){
             fragment=null;
@@ -28,19 +28,27 @@ public class Shader {
             geometry=null;
         }
         public Builder fragment(String file){
-            fragment= Utils.readFile(file);
+            fragment= Utils.readInternal(file);
             return this;
         }
         public Builder vertex(String file){
-            vertex=Utils.readFile(file);
+            vertex=Utils.readInternal(file);
             return this;
         }
         public Builder geometry(String file){
-            geometry=Utils.readFile(file);
+            geometry=Utils.readInternal(file);
+            return this;
+        }
+        public Builder tesselationEvaluation(String file){
+            tesselationEvaluation=Utils.readInternal(file);
+            return this;
+        }
+        public Builder tesselationControl(String file){
+            tesselationControl=Utils.readInternal(file);
             return this;
         }
         public Builder compute(String file){
-            compute=Utils.readFile(file);
+            compute=Utils.readInternal(file);
             return this;
         }
         public Builder fragmentSource(String source){
@@ -53,6 +61,14 @@ public class Shader {
         }
         public Builder geometrySource(String source){
             geometry=source;
+            return this;
+        }
+        public Builder tesselationEvaluationSource(String source){
+            tesselationEvaluation=source;
+            return this;
+        }
+        public Builder tesselationControlSource(String source){
+            tesselationControl=source;
             return this;
         }
         public Builder computeSource(String source){
@@ -107,6 +123,32 @@ public class Shader {
                 }
             }
 
+            int tesselationEvaluationShader=0;
+            if(tesselationEvaluation!=null){
+                tesselationEvaluationShader=glCreateShader(GL_TESS_EVALUATION_SHADER);
+                glShaderSource(tesselationEvaluationShader,tesselationEvaluation);
+                glCompileShader(tesselationEvaluationShader);
+                glGetShaderiv(tesselationEvaluationShader,GL_COMPILE_STATUS,status);
+                if(status[0]==0){
+                    compiled=false;
+                    log+="Tesselation Evaluation Log:\n";
+                    log+=glGetShaderInfoLog(tesselationEvaluationShader)+"\n";
+                }
+            }
+
+            int tesselationControlShader=0;
+            if(tesselationControl!=null){
+                tesselationControlShader=glCreateShader(GL_TESS_CONTROL_SHADER);
+                glShaderSource(tesselationControlShader,tesselationControl);
+                glCompileShader(tesselationControlShader);
+                glGetShaderiv(tesselationControlShader,GL_COMPILE_STATUS,status);
+                if(status[0]==0){
+                    compiled=false;
+                    log+="Tesselation Control Log:\n";
+                    log+=glGetShaderInfoLog(tesselationControlShader)+"\n";
+                }
+            }
+
             //compiling compute shader
             int computeShader=0;
             if(compute!=null){
@@ -125,6 +167,8 @@ public class Shader {
             if(vertex   !=null)    glAttachShader(programId,vertexShader);
             if(fragment !=null)  glAttachShader(programId,fragmentShader);
             if(geometry !=null)  glAttachShader(programId,geometryShader);
+            if(tesselationControl !=null)  glAttachShader(programId,tesselationControlShader);
+            if(tesselationEvaluation !=null)  glAttachShader(programId,tesselationEvaluationShader);
             if(compute  !=null)  glAttachShader(programId,computeShader);
             glLinkProgram(programId);
 
