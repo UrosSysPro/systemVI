@@ -83,7 +83,7 @@ public class Utils {
         glLineWidth(lineWidth);
     }
     public static void disableLines(){
-        glPolygonMode(GL_FRONT_AND_BACK,GL_TRIANGLES);
+        glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
     }
 
     public enum Barrier{

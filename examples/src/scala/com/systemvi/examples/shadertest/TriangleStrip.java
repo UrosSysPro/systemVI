@@ -32,6 +32,6 @@ public class TriangleStrip extends Game {
         shader.use();
 //        mesh.draw();
         mesh.bind();
-        shader.drawArrays(Primitive.TIRANGLE_STRIP,4);
+        shader.drawArrays(Primitive.TRIANGLE_STRIP,4);
     }
 }

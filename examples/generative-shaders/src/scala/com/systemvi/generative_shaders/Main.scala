@@ -1,7 +1,7 @@
 package com.systemvi.generative_shaders
 
 import com.systemvi.engine.application.Game
-import com.systemvi.engine.buffer.VertexArray
+import com.systemvi.engine.buffer.{VertexArray}
 import com.systemvi.engine.camera.{Camera3, CameraController3}
 import com.systemvi.engine.shader.{Primitive, Shader}
 import com.systemvi.engine.ui.utils.data.Colors
@@ -33,6 +33,7 @@ class Main extends Game(4,6,60,800,600,"Shader"){
 
   override def setup(window: Window): Unit = {
     vertexArray=new VertexArray()
+    vertexArray.bind()
 
     vertexShader=Shader.builder()
       .vertex("vertex/vertex.glsl")
@@ -45,12 +46,13 @@ class Main extends Game(4,6,60,800,600,"Shader"){
       .geometry("geometry/geometry.glsl")
       .build()
 
+    Utils.setNumberOfPatchVertices(4)
     tesselationShader=Shader.builder()
       .fragment("tesselation/fragment.glsl")
       .vertex("tesselation/vertex.glsl")
-      .geometry("tesselation/geometry.glsl")
-//      .tesselationControl("tesselation/tesselationControl.glsl")
-//      .tesselationEvaluation("tesselation/tesselationEvaluation.glsl")
+//      .geometry("tesselation/geometry.glsl")
+      .tesselationControl("tesselation/tesselationControl.glsl")
+      .tesselationEvaluation("tesselation/tesselationEvaluation.glsl")
       .build()
 
     controller=CameraController3.builder()
@@ -60,25 +62,26 @@ class Main extends Game(4,6,60,800,600,"Shader"){
       .build()
     setInputProcessor(controller)
 
-//    Utils.setNumberOfPatchVertices(4)
   }
 
   override def loop(delta: Float): Unit = {
+
     Utils.clear(Colors.blue500,Buffer.COLOR_BUFFER,Buffer.DEPTH_BUFFER)
     Utils.enableDepthTest();
-    //    Utils.enableLines(2)
     controller.update(delta)
     vertexArray.bind()
 
+    Utils.enableLines(3)
     vertexShader.use()
     vertexShader.setUniform("grid",grid)
     vertexShader.setUniform("view",controller.camera.view)
     vertexShader.setUniform("model",vertexModel)
     vertexShader.setUniform("projection",controller.camera.projection)
-    vertexShader.drawArrays(Primitive.TIRANGLE_STRIP,(grid.x*2+2)*(grid.y-1))
+    vertexShader.drawArrays(Primitive.TRIANGLE_STRIP,(grid.x*2+2)*(grid.y-1))
+    Utils.disableLines()
 
-    geometryShader.use()
     Utils.enableLines(3)
+    geometryShader.use()
     geometryShader.setUniform("grid",grid)
     geometryShader.setUniform("view",controller.camera.view)
     geometryShader.setUniform("model",geometryModel)
@@ -86,13 +89,13 @@ class Main extends Game(4,6,60,800,600,"Shader"){
     geometryShader.drawArrays(Primitive.POINTS,grid.x*grid.y)
     Utils.disableLines()
 
-    tesselationShader.use()
     Utils.enableLines(3)
-    tesselationShader.setUniform("grid",grid)
+    tesselationShader.use()
     tesselationShader.setUniform("view",controller.camera.view)
     tesselationShader.setUniform("model",tesselationModel)
     tesselationShader.setUniform("projection",controller.camera.projection)
-    tesselationShader.drawArrays(Primitive.POINTS,grid.x*grid.y)
+    tesselationShader.setUniform("cameraPosition",controller.camera.position)
+    tesselationShader.drawArrays(Primitive.PATCHES,4)
     Utils.disableLines()
 
     Utils.disableDepthTest()
