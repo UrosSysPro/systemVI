@@ -49,6 +49,8 @@ class Main extends Game(4,6,60,800,600,"Shader"){
       .fragment("tesselation/fragment.glsl")
       .vertex("tesselation/vertex.glsl")
       .geometry("tesselation/geometry.glsl")
+//      .tesselationControl("tesselation/tesselationControl.glsl")
+//      .tesselationEvaluation("tesselation/tesselationEvaluation.glsl")
       .build()
 
     controller=CameraController3.builder()
@@ -57,6 +59,8 @@ class Main extends Game(4,6,60,800,600,"Shader"){
       .aspect(window.getWidth.toFloat/window.getHeight.toFloat)
       .build()
     setInputProcessor(controller)
+
+//    Utils.setNumberOfPatchVertices(4)
   }
 
   override def loop(delta: Float): Unit = {
