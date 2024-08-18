@@ -15,6 +15,8 @@ class Main extends Game(4,6,60,800,600,"Shader"){
   private var vertexShader:Shader=null
   private var geometryShader:Shader=null
   private var tesselationShader:Shader=null
+  private var combinedShader:Shader=null
+
   private var vertexArray:VertexArray=null
   private var controller:CameraController3=null
   private val grid=new Vector2i(10,10)
@@ -27,6 +29,10 @@ class Main extends Game(4,6,60,800,600,"Shader"){
     .scale(10)
   private val tesselationModel =new Matrix4f().identity()
     .translate(0,0,10)
+    .rotateXYZ(Math.PI.toFloat/2,0,0)
+    .scale(10)
+  private val combinedModel =new Matrix4f().identity()
+    .translate(10,0,10)
     .rotateXYZ(Math.PI.toFloat/2,0,0)
     .scale(10)
 
