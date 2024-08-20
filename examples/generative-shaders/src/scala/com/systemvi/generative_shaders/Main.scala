@@ -20,17 +20,21 @@ class Main extends Game(4,6,60,800,600,"Shader"){
   private var vertexArray:VertexArray=null
   private var controller:CameraController3=null
   private val grid=new Vector2i(10,10)
+
   private val vertexModel =new Matrix4f().identity()
     .rotateXYZ(Math.PI.toFloat/2,0,0)
     .scale(10)
+
   private val geometryModel =new Matrix4f().identity()
     .translate(10,0,0)
     .rotateXYZ(Math.PI.toFloat/2,0,0)
     .scale(10)
+
   private val tesselationModel =new Matrix4f().identity()
     .translate(0,0,10)
     .rotateXYZ(Math.PI.toFloat/2,0,0)
     .scale(10)
+
   private val combinedModel =new Matrix4f().identity()
     .translate(10,0,10)
     .rotateXYZ(Math.PI.toFloat/2,0,0)
@@ -56,9 +60,16 @@ class Main extends Game(4,6,60,800,600,"Shader"){
     tesselationShader=Shader.builder()
       .fragment("tesselation/fragment.glsl")
       .vertex("tesselation/vertex.glsl")
-//      .geometry("tesselation/geometry.glsl")
       .tesselationControl("tesselation/tesselationControl.glsl")
       .tesselationEvaluation("tesselation/tesselationEvaluation.glsl")
+      .build()
+
+    combinedShader=Shader.builder()
+      .fragment("combined/fragment.glsl")
+      .vertex("combined/vertex.glsl")
+      .tesselationControl("combined/tesselationControl.glsl")
+      .tesselationEvaluation("combined/tesselationEvaluation.glsl")
+      .geometry("combined/geometry.glsl")
       .build()
 
     controller=CameraController3.builder()
@@ -102,6 +113,15 @@ class Main extends Game(4,6,60,800,600,"Shader"){
     tesselationShader.setUniform("projection",controller.camera.projection)
     tesselationShader.setUniform("cameraPosition",controller.camera.position)
     tesselationShader.drawArrays(Primitive.PATCHES,4)
+    Utils.disableLines()
+
+    Utils.enableLines(3)
+    combinedShader.use()
+    combinedShader.setUniform("view",controller.camera.view)
+    combinedShader.setUniform("model",combinedModel)
+    combinedShader.setUniform("projection",controller.camera.projection)
+    combinedShader.setUniform("cameraPosition",controller.camera.position)
+    combinedShader.drawArrays(Primitive.PATCHES,4)
     Utils.disableLines()
 
     Utils.disableDepthTest()

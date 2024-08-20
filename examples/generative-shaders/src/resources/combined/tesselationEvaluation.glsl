@@ -2,10 +2,6 @@
 
 layout (quads, equal_spacing, ccw) in;
 
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
-
 void main()
 {
     vec4 p0 = gl_in[0].gl_Position;
@@ -18,5 +14,5 @@ void main()
 
     vec4 p = mix(mix(p0, p1, u), mix(p3, p2, u), v);
 
-    gl_Position = projection * view * model * p;
+    gl_Position = p;
 }
