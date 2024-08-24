@@ -1,4 +1,4 @@
-package com.systemvi.examples.breakout;
+package com.systemvi.breakout;
 
 import java.util.Random;
 

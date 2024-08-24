@@ -1,4 +1,4 @@
-package com.systemvi.examples.breakout;
+package com.systemvi.breakout;
 
 import com.systemvi.engine.renderers.ShapeRenderer;
 import com.systemvi.engine.window.Window;
