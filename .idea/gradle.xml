@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/engine" />
             <option value="$PROJECT_DIR$/examples" />
             <option value="$PROJECT_DIR$/examples/generative-shaders" />
+            <option value="$PROJECT_DIR$/examples/lanterna-powerline" />
             <option value="$PROJECT_DIR$/voxel-world" />
           </set>
         </option>
