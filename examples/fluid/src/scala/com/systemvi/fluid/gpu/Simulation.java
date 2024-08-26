@@ -1,4 +1,4 @@
-package com.systemvi.examples.compute.fluid;
+package com.systemvi.fluid.gpu;
 
 import com.systemvi.engine.shader.Shader;
 import com.systemvi.engine.texture.Format;
@@ -26,25 +26,25 @@ public class Simulation {
         div             = new Texture(width, height, Format.R16F);
         helper          = new Texture(width, height, Format.R16F);
 
-        project1=Shader.builder().compute("assets/examples/compute/fluid/project1.glsl").build();
+        project1=Shader.builder().compute("gpu/fluid/project1.glsl").build();
         if(!project1.isCompiled()) System.out.println(project1.getLog());
-        project2=Shader.builder().compute("assets/examples/compute/fluid/project2.glsl").build();
+        project2=Shader.builder().compute("gpu/fluid/project2.glsl").build();
         if(!project2.isCompiled()) System.out.println(project2.getLog());
-        project3=Shader.builder().compute("assets/examples/compute/fluid/project3.glsl").build();
+        project3=Shader.builder().compute("gpu/fluid/project3.glsl").build();
         if(!project3.isCompiled()) System.out.println(project3.getLog());
 
-        advect=Shader.builder().compute("assets/examples/compute/fluid/advect.glsl").build();
+        advect=Shader.builder().compute("gpu/fluid/advect.glsl").build();
         if(!advect.isCompiled())System.out.println(advect.getLog());
 
-        advectX=Shader.builder().compute("assets/examples/compute/fluid/advectX.glsl").build();
+        advectX=Shader.builder().compute("gpu/fluid/advectX.glsl").build();
         if(!advectX.isCompiled())System.out.println(advectX.getLog());
 
-        advectY=Shader.builder().compute("assets/examples/compute/fluid/advectY.glsl").build();
+        advectY=Shader.builder().compute("gpu/fluid/advectY.glsl").build();
         if(!advectY.isCompiled())System.out.println(advectY.getLog());
 
 
 
-        fill = Shader.builder().compute("assets/examples/compute/fluid/fill.glsl").build();
+        fill = Shader.builder().compute("gpu/fluid/fill.glsl").build();
         if(!fill.isCompiled())System.out.println(fill.getLog());
     }
 

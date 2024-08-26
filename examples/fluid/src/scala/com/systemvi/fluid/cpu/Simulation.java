@@ -1,4 +1,4 @@
-package com.systemvi.fluid;
+package com.systemvi.fluid.cpu;
 
 import com.systemvi.engine.renderers.ShapeRenderer;
 import org.joml.Vector4f;

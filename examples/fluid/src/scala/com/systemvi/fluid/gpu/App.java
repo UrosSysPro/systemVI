@@ -1,12 +1,10 @@
-package com.systemvi.examples.compute.fluid;
+package com.systemvi.fluid.gpu;
 
 import com.systemvi.engine.application.Game;
 import com.systemvi.engine.camera.Camera;
 import com.systemvi.engine.renderers.TextureRenderer;
-import com.systemvi.engine.shader.Shader;
 import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
-import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 
