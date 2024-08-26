@@ -12,18 +12,21 @@ object Main{
   def main(args: Array[String]): Unit = {
 
     val testString="- --- == === != !== =!= =:= =/= <= >>> << >> || -> // /// /* */ /= //= /== @_ __ ??? <:< ;;;";
-    val testString2=" ╵ ╶ ╷ ╸ ╹werline\uE0A0 \uE0A1 \uE0A2 \uE0B0 \uE0B1 \uE0B2 \uE0B3"
+    val testString2="powerline \uE0A0 \uE0A1 \uE0A2 \uE0B0 \uE0B1 \uE0B2 \uE0B3"
     val customFont = new Font("JetBrains Mono", Font.PLAIN, 13)
     println(customFont.getFontName)
     println(customFont.canDisplay('a'))
     println(customFont.getFamily)
     println(customFont.isPlain)
 
+//    val terminal=new DefaultTerminalFactory().setForceTextTerminal(true).createTerminal()
     val terminal=new DefaultTerminalFactory().createSwingTerminal()
     terminal.setFont(customFont)
     terminal.setVisible(true)
     terminal.invalidate()
     terminal.repaint()
+
+//    terminal.
 
     val screen = new TerminalScreen(terminal)
     screen.startScreen()
