@@ -1,4 +1,4 @@
-package com.systemvi.examples.fluid;
+package com.systemvi.fluid;
 
 import com.systemvi.engine.application.Application;
 import com.systemvi.engine.camera.Camera;

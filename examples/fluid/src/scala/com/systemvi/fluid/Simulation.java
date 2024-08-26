@@ -1,4 +1,4 @@
-package com.systemvi.examples.fluid;
+package com.systemvi.fluid;
 
 import com.systemvi.engine.renderers.ShapeRenderer;
 import org.joml.Vector4f;
