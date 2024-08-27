@@ -9,6 +9,7 @@ fun Application.configureRouting() {
     routing {
         staticResources("html","html")
         staticResources("images","images")
+
         get("/") {
             call.respondText("[GET] root")
         }
