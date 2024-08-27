@@ -9,7 +9,7 @@ fun main() {
     embeddedServer(
         Netty,
         port = 8080,
-        host = "0.0.0.0",
+        host = "localhost",
         watchPaths = listOf("classes"),
         module = Application::module
     ).start(wait = true)

@@ -7,8 +7,7 @@ import io.ktor.server.routing.*
 
 fun Application.configureRouting() {
     routing {
-        staticResources("html","html")
-        staticResources("images","images")
+        staticResources("","public")
 
         get("/") {
             call.respondText("[GET] root")
