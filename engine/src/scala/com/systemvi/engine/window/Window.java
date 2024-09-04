@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import org.joml.Vector2d;
 import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GLCapabilities;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL33.*;
@@ -13,6 +14,7 @@ public class Window {
     private MousePressListener mouseUp=null,mouseDown=null;
     private int width,height;
     private final long id;
+    private GLCapabilities capabilities;
     private ArrayList<KeyListener> keyUpEvents;
     private ArrayList<KeyListener> keyDownEvents;
     private ArrayList<MousePressListener> mouseUpEvents;
@@ -32,7 +34,7 @@ public class Window {
             System.out.println("[ERROR] Cant create window");
         }
         glfwMakeContextCurrent(id);
-        GL.createCapabilities();
+        capabilities=GL.createCapabilities();
         glViewport(0,0,width,height);
 
         openglInfo=glGetString(GL_VERSION);
@@ -171,6 +173,7 @@ public class Window {
 
     public void use(){
         glfwMakeContextCurrent(id);
+        GL.setCapabilities(capabilities);
     }
     public long getId() {
         return id;
