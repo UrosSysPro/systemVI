@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/examples/generative-shaders" />
             <option value="$PROJECT_DIR$/examples/lanterna-powerline" />
             <option value="$PROJECT_DIR$/examples/multi-window" />
+            <option value="$PROJECT_DIR$/examples/normal-mapping" />
             <option value="$PROJECT_DIR$/voxel-world" />
           </set>
         </option>

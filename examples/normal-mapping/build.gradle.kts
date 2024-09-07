@@ -7,7 +7,7 @@ scala {
     zincVersion = "1.6.1"
 }
 application {
-    mainClass = "com.systemvi.breakout.Main"
+    mainClass = "com.systemvi.normal_mapping.Main"
 }
 
 val run: JavaExec by tasks
@@ -27,8 +27,3 @@ sourceSets {
 dependencies {
 //    implementation project(":jni-lib")
 }
-
-tasks.register("mytask"){
-    print("hello")
-}
-
