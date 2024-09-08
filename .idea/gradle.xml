@@ -12,11 +12,13 @@
             <option value="$PROJECT_DIR$/engine" />
             <option value="$PROJECT_DIR$/examples" />
             <option value="$PROJECT_DIR$/examples/break-out" />
+            <option value="$PROJECT_DIR$/examples/data-structures" />
             <option value="$PROJECT_DIR$/examples/fluid" />
             <option value="$PROJECT_DIR$/examples/generative-shaders" />
             <option value="$PROJECT_DIR$/examples/lanterna-powerline" />
             <option value="$PROJECT_DIR$/examples/multi-window" />
             <option value="$PROJECT_DIR$/examples/normal-mapping" />
+            <option value="$PROJECT_DIR$/examples/sdf" />
             <option value="$PROJECT_DIR$/voxel-world" />
           </set>
         </option>
