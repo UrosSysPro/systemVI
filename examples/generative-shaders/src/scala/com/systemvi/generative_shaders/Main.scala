@@ -11,7 +11,7 @@ import com.systemvi.engine.window.Window
 import org.joml.{Matrix4f, Vector2i}
 
 
-class Main extends Game(4,6,60,800,600,"Shader"){
+class Main extends Game(4,1,60,800,600,"Shader"){
   private var vertexShader:Shader=null
   private var geometryShader:Shader=null
   private var tesselationShader:Shader=null

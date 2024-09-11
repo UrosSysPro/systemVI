@@ -1,4 +1,4 @@
-#version 460 core
+#version 410 core
 #define PI 3.14159265358979323846
 uniform ivec2 grid;
 uniform mat4 view;
