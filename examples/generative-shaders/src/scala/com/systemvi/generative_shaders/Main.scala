@@ -82,22 +82,22 @@ class Main extends Game(4,1,60,800,600,"Shader"){
   }
 
   override def loop(delta: Float): Unit = {
-
+    val lineWidth=8;
     Utils.clear(Colors.blue500,Buffer.COLOR_BUFFER,Buffer.DEPTH_BUFFER)
     Utils.enableDepthTest();
     controller.update(delta)
     vertexArray.bind()
 
-    Utils.enableLines(3)
+//    Utils.enableLines(3)
     vertexShader.use()
     vertexShader.setUniform("grid",grid)
     vertexShader.setUniform("view",controller.camera.view)
     vertexShader.setUniform("model",vertexModel)
     vertexShader.setUniform("projection",controller.camera.projection)
     vertexShader.drawArrays(Primitive.TRIANGLE_STRIP,(grid.x*2+2)*(grid.y-1))
-    Utils.disableLines()
+//    Utils.disableLines()
 
-    Utils.enableLines(3)
+    Utils.enableLines(lineWidth)
     geometryShader.use()
     geometryShader.setUniform("grid",grid)
     geometryShader.setUniform("view",controller.camera.view)
@@ -106,7 +106,7 @@ class Main extends Game(4,1,60,800,600,"Shader"){
     geometryShader.drawArrays(Primitive.POINTS,grid.x*grid.y)
     Utils.disableLines()
 
-    Utils.enableLines(3)
+    Utils.enableLines(lineWidth)
     tesselationShader.use()
     tesselationShader.setUniform("view",controller.camera.view)
     tesselationShader.setUniform("model",tesselationModel)
@@ -115,7 +115,7 @@ class Main extends Game(4,1,60,800,600,"Shader"){
     tesselationShader.drawArrays(Primitive.PATCHES,4)
     Utils.disableLines()
 
-    Utils.enableLines(3)
+    Utils.enableLines(lineWidth)
     combinedShader.use()
     combinedShader.setUniform("view",controller.camera.view)
     combinedShader.setUniform("model",combinedModel)
