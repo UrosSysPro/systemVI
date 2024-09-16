@@ -72,7 +72,9 @@ fun declareDependencies(){
         // https://mvnrepository.com/artifact/com.googlecode.lanterna/lanterna
         implementation("com.googlecode.lanterna:lanterna:3.0.1")
 
-        implementation("org.scala-lang:scala-library:2.11.12")
+//        implementation("org.scala-lang:scala-library:2.11.12")
+        implementation("org.scala-lang:scala3-library_3:3.0.1")
+        implementation("commons-collections:commons-collections:3.2.2")
 
         implementation("org.joml:joml:${jomlVersion}")
 

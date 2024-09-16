@@ -36,7 +36,7 @@ class Column(
           nonFlexSize+=childSize.y
           totalHeight+=childSize.y
           if(childSize.x>maxWidth)maxWidth=childSize.x
-        case _=>
+        case null=>
       }
     }
     //izracunati velicinu za flex elemente

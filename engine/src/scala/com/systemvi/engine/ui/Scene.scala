@@ -45,10 +45,10 @@ class Scene(val root:Widget,initialWidth:Float=800,initialHeight:Float=600,font:
   def resize(width:Int,height:Int): Boolean = {
     this.width=width
     this.height=height
-    root.calculateSize(new Vector2f(width,height))
+    root.calculateSize(new Vector2f(width.toFloat,height.toFloat))
     root.calculatePosition(new Vector2f(0,0))
-    renderer.camera.orthographic(-width/2,width/2,-height/2,height/2,0,100)
-    renderer.camera.position(width/2,height/2,0)
+    renderer.camera.orthographic(-width.toFloat/2,width.toFloat/2f,-height.toFloat/2f,height.toFloat/2f,0,100)
+    renderer.camera.position(width.toFloat/2f,height.toFloat/2f,0)
     renderer.camera.update()
     true
   }
@@ -147,8 +147,8 @@ class UIApplication(title:String,home:Widget) extends Game(3,3,60,800,600,title)
       "assets/examples/widgetRenderer2Test/font.json"
     )
     scene=new Scene(
-      initialWidth = window.getWidth,
-      initialHeight = window.getHeight,
+      initialWidth = window.getWidth.toFloat,
+      initialHeight = window.getHeight.toFloat,
       root = home,
       font = UIApplication.font
     )

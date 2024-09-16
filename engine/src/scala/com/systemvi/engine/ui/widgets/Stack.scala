@@ -23,7 +23,7 @@ class Stack(val children:Array[Widget]) extends StatelessWidget {
           val height=maxParentSize.y-top-bottom
           positioned.calculateSize(new Vector2f(width,height))
         case widget:Widget=>widget.calculateSize(maxParentSize)
-        case _=>
+        case null=>
       }
     }
     size
@@ -42,7 +42,7 @@ class Stack(val children:Array[Widget]) extends StatelessWidget {
           if(positioned.bottom!= -1)y=size.y-positioned.bottom-positioned.size.y
           positioned.calculatePosition(new Vector2f(parentPosition).add(x,y))
         case widget: Widget=>widget.calculatePosition(parentPosition)
-        case _=>
+        case null=>
       }
     }
   }

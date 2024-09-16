@@ -57,9 +57,9 @@ class RangeState extends State {
       widget.position.x+r,
       widget.position.y+r-lineHeight/2,
       lineWidth,
-      lineHeight,
+      lineHeight.toFloat,
       new Vector4f(0,0,0,1),
-      lineHeight/2,
+      lineHeight.toFloat/2,
       context
     )
     val range=widget match {
