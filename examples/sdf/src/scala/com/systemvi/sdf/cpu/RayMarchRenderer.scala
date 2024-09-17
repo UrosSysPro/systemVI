@@ -1,11 +1,11 @@
-package com.systemvi.examples.sdf
+package com.systemvi.sdf.cpu
 
 import com.systemvi.engine.camera.Camera3
 import com.systemvi.engine.ui.utils.data.Colors
 import org.joml.{Matrix4f, Vector3f, Vector4f}
 
 import scala.util.Random
-import scala.util.control.Breaks._
+import scala.util.control.Breaks.*
 
 case class Material(roughness:Float=0.3f, metallic:Float=1.0f, color:Vector4f = Colors.blue500,emission:Vector4f=new Vector4f(0,0,0,0))
 

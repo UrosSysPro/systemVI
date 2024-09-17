@@ -1,18 +1,18 @@
-package com.systemvi.examples.sdf.maps
+package com.systemvi.sdf.cpu.maps
 
 import com.systemvi.engine.camera.Camera3
 import com.systemvi.engine.math.sdf.{Plane, Sphere, Union}
 import com.systemvi.engine.ui.utils.data.Colors
-import com.systemvi.examples.sdf.{Material, RayMarchRenderer}
+import com.systemvi.sdf.cpu.{Material, RayMarchRenderer}
 import org.joml.{Vector3f, Vector4f}
 
 
 object Map2 {
   val epsilon=0.001f
-  val red=Material(0.4f,0,new Vector4f(Colors.red500),emission = Colors.red300)
-  val blue=Material(1,0,new Vector4f(Colors.blue500))
-  val floor=Material(0.5f,0.5f,new Vector4f(Colors.orange300))
-  val sky=Material(1,1,Colors.black)
+  private val red=Material(0.4f,0,new Vector4f(Colors.red500),emission = Colors.red300)
+  private val blue=Material(1,0,new Vector4f(Colors.blue500))
+  val floor: Material =Material(0.5f,0.5f,new Vector4f(Colors.orange300))
+  val sky: Material =Material(1,1,Colors.black)
 
   def getMaterial(p: Vector3f): Material = {
     if (Sphere(p,new Vector3f(-100,100,0),100)<epsilon) return red

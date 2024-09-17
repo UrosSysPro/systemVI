@@ -1,9 +1,9 @@
-package com.systemvi.examples.sdf.maps
+package com.systemvi.sdf.cpu.maps
 
 import com.systemvi.engine.camera.Camera3
 import com.systemvi.engine.math.sdf.{Box, Plane, Union}
 import com.systemvi.engine.ui.utils.data.Colors
-import com.systemvi.examples.sdf.{Material, RayMarchRenderer}
+import com.systemvi.sdf.cpu.{Material, RayMarchRenderer}
 import org.joml.{Vector3f, Vector4f}
 
 object Map3 {

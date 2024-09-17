@@ -1,13 +1,13 @@
-package com.systemvi.examples.sdf.maps
+package com.systemvi.sdf.cpu.maps
 
 import com.systemvi.engine.camera.Camera3
 import com.systemvi.engine.math.sdf.{Plane, Sphere, Union}
 import com.systemvi.engine.ui.utils.data.Colors
-import com.systemvi.examples.sdf.{Material, RayMarchRenderer}
+import com.systemvi.sdf.cpu.{Material, RayMarchRenderer}
 import org.joml.Vector3f
 
 import scala.util.Random
-import scala.util.control.Breaks._
+import scala.util.control.Breaks.*
 
 object Map {
   val epsilon=0.001f

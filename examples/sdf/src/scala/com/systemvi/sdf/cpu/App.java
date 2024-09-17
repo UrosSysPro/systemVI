@@ -1,17 +1,16 @@
-package com.systemvi.examples.sdf;
+package com.systemvi.sdf.cpu;
 
 import com.systemvi.engine.application.Game;
 import com.systemvi.engine.camera.Camera3;
-import com.systemvi.engine.camera.CameraController3;
 import com.systemvi.engine.renderers.TextureRenderer;
 import com.systemvi.engine.texture.Format;
 import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.texture.TextureData;
 import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
-import com.systemvi.examples.sdf.maps.Map;
-import com.systemvi.examples.sdf.maps.Map2;
-import com.systemvi.examples.sdf.maps.Map3;
+import com.systemvi.sdf.cpu.maps.Map;
+import com.systemvi.sdf.cpu.maps.Map2;
+import com.systemvi.sdf.cpu.maps.Map3;
 import org.joml.*;
 
 import java.lang.Math;
