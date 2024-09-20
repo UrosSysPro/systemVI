@@ -8,44 +8,31 @@ import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.Window
 
-object Main extends Application(3,3,60){
+import scala.language.postfixOps
 
-  var window1:Window=null
-  var window2:Window=null
-  var shapeRenderer:ShapeRenderer=null
+object Main extends Application(3,3,60):
+
+  val n=4
+  val width=400
+  val height=300
+  var windows:Array[Window]=null
   var camera:Camera3=null
 
-  override def setup(): Unit = {
-    window1=new Window(800,600,"window 1")
-//    window2=new Window(800,600,"window 2")
+  override def setup(): Unit=
+    windows=(0 until n).map{i=>new Window(width,height,s"Window $i")}.toArray
     camera=Camera3.builder2d()
-      .size(800,600)
-//      .position(400,300)
-      .scale(1,-1)
+      .size(width.toFloat,height.toFloat).position(width.toFloat/2,height.toFloat/2)
       .build()
-    shapeRenderer=new ShapeRenderer();
-    shapeRenderer.setView(camera.view)
-    shapeRenderer.setProjection(camera.projection)
-  }
 
-  override def loop(delta: Float): Unit = {
-    if(window1.shouldClose()){
-      close()
-    }
-//    window1.use()
-    window1.pollEvents()
-    Utils.clear(0,0,0,0,Buffer.COLOR_BUFFER)
-    shapeRenderer.rect(0,0,200,300,Colors.blue500)
-    shapeRenderer.flush()
-    window1.swapBuffers()
-//    window2.use()
-//    window2.pollEvents()
-//    Utils.clear(0,0,0,0,Buffer.COLOR_BUFFER)
-//    shapeRenderer.rect(100,100,200,300,Colors.blue500)
-//    shapeRenderer.flush()
-  }
 
-  def main(args: Array[String]): Unit = {
+  override def loop(delta: Float): Unit =
+    for (window<-windows)
+      window.use()
+      window.pollEvents()
+      if(window.shouldClose())close()
+      window.swapBuffers()
+
+
+  def main(args: Array[String]): Unit =
     run()
-  }
-}
+
