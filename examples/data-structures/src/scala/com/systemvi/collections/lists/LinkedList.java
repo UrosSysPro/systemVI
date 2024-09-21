@@ -1,4 +1,4 @@
-package com.systemvi.data_structures.lists;
+package com.systemvi.collections.lists;
 
 public class LinkedList {
 
@@ -17,6 +17,9 @@ public class LinkedList {
     }
     public void add(int value,int index){
 
+    }
+    public int get(int index){
+        return 0;
     }
     public int size(){
         return 0;
