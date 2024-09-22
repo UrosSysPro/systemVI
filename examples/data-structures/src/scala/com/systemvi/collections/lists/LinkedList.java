@@ -1,25 +1,30 @@
 package com.systemvi.collections.lists;
 
-public class LinkedList {
+import java.util.Iterator;
+
+public class LinkedList<T> extends Iterable<T>{
     private class Node {
-        public int value;
+        public T value;
         public Node next;
-        public Node(int value, Node next) {
+        public Node(T value, Node next) {
             this.value = value;
             this.next = next;
         }
     };
+    public class ListIterator implements Iterator<T> {
+        
+    }
     private Node root;
 
-    public void addFirst(int value){
+    public void addFirst(T value){
         Node node=new Node(value,root);
         root=node;
     }
-    public void addLast(int value){
+    public void addLast(T value){
         root=addLastR(root,value);
-        addLastI(value);
+//        addLastI(value);
     }
-    private void addLastI(int value){
+    private void addLastI(T value){
         if(root==null){
             root=new Node(value,null);
             return;
@@ -28,7 +33,7 @@ public class LinkedList {
         for(node=root;node.next!=null;node=node.next);
         node.next=new Node(value,null);
     }
-    private Node addLastR(Node root,int value){
+    private Node addLastR(Node root,T value){
         if(root==null)return new Node(value,null);
         root.next=addLastR(root.next,value);
         return root;
@@ -42,15 +47,17 @@ public class LinkedList {
     public void add(int value,int index){
 
     }
-    public int get(int index){
+    public T get(int index){
         return getR(root,index);
     }
-    private int getI(int index){
+    private T getI(int index){
         int i;
         Node node;
-        for(node=root,i=0;node!=null;node=node.next,i++) if(i==index)return node.value;
+        for(node=root,i=0;node!=null;node=node.next,i++)
+            if(i==index)return node.value;
+        return node.value;
     }
-    private int getR(Node node,int index){
+    private T getR(Node node,int index){
         if(index==0)return node.value;
         return getR(node.next,index-1);
     }

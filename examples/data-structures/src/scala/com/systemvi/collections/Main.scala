@@ -4,11 +4,11 @@ import com.systemvi.collections.lists.LinkedList
 
 object Main{
   def main(args: Array[String]): Unit = {
-    val list=new LinkedList()
+    val list=new LinkedList[Int]()
     for(i<-0 until 10){
-      list.addFirst(i)
+      list.addLast(i)
     }
-    for (i <- 0 until 10) {
+    for (i <- list) {
       println(list.get(i))
     }
   }
