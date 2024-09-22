@@ -1,4 +1,4 @@
-package com.systemvi.examples.flappybird;
+package com.systemvi.flappybird;
 
 import com.systemvi.engine.renderers.ShapeRenderer;
 import com.systemvi.engine.window.Window;

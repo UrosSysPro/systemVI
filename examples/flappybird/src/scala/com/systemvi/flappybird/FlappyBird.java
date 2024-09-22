@@ -1,4 +1,4 @@
-package com.systemvi.examples.flappybird;
+package com.systemvi.flappybird;
 
 import com.systemvi.engine.application.Application;
 import com.systemvi.engine.camera.Camera;
