@@ -8,8 +8,9 @@ object Main{
     for(i<-0 until 10){
       list.addLast(i)
     }
-    for (i <- list) {
-      println(list.get(i))
+    val iterator=list.iterator()
+    while(iterator.hasNext){
+      println(iterator.next())
     }
   }
 }

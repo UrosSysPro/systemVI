@@ -1,4 +1,4 @@
-package com.systemvi.examples.compute.raymarching
+package com.systemvi.sdf.gpu
 
 import com.systemvi.engine.application.Game
 import com.systemvi.engine.camera.{Camera3, CameraController3}
@@ -26,7 +26,7 @@ class App extends Game(4,3,60,800,600,"Ray Marching"){
       .scale(1,1)
       .build()
     shader=Shader.builder()
-      .compute("assets/examples/compute/raymarching/compute.glsl")
+      .compute("compute.glsl")
       .build()
     textureRenderer.projection(rendererCamera.projection).view(rendererCamera.view)
     controller=CameraController3.builder()

@@ -1,8 +1,8 @@
 package com.systemvi.collections.lists;
-
 import java.util.Iterator;
 
-public class LinkedList<T> extends Iterable<T>{
+public class LinkedList<T> implements Iterable<T> {
+
     private class Node {
         public T value;
         public Node next;
@@ -10,11 +10,39 @@ public class LinkedList<T> extends Iterable<T>{
             this.value = value;
             this.next = next;
         }
-    };
-    public class ListIterator implements Iterator<T> {
-        
     }
+
+    public class ListIterator implements Iterator<T> {
+
+        private Node current;
+
+        public ListIterator(LinkedList<T> list) {
+            current=list.root;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return current!=null;
+        }
+
+        @Override
+        public T next() {
+            T value=current.value;
+            current=current.next;
+            return value;
+        }
+    }
+
+    public LinkedList() {
+        root=null;
+    }
+
     private Node root;
+
+    @Override
+    public Iterator<T> iterator(){
+        return new ListIterator(this);
+    }
 
     public void addFirst(T value){
         Node node=new Node(value,root);
@@ -38,17 +66,24 @@ public class LinkedList<T> extends Iterable<T>{
         root.next=addLastR(root.next,value);
         return root;
     }
+
+
     public void removeFirst(){
         root=root.next;
     }
     public void removeLast(){
 
     }
+
+
     public void add(int value,int index){
 
     }
+
+
     public T get(int index){
-        return getR(root,index);
+//        return getR(root,index);
+        return getI(index);
     }
     private T getI(int index){
         int i;
@@ -61,7 +96,11 @@ public class LinkedList<T> extends Iterable<T>{
         if(index==0)return node.value;
         return getR(node.next,index-1);
     }
+
     public int size(){
-        return 0;
+        int size;
+        Node node;
+        for(node=root,size=0;node!=null;node=node.next,size++);
+        return size;
     }
 }
