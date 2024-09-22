@@ -6,7 +6,7 @@ object Main{
   def main(args: Array[String]): Unit = {
     val list=new LinkedList()
     for(i<-0 until 10){
-      list.add(i,i)
+      list.addFirst(i)
     }
     for (i <- 0 until 10) {
       println(list.get(i))
