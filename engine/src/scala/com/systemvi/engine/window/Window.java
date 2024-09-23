@@ -23,7 +23,6 @@ public class Window {
     private ArrayList<ResizeListener> resizeEvents;
     private ArrayList<ScrollListener> scrollEvents;
     private Vector2d mousePosition;
-    private final String openglInfo;
 
     private InputProcessor inputProcessor;
     public Window(int width,int height,String title){
@@ -36,9 +35,6 @@ public class Window {
         glfwMakeContextCurrent(id);
         capabilities=GL.createCapabilities();
         glViewport(0,0,width,height);
-
-        openglInfo=glGetString(GL_VERSION);
-        System.out.println(openglInfo);
 
         registerListeners();
     }
@@ -167,14 +163,11 @@ public class Window {
         });
     }
 
-    public String getOpenglInfo() {
-        return openglInfo;
-    }
-
     public void use(){
         glfwMakeContextCurrent(id);
         GL.setCapabilities(capabilities);
     }
+
     public long getId() {
         return id;
     }
@@ -195,5 +188,49 @@ public class Window {
     }
     public void close(){
         glfwDestroyWindow(id);
+    }
+
+    public String version(){
+        return glGetString(GL_VERSION);
+    }
+    public String renderer(){
+        return glGetString(GL_RENDERER);
+    }
+    public String extensions(){
+        return glGetString(GL_EXTENSIONS);
+    }
+    public String vendor(){
+        return glGetString(GL_VENDOR);
+    }
+    public String shadingLanguageVersion(){
+        return glGetString(GL_SHADING_LANGUAGE_VERSION);
+    }
+    
+    public static class Builder{
+        private int width=-1,height=-1;
+        private String title="";
+        public Builder width(int width){
+            this.width=width;
+            return this;
+        }
+        public Builder height(int height){
+            this.height=height;
+            return this;
+        }
+        public Builder title(String title){
+            this.title=title;
+            return this;
+        }
+        public Builder size(int width,int height){
+            width(width);
+            height(height);
+            return this;
+        }
+        public Window build(){
+            return new Window(width,height,title);
+        }
+    }
+    public static Builder builder(){
+        return new Builder();
     }
 }
