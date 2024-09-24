@@ -12,14 +12,14 @@ import scala.language.postfixOps
 
 object Main extends Application(3,3,60):
 
-  val n=4
-  val width=400
-  val height=300
   var windows:Seq[Window]=null
   var cameras:Seq[Camera3]=null
   var renderers:Seq[ShapeRenderer]=null
 
   override def setup(): Unit=
+    val n = 4
+    val width = 400
+    val height = 300
     windows=for(i<-0 until n)yield Window.builder()
       .size(width,height)
       .title(s"window $i")
@@ -27,9 +27,8 @@ object Main extends Application(3,3,60):
     cameras=for(window<-windows)yield Camera3.builder2d()
       .size(width.toFloat,height.toFloat).position(width.toFloat/2,height.toFloat/2)
       .build()
-    windows.zip(cameras).foreach{case (window,camera)=>window.addOnResizeListener{(width,height)=>camera
+    windows.zip(cameras).foreach{(window,camera)=>window.addOnResizeListener{(width,height)=>camera
       .position(width.toFloat / 2, height.toFloat / 2, 0)
-      //      .position(0, 0, 0)
       .orthographic(
         -width.toFloat/2,
         width.toFloat/2,

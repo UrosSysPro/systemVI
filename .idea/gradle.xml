@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/examples" />
             <option value="$PROJECT_DIR$/examples/break-out" />
             <option value="$PROJECT_DIR$/examples/collections" />
+            <option value="$PROJECT_DIR$/examples/diffusion" />
             <option value="$PROJECT_DIR$/examples/flappybird" />
             <option value="$PROJECT_DIR$/examples/fluid" />
             <option value="$PROJECT_DIR$/examples/generative-shaders" />

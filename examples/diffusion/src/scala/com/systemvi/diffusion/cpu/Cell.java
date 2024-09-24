@@ -1,4 +1,4 @@
-package com.systemvi.examples.reactiondiffusion;
+package com.systemvi.diffusion.cpu;
 
 public class Cell {
     public float a,b;

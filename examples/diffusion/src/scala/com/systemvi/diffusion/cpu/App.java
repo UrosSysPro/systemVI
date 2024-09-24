@@ -1,4 +1,4 @@
-package com.systemvi.examples.reactiondiffusion;
+package com.systemvi.diffusion.cpu;
 
 import com.systemvi.engine.application.Application;
 import com.systemvi.engine.camera.Camera;
