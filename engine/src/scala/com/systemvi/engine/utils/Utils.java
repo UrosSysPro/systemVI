@@ -62,6 +62,9 @@ public class Utils {
     public static void disableFaceCulling(){
         glDisable(GL_CULL_FACE);
     }
+    public static void viewport(int x,int y,int width,int height){
+        glViewport(x,y,width,height);
+    }
 
     public static void enableDepthTest(){
         glEnable(GL_DEPTH_TEST);

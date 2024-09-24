@@ -1,6 +1,8 @@
 package com.systemvi.engine.window;
 
 import java.util.ArrayList;
+
+import com.systemvi.engine.utils.Utils;
 import org.joml.Vector2d;
 import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.opengl.GL;
@@ -166,6 +168,7 @@ public class Window {
     public void use(){
         glfwMakeContextCurrent(id);
         GL.setCapabilities(capabilities);
+        Utils.viewport(0,0,width,height);
     }
 
     public long getId() {
