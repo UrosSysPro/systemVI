@@ -1,4 +1,4 @@
-package com.systemvi.examples.fractals;
+package com.systemvi.fractals;
 
 import com.systemvi.engine.application.Game;
 import com.systemvi.engine.camera.Camera;
@@ -12,10 +12,10 @@ import org.joml.Vector2f;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class Mandelbrotset extends Game {
+public class Juliaset extends Game {
 
-    public Mandelbrotset(int openglVersionMajor, int openglVersionMinor, int targetFPS, int windowWidth, int windowHeight, String title) {
-        super(openglVersionMajor, openglVersionMinor, targetFPS, windowWidth, windowHeight, title);
+    public Juliaset() {
+        super(3,3,60,800,600,"Julia Set");
     }
 
     TextureRenderer renderer;
@@ -26,8 +26,10 @@ public class Mandelbrotset extends Game {
     float aspect;
     float zoom;
     boolean up,down,right,left,zoomin,zoomout;
+    Vector2f c;
     @Override
     public void setup(Window window) {
+        c=new Vector2f(0);
         up=false;
         down=false;
         right=false;
@@ -40,7 +42,7 @@ public class Mandelbrotset extends Game {
         renderer.setCamera(camera);
         texture=new Texture(1,1, Format.RGB);
         shader= Shader.builder()
-                .fragment("assets/examples/fractals/mandelbrot.glsl")
+                .fragment("fractals/juliaset.glsl")
                 .vertex("assets/renderer/textureRenderer/vertex.glsl")
                 .build();
         if(!shader.isCompiled()){
@@ -63,6 +65,7 @@ public class Mandelbrotset extends Game {
         if(zoomout)zoom/=1.01f;
 
         shader.use();
+        shader.setUniform("c",c);
         shader.setUniform("position",position);
         shader.setUniform("zoom",zoom);
         shader.setUniform("aspect",aspect);
@@ -74,6 +77,15 @@ public class Mandelbrotset extends Game {
     public boolean resize(int width, int height) {
         aspect= (float) width /height;
         return super.resize(width, height);
+    }
+
+    @Override
+    public boolean mouseMove(double x, double y) {
+        c.set(x,y);
+        c.div(800);
+        c.sub(0.5f,0.5f);
+
+        return super.mouseMove(x, y);
     }
 
     @Override
