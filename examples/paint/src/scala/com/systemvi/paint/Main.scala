@@ -4,6 +4,9 @@ import com.systemvi.engine.application.Game
 import com.systemvi.engine.camera.Camera3
 import com.systemvi.engine.renderers.{ShapeRenderer, TextureRenderer}
 import com.systemvi.engine.texture.{Format, FrameBuffer, Texture}
+import com.systemvi.engine.ui.utils.data.Colors
+import com.systemvi.engine.utils.Utils
+import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.Window
 import org.joml.Vector2f
 
@@ -32,9 +35,20 @@ object Main extends Game(3,3,60,800,600,"paint"){
   }
   override def loop(delta: Float): Unit = {
     frameBuffer.begin()
-
-    frameBuffer.end()
-
+    camera.scale(1,1,1).update()
+//    if(mouseDown){
+      shapeRenderer.setView(camera.view)
+      shapeRenderer.setProjection(camera.projection)
+      shapeRenderer.line(mouseCurr, mousePrev, 3, Colors.green400)
+      shapeRenderer.flush()
+      frameBuffer.end()
+//    }
+    Utils.clear(0,0,0,0,Buffer.COLOR_BUFFER)
+    camera.scale(1,-1,1).update()
+    textureRenderer.view(camera.view)
+    textureRenderer.projection(camera.projection)
+    textureRenderer.draw(colorTexture,0,0,colorTexture.getWidth.toFloat,colorTexture.getHeight.toFloat)
+    textureRenderer.flush()
     mousePrev.set(mouseCurr)
   }
 
@@ -49,7 +63,20 @@ object Main extends Game(3,3,60,800,600,"paint"){
   }
 
   override def mouseMove(x: Double, y: Double): Boolean = {
-    mouseCurr.set(x,y)
+    mouseCurr.set(x*2,y*2)
+    true
+  }
+
+  override def resize(width: Int, height: Int): Boolean = {
+    colorTexture.delete()
+    frameBuffer.delete()
+    colorTexture = new Texture(width*2, height*2, Format.RGB32F)
+    frameBuffer = FrameBuffer.builder()
+      .color(colorTexture)
+      .build()
+    camera.position(width.toFloat/2,height.toFloat/2,0)
+      .orthographic(-width.toFloat/2,width.toFloat/2,-height.toFloat/2,height.toFloat/2,0,1)
+      .update()
     true
   }
 
