@@ -23,6 +23,7 @@
             <option value="$PROJECT_DIR$/examples/normal-mapping" />
             <option value="$PROJECT_DIR$/examples/paint" />
             <option value="$PROJECT_DIR$/examples/sdf" />
+            <option value="$PROJECT_DIR$/examples/triangle" />
             <option value="$PROJECT_DIR$/voxel-world" />
           </set>
         </option>
