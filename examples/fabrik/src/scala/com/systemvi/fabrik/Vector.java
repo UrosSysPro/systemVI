@@ -1,4 +1,4 @@
-package com.systemvi.examples.inversekinematics;
+package com.systemvi.fabrik;
 
 public class Vector {
     public float x,y;

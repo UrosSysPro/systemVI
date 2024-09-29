@@ -1,6 +1,6 @@
 package com.systemvi.triangle
 
-import com.systemvi.engine.buffer.ArrayBuffer
+import com.systemvi.engine.buffer.{ArrayBuffer, VertexArray}
 import com.systemvi.engine.model.VertexAttribute
 import com.systemvi.engine.shader.{Primitive, Shader}
 import com.systemvi.engine.ui.utils.data.Colors
@@ -8,10 +8,10 @@ import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.Window
 import org.lwjgl.glfw.GLFW
-import org.lwjgl.glfw.GLFW.{GLFW_CONTEXT_VERSION_MAJOR, GLFW_CONTEXT_VERSION_MINOR, GLFW_OPENGL_CORE_PROFILE, GLFW_OPENGL_PROFILE, glfwInit, glfwWindowHint}
+import org.lwjgl.glfw.GLFW._
 import org.lwjgl.opengl.GL
 
-import scala.util.control.Breaks
+import scala.util.control.Breaks._
 
 object Main {
   def main(args:Array[String]): Unit = {
@@ -21,9 +21,12 @@ object Main {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
 
     val window=new Window(800,600,"Triangle")
-
+    val vertexArray=new VertexArray()
     val arrayBuffer=new ArrayBuffer()
+
+    vertexArray.bind()
     arrayBuffer.bind()
+
     arrayBuffer.setVertexAttributes(Array(
       new VertexAttribute("position",2)
     ))
@@ -44,18 +47,17 @@ object Main {
     println(shader.isCompiled)
 
 
-    Breaks.breakable{
+    breakable{
       while (true) {
         val startTime=System.nanoTime()
 
         window.pollEvents()
-        if (window.shouldClose())Breaks.break()
+        if (window.shouldClose())break
         Utils.clear(Colors.green400, Buffer.COLOR_BUFFER)
 
         shader.use()
-        arrayBuffer.bind()
+        vertexArray.bind()
         shader.drawArrays(Primitive.TRIANGLES,0,3)
-
 
         window.swapBuffers()
         val endTime=System.nanoTime()

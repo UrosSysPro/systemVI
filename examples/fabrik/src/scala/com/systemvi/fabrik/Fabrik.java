@@ -1,12 +1,9 @@
-package com.systemvi.examples.inversekinematics;
+package com.systemvi.fabrik;
 
-import com.systemvi.engine.application.Application;
 import com.systemvi.engine.application.Game;
-import com.systemvi.engine.camera.Camera;
 import com.systemvi.engine.camera.Camera3;
 import com.systemvi.engine.renderers.ShapeRenderer;
 import com.systemvi.engine.window.Window;
-import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
