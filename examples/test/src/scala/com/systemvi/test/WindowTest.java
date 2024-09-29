@@ -1,4 +1,4 @@
-package com.systemvi.examples.applicationtest;
+package com.systemvi.test;
 
 import com.systemvi.engine.model.Mesh;
 import com.systemvi.engine.model.VertexAttribute;

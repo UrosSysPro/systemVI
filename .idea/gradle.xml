@@ -19,12 +19,15 @@
             <option value="$PROJECT_DIR$/examples/flappybird" />
             <option value="$PROJECT_DIR$/examples/fluid" />
             <option value="$PROJECT_DIR$/examples/fractals" />
+            <option value="$PROJECT_DIR$/examples/game-of-life" />
             <option value="$PROJECT_DIR$/examples/generative-shaders" />
+            <option value="$PROJECT_DIR$/examples/instancing" />
             <option value="$PROJECT_DIR$/examples/lanterna-powerline" />
             <option value="$PROJECT_DIR$/examples/multi-window" />
             <option value="$PROJECT_DIR$/examples/normal-mapping" />
             <option value="$PROJECT_DIR$/examples/paint" />
             <option value="$PROJECT_DIR$/examples/sdf" />
+            <option value="$PROJECT_DIR$/examples/test" />
             <option value="$PROJECT_DIR$/examples/triangle" />
             <option value="$PROJECT_DIR$/voxel-world" />
           </set>

@@ -1,4 +1,4 @@
-package com.systemvi.examples.compute;
+package com.systemvi.game.gpu;
 
 import com.systemvi.engine.application.Application;
 import com.systemvi.engine.camera.Camera;
@@ -12,14 +12,13 @@ import com.systemvi.engine.window.Window;
 import org.joml.Random;
 import org.joml.Vector2i;
 import org.joml.Vector4f;
-import org.joml.Vector4i;
 
 import static org.lwjgl.opengl.GL43.*;
 
 
-public class GameOfLife extends Application {
-    public GameOfLife(int openglVersionMajor, int openglVersionMinor, int targetFPS) {
-        super(openglVersionMajor, openglVersionMinor, targetFPS);
+public class Game extends Application {
+    public Game() {
+        super(3,3,60);
     }
 
     private Window window;
@@ -49,7 +48,7 @@ public class GameOfLife extends Application {
         renderer = new TextureRenderer();
         renderer.setCamera(camera);
         shader= Shader.builder()
-            .compute("assets/examples/compute/gameOfLife/compute.glsl")
+            .compute("compute.glsl")
             .build();
     }
 

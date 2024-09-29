@@ -1,4 +1,4 @@
-package com.systemvi.examples.instancingtest;
+package com.systemvi.instancing;
 
 import com.systemvi.engine.application.Application;
 import com.systemvi.engine.camera.Camera;
@@ -11,8 +11,8 @@ import org.lwjgl.glfw.GLFW;
 import static org.lwjgl.opengl.GL33.*;
 
 public class App extends Application {
-    public App(int openglVersionMajor, int openglVersionMinor, int targetFPS) {
-        super(openglVersionMajor, openglVersionMinor, targetFPS);
+    public App() {
+        super(3,3,60);
     }
     Window window;
     Mesh mesh;
@@ -67,8 +67,8 @@ public class App extends Application {
         camera.update();
 
         shader= Shader.builder()
-            .fragment("assets/examples/instancingTest/fragment.glsl")
-            .vertex("assets/examples/instancingTest/vertex.glsl")
+            .fragment("fragment.glsl")
+            .vertex("vertex.glsl")
             .build();
         if(!shader.isCompiled()){
             System.out.println(shader.getLog());

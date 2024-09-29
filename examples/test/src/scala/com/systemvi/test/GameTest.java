@@ -1,4 +1,4 @@
-package com.systemvi.examples.applicationtest;
+package com.systemvi.test;
 
 import com.systemvi.engine.application.Game;
 import com.systemvi.engine.window.Window;
