@@ -2,14 +2,14 @@ package com.systemvi.noise
 
 import com.systemvi.engine.application.Game
 import com.systemvi.engine.camera.Camera3
-import com.systemvi.engine.noise.PerlinNoise
+import com.systemvi.engine.noise.{Perlin2, PerlinNoise}
 import com.systemvi.engine.renderers.TextureRenderer
 import com.systemvi.engine.texture.{Format, Texture, TextureData}
 import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.Window
-import org.joml.Vector4f
+import org.joml.{Vector2f, Vector2i, Vector4f}
 
 object Main extends Game(3,3,60,800,600,"Noise"){
   var textureRenderer:TextureRenderer=null
@@ -47,14 +47,15 @@ object Main extends Game(3,3,60,800,600,"Noise"){
   }
 
   private def redraw(width:Int, height:Int): Unit = {
-    val noise=new PerlinNoise(100,100)
+    val noise=Perlin2(
+      gridSize = new Vector2i(100,100),
+      seed = 0
+    )
+    val scale=0.01f
     val textureData = new TextureData(width, height, Format.RGBA)
     for (i <- 0 until width; j <- 0 until height) {
-//      textureData.set(i, j, new Vector4f()
-//        .add(new Vector4f(Colors.red400).mul(i.toFloat/width))
-//        .add(new Vector4f(Colors.green400).mul(1f-i.toFloat/width))
-//      )
-//      textureData.set()
+      val value=noise.get(new Vector2f(i.toFloat*scale,j.toFloat*scale))*0.5f+0.5f
+      textureData.set(i,j,new Vector4f(value,value,value,1.0f))
     }
     texture.setData(textureData)
   }
