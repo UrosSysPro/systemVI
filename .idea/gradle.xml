@@ -24,6 +24,7 @@
             <option value="$PROJECT_DIR$/examples/instancing" />
             <option value="$PROJECT_DIR$/examples/lanterna-powerline" />
             <option value="$PROJECT_DIR$/examples/multi-window" />
+            <option value="$PROJECT_DIR$/examples/noise" />
             <option value="$PROJECT_DIR$/examples/normal-mapping" />
             <option value="$PROJECT_DIR$/examples/paint" />
             <option value="$PROJECT_DIR$/examples/phong" />

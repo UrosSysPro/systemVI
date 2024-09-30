@@ -22,7 +22,8 @@ val examples=listOf(
     "instancing",
     "game-of-life",
     "phong",
-    "sdf"
+    "sdf",
+    "noise"
 )
 examples.forEach{
     include("examples:$it")
