@@ -63,14 +63,14 @@ object Main extends Game(3,3,60,800,600,"paint"){
   }
 
   override def mouseMove(x: Double, y: Double): Boolean = {
-    mouseCurr.set(x*2,y*2)
+    mouseCurr.set(x,y)
     true
   }
 
   override def resize(width: Int, height: Int): Boolean = {
     colorTexture.delete()
     frameBuffer.delete()
-    colorTexture = new Texture(width*2, height*2, Format.RGB32F)
+    colorTexture = new Texture(width, height, Format.RGB32F)
     frameBuffer = FrameBuffer.builder()
       .color(colorTexture)
       .build()

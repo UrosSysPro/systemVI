@@ -14,8 +14,8 @@ public class FlappyBird extends Application {
     public ShapeRenderer renderer;
     public Camera camera;
 
-    public FlappyBird(int openglVersionMajor, int openglVersionMinor, int targetFPS) {
-        super(openglVersionMajor, openglVersionMinor, targetFPS);
+    public FlappyBird() {
+        super(3,3,60);
     }
 
     @Override

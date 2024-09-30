@@ -1,5 +1,7 @@
 package com.systemvi.flappybird
 
-@main def main(): Unit = {
-  new FlappyBird(3,3,60).run()
+object Main{
+  def main(args: Array[String]): Unit = {
+    new FlappyBird().run()
+  }
 }
