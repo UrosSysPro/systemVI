@@ -1,32 +1,11 @@
 rootProject.name = "systemVI"
+
 include ("voxel-world")
 include ("examples")
 include ("engine")
 
-val examples=listOf(
-    "generative-shaders",
-    "normal-mapping",
-    "lanterna-powerline",
-    "break-out",
-    "fluid",
-    "multi-window",
-    "collections",
-    "flappybird",
-    "diffusion",
-    "fractals",
-    "paint",
-    "cats",
-    "triangle",
-    "fabrik",
-    "test",
-    "instancing",
-    "game-of-life",
-    "phong",
-    "sdf",
-    "noise"
-)
-examples.forEach{
-    include("examples:$it")
-}
+val subprojects=file("examples").listFiles()
+    ?.filter { it.isDirectory && !listOf("src","assets","build").contains(it.name) }
+    ?.map{ it.name }
 
-
+subprojects?.forEach { include("examples:${it}") }
