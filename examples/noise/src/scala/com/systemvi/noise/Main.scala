@@ -47,17 +47,24 @@ object Main extends Game(3,3,60,800,600,"Noise"){
   }
 
   private def redraw(width:Int, height:Int): Unit = {
-    val noise=Perlin2(new Vector2i(100,100),0)
-    val scale=1f/300
+    val noises=for(i<-0 until 1)yield Perlin2(new Vector2i(100,100))
+    val scale=1f/100
+    val weights = Array(1,4,8,16)
     val textureData = new TextureData(width, height, Format.RGBA)
     for (i <- 0 until width; j <- 0 until height)
-      noise.get(new Vector2f(i.toFloat*scale,j.toFloat*scale)) match{
-        case value if value > 1 =>textureData.set(i,j,Colors.green400)
-        case value if value < 0 =>textureData.set(i,j,Colors.red400)
-        case value:Float=>textureData.set(i,j,new Vector4f(value,value,value,1.0f))
+      noises.zipWithIndex.map((noise,index)=>
+        val w=weights(index)
+        val x=i.toFloat
+        val y=j.toFloat
+        noise.get(new Vector2f(x*scale/w,y*scale/w))*w
+      ).foldLeft(0f){(acc,value)=>acc+value} match{
+        case x if x>1 =>textureData.set(i,j,Colors.green400)
+        case y if y<0 =>textureData.set(i,j,Colors.red400)
+        case x=>textureData.set(i,j,new Vector4f(x,x,x,1))
       }
     texture.setData(textureData)
   }
+
   def main(args: Array[String]): Unit = {
     run()
   }
