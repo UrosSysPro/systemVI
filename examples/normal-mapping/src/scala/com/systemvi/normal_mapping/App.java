@@ -73,10 +73,10 @@ public class App extends Game {
         }
         angle=0;
 
-        diffuse=new Texture("diffuse.png");
-        specular=new Texture("roughness.png");
-        ambient=new Texture("ambientOclusion.png");
-        normal=new Texture("normal.png");
+        diffuse=new Texture("assets/diffuse.png");
+        specular=new Texture("assets/roughness.png");
+        ambient=new Texture("assets/ambientOclusion.png");
+        normal=new Texture("assets/normal.png");
 
     }
 
