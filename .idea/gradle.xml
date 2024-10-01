@@ -30,6 +30,7 @@
             <option value="$PROJECT_DIR$/examples/phong" />
             <option value="$PROJECT_DIR$/examples/sdf" />
             <option value="$PROJECT_DIR$/examples/test" />
+            <option value="$PROJECT_DIR$/examples/test3dmodels" />
             <option value="$PROJECT_DIR$/examples/triangle" />
             <option value="$PROJECT_DIR$/voxel-world" />
           </set>

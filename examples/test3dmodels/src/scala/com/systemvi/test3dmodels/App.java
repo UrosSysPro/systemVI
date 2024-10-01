@@ -1,4 +1,4 @@
-package com.systemvi.examples.test3d.modelloading;
+package com.systemvi.test3dmodels;
 
 import com.systemvi.engine.application.Game;
 import com.systemvi.engine.camera.Camera3;
@@ -20,15 +20,15 @@ public class App extends Game {
     public CameraController3 controller;
     public PhongRenderer[] renderer;
     public String[] modelFiles=new String[]{
-        "assets/examples/models/cars/sedan-sports.glb",
-        "assets/examples/models/cars/hatchback-sports.glb",
-        "assets/examples/models/cars/suv.glb",
-        "assets/examples/models/cars/suv-luxury.glb",
-        "assets/examples/models/castle/tower.glb",
-        "assets/examples/models/castle/bridge-draw.glb",
-        "assets/examples/models/castle/bridge-straight-pillar.obj",
-        "assets/examples/models/castle/bridge-straight.obj",
-        "assets/examples/models/castle/siege-ballista.fbx"
+        "assets/cars/sedan-sports.glb",
+        "assets/cars/hatchback-sports.glb",
+        "assets/cars/suv.glb",
+        "assets/cars/suv-luxury.glb",
+        "assets/castle/tower.glb",
+        "assets/castle/bridge-draw.glb",
+        "assets/castle/bridge-straight-pillar.obj",
+        "assets/castle/bridge-straight.obj",
+        "assets/castle/siege-ballista.fbx"
     };
 
     @Override
@@ -59,7 +59,7 @@ public class App extends Game {
             renderer[i]= PhongRenderer.builder()
                 .camera(controller.camera())
                 .model(model[i])
-                .texturesFolder("assets/examples/models/cars")
+                .texturesFolder("assets/cars")
                 .build();
         }
         model[model.length-1].root.transform.scale(0.01f);
