@@ -16,7 +16,7 @@ object Main extends Game(3, 3, 60, 800, 600, "Noise") {
   var texture: Texture = null
   var camera: Camera3 = null
 
-  override def setup(window: Window): Unit = {
+  override def setup(window: Window): Unit =
     val width = window.getWidth.toFloat
     val height = window.getHeight.toFloat
     camera = Camera3.builder2d()
@@ -26,17 +26,15 @@ object Main extends Game(3, 3, 60, 800, 600, "Noise") {
     texture = new Texture(window.getWidth, window.getHeight, Format.RGBA)
     redraw(window.getWidth, window.getHeight)
     textureRenderer = new TextureRenderer()
-  }
 
-  override def loop(delta: Float): Unit = {
+  override def loop(delta: Float): Unit =
     Utils.clear(Colors.green400, Buffer.COLOR_BUFFER)
     textureRenderer.view(camera.view)
     textureRenderer.projection(camera.projection)
     textureRenderer.draw(texture, 0, 0, texture.getWidth.toFloat, texture.getHeight.toFloat)
     textureRenderer.flush()
-  }
 
-  override def resize(width: Int, height: Int): Boolean = {
+  override def resize(width: Int, height: Int): Boolean =
     texture.delete()
     texture = new Texture(width, height, Format.RGB32F)
     camera
@@ -45,14 +43,19 @@ object Main extends Game(3, 3, 60, 800, 600, "Noise") {
       .update()
     redraw(width, height)
     true
-  }
 
   private def redraw(width: Int, height: Int): Unit = {
+
     val n = 10
-    val octaves = for (i <- 1 to n) yield (new Voronoi2(new Vector2i(100, 100)), Math.pow(2, i).toFloat)
+
+    val octaves = for (i <- 1 to n) yield (
+      new Perlin2(new Vector2i(100, 100)),
+      Math.pow(2, i).toFloat
+    )
     val textureData = new TextureData(width, height, Format.RGBA)
     val scale = 1f / 100f
-    for (i <- 0 until width; j <- 0 until height) {
+
+    for (i <- 0 until width; j <- 0 until height)
       val point = new Vector2f(i.toFloat * scale, j.toFloat * scale)
       val value = octaves.foldLeft(0f) {
         case (acc, (noise, interval)) =>
@@ -62,11 +65,9 @@ object Main extends Game(3, 3, 60, 800, 600, "Noise") {
         case x if x > 1 => textureData.set(i, j, Colors.blue400)
         case x if x < 0 => textureData.set(i, j, Colors.red400)
         case x => textureData.set(i, j, new Vector4f(x, x, x, 1))
-    }
+
     texture.setData(textureData)
   }
-
-  def main(args: Array[String]): Unit = {
-    run()
-  }
+  
+  def main(args: Array[String]): Unit = run()
 }
