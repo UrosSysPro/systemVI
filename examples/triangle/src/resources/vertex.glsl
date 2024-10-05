@@ -1,19 +1,15 @@
 #version 330
 
+
+uniform mat4 view;
+uniform mat4 projection;
+
+
 layout(location=0)in vec2 position;
 
-void main(){
-//    int float vec2 vec3 mat2 mat3
+out vec2 p;
 
-//    int id=gl_VertexID;
-//    if(id==0){
-//        gl_Position=vec4(0,0.5,0.0,1.0);
-//    }
-//if(id==1){
-//    gl_Position=vec4(0.5,-0.5,0.0,1.0);
-//}
-//if(id==2){
-//    gl_Position=vec4(-0.5,-0.5,0.0,1.0);
-//}
-    gl_Position=vec4(position,0.0,1.0);
+void main(){
+    p=position;
+    gl_Position=projection*view*vec4(position,0.0,1.0);
 }
