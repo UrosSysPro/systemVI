@@ -1,4 +1,4 @@
-package com.systemvi.triangle
+package com.systemvi.particle
 
 import com.systemvi.engine.application.{Application, Game}
 import com.systemvi.engine.buffer.{ArrayBuffer, ElementsBuffer, VertexArray}
