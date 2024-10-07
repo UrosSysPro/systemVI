@@ -9,6 +9,7 @@ import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.Window
+import com.systemvi.particle.Particles.random
 import org.joml.{Vector2f, Vector2i}
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFW.*
@@ -16,7 +17,16 @@ import org.lwjgl.opengl.GL
 
 import scala.util.Random
 
-case class Particle(position: Vector2f, acceleration: Vector2f, var life: Float, lifeSpan: Float)
+case class Particle(position: Vector2f, acceleration: Vector2f, var life: Float, var lifeSpan: Float){
+  def restart(mouse:Vector2f, maxSpeed:Float,minSpeed:Float,random:Random): Unit = {
+    val angle = random.nextFloat() * Math.PI * 2
+    val speed = random.nextFloat() * (maxSpeed-minSpeed) + minSpeed
+    acceleration.set(Math.cos(angle).toFloat, Math.sin(angle).toFloat).mul(speed)
+    position.set(mouse)
+    life = 0
+    lifeSpan=random.nextFloat()*5
+  }
+}
 
 object Particles extends Game(3, 3, 60, 800, 600, "Triangle") {
   var vertexArray: VertexArray = null
@@ -27,6 +37,10 @@ object Particles extends Game(3, 3, 60, 800, 600, "Triangle") {
   var particles: Array[Particle] = null
   val random = Random()
   val mouse=Vector2f()
+  val n=200
+  val g:Float=200
+  val maxSpeed:Float=100
+  val minSpeed:Float=20
 
   override def mouseMove(x: Double, y: Double): Boolean = {
     mouse.set(x,y)
@@ -55,7 +69,7 @@ object Particles extends Game(3, 3, 60, 800, 600, "Triangle") {
       new VertexAttribute("position", 2)
     ))
 
-    particles = (for i <- 0 until 100 yield
+    particles = (for i <- 0 until n yield
       val angle = random.nextFloat() * Math.PI * 2
       val speed=random.nextFloat()*50+10
       Particle(
@@ -95,13 +109,7 @@ object Particles extends Game(3, 3, 60, 800, 600, "Triangle") {
 
     particles.foreach{p=>
       p.life+=delta
-      if(p.life>p.lifeSpan){
-        val angle = random.nextFloat() * Math.PI * 2
-        val speed = random.nextFloat() * 50 + 10
-        p.acceleration.set(Math.cos(angle).toFloat,Math.sin(angle).toFloat).mul(speed)
-        p.position.set(mouse)
-        p.life=0
-      }
+      if(p.life>p.lifeSpan)p.restart(mouse, maxSpeed, minSpeed , random )
     }
 
     arrayBuffer.setData((for
@@ -111,7 +119,6 @@ object Particles extends Game(3, 3, 60, 800, 600, "Triangle") {
       val size = 10
       val p = particle.position
       val acc = particle.acceleration
-      val g=50
       val t=particle.life
       Array[Float](
         p.x + (k % 2) * size + acc.x*t,
