@@ -10,21 +10,21 @@ import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.Window
 import com.systemvi.particle.Particles.random
-import org.joml.{Vector2f, Vector2i}
+import org.joml.{Vector2f, Vector2i, Vector4f}
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.GL
 
 import scala.util.Random
 
-case class Particle(position: Vector2f, acceleration: Vector2f, var life: Float, var lifeSpan: Float){
-  def restart(mouse:Vector2f, maxSpeed:Float,minSpeed:Float,random:Random): Unit = {
+case class Particle(position: Vector2f, acceleration: Vector2f, var life: Float, var lifeSpan: Float, color: Vector4f) {
+  def restart(mouse: Vector2f, maxSpeed: Float, minSpeed: Float, random: Random): Unit = {
     val angle = random.nextFloat() * Math.PI * 2
-    val speed = random.nextFloat() * (maxSpeed-minSpeed) + minSpeed
+    val speed = random.nextFloat() * (maxSpeed - minSpeed) + minSpeed
     acceleration.set(Math.cos(angle).toFloat, Math.sin(angle).toFloat).mul(speed)
     position.set(mouse)
     life = 0
-    lifeSpan=random.nextFloat()*5
+    lifeSpan = random.nextFloat() * 5
   }
 }
 
@@ -36,14 +36,14 @@ object Particles extends Game(3, 3, 60, 800, 600, "Triangle") {
   var camera: Camera3 = null
   var particles: Array[Particle] = null
   val random = Random()
-  val mouse=Vector2f()
-  val n=200
-  val g:Float=200
-  val maxSpeed:Float=100
-  val minSpeed:Float=20
+  val mouse = Vector2f()
+  val n = 5000
+  val g: Float = 200
+  val maxSpeed: Float = 100
+  val minSpeed: Float = 20
 
   override def mouseMove(x: Double, y: Double): Boolean = {
-    mouse.set(x,y)
+    mouse.set(x, y)
     true
   }
 
@@ -66,17 +66,32 @@ object Particles extends Game(3, 3, 60, 800, 600, "Triangle") {
 
 
     arrayBuffer.setVertexAttributes(Array(
-      new VertexAttribute("position", 2)
+      VertexAttribute("position", 2),
+      VertexAttribute("color", 4),
+      VertexAttribute("alpha", 1),
     ))
+
+    val colors = Array(
+      Colors.green400,
+      Colors.pink400,
+      Colors.blue400,
+      Colors.orange400,
+      Colors.red400,
+      Colors.purple400,
+      Colors.violet400,
+      Colors.amber400,
+      Colors.sky400,
+    )
 
     particles = (for i <- 0 until n yield
       val angle = random.nextFloat() * Math.PI * 2
-      val speed=random.nextFloat()*50+10
+      val speed = random.nextFloat() * 50 + 10
       Particle(
         position = Vector2f(mouse),
         acceleration = Vector2f(Math.cos(angle).toFloat, Math.sin(angle).toFloat).mul(speed),
         life = 0,
-        lifeSpan = random.nextFloat()*5
+        lifeSpan = random.nextFloat() * 5,
+        color = colors(random.nextInt(colors.length))
       )).toArray
 
     elementsBuffer.setData((for
@@ -90,8 +105,8 @@ object Particles extends Game(3, 3, 60, 800, 600, "Triangle") {
 
 
     shader = Shader.builder()
-      .vertex("vertex.glsl")
-      .fragment("fragment.glsl")
+      .vertex("particle/vertex.glsl")
+      .fragment("particle/fragment.glsl")
       .build()
 
     println(shader.getLog)
@@ -104,12 +119,12 @@ object Particles extends Game(3, 3, 60, 800, 600, "Triangle") {
     val window = getWindow
     window.pollEvents()
     if (window.shouldClose()) close()
-    Utils.clear(Colors.green400, Buffer.COLOR_BUFFER)
+    Utils.clear(Colors.black, Buffer.COLOR_BUFFER)
 
 
-    particles.foreach{p=>
-      p.life+=delta
-      if(p.life>p.lifeSpan)p.restart(mouse, maxSpeed, minSpeed , random )
+    particles.foreach { p =>
+      p.life += delta
+      if (p.life > p.lifeSpan) p.restart(mouse, maxSpeed, minSpeed, random)
     }
 
     arrayBuffer.setData((for
@@ -119,21 +134,29 @@ object Particles extends Game(3, 3, 60, 800, 600, "Triangle") {
       val size = 10
       val p = particle.position
       val acc = particle.acceleration
-      val t=particle.life
+      val t = particle.life
+      val color = particle.color
       Array[Float](
-        p.x + (k % 2) * size + acc.x*t,
-        p.y + (k / 2) * size + acc.y*particle.life+g*t*t/2
+        p.x + (k % 2) * size + acc.x * t,
+        p.y + (k / 2) * size + acc.y * particle.life + g * t * t / 2,
+        color.x,
+        color.y,
+        color.z,
+        color.w,
+        1f-particle.life/particle.lifeSpan
       )).flatten.toArray
     )
 
-    Utils.enableLines(2)
+    //    Utils.enableLines(2)
+    Utils.enableBlending()
     shader.use()
     shader.setUniform("view", camera.view)
     shader.setUniform("projection", camera.projection)
     vertexArray.bind()
     shader.drawElements(Primitive.TRIANGLES, particles.length * 2, ElementsDataType.UNSIGNED_INT, 3)
+    Utils.disableBlending()
     //    shader.drawArrays(Primitive.TRIANGLES, 0, 100)
-    Utils.disableLines()
+    //    Utils.disableLines()
 
     val endTime = System.nanoTime()
     val frameTime = endTime - startTime
