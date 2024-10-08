@@ -16,97 +16,100 @@ import org.joml.{Vector2f, Vector4f}
 import java.util.ArrayList
 import org.lwjgl.opengl.{GL11, GL33}
 
+case class PhysicsBody(body:Body,size:Vector2f)
 
-object Physics extends Game(3,3,60,800,600,"Physics") {
+object Physics extends Game(3, 3, 60, 800, 600, "Physics") {
 
-    var world:World=null
-    var renderer:ShapeRenderer=null
-    var camera:Camera3=null
-    var mouse=new Vector2f()
-    var bodies:Array[Body]=Array()
+  var world: World = null
+  var renderer: ShapeRenderer = null
+  var camera: Camera3 = null
+  var mouse = Vector2f()
+  var bodies: Array[PhysicsBody] = Array()
+  val size: Float = 20
 
-    override def setup(window:Window):Unit = {
-        val width=window.getWidth.toFloat
-        val height=window.getHeight.toFloat
-        world=new World(new Vec2(0,600))
-        renderer=new ShapeRenderer()
-        camera=Camera3.builder2d()
-          .position(width/2,height/2)
-          .size(width, height)
-          .build()
+  override def setup(window: Window): Unit = {
+    val width = window.getWidth.toFloat
+    val height = window.getHeight.toFloat
+    world = World(new Vec2(0, 1000))
+    renderer = ShapeRenderer()
+    camera = Camera3.builder2d()
+      .position(width / 2, height / 2)
+      .size(width, height)
+      .build()
 
-        camera.update()
-        renderer.setView(camera.view)
-        renderer.setProjection(camera.projection)
+    camera.update()
+    renderer.setView(camera.view)
+    renderer.setProjection(camera.projection)
 
-        createWalls()
+    createWalls()
+  }
+
+  override def loop(delta: Float): Unit = {
+    val window = getWindow
+    if (window.shouldClose()) close()
+    Utils.clear(Colors.black, Buffer.COLOR_BUFFER)
+    //input
+    window.pollEvents()
+    //update
+    world.step(delta, 10, 10)
+    //draw
+    for (element <- bodies) {
+      val x = element.body.getPosition.x
+      val y = element.body.getPosition.y
+      val a = element.body.getAngle
+      renderer.rect(
+          x - element.size.x/2f,
+          y - element.size.y/2f,
+          element.size.x,
+          element.size.y,
+          Colors.red400, a
+      )
     }
+    renderer.flush()
+  }
 
-    override def loop(delta:Float):Unit = {
-        val window=getWindow
-        if(window.shouldClose())close()
-        Utils.clear(Colors.black,Buffer.COLOR_BUFFER)
-        //input
-        window.pollEvents();
-        //update
-        world.step(delta,10,10);
-        //draw
-        for(body<-bodies){
-            val x=body.getPosition().x
-            val y=body.getPosition().y
-            val a=body.getAngle()
-            renderer.rect(x-20,y-20,40,40,new Vector4f(1),a)
-        }
-        renderer.flush()
-    }
+  def createWalls(): Unit = {
+    addBody(0,300,20,600,BodyType.STATIC)
+    addBody(780,300,20,600,BodyType.STATIC)
+    addBody(400,0,800,20,BodyType.STATIC)
+    addBody(400,580,800,20,BodyType.STATIC)
+  }
 
-    def createWalls():Unit = {
-        val bodyDef=new BodyDef();
-        bodyDef.position.set(400f,560f)
-        bodyDef.`type` = BodyType.STATIC
+  override def mouseDown(button: Int, mods: Int, x: Double, y: Double): Boolean = {
+    addBody(x.toFloat,y.toFloat,20,20)
+    true
+  }
 
-        val fixtureDef=new FixtureDef()
-        fixtureDef.density=1
-        fixtureDef.restitution=0.5f
-        fixtureDef.friction=0.7f
-        val shape=new PolygonShape()
-        shape.setAsBox(400f,21f)
+  def addBody(x:Float,y:Float,width:Float,height:Float,`type`:BodyType=BodyType.DYNAMIC):Unit = {
+      val bodyDef = BodyDef()
+      bodyDef.position.set(x, y)
+      bodyDef.`type` = `type`
+      bodyDef.linearDamping = 0
+      bodyDef.angularDamping = 0
 
-        fixtureDef.shape=shape
+      val fixtureDef = FixtureDef()
+      fixtureDef.density = 1
+      fixtureDef.restitution = 0.5f
+      fixtureDef.friction = 0.7f
+      val shape = PolygonShape()
+      shape.setAsBox(width/2, height/2)
 
-        val body=world.createBody(bodyDef)
-        body.createFixture(fixtureDef)
-        bodies=bodies ++ Array(body)
-    }
+      fixtureDef.shape = shape
 
-    override def mouseDown(button: Int, mods: Int, x: Double, y: Double): Boolean = {
-        val bodyDef = new BodyDef()
-        bodyDef.position.set(mouse.x, mouse.y)
-        bodyDef.`type` = BodyType.DYNAMIC
-        bodyDef.linearDamping = 0
-        val fixtureDef = new FixtureDef()
-        fixtureDef.density = 1
-        fixtureDef.restitution = 0.5f
-        fixtureDef.friction = 0.7f
-        val shape = new PolygonShape()
-        shape.setAsBox(20f, 20f)
+      val body = world.createBody(bodyDef)
+      body.createFixture(fixtureDef)
+      bodies=bodies :+ PhysicsBody(body, Vector2f(width,height))
+  }
 
-        fixtureDef.shape = shape;
+  override def resize(width: Int, height: Int): Boolean = {
+    camera.position.set(width / 2f, height / 2f, 0)
+    camera.orthographic(-width / 2f, width / 2f, -height / 2f, height / 2f, 0, 1)
+    camera.update()
+    true
+  }
 
-        val body = world.createBody(bodyDef)
-        body.createFixture(fixtureDef)
-        bodies = bodies ++ Array(body)
-        true
-    }
-
-    override def resize(width: Int, height: Int): Boolean = {
-        camera.position.set(width/2f,height/2f,0)
-        camera.orthographic(-width/2f,width/2f,-height/2f,height/2f,0,1)
-        camera.update()
-        true
-    }
-    override def mouseMove(x: Double, y: Double): Boolean = {
-        mouse.set(x,y)
-        true
-    }
+  override def mouseMove(x: Double, y: Double): Boolean = {
+    mouse.set(x, y)
+    true
+  }
 }
