@@ -13,10 +13,11 @@ import com.systemvi.engine.ui.utils.data.Colors;
 import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
 
-public class Triangle  extends Game {
-    public Triangle(){
-        super(3,3,60,800,600,"Triangle");
+public class Triangle extends Game {
+    public Triangle() {
+        super(3, 3, 60, 800, 600, "Triangle");
     }
+
     VertexArray vertexArray;
     ArrayBuffer arrayBuffer;
     ElementsBuffer elementsBuffer;
@@ -30,9 +31,9 @@ public class Triangle  extends Game {
         elementsBuffer = new ElementsBuffer();
 
 
-            float width = window.getWidth();
-            float height = window.getHeight();
-            camera = Camera3.builder2d()
+        float width = window.getWidth();
+        float height = window.getHeight();
+        camera = Camera3.builder2d()
                 .size(width, height)
                 .position(width / 2, height / 2)
                 .build();
@@ -47,12 +48,12 @@ public class Triangle  extends Game {
         });
 
         arrayBuffer.setData(new float[]{
-                400,150,
-                200,450,
-                600,450
+                400, 150,
+                200, 450,
+                600, 450
         });
 
-        elementsBuffer.setData(new int[]{0,1,2});
+        elementsBuffer.setData(new int[]{0, 1, 2});
 
         shader = Shader.builder()
                 .vertex("vertex.glsl")
@@ -62,8 +63,9 @@ public class Triangle  extends Game {
         System.out.println(shader.getLog());
         System.out.println(shader.isCompiled());
     }
+
     @Override
-     public void loop(float delta) {
+    public void loop(float delta) {
         long startTime = System.nanoTime();
 
         Window window = getWindow();
@@ -84,7 +86,7 @@ public class Triangle  extends Game {
         long nano = frameTime % 1000;
         long micro = frameTime / 1000 % 1000;
         long milli = frameTime / 1000000;
-        long fps = 1000 / ( milli == 0 ? 1 : milli);
+        long fps = 1000 / (milli == 0 ? 1 : milli);
         System.out.printf("\r %3d %3d %3d fps: %3d", milli, micro, nano, fps);
     }
 }
