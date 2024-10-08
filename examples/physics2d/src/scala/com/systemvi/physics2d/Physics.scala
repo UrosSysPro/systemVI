@@ -14,7 +14,6 @@ import org.jbox2d.dynamics.*
 import org.joml.{Vector2f, Vector4f}
 
 import java.util.ArrayList
-import org.lwjgl.opengl.{GL11, GL33}
 
 case class PhysicsBody(body:Body,size:Vector2f)
 
@@ -26,18 +25,17 @@ object Physics extends Game(3, 3, 60, 800, 600, "Physics") {
   var mouse = Vector2f()
   var bodies: Array[PhysicsBody] = Array()
   val size: Float = 20
+  val scale=20f
 
   override def setup(window: Window): Unit = {
     val width = window.getWidth.toFloat
     val height = window.getHeight.toFloat
-    world = World(new Vec2(0, 1000))
+    world = World(new Vec2(0, 10))
     renderer = ShapeRenderer()
     camera = Camera3.builder2d()
       .position(width / 2, height / 2)
       .size(width, height)
       .build()
-
-    camera.update()
     renderer.setView(camera.view)
     renderer.setProjection(camera.projection)
 
@@ -45,17 +43,13 @@ object Physics extends Game(3, 3, 60, 800, 600, "Physics") {
   }
 
   override def loop(delta: Float): Unit = {
-    val window = getWindow
-    if (window.shouldClose()) close()
     Utils.clear(Colors.black, Buffer.COLOR_BUFFER)
-    //input
-    window.pollEvents()
     //update
     world.step(delta, 10, 10)
     //draw
     for (element <- bodies) {
-      val x = element.body.getPosition.x
-      val y = element.body.getPosition.y
+      val x = element.body.getPosition.x*scale
+      val y = element.body.getPosition.y*scale
       val a = element.body.getAngle
       renderer.rect(
           x - element.size.x/2f,
@@ -70,9 +64,9 @@ object Physics extends Game(3, 3, 60, 800, 600, "Physics") {
 
   def createWalls(): Unit = {
     addBody(0,300,20,600,BodyType.STATIC)
-    addBody(780,300,20,600,BodyType.STATIC)
+    addBody(800,300,20,600,BodyType.STATIC)
     addBody(400,0,800,20,BodyType.STATIC)
-    addBody(400,580,800,20,BodyType.STATIC)
+    addBody(400,600,800,20,BodyType.STATIC)
   }
 
   override def mouseDown(button: Int, mods: Int, x: Double, y: Double): Boolean = {
@@ -82,7 +76,7 @@ object Physics extends Game(3, 3, 60, 800, 600, "Physics") {
 
   def addBody(x:Float,y:Float,width:Float,height:Float,`type`:BodyType=BodyType.DYNAMIC):Unit = {
       val bodyDef = BodyDef()
-      bodyDef.position.set(x, y)
+      bodyDef.position.set(x/scale, y/scale)
       bodyDef.`type` = `type`
       bodyDef.linearDamping = 0
       bodyDef.angularDamping = 0
@@ -92,7 +86,7 @@ object Physics extends Game(3, 3, 60, 800, 600, "Physics") {
       fixtureDef.restitution = 0.5f
       fixtureDef.friction = 0.7f
       val shape = PolygonShape()
-      shape.setAsBox(width/2, height/2)
+      shape.setAsBox(width/2/scale, height/2/scale)
 
       fixtureDef.shape = shape
 
