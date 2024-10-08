@@ -9,6 +9,7 @@ public class Block {
     public Block(TextureRegion top,TextureRegion bottom,TextureRegion sides,boolean opaque){
         this(top,bottom,sides,sides,sides,sides,opaque);
     }
+
     public Block(TextureRegion top,TextureRegion bottom,TextureRegion left,TextureRegion right,TextureRegion front,TextureRegion back,boolean opaque){
         this.top=top;
         this.bottom=bottom;

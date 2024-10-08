@@ -1,4 +1,4 @@
-package com.systemvi.examples.parallel;
+package com.systemvi.parallel;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

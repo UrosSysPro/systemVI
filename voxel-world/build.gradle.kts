@@ -15,8 +15,8 @@ run.standardInput = System.`in`
 
 sourceSets {
     main {
-        java {
-            setSrcDirs(listOf("src/java"))
+        scala {
+            setSrcDirs(listOf("src/scala"))
         }
         resources {
             setSrcDirs(listOf("src/resources"))

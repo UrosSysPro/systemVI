@@ -1,4 +1,4 @@
-package com.systemvi.examples.parallel;
+package com.systemvi.parallel;
 
 public class Parallel {
     public Parallel() throws Exception {
