@@ -29,6 +29,7 @@
             <option value="$PROJECT_DIR$/examples/normal-mapping" />
             <option value="$PROJECT_DIR$/examples/paint" />
             <option value="$PROJECT_DIR$/examples/particle-system" />
+            <option value="$PROJECT_DIR$/examples/particle-system-homework" />
             <option value="$PROJECT_DIR$/examples/phong" />
             <option value="$PROJECT_DIR$/examples/physics2d" />
             <option value="$PROJECT_DIR$/examples/sdf" />
