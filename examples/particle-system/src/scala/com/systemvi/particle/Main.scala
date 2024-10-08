@@ -13,6 +13,6 @@ import com.systemvi.engine.window.Window
 
 object Main  {
   def main(args: Array[String]): Unit = {
-    Particles.run()
+    Triangle.run()
   }
 }
