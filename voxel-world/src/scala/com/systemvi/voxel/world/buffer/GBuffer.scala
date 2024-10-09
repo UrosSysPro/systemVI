@@ -1,5 +1,7 @@
 package com.systemvi.voxel.world.buffer
 
-class GBuffer {
+import com.systemvi.engine.texture.Texture
 
+class GBuffer(){
+//  val uv:Texture=Texture()
 }

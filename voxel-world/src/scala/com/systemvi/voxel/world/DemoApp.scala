@@ -14,6 +14,7 @@ object DemoApp extends Game(3,3,60,800,600, "Demo Game"){
   val worldCache:WorldCache=WorldCache()
   val blockRenderer:BlockFaceRenderer=BlockFaceRenderer()
   var controller:CameraController3=null
+  
 
   override def setup(window: Window): Unit = {
     controller=CameraController3.builder().build()
