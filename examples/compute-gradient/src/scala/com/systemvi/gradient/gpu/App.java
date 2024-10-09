@@ -1,4 +1,4 @@
-package com.systemvi.examples.compute;
+package com.systemvi.gradient.gpu;
 
 import com.systemvi.engine.application.Game;
 import com.systemvi.engine.camera.Camera;
@@ -8,10 +8,12 @@ import com.systemvi.engine.texture.Format;
 import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
+import org.joml.Vector2i;
+import org.lwjgl.glfw.GLFW;
 
-public class Gradient extends Game {
-    public Gradient(int openglVersionMajor, int openglVersionMinor, int targetFPS, int windowWidth, int windowHeight, String title) {
-        super(openglVersionMajor, openglVersionMinor, targetFPS, windowWidth, windowHeight, title);
+public class App extends Game {
+    public App() {
+        super(3,3,60,800,600,"Gradient");
     }
     Shader compute;
     Texture texture;
@@ -20,7 +22,7 @@ public class Gradient extends Game {
     @Override
     public void setup(Window window) {
         compute= Shader.builder()
-            .compute("assets/examples/compute/gradient/compute.glsl")
+            .compute("compute.glsl")
             .build();
         texture=new Texture(800,600, Format.RGBA32F);
         renderer=new TextureRenderer();

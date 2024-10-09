@@ -1,4 +1,4 @@
-package com.systemvi.examples.compute;
+package com.systemvi.graph.gpu;
 
 import com.systemvi.engine.application.Game;
 import com.systemvi.engine.camera.Camera;
@@ -9,12 +9,13 @@ import com.systemvi.engine.texture.Format;
 import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
+import org.joml.Vector2i;
+import org.lwjgl.glfw.GLFW;
 
-public class Graph extends Game {
-    public Graph(int openglVersionMajor, int openglVersionMinor, int targetFPS, int windowWidth, int windowHeight, String title) {
-        super(openglVersionMajor, openglVersionMinor, targetFPS, windowWidth, windowHeight, title);
+public class App extends Game {
+    public App() {
+        super(3,3,60,800,600,"Gradient");
     }
-
     Shader compute;
     ShaderStorage storage;
     Shader shader;
@@ -30,10 +31,10 @@ public class Graph extends Game {
         texture=new Texture(window.getWidth(),window.getHeight(), Format.RGB);
         renderer=new TextureRenderer();
         renderer.setCamera(camera);
-        compute=Shader.builder().compute("assets/examples/compute/graph/compute.glsl").build();
+        compute=Shader.builder().compute("compute.glsl").build();
         shader= Shader.builder()
             .vertex("assets/renderer/textureRenderer/vertex.glsl")
-            .fragment("assets/examples/compute/graph/fragment.glsl")
+            .fragment("fragment.glsl")
             .build();
         renderer.setShader(shader);
         storage=new ShaderStorage(new float[800]);
