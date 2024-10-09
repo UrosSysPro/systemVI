@@ -26,8 +26,8 @@ class TextWidgetTest extends Game(3,3,60,800,600,"Text Widget"){
 
   override def setup(window: Window): Unit = {
     scene=Scene(
-      initialWidth = window.getWidth,
-      initialHeight = window.getHeight,
+      initialWidth = window.getWidth.toFloat,
+      initialHeight = window.getHeight.toFloat,
       font=TextWidgetTest.font,
       root=new TransformsTest()
     )

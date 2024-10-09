@@ -1,14 +1,11 @@
 package com.systemvi.examples.uitest
 
-import com.systemvi.engine.ui.{Widget, widgets}
-import com.systemvi.engine.ui.utils.animation.AnimationStates.AnimationState
-import com.systemvi.engine.ui.utils.animation.{Animatable, AnimationController, AnimationStates}
+import com.systemvi.engine.ui.Widget
+import com.systemvi.engine.ui.utils.animation.Animatable
 import com.systemvi.engine.ui.utils.context.BuildContext
-import com.systemvi.engine.ui.utils.data.{AxisSize, BoxDecoration, BoxShadow, Colors, CrossAxisAlignment, MainAxisAlignment}
+import com.systemvi.engine.ui.utils.data.{ BoxDecoration, Colors, CrossAxisAlignment, MainAxisAlignment}
 import com.systemvi.engine.ui.widgets.cupertino.Switch
-import com.systemvi.engine.ui.widgets.material.{ProgressBar, Range}
 import com.systemvi.engine.ui.widgets.{Column, Container, EdgeInsets, Expanded, Padding, Row, SizedBox, State, StatefulWidget, Text, TextStyle}
-import org.joml.{Vector2f, Vector4f}
 
 /**
  *  Row Column Stack padding sizedBox container Switch Range ProgressBar

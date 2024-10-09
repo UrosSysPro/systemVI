@@ -3,9 +3,9 @@ plugins {
     id("scala")
     id("com.github.johnrengelman.shadow") version("8.1.1")
 }
-scala {
-    zincVersion = "1.6.1"
-}
+//scala {
+//    zincVersion = "1.6.1"
+//}
 application {
     mainClass = "com.systemvi.examples.Main"
 }
@@ -23,7 +23,6 @@ sourceSets {
         }
     }
 }
-
 
 fun declareDependencies(){
 
@@ -66,13 +65,19 @@ fun declareDependencies(){
 
     dependencies {
         implementation(project(":engine"))
+
         implementation("dev.dominion.ecs:dominion-ecs-engine:0.9.0")
+
         implementation("com.google.code.gson:gson:2.10.1")
+
         implementation("org.jbox2d:jbox2d-library:2.2.1.1")
-        // https://mvnrepository.com/artifact/com.googlecode.lanterna/lanterna
+
         implementation("com.googlecode.lanterna:lanterna:3.0.1")
 
-        implementation("org.scala-lang:scala-library:2.11.12")
+        implementation("org.scala-lang:scala3-library_3:3.5.1")
+//        implementation("org.scala-lang:scala3-library_3:3.0.1")
+
+        implementation("commons-collections:commons-collections:3.2.2")
 
         implementation("org.joml:joml:${jomlVersion}")
 
@@ -105,18 +110,15 @@ fun declareDependencies(){
         implementation("org.lwjgl:lwjgl-opencl")
         implementation("org.lwjgl:lwjgl-opengl")
         implementation("org.lwjgl:lwjgl-opengles")
-//        implementation("org.lwjgl:lwjgl-openvr")
         implementation("org.lwjgl:lwjgl-opus")
         implementation("org.lwjgl:lwjgl-par")
         implementation("org.lwjgl:lwjgl-remotery")
         implementation("org.lwjgl:lwjgl-rpmalloc")
         implementation("org.lwjgl:lwjgl-shaderc")
         implementation("org.lwjgl:lwjgl-spvc")
-//        implementation("org.lwjgl:lwjgl-sse")
         implementation("org.lwjgl:lwjgl-stb")
         implementation("org.lwjgl:lwjgl-tinyexr")
         implementation("org.lwjgl:lwjgl-tinyfd")
-//        implementation("org.lwjgl:lwjgl-tootle")
         implementation("org.lwjgl:lwjgl-vma")
         implementation("org.lwjgl:lwjgl-vulkan")
         implementation("org.lwjgl:lwjgl-xxhash")
@@ -143,18 +145,15 @@ fun declareDependencies(){
         runtimeOnly("org.lwjgl:lwjgl-openal::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-opengl::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-opengles::$lwjglNatives")
-//        runtimeOnly("org.lwjgl:lwjgl-openvr::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-opus::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-par::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-remotery::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-rpmalloc::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-shaderc::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-spvc::$lwjglNatives")
-//        runtimeOnly("org.lwjgl:lwjgl-sse::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-stb::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-tinyexr::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-tinyfd::$lwjglNatives")
-//        runtimeOnly("org.lwjgl:lwjgl-tootle::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-vma::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-xxhash::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-yoga::$lwjglNatives")
@@ -207,14 +206,18 @@ subprojects{
 
     dependencies {
         implementation(project(":engine"))
+
         implementation("dev.dominion.ecs:dominion-ecs-engine:0.9.0")
+
         implementation("com.google.code.gson:gson:2.10.1")
+
         implementation("org.jbox2d:jbox2d-library:2.2.1.1")
-        // https://mvnrepository.com/artifact/com.googlecode.lanterna/lanterna
+
         implementation("com.googlecode.lanterna:lanterna:3.0.1")
 
-//        implementation("org.scala-lang:scala-library:2.11.12")
-        implementation("org.scala-lang:scala3-library_3:3.0.1")
+        implementation("org.scala-lang:scala3-library_3:3.5.1")
+//        implementation("org.scala-lang:scala3-library_3:3.0.1")
+
         implementation("commons-collections:commons-collections:3.2.2")
 
         implementation("org.joml:joml:${jomlVersion}")
@@ -248,18 +251,15 @@ subprojects{
         implementation("org.lwjgl:lwjgl-opencl")
         implementation("org.lwjgl:lwjgl-opengl")
         implementation("org.lwjgl:lwjgl-opengles")
-//        implementation("org.lwjgl:lwjgl-openvr")
         implementation("org.lwjgl:lwjgl-opus")
         implementation("org.lwjgl:lwjgl-par")
         implementation("org.lwjgl:lwjgl-remotery")
         implementation("org.lwjgl:lwjgl-rpmalloc")
         implementation("org.lwjgl:lwjgl-shaderc")
         implementation("org.lwjgl:lwjgl-spvc")
-//        implementation("org.lwjgl:lwjgl-sse")
         implementation("org.lwjgl:lwjgl-stb")
         implementation("org.lwjgl:lwjgl-tinyexr")
         implementation("org.lwjgl:lwjgl-tinyfd")
-//        implementation("org.lwjgl:lwjgl-tootle")
         implementation("org.lwjgl:lwjgl-vma")
         implementation("org.lwjgl:lwjgl-vulkan")
         implementation("org.lwjgl:lwjgl-xxhash")
@@ -286,18 +286,15 @@ subprojects{
         runtimeOnly("org.lwjgl:lwjgl-openal::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-opengl::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-opengles::$lwjglNatives")
-//        runtimeOnly("org.lwjgl:lwjgl-openvr::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-opus::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-par::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-remotery::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-rpmalloc::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-shaderc::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-spvc::$lwjglNatives")
-//        runtimeOnly("org.lwjgl:lwjgl-sse::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-stb::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-tinyexr::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-tinyfd::$lwjglNatives")
-//        runtimeOnly("org.lwjgl:lwjgl-tootle::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-vma::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-xxhash::$lwjglNatives")
         runtimeOnly("org.lwjgl:lwjgl-yoga::$lwjglNatives")

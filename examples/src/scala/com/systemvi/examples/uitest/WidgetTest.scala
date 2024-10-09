@@ -21,8 +21,8 @@ class WidgetTest extends Game(3,3,60,800,600,"Widget test"){
       "assets/examples/widgetRenderer2Test/font.json"
     )
     scene = Scene(
-      initialWidth=window.getWidth,
-      initialHeight=window.getHeight,
+      initialWidth=window.getWidth.toFloat,
+      initialHeight=window.getHeight.toFloat,
       root = App(),
       font = WidgetTest.font
     )

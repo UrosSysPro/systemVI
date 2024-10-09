@@ -15,8 +15,8 @@ class ContainerTest extends Game(3,3,60,800,600,"Container Test"){
   override def setup(window: Window): Unit = {
     scene=new Scene(
       root=ContainerTestWidget(),
-      initialWidth = window.getWidth,
-      initialHeight = window.getHeight,
+      initialWidth = window.getWidth.toFloat,
+      initialHeight = window.getHeight.toFloat,
       font = Font.load(
         "assets/examples/widgetRenderer2Test/font.PNG",
         "assets/examples/widgetRenderer2Test/font.json"

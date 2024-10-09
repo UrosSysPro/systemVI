@@ -28,8 +28,8 @@ class WidgetRenderer2Test extends Game(3,3,60,800,600,"Widget renderer test"){
   )
   override def setup(window: Window): Unit = {
     camera=Camera3.builder2d()
-      .size(window.getWidth,window.getHeight)
-      .position(window.getWidth/2,window.getHeight/2)
+      .size(window.getWidth.toFloat,window.getHeight.toFloat)
+      .position(window.getWidth/2f,window.getHeight/2f)
       .scale(1,-1)
       .build()
 
@@ -67,8 +67,8 @@ class WidgetRenderer2Test extends Game(3,3,60,800,600,"Widget renderer test"){
         rect = Rect(
           x+s.width.toFloat/2+s.xoffset.toFloat,
           y+s.height.toFloat/2+s.yoffset.toFloat,
-          s.width,
-          s.height
+          s.width.toFloat,
+          s.height.toFloat
         )
 //        transform = new Matrix4f().identity().translate(x,y,0).rotateZ(time).translate(-x,-y,0)
       ))
