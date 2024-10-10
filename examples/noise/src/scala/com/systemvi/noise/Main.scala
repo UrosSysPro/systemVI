@@ -2,14 +2,14 @@ package com.systemvi.noise
 
 import com.systemvi.engine.application.Game
 import com.systemvi.engine.camera.Camera3
-import com.systemvi.engine.noise.{Perlin2, PerlinNoise, Voronoi2}
+import com.systemvi.engine.noise.{Octave2, Perlin2, PerlinNoise, Voronoi2}
 import com.systemvi.engine.renderers.TextureRenderer
 import com.systemvi.engine.texture.{Format, Texture, TextureData}
 import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.Window
-import org.joml.{Vector2f, Vector2i, Vector4f}
+import org.joml.{Matrix4f, Vector2f, Vector2i, Vector4f}
 
 object Main extends Game(3, 3, 60, 800, 600, "Noise") {
   var textureRenderer: TextureRenderer = null
@@ -48,19 +48,33 @@ object Main extends Game(3, 3, 60, 800, 600, "Noise") {
 
     val n = 10
 
-    val octaves = for (i <- 1 to n) yield (
-      new Perlin2(new Vector2i(100, 100)),
-      Math.pow(2, i).toFloat
-    )
+    //    val octaves = for (i <- 1 to n) yield (
+    //      new Perlin2(new Vector2i(100, 100)),
+    //      Math.pow(2, i).toFloat
+    //    )
+    val octaves = for (i <- 1 to n) yield
+      val scale = Math.pow(2f, i).toFloat
+      Octave2(
+        Perlin2(Vector2i(100,100)),
+        Matrix4f().identity()
+          .scale(scale, scale, 1)
+      )
     val textureData = new TextureData(width, height, Format.RGBA)
     val scale = 1f / 100f
 
     for (i <- 0 until width; j <- 0 until height)
+      //      val point = new Vector2f(i.toFloat * scale, j.toFloat * scale)
+      //      val value = octaves.foldLeft(0f) {
+      //        case (acc, (noise, interval)) =>
+      //          noise.get(new Vector2f(point.x * interval, point.y * interval)) / interval + acc
+      //      }
+
       val point = new Vector2f(i.toFloat * scale, j.toFloat * scale)
       val value = octaves.foldLeft(0f) {
-        case (acc, (noise, interval)) =>
-          noise.get(new Vector2f(point.x * interval, point.y * interval)) / interval + acc
+        case (acc, octave) =>
+          acc+octave.get(point)
       }
+
       value match
         case x if x > 1 => textureData.set(i, j, Colors.blue400)
         case x if x < 0 => textureData.set(i, j, Colors.red400)
@@ -68,6 +82,6 @@ object Main extends Game(3, 3, 60, 800, 600, "Noise") {
 
     texture.setData(textureData)
   }
-  
+
   def main(args: Array[String]): Unit = run()
 }

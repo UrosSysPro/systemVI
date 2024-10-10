@@ -66,14 +66,18 @@ fun declareDependencies(){
 
     dependencies {
         implementation(project(":engine"))
+
         implementation("dev.dominion.ecs:dominion-ecs-engine:0.9.0")
+
         implementation("com.google.code.gson:gson:2.10.1")
+
         implementation("org.jbox2d:jbox2d-library:2.2.1.1")
-        // https://mvnrepository.com/artifact/com.googlecode.lanterna/lanterna
+
         implementation("com.googlecode.lanterna:lanterna:3.0.1")
 
-//        implementation("org.scala-lang:scala-library:2.11.12")
-        implementation("org.scala-lang:scala3-library_3:3.0.1")
+        implementation("org.scala-lang:scala3-library_3:3.5.1")
+//        implementation("org.scala-lang:scala3-library_3:3.0.1")
+
         implementation("commons-collections:commons-collections:3.2.2")
 
         implementation("org.joml:joml:${jomlVersion}")
