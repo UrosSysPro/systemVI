@@ -26,6 +26,7 @@
             <option value="$PROJECT_DIR$/examples/instancing" />
             <option value="$PROJECT_DIR$/examples/jni-lib" />
             <option value="$PROJECT_DIR$/examples/lanterna-powerline" />
+            <option value="$PROJECT_DIR$/examples/maze" />
             <option value="$PROJECT_DIR$/examples/multi-window" />
             <option value="$PROJECT_DIR$/examples/noise" />
             <option value="$PROJECT_DIR$/examples/normal-mapping" />
@@ -38,7 +39,9 @@
             <option value="$PROJECT_DIR$/examples/sdf" />
             <option value="$PROJECT_DIR$/examples/test" />
             <option value="$PROJECT_DIR$/examples/test3dmodels" />
+            <option value="$PROJECT_DIR$/examples/tetris" />
             <option value="$PROJECT_DIR$/examples/triangle" />
+            <option value="$PROJECT_DIR$/examples/ui-tests" />
             <option value="$PROJECT_DIR$/voxel-world" />
           </set>
         </option>

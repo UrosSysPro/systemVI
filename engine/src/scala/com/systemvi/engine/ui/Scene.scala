@@ -25,8 +25,8 @@ class Scene(val root:Widget,initialWidth:Float=800,initialHeight:Float=600,font:
       .position(initialWidth/2,initialHeight/2)
       .build(),
     Font.load(
-      "assets/examples/widgetRenderer2Test/font.PNG",
-      "assets/examples/widgetRenderer2Test/font.json"
+      "assets/font.PNG",
+      "assets/font.json"
     )
   )
   //event listeners
