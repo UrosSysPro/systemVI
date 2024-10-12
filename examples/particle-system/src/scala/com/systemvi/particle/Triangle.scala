@@ -67,15 +67,15 @@ object Triangle extends Game(3, 3, 60, 800, 600, "Triangle") {
     val window = getWindow
     window.pollEvents()
     if (window.shouldClose()) close()
-    Utils.clear(Colors.green400, Buffer.COLOR_BUFFER)
+    Utils.clear(Colors.black, Buffer.COLOR_BUFFER)
 
-    Utils.enableLines(2)
+//    Utils.enableLines(2)
     shader.use()
     shader.setUniform("view", camera.view)
     shader.setUniform("projection", camera.projection)
     vertexArray.bind()
     shader.drawElements(Primitive.TRIANGLES, 1, ElementsDataType.UNSIGNED_INT, 3)
-    Utils.disableLines()
+//    Utils.disableLines()
 
     val endTime = System.nanoTime()
     val frameTime = endTime - startTime

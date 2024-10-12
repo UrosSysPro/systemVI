@@ -40,6 +40,7 @@
             <option value="$PROJECT_DIR$/examples/test" />
             <option value="$PROJECT_DIR$/examples/test3dmodels" />
             <option value="$PROJECT_DIR$/examples/tetris" />
+            <option value="$PROJECT_DIR$/examples/text-platformer" />
             <option value="$PROJECT_DIR$/examples/triangle" />
             <option value="$PROJECT_DIR$/examples/ui-tests" />
             <option value="$PROJECT_DIR$/voxel-world" />

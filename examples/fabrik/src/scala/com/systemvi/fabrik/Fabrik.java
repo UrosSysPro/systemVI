@@ -37,10 +37,10 @@ public class Fabrik extends Game {
         renderer.setView(camera.view());
         renderer.setProjection(camera.projection());
 
-        n=10;
+        n=3;
         points=new ArrayList<>(n);
         lengths=new ArrayList<>(n-1);
-        float length=200;
+        float length=400;
         for(int i=0;i<n;i++){
             points.add(new Vector(400+i*(length/n),300));
         }
