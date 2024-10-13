@@ -12,7 +12,9 @@ import com.systemvi.engine.shader.Shader;
 import com.systemvi.engine.ui.utils.data.Colors;
 import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
+import org.joml.Vector4f;
 import org.lwjgl.glfw.GLFW;
+
 import java.io.*;
 import java.lang.Thread;
 import java.util.ArrayList;
@@ -23,14 +25,16 @@ class MovingSquare {
     public float directionX, directionY;
     public float velocityY;
     public long timestamp;
+    public Vector4f[] colors;
 
-    public MovingSquare(float x, float y, float directionX, float directionY, float velocityY, long timestamp) {
+    public MovingSquare(float x, float y, float directionX, float directionY, float velocityY, long timestamp, Vector4f[] colors) {
         this.x = x;
         this.y = y;
         this.directionX = directionX;
         this.directionY = directionY;
         this.velocityY = velocityY;
         this.timestamp = timestamp;
+        this.colors = colors;
     }
 }
 
@@ -42,6 +46,7 @@ public class Triangle extends Game {
     private static final float INITIAL_VELOCITY = -4.0f;
     private static final long SPAWN_COOLDOWN = 150;
     private long lastSpawnTime;
+
     public Triangle() {
         super(3, 3, 60, 800, 600, "Square");
         squares = new ArrayList<>();
@@ -72,7 +77,8 @@ public class Triangle extends Game {
         elementsBuffer.bind();
 
         arrayBuffer.setVertexAttributes(new VertexAttribute[]{
-                new VertexAttribute("position", 2)
+                new VertexAttribute("position", 2),
+                new VertexAttribute("color", 4),
         });
 
         arrayBuffer.setData(new float[]{
@@ -119,10 +125,20 @@ public class Triangle extends Game {
 
         GLFW.glfwGetCursorPos(window.getId(), mouseX, mouseY);
 
+        Vector4f[] colors = new Vector4f[]{
+                Colors.green400(),
+                Colors.orange400(),
+                Colors.amber400(),
+                Colors.red400(),
+                Colors.blue400(),
+                Colors.violet400(),
+                Colors.purple400(),
+        };
+
         long currentTime = System.currentTimeMillis();
         if ((currentTime - lastSpawnTime) > SPAWN_COOLDOWN) {
             lastSpawnTime = currentTime;
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 3; i++) {
                 double angle = Math.toRadians(100 * i);
                 float directionX = (float) Math.cos(angle);
                 float directionY = (float) Math.sin(angle);
@@ -132,7 +148,13 @@ public class Triangle extends Game {
                         directionX,
                         directionY,
                         INITIAL_VELOCITY,
-                        System.currentTimeMillis()
+                        System.currentTimeMillis(),
+                        new Vector4f[]{
+                                colors[(int) (Math.random() * colors.length)],
+                                colors[(int) (Math.random() * colors.length)],
+                                colors[(int) (Math.random() * colors.length)],
+                                colors[(int) (Math.random() * colors.length)],
+                        }
                 ));
             }
         }
@@ -154,15 +176,15 @@ public class Triangle extends Game {
         }
 
         for (MovingSquare square : squares) {
-            float squareSize = 8.0f;
+            float squareSize = 100.0f;
             float halfSize = squareSize / 2.0f;
-
-            float[] squareVertices = generateQuadrilateralVertices(
-                    square.x - halfSize, square.y - halfSize,
-                    square.x + halfSize, square.y - halfSize,
-                    square.x + halfSize, square.y + halfSize,
-                    square.x - halfSize, square.y + halfSize
-            );
+            Vector4f[] c = square.colors;
+            float[] squareVertices = new float[]{
+                    square.x - halfSize, square.y - halfSize, c[0].x, c[0].y, c[0].z, c[0].w,
+                    square.x + halfSize, square.y - halfSize, c[1].x, c[1].y, c[1].z, c[1].w,
+                    square.x + halfSize, square.y + halfSize, c[2].x, c[2].y, c[2].z, c[2].w,
+                    square.x - halfSize, square.y + halfSize, c[3].x, c[3].y, c[3].z, c[3].w,
+            };
 
             arrayBuffer.setData(squareVertices);
             shader.use();
