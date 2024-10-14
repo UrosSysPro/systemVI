@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/examples" />
             <option value="$PROJECT_DIR$/examples/break-out" />
             <option value="$PROJECT_DIR$/examples/cats" />
+            <option value="$PROJECT_DIR$/examples/character-movement-homework" />
             <option value="$PROJECT_DIR$/examples/collections" />
             <option value="$PROJECT_DIR$/examples/compute-gradient" />
             <option value="$PROJECT_DIR$/examples/compute-graph" />
@@ -28,6 +29,7 @@
             <option value="$PROJECT_DIR$/examples/lanterna-powerline" />
             <option value="$PROJECT_DIR$/examples/maze" />
             <option value="$PROJECT_DIR$/examples/multi-window" />
+            <option value="$PROJECT_DIR$/examples/new-shape-renderer" />
             <option value="$PROJECT_DIR$/examples/noise" />
             <option value="$PROJECT_DIR$/examples/normal-mapping" />
             <option value="$PROJECT_DIR$/examples/paint" />

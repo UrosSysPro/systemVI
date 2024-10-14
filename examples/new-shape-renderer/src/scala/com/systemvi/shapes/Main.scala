@@ -1,7 +1,7 @@
-package com.systemvi.voxel.world
+package com.systemvi.shapes
 
 object Main {
   def main(args: Array[String]): Unit = {
-    DebugApp().run()
+    
   }
 }
