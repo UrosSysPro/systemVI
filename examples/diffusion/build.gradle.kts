@@ -6,12 +6,21 @@ plugins {
 scala {
     zincVersion = "1.6.1"
 }
+
+val startClassName:String="com.systemvi.diffusion.Main"
+
 application {
-    mainClass = "com.systemvi.diffusion.Main"
+    mainClass = startClassName
 }
 
 val run: JavaExec by tasks
 run.standardInput = System.`in`
+
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = startClassName
+    }
+}
 
 sourceSets {
     main {

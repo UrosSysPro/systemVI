@@ -23,10 +23,19 @@ sourceSets {
 }
 
 tasks.register("compile-release"){
+    val systemVIVersion: String by project
     subprojects.forEach {
-        dependsOn(it.tasks.named("shadowJar"))
-        val jar=file("${it.name}/build/libs/${it.name}-all.jar")
-        jar.copyTo(file("build/release/${jar.name}"),true)
+        dependsOn(it.tasks.named("jar"))
+    }
+    rootProject.subprojects.forEach{
+        if(it.name=="engine")dependsOn(it.tasks.named("shadowJar"))
+    }
+    doLast{
+        file("../engine/build/libs/engine-$systemVIVersion-all.jar").copyTo(file("build/release/engine.jar"),true)
+        subprojects.forEach {
+            val jar=file("${it.name}/build/libs/${it.name}.jar")
+            jar.copyTo(file("build/release/${jar.name}"),true)
+        }
     }
 }
 
@@ -173,6 +182,8 @@ subprojects{
     apply(plugin="application")
     apply(plugin="scala")
     apply(plugin="com.github.johnrengelman.shadow")
+
+
 
     val currentOs=org.gradle.internal.os.OperatingSystem.current()
     val lwjglVersion:String by project
