@@ -10,6 +10,7 @@ import com.systemvi.engine.ui.utils.data.Colors;
 import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
 import org.joml.Vector2i;
+import org.lwjgl.glfw.GLFW;
 
 public class Main extends Game {
     
@@ -48,6 +49,28 @@ public class Main extends Game {
         renderer.draw(character,characterPosition.x,characterPosition.y,size,size);
         renderer.draw(plant,plantPosition.x,plantPosition.y,size,size);
         renderer.flush();
+    }
+    
+    @Override
+    public boolean keyDown(int key, int scancode, int mods) {
+        if(key == GLFW.GLFW_KEY_D){
+            //skreni desno 
+        }
+        if(key == GLFW.GLFW_KEY_A){
+            //skreni levo 
+        }
+        return true;
+    }
+
+    @Override
+    public boolean keyUp(int key, int scancode, int mods) {
+        if(key == GLFW.GLFW_KEY_D){
+            //skreni desno 
+        }
+        if(key == GLFW.GLFW_KEY_A){
+            //skreni levo 
+        }
+        return true;
     }
 
     public static void main(String[] args) {
