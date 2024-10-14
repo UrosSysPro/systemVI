@@ -3,9 +3,7 @@ plugins {
     id("scala")
     id("com.github.johnrengelman.shadow") version("8.1.1")
 }
-//scala {
-//    zincVersion = "1.6.1"
-//}
+
 application {
     mainClass = "com.systemvi.examples.Main"
 }
@@ -21,6 +19,14 @@ sourceSets {
         resources {
             setSrcDirs(listOf("src/resources"))
         }
+    }
+}
+
+tasks.register("compile-release"){
+    subprojects.forEach {
+        dependsOn(it.tasks.named("shadowJar"))
+        val jar=file("${it.name}/build/libs/${it.name}-all.jar")
+        jar.copyTo(file("build/release/${jar.name}"),true)
     }
 }
 
@@ -216,7 +222,6 @@ subprojects{
         implementation("com.googlecode.lanterna:lanterna:3.0.1")
 
         implementation("org.scala-lang:scala3-library_3:3.5.1")
-//        implementation("org.scala-lang:scala3-library_3:3.0.1")
 
         implementation("commons-collections:commons-collections:3.2.2")
 
