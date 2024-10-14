@@ -5,6 +5,7 @@ plugins {
     id("maven-publish")
     id("java-library")
 }
+
 val systemVIVersion: String by project
 group="com.systempro.systemvi"
 version=systemVIVersion
@@ -25,35 +26,6 @@ application {
 val run: JavaExec by tasks
 run.standardInput = System.`in`
 
-private val currentOs=org.gradle.internal.os.OperatingSystem.current()
-
-val lwjglVersion:String by project
-val jomlVersion:String by project
-project.ext.set("lwjglVersion",lwjglVersion)
-project.ext.set("jomlVersion",jomlVersion)
-
-if(currentOs.isLinux){
-    val osArch = System.getProperty("os.arch")
-    val isArm=osArch.startsWith("arm")||osArch.startsWith("aarch64")
-    val isArm8or64=osArch.contains("64") || osArch.startsWith("armv8")
-    project.ext.set("lwjglNatives",if(isArm) "natives-linux-${if(isArm8or64) "arm64" else "arm32"}" else "natives-linux")
-}
-if(currentOs.isMacOsX){
-    val osArch = System.getProperty("os.arch")
-    val isArm=osArch.startsWith("arm")||osArch.startsWith("aarch64")
-    project.ext.set("lwjglNatives",if(isArm)"natives-macos-arm64" else "natives-macos")
-    application{
-        applicationDefaultJvmArgs = listOf("-XstartOnFirstThread")
-    }
-}
-if(currentOs.isWindows){
-    val osArch = System.getProperty("os.arch")
-    val isArm=osArch.contains("64")
-    val isAarch64=osArch.startsWith("aarch64")
-    project.ext.set("lwjglNatives",if(isArm) "natives-windows${if(isAarch64)"-arm64" else ""}" else "natives-windows-x86")
-}
-private val lwjglNatives=project.ext.get("lwjglNatives")
-
 repositories {
     mavenCentral()
     maven {
@@ -72,17 +44,53 @@ sourceSets {
     }
 }
 
-println(lwjglNatives)
-println(lwjglVersion)
+val listOfImplementations: DependencyHandlerScope.() -> Unit = {
+    val currentOs = org.gradle.internal.os.OperatingSystem.current()
+
+    val lwjglVersion: String by project
+    val jomlVersion: String by project
+    project.ext.set("lwjglVersion", lwjglVersion)
+    project.ext.set("jomlVersion", jomlVersion)
+
+    if (currentOs.isLinux) {
+        val osArch = System.getProperty("os.arch")
+        val isArm = osArch.startsWith("arm") || osArch.startsWith("aarch64")
+        val isArm8or64 = osArch.contains("64") || osArch.startsWith("armv8")
+        project.ext.set(
+            "lwjglNatives",
+            if (isArm) "natives-linux-${if (isArm8or64) "arm64" else "arm32"}" else "natives-linux"
+        )
+    }
+    if (currentOs.isMacOsX) {
+        val osArch = System.getProperty("os.arch")
+        val isArm = osArch.startsWith("arm") || osArch.startsWith("aarch64")
+        project.ext.set("lwjglNatives", if (isArm) "natives-macos-arm64" else "natives-macos")
+        application {
+            applicationDefaultJvmArgs = listOf("-XstartOnFirstThread")
+        }
+    }
+    if (currentOs.isWindows) {
+        val osArch = System.getProperty("os.arch")
+        val isArm = osArch.contains("64")
+        val isAarch64 = osArch.startsWith("aarch64")
+        project.ext.set(
+            "lwjglNatives",
+            if (isArm) "natives-windows${if (isAarch64) "-arm64" else ""}" else "natives-windows-x86"
+        )
+    }
+    val lwjglNatives = project.ext.get("lwjglNatives")
 
 
-dependencies {
     implementation("dev.dominion.ecs:dominion-ecs-engine:0.9.0")
+
     implementation("com.google.code.gson:gson:2.10.1")
+
     implementation("org.jbox2d:jbox2d-library:2.2.1.1")
+
     implementation("com.googlecode.lanterna:lanterna:3.0.1")
 
     implementation("org.scala-lang:scala3-library_3:3.5.1")
+//        implementation("org.scala-lang:scala3-library_3:3.0.1")
 
     implementation("commons-collections:commons-collections:3.2.2")
 
@@ -165,7 +173,10 @@ dependencies {
     runtimeOnly("org.lwjgl:lwjgl-xxhash::$lwjglNatives")
     runtimeOnly("org.lwjgl:lwjgl-yoga::$lwjglNatives")
     runtimeOnly("org.lwjgl:lwjgl-zstd::$lwjglNatives")
+
 }
+
+dependencies(listOfImplementations)
 //
 //publishing {
 //    repositories {
