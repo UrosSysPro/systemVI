@@ -10,6 +10,13 @@ application {
     mainClass = "com.systemvi.voxel.world.Main"
 }
 
+val currentOs = org.gradle.internal.os.OperatingSystem.current()
+if (currentOs.isMacOsX) {
+    application {
+        applicationDefaultJvmArgs = listOf("-XstartOnFirstThread")
+    }
+}
+
 val run: JavaExec by tasks
 run.standardInput = System.`in`
 
@@ -50,9 +57,6 @@ val listOfImplementations: DependencyHandlerScope.() -> Unit = {
         val osArch = System.getProperty("os.arch")
         val isArm = osArch.startsWith("arm") || osArch.startsWith("aarch64")
         project.ext.set("lwjglNatives", if (isArm) "natives-macos-arm64" else "natives-macos")
-        application {
-            applicationDefaultJvmArgs = listOf("-XstartOnFirstThread")
-        }
     }
     if (currentOs.isWindows) {
         val osArch = System.getProperty("os.arch")
