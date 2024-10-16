@@ -46,29 +46,19 @@ object Main extends Game(3, 3, 60, 800, 600, "Noise") {
 
   private def redraw(width: Int, height: Int): Unit = {
 
-    val n = 10
-
-    //    val octaves = for (i <- 1 to n) yield (
-    //      new Perlin2(new Vector2i(100, 100)),
-    //      Math.pow(2, i).toFloat
-    //    )
+    val n = 5
     val octaves = for (i <- 1 to n) yield
       val scale = Math.pow(2f, i).toFloat
       Octave2(
-        Perlin2(Vector2i(100,100)),
-        scale,
-        1f/scale,
+//        noise = Perlin2(Vector2i(100,100)),
+        noise = Voronoi2(Vector2i(10,10)),
+        frequency = scale,
+        amplitude = 1f/scale,
       )
     val textureData = new TextureData(width, height, Format.RGBA)
     val scale = 1f / 100f
 
     for (i <- 0 until width; j <- 0 until height)
-      //      val point = new Vector2f(i.toFloat * scale, j.toFloat * scale)
-      //      val value = octaves.foldLeft(0f) {
-      //        case (acc, (noise, interval)) =>
-      //          noise.get(new Vector2f(point.x * interval, point.y * interval)) / interval + acc
-      //      }
-
       val point = new Vector2f(i.toFloat * scale, j.toFloat * scale)
       val value = octaves.foldLeft(0f) {
         case (acc, octave) =>
