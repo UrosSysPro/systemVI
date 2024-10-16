@@ -47,6 +47,13 @@ tasks.register("compile-release") {
     }
 }
 
+repositories {
+    mavenCentral()
+    maven {
+        setUrl("https://oss.sonatype.org/content/repositories/snapshots/")
+    }
+}
+
 val listOfImplementations: DependencyHandlerScope.() -> Unit = {
     val currentOs = org.gradle.internal.os.OperatingSystem.current()
 

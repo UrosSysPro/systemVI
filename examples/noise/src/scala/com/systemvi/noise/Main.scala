@@ -56,8 +56,8 @@ object Main extends Game(3, 3, 60, 800, 600, "Noise") {
       val scale = Math.pow(2f, i).toFloat
       Octave2(
         Perlin2(Vector2i(100,100)),
-        Matrix4f().identity()
-          .scale(scale, scale, 1)
+        scale,
+        1f/scale,
       )
     val textureData = new TextureData(width, height, Format.RGBA)
     val scale = 1f / 100f
