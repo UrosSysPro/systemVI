@@ -46,7 +46,6 @@
             <option value="$PROJECT_DIR$/examples/triangle" />
             <option value="$PROJECT_DIR$/examples/ui-tests" />
             <option value="$PROJECT_DIR$/voxel-world" />
-            <option value="$PROJECT_DIR$/website" />
           </set>
         </option>
       </GradleProjectSettings>
