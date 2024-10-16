@@ -26,6 +26,7 @@ public abstract class Game implements InputProcessor {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,openglVersionMajor);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,openglVersionMinor);
         glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER,GLFW_FALSE);
         window=new Window(windowWidth,windowHeight,title);
         window.setInputProcessor(this);
     }

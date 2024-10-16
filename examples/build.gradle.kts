@@ -6,6 +6,7 @@ plugins {
 
 application {
     mainClass = "com.systemvi.examples.Main"
+    applicationDefaultJvmArgs = listOf("-XstartOnFirstThread")
 }
 
 val run: JavaExec by tasks
@@ -88,7 +89,6 @@ val listOfImplementations: DependencyHandlerScope.() -> Unit = {
     implementation("com.googlecode.lanterna:lanterna:3.0.1")
 
     implementation("org.scala-lang:scala3-library_3:3.5.1")
-//        implementation("org.scala-lang:scala3-library_3:3.0.1")
 
     implementation("commons-collections:commons-collections:3.2.2")
 
@@ -180,6 +180,10 @@ subprojects {
     apply(plugin = "application")
     apply(plugin = "scala")
     apply(plugin = "com.github.johnrengelman.shadow")
+
+    application{
+        applicationDefaultJvmArgs = listOf("-XstartOnFirstThread")
+    }
 
     repositories {
         mavenCentral()

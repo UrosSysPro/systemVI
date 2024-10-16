@@ -22,6 +22,7 @@ public abstract class Application {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,openglVersionMajor);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,openglVersionMinor);
         glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER,GLFW_FALSE);
     }
 
     public void run(){
