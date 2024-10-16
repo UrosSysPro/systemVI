@@ -6,8 +6,15 @@ plugins {
 
 application {
     mainClass = "com.systemvi.examples.Main"
-    applicationDefaultJvmArgs = listOf("-XstartOnFirstThread")
 }
+
+val currentOs = org.gradle.internal.os.OperatingSystem.current()
+if (currentOs.isMacOsX) {
+    application {
+        applicationDefaultJvmArgs = listOf("-XstartOnFirstThread")
+    }
+}
+
 
 val run: JavaExec by tasks
 run.standardInput = System.`in`
@@ -181,8 +188,11 @@ subprojects {
     apply(plugin = "scala")
     apply(plugin = "com.github.johnrengelman.shadow")
 
-    application{
-        applicationDefaultJvmArgs = listOf("-XstartOnFirstThread")
+    val currentOs = org.gradle.internal.os.OperatingSystem.current()
+    if (currentOs.isMacOsX) {
+        application {
+            applicationDefaultJvmArgs = listOf("-XstartOnFirstThread")
+        }
     }
 
     repositories {
