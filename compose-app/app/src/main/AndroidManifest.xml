@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
             android:allowBackup="true"
             android:dataExtractionRules="@xml/data_extraction_rules"
@@ -11,6 +13,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/Theme.Composeapp"
+            android:usesCleartextTraffic="true"
             tools:targetApi="31">
         <activity
                 android:name=".activities.MainActivity"
@@ -21,17 +24,6 @@
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-        <activity
-                android:name=".activities.LoginActivity"
-                android:exported="true"
-                android:label="@string/login_name"
-                android:theme="@style/Theme.Composeapp">
-            <intent-filter>
-                <action android:name="android.intent.action.ALL_APPS"/>
-
-                <category android:name="android.intent.category.HOME"/>
             </intent-filter>
         </activity>
     </application>
