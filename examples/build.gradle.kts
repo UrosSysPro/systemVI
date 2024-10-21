@@ -39,16 +39,22 @@ tasks.register("compile-release") {
         if (it.name == "engine") dependsOn(it.tasks.named("shadowJar"))
     }
     doLast {
-        file("../engine/build/libs/engine-$systemVIVersion-all.jar").copyTo(file("build/release/engine.jar"), true)
+        val jarsFolderName="build/release/jars"
+        val launchersFolderName="build/release/launchers"
+        file(jarsFolderName).mkdir()
+        file(launchersFolderName).mkdir()
+        file("../engine/build/libs/engine-$systemVIVersion-all.jar")
+            .copyTo(file("${jarsFolderName}/engine.jar"), true)
         subprojects.forEach {
-            val launcherFile=file("build/release/${it.name}.bat")
+            val launcherFile=file("$launchersFolderName/${it.name}.bat")
             launcherFile.createNewFile()
+            launcherFile.setExecutable(true)
             val writer=launcherFile.writer()
-            writer.write("java -cp \"engine.jar:${it.name}.jar\" ${it.application.mainClass.get()}")
+            writer.write("java -cp \"../jars/engine.jar;../jars/${it.name}.jar\" ${it.application.mainClass.get()}")
             writer.flush()
             writer.close()
             val jar = file("${it.name}/build/libs/${it.name}.jar")
-            jar.copyTo(file("build/release/${jar.name}"), true)
+            jar.copyTo(file("$jarsFolderName/${jar.name}"), true)
         }
     }
 }
