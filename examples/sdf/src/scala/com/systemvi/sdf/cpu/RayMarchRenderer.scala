@@ -102,11 +102,11 @@ class RayMarchRenderer(
   def calculatePixel(i: Int, j: Int, width:Int, height:Int, bounces: Int, samples: Int, iterations: Int): Vector4f = {
     var x = .0f
     var y = .0f
-    x = i
+    x = i.toFloat
     x /= width
     x = x * 2 - 1
     x *= width.toFloat / height.toFloat
-    y = j
+    y = j.toFloat
     y /= height
     y = 2 * y - 1
     y *= -1
@@ -114,7 +114,7 @@ class RayMarchRenderer(
     for (_ <- 0 until samples) {
       color.add(SimulatePhoton(x, y, bounces, iterations))
     }
-    color.div(samples)
+    color.div(samples.toFloat)
     color
   }
 

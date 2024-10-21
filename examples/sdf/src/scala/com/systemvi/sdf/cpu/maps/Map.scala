@@ -33,8 +33,8 @@ object Map {
     var r=0f
     breakable {
       while (true) {
-        x = random.nextInt(spawnRadius * 2) - spawnRadius
-        z = random.nextInt(spawnRadius * 2) - spawnRadius
+        x = random.nextInt(spawnRadius * 2).toFloat - spawnRadius
+        z = random.nextInt(spawnRadius * 2).toFloat - spawnRadius
         val d = Math.sqrt(x * x + y * y).toFloat
         r = (spawnRadius - d) / spawnRadius * 10f + 3f
         y = r
@@ -55,7 +55,7 @@ object Map {
   def getDistance(p: Vector3f): Float = {
     Union(
       spheres.map { s => Sphere(p, s.center, s.radius)}:+
-      Plane(p):_*
+      Plane(p)*
     )
   }
 

@@ -41,6 +41,12 @@ tasks.register("compile-release") {
     doLast {
         file("../engine/build/libs/engine-$systemVIVersion-all.jar").copyTo(file("build/release/engine.jar"), true)
         subprojects.forEach {
+            val launcherFile=file("build/release/${it.name}.bat")
+            launcherFile.createNewFile()
+            val writer=launcherFile.writer()
+            writer.write("java -cp \"engine.jar:${it.name}.jar\" ${it.application.mainClass.get()}")
+            writer.flush()
+            writer.close()
             val jar = file("${it.name}/build/libs/${it.name}.jar")
             jar.copyTo(file("build/release/${jar.name}"), true)
         }

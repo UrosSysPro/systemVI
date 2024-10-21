@@ -25,6 +25,7 @@
             <option value="$PROJECT_DIR$/examples/game-of-life" />
             <option value="$PROJECT_DIR$/examples/generative-shaders" />
             <option value="$PROJECT_DIR$/examples/instancing" />
+            <option value="$PROJECT_DIR$/examples/java-and-scala" />
             <option value="$PROJECT_DIR$/examples/jni-lib" />
             <option value="$PROJECT_DIR$/examples/lanterna-powerline" />
             <option value="$PROJECT_DIR$/examples/maze" />

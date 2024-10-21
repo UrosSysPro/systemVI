@@ -19,8 +19,8 @@ object Map3 {
 
   def distance(p:Vector3f): Float= {
     Union(
-      Box(p,new Vector3f(width,side,side),translate = new Vector3f(-side,side,0)), // left
-      Box(p,new Vector3f(width,side,side),translate = new Vector3f( side,side,0)), // right
+      Box(p,new Vector3f(width.toFloat,side.toFloat,side.toFloat),translate = new Vector3f(-side.toFloat,side.toFloat,0)), // left
+      Box(p,new Vector3f(width.toFloat,side.toFloat,side.toFloat),translate = new Vector3f( side.toFloat,side.toFloat,0)), // right
       Box(p,new Vector3f(side,side,width),translate = new Vector3f(  0,side,-side)), // back
       Box(p,new Vector3f(side,width,side),translate = new Vector3f(  0,2*side,0)), // top
       Plane(p)
