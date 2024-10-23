@@ -51,19 +51,23 @@ class ShapeRenderer {
   elementBuffer.bind()
 
   def draw(shape: Shape): ShapeRenderer = {
-    vertexData=shape.vertexData()
-    elementsData=shape.elementData()
+    val shapeVerticesData=shape.vertexData()
+    val shapeElementsData=shape.elementData();
+    elementsData++=shapeElementsData.map(e=>e+vertexData.length/6)
+    vertexData++=shapeVerticesData
     this
   }
 
   def flush(): Unit = {
-    shader.use()
+
     vertexArray.bind()
     arrayBuffer.setData(vertexData)
     elementBuffer.setData(elementsData)
+
+    shader.use()
     shader.setUniform("view",view)
     shader.setUniform("projection",projection)
-    shader.drawElements(Primitive.TRIANGLES,1,ElementsDataType.UNSIGNED_INT,3)
+    shader.drawElements(Primitive.TRIANGLES,elementsData.length/6,ElementsDataType.UNSIGNED_INT,3)
   }
 
   def view(m:Matrix4f):Unit=view.set(m)
