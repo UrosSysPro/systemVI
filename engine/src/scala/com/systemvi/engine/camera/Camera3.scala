@@ -50,10 +50,10 @@ class Camera3(val position:Vector3f,val rotation:Vector3f,val scale:Vector3f) {
 
 object Camera3{
   class Builder2D{
-    val position:Vector2f=new Vector2f(0)
-    var rotation:Float=0
-    val scale:Vector2f=new Vector2f(1,-1)
-    val size:Vector2f=new Vector2f(0,0)
+    private val position:Vector2f=new Vector2f(0)
+    private var rotation:Float=0
+    private val scale:Vector2f=new Vector2f(1,-1)
+    private val size:Vector2f=new Vector2f(0,0)
     def position(x:Float,y:Float):Builder2D={
       position.set(x,y)
       this
