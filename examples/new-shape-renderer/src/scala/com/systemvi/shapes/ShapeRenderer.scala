@@ -5,28 +5,6 @@ import com.systemvi.engine.model.VertexAttribute
 import com.systemvi.engine.shader.{ElementsDataType, Primitive, Shader}
 import org.joml.{Matrix4f, Vector2f, Vector3f, Vector4f}
 
-trait Shape {
-  def vertexData(): Array[Float]
-
-  def elementData(): Array[Int]
-}
-
-case class Vertex(position: Vector2f, color: Vector4f)
-
-class Triangle(val points: Array[Vertex]) extends Shape {
-  override def vertexData(): Array[Float] = (
-    for point <- points yield
-      val p = point.position
-      val c = point.color
-      Array(p.x, p.y, c.x, c.y, c.z, c.w)
-    ).flatten
-
-
-  override def elementData(): Array[Int] = {
-    Array(0, 1, 2)
-  }
-}
-
 class ShapeRenderer {
   private val vertexArray=VertexArray()
   private val arrayBuffer=ArrayBuffer()
@@ -59,7 +37,6 @@ class ShapeRenderer {
   }
 
   def flush(): Unit = {
-
     vertexArray.bind()
     arrayBuffer.setData(vertexData)
     elementBuffer.setData(elementsData)
@@ -67,7 +44,10 @@ class ShapeRenderer {
     shader.use()
     shader.setUniform("view",view)
     shader.setUniform("projection",projection)
-    shader.drawElements(Primitive.TRIANGLES,elementsData.length/6,ElementsDataType.UNSIGNED_INT,3)
+    shader.drawElements(Primitive.TRIANGLES,elementsData.length/3,ElementsDataType.UNSIGNED_INT,3)
+
+    vertexData=Array()
+    elementsData=Array()
   }
 
   def view(m:Matrix4f):Unit=view.set(m)

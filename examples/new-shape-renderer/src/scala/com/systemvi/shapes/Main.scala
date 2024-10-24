@@ -27,16 +27,13 @@ object Main extends Game(3, 3, 60, 800, 600, "Shape Renderer") {
     Utils.clear(Colors.black, Buffer.COLOR_BUFFER)
     renderer.view(camera.view)
     renderer.projection(camera.projection)
-    val n = 10
-    for (i <- 0 until n; j <- 0 until n) {
-      val x = i.toFloat * n
-      val y = j.toFloat * n
-      renderer.draw(Triangle(Array(
-        Vertex(position = Vector2f(x, y), color = Colors.blue500),
-        Vertex(position = Vector2f(x + n/2, y + n), color = Colors.red500),
-        Vertex(position = Vector2f(x - n/2, y + n), color = Colors.green500),
-      )))
-    }
+
+    renderer.draw(Polygon((for (i <- 0 until 5) yield {
+      val a: Float = (Math.PI * i * 2 / 5).toFloat
+      val x = Math.cos(a).toFloat*100+300
+      val y = Math.sin(a).toFloat*100+200
+      Vertex(position = Vector2f(x, y), color = Colors.blue500)
+    }).toArray))
     renderer.flush()
   }
 
