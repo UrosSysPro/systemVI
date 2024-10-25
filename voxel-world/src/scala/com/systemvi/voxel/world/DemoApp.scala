@@ -15,7 +15,8 @@ object DemoApp extends Game(3,3,60,800,600, "Demo Game"){
 
   val generator:WorldGenerator=PerlinWorldGenerator()
   val world:World=World(generator)
-  val worldCache:WorldCache=WorldCache()
+  world.generate()
+  val worldCache:WorldCache=WorldCache(world)
   val blockRenderer:BlockFaceRenderer=BlockFaceRenderer()
   var controller:CameraController3=null
   var gbuffer:GBuffer=null

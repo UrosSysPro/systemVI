@@ -1,5 +1,5 @@
 package com.systemvi.voxel.world.world2
 
-class WorldCache(world: World) {
-  
+class BlockFace {
+
 }
