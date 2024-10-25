@@ -1,17 +1,18 @@
-package com.systemvi.shapes
+package com.systemvi.engine.renderers
+
 
 import com.systemvi.engine.buffer.{ArrayBuffer, ElementsBuffer, VertexArray}
 import com.systemvi.engine.model.VertexAttribute
 import com.systemvi.engine.shader.{ElementsDataType, Primitive, Shader}
-import org.joml.{Matrix4f, Vector2f, Vector3f, Vector4f}
+import org.joml.Matrix4f
 
-class ShapeRenderer {
+class PolygonRenderer {
   private val vertexArray = VertexArray()
   private val arrayBuffer = ArrayBuffer()
   private val elementBuffer = ElementsBuffer()
   private val shader = Shader.builder()
-    .fragment("fragment.glsl")
-    .vertex("vertex.glsl")
+    .fragment("assets/renderer/polygonRenderer/fragment.glsl")
+    .vertex("assets/renderer/polygonRenderer/vertex.glsl")
     .build()
 
   private var vertexData: Array[Float] = Array()
@@ -32,7 +33,7 @@ class ShapeRenderer {
   ))
   elementBuffer.bind()
 
-  def draw(shape: Shape): ShapeRenderer = {
+  def draw(shape: Shape): PolygonRenderer = {
     val shapeVerticesData = shape.vertexData()
     val shapeElementsData = shape.elementData()
     elementsData ++= shapeElementsData.map(e => e + vertexData.length / 22)

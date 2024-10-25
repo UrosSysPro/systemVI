@@ -1,10 +1,9 @@
-package com.systemvi.shapes
+package com.systemvi.engine.renderers
 
 import org.joml.{Matrix4f, Vector2f, Vector4f}
 
 trait Shape:
   def vertexData(): Array[Float]
-
   def elementData(): Array[Int]
 
 case class Vertex(position: Vector2f, color: Vector4f, transform: Matrix4f)

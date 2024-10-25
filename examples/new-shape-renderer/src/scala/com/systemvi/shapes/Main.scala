@@ -2,6 +2,7 @@ package com.systemvi.shapes
 
 import com.systemvi.engine.application.Game
 import com.systemvi.engine.camera.Camera3
+import com.systemvi.engine.renderers.{Polygon, PolygonRenderer}
 import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
@@ -14,7 +15,7 @@ given Conversion[Int,Float] with
 object Main extends Game(3, 3, 60, 800, 600, "Shape Renderer") {
 
   var camera: Camera3 = null
-  var renderer: ShapeRenderer = null
+  var renderer: PolygonRenderer = null
   var rotation=0f
 
   override def setup(window: Window): Unit = {
@@ -24,11 +25,11 @@ object Main extends Game(3, 3, 60, 800, 600, "Shape Renderer") {
       .position(width / 2, height / 2)
       .size(width, height)
       .build()
-    renderer = ShapeRenderer()
+    renderer = PolygonRenderer()
   }
 
   override def loop(delta: Float): Unit = {
-    rotation+=delta
+//    rotation+=delta
 
     Utils.clear(Colors.black, Buffer.COLOR_BUFFER)
     renderer.view(camera.view)
