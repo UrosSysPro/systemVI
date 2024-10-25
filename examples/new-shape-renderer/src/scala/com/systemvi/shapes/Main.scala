@@ -9,8 +9,7 @@ import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.Window
 import org.joml.Vector2f
 
-given Conversion[Int,Float] with
-  override def apply(x: Int): Float = x.toFloat
+given int2Float:Conversion[Int,Float]=x=>x.toFloat
 
 object Main extends Game(3, 3, 60, 800, 600, "Shape Renderer") {
 

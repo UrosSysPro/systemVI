@@ -14,7 +14,7 @@ import com.systemvi.voxel.world.world2.{World, WorldCache}
 object DemoApp extends Game(3,3,60,800,600, "Demo Game"){
 
   val generator:WorldGenerator=PerlinWorldGenerator()
-  val world:World=World()
+  val world:World=World(generator)
   val worldCache:WorldCache=WorldCache()
   val blockRenderer:BlockFaceRenderer=BlockFaceRenderer()
   var controller:CameraController3=null

@@ -1,6 +1,6 @@
 package com.systemvi.scala
 
-case class Point(x: Int, y: Int) {
+private case class Point(x: Int, y: Int) {
   def +(p: Point): Point = Point(x + p.x, y + p.y)
 
   def plus(p: Point): Point = Point(x + p.x, y + p.y)

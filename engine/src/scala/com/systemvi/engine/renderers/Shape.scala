@@ -6,7 +6,8 @@ trait Shape:
   def vertexData(): Array[Float]
   def elementData(): Array[Int]
 
-case class Vertex(position: Vector2f, color: Vector4f, transform: Matrix4f)
+
+import Polygon.Vertex
 
 class Polygon(val points: Array[Vertex]) extends Shape:
 
@@ -25,6 +26,7 @@ class Polygon(val points: Array[Vertex]) extends Shape:
     (for i <- 0 until n - 2 yield Array(0, i + 1, i + 2)).flatten.toArray
 
 object Polygon:
+  case class Vertex(position: Vector2f, color: Vector4f, transform: Matrix4f)
   def regular(
                n: Int,
                radius: Float,

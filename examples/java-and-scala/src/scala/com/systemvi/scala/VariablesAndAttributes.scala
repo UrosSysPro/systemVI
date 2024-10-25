@@ -1,7 +1,7 @@
 package com.systemvi.scala
 
 //case class je klasa koja se definise u jednoj liniji, svi parametri su public atributi, svi imaju getter i opciono setter
-case class Point(var x:Float=0,var y:Float=0,size:Float)
+private case class Point1(var x:Float=0,var y:Float=0,size:Float)
 
 //scala ima samo reference, ne postoje primitivni tipovi
 
