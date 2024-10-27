@@ -18,7 +18,8 @@ class BlockFaceRenderer {
   arrayBuffer.bind()
   elementBuffer.bind()
   arrayBuffer.setVertexAttributes(Array(
-    VertexAttribute("position", 3)
+    VertexAttribute("position", 3),
+    VertexAttribute("sideIndex",1),
   ))
 
   val shader: Shader = Shader.builder()
@@ -32,23 +33,36 @@ class BlockFaceRenderer {
 
   def draw(faces: List[BlockFace]): Unit = this.faces ++= faces
 
-  def view(mat:Matrix4f):Unit=view.set(mat)
-  def projection(mat:Matrix4f):Unit=projection.set(mat)
+  def view(mat: Matrix4f): Unit = view.set(mat)
+
+  def projection(mat: Matrix4f): Unit = projection.set(mat)
 
   def flush(): Unit = {
     given Conversion[Int, Float] = (x: Int) => x.toFloat
 
+    val verticesPerFace=4
+    val trianglesPerFace=2
+
     val vertexData = faces.flatMap { face =>
       val p = face.worldPosition
+      val sideIndex=face.side.index
       Array[Float](
-        p.x, p.y, p.z,
-        p.x + 1, p.y, p.z,
-        p.x, p.y + 1, p.z,
-        p.x + 1, p.y + 1, p.z
+        p.x, p.y, p.z, sideIndex,
+        p.x + 1, p.y, p.z, sideIndex,
+        p.x, p.y + 1, p.z, sideIndex,
+        p.x + 1, p.y + 1, p.z, sideIndex
       )
     }.toArray
     val elementData = faces.zipWithIndex.flatMap { (face, index) =>
-      Array(index, index + 1, index + 2, index + 3)
+      Array(
+        index * verticesPerFace,
+        index * verticesPerFace + 1,
+        index * verticesPerFace + 2,
+
+        index * verticesPerFace + 1,
+        index * verticesPerFace + 2,
+        index * verticesPerFace + 3,
+      )
     }.toArray
 
     vertexArray.bind()
@@ -58,7 +72,12 @@ class BlockFaceRenderer {
     shader.use()
     shader.setUniform("view", view)
     shader.setUniform("projection", projection)
-    shader.drawElements(Primitive.TRIANGLE_STRIP,faces.length,ElementsDataType.UNSIGNED_INT,4)
+    shader.drawElements(
+      Primitive.TRIANGLES,
+      faces.length*trianglesPerFace,
+      ElementsDataType.UNSIGNED_INT,
+      3
+    )
 
     faces = List.empty[BlockFace]
   }
