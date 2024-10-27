@@ -22,13 +22,22 @@ object DemoApp extends Game(3,3,60,800,600, "Demo Game"){
   var gbuffer:GBuffer=null
   
   override def setup(window: Window): Unit = {
-    controller=CameraController3.builder().build()
+    controller=CameraController3.builder()
+      .window(window)
+      .build()
     setInputProcessor(controller)
     gbuffer=GBuffer(800,600)
   }
 
   override def loop(delta: Float): Unit ={
+
     controller.update(delta)
+
     Utils.clear(Colors.black,Buffer.COLOR_BUFFER)
+
+    blockRenderer.view(controller.camera.view)
+    blockRenderer.projection(controller.camera.projection)
+    blockRenderer.draw(worldCache.chunkCache(0)(0)(0).blockFaces)
+    blockRenderer.flush()
   }
 }
