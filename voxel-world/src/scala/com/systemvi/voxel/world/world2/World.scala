@@ -14,7 +14,7 @@ class World {
   Block.STONE = new Block(regions(7)(0), regions(7)(0), regions(7)(0), true)
   Block.DIRT = new Block(regions(2)(3), regions(1)(2), regions(1)(3), true)
 
-  val chunks:Array[Array[Array[Chunk]]]=Array.ofDim(1,1,1)
+  val chunks:Array[Array[Array[Chunk]]]=Array.ofDim(4,1,4)
   
   
   def generate(generator: WorldGenerator): Unit = {

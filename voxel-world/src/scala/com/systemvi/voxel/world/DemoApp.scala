@@ -1,7 +1,7 @@
 package com.systemvi.voxel.world
 
 import com.systemvi.engine.application.Game
-import com.systemvi.engine.camera.{Camera3, CameraController3}
+import com.systemvi.engine.camera.CameraController3
 import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
@@ -43,7 +43,11 @@ object DemoApp extends Game(3,3,60,800,600, "Demo Game"){
     blockRenderer.time=GLFW.glfwGetTime().toFloat
     blockRenderer.view(controller.camera.view)
     blockRenderer.projection(controller.camera.projection)
-    blockRenderer.draw(worldCache.chunkCache(0)(0)(0).blockFaces)
+    for {
+      col0 <- worldCache.chunkCache
+      col1 <- col0
+      chunkCache <- col1
+    } blockRenderer.draw(chunkCache.blockFaces)
     blockRenderer.flush()
     Utils.disableDepthTest()
   }
