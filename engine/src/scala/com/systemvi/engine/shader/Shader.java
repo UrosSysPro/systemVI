@@ -263,6 +263,10 @@ public class Shader {
         int uniformId=glGetUniformLocation(id,name);
         glUniform1f(uniformId,value);
     }
+    public void setUniform(String name,double value){
+        int uniformId=glGetUniformLocation(id,name);
+        glUniform1d(uniformId,value);
+    }
 
     public void bindUniformBuffer(String name, UniformBuffer buffer){
         int index=glGetUniformBlockIndex(id,name);

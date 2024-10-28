@@ -1,7 +1,7 @@
 package com.systemvi.voxel.world
 
 import com.systemvi.engine.application.Game
-import com.systemvi.engine.camera.CameraController3
+import com.systemvi.engine.camera.{Camera3, CameraController3}
 import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
@@ -10,6 +10,7 @@ import com.systemvi.voxel.world.buffer.GBuffer
 import com.systemvi.voxel.world.generators.{PerlinWorldGenerator, WorldGenerator}
 import com.systemvi.voxel.world.renderer.BlockFaceRenderer
 import com.systemvi.voxel.world.world2.{World, WorldCache}
+import org.lwjgl.glfw.GLFW
 
 object DemoApp extends Game(3,3,60,800,600, "Demo Game"){
 
@@ -24,6 +25,8 @@ object DemoApp extends Game(3,3,60,800,600, "Demo Game"){
   override def setup(window: Window): Unit = {
     controller=CameraController3.builder()
       .window(window)
+      .aspect(window.getWidth.toFloat/window.getHeight.toFloat)
+      .speed(20)
       .build()
     setInputProcessor(controller)
     gbuffer=GBuffer(800,600)
@@ -33,11 +36,15 @@ object DemoApp extends Game(3,3,60,800,600, "Demo Game"){
 
     controller.update(delta)
 
-    Utils.clear(Colors.black,Buffer.COLOR_BUFFER)
+    Utils.clear(Colors.black,Buffer.COLOR_BUFFER,Buffer.DEPTH_BUFFER)
 
+    Utils.enableDepthTest()
+
+    blockRenderer.time=GLFW.glfwGetTime().toFloat
     blockRenderer.view(controller.camera.view)
     blockRenderer.projection(controller.camera.projection)
     blockRenderer.draw(worldCache.chunkCache(0)(0)(0).blockFaces)
     blockRenderer.flush()
+    Utils.disableDepthTest()
   }
 }

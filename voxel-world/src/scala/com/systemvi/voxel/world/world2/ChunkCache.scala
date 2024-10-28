@@ -29,7 +29,7 @@ class ChunkCache(chunk: Chunk, chunkPosition: Vector3i) {
           blockFaces :+= BlockFace(state, Vector3i(i, j, k), BlockSide.Front)
         //add back
         if k - 1 < 0 || chunk.blockStates(i)(j)(k - 1).block == Block.AIR then
-          blockFaces :+= BlockFace(state, Vector3i(i, j, k), BlockSide.Bottom)
+          blockFaces :+= BlockFace(state, Vector3i(i, j, k), BlockSide.Back)
   }
   println(blockFaces.length)
 }

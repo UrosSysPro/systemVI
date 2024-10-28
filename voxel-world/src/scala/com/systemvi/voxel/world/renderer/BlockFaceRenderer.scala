@@ -7,27 +7,29 @@ import com.systemvi.voxel.world.world2.BlockFace
 import org.joml.Matrix4f
 
 class BlockFaceRenderer {
-  val view = Matrix4f()
-  val projection = Matrix4f()
+  var time: Float = 0
+  private val view = Matrix4f()
+  private val projection = Matrix4f()
 
-  val vertexArray = VertexArray()
-  val arrayBuffer = ArrayBuffer()
-  val elementBuffer = ElementsBuffer()
+  private val vertexArray = VertexArray()
+  private val arrayBuffer = ArrayBuffer()
+  private val elementBuffer = ElementsBuffer()
 
   vertexArray.bind()
   arrayBuffer.bind()
   elementBuffer.bind()
   arrayBuffer.setVertexAttributes(Array(
-    VertexAttribute("position", 3),
-    VertexAttribute("sideIndex",1),
+    VertexAttribute("worldPosition", 3),
+    VertexAttribute("position", 2),
+    VertexAttribute("sideIndex", 1),
   ))
 
-  val shader: Shader = Shader.builder()
+  private val shader: Shader = Shader.builder()
     .fragment("assets/examples/voxels/newBlockFaceRenderer/fragment.glsl")
     .vertex("assets/examples/voxels/newBlockFaceRenderer/vertex.glsl")
     .build()
 
-  var faces = List.empty[BlockFace]
+  private var faces = List.empty[BlockFace]
 
   def draw(face: BlockFace): Unit = faces = faces.prepended(face)
 
@@ -40,17 +42,18 @@ class BlockFaceRenderer {
   def flush(): Unit = {
     given Conversion[Int, Float] = (x: Int) => x.toFloat
 
-    val verticesPerFace=4
-    val trianglesPerFace=2
+    val verticesPerFace = 4
+    val trianglesPerFace = 2
 
     val vertexData = faces.flatMap { face =>
       val p = face.worldPosition
-      val sideIndex=face.side.index
-      Array[Float](
-        p.x, p.y, p.z, sideIndex,
-        p.x + 1, p.y, p.z, sideIndex,
-        p.x, p.y + 1, p.z, sideIndex,
-        p.x + 1, p.y + 1, p.z, sideIndex
+      val sideIndex = face.side.index
+      val s = 1f
+      List[Float](
+        p.x, p.y, p.z, 0f, 0f, sideIndex,
+        p.x, p.y, p.z, s, 0f, sideIndex,
+        p.x, p.y, p.z, 0f, s, sideIndex,
+        p.x, p.y, p.z, s, s, sideIndex
       )
     }.toArray
     val elementData = faces.zipWithIndex.flatMap { (face, index) =>
@@ -70,11 +73,12 @@ class BlockFaceRenderer {
     elementBuffer.setData(elementData)
 
     shader.use()
+    shader.setUniform("time", time)
     shader.setUniform("view", view)
     shader.setUniform("projection", projection)
     shader.drawElements(
       Primitive.TRIANGLES,
-      faces.length*trianglesPerFace,
+      faces.length * trianglesPerFace,
       ElementsDataType.UNSIGNED_INT,
       3
     )
