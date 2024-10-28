@@ -12,6 +12,7 @@ import com.systemvi.voxel.world.generators.{PerlinWorldGenerator, WorldGenerator
 import com.systemvi.voxel.world.renderer.BlockFaceRenderer
 import com.systemvi.voxel.world.world2.{World, WorldCache}
 import org.lwjgl.glfw.GLFW
+import org.lwjgl.opengl.GL11.{GL_NEAREST, GL_NEAREST_MIPMAP_LINEAR}
 
 object DemoApp extends Game(3,3,60,800,600, "Demo Game"){
 
@@ -28,12 +29,13 @@ object DemoApp extends Game(3,3,60,800,600, "Demo Game"){
     controller=CameraController3.builder()
       .window(window)
       .aspect(window.getWidth.toFloat/window.getHeight.toFloat)
-      .far(10000)
+      .far(1000)
       .speed(20)
       .build()
     setInputProcessor(controller)
     gbuffer=GBuffer(800,600)
     texture=Texture("assets/examples/minecraft/textures/diffuse.png")
+    texture.setSamplerFilter(GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST)
     for {
       col0 <- worldCache.chunkCache
       col1 <- col0
