@@ -7,7 +7,11 @@ import org.joml.Vector3i
 class ChunkCache(chunk: Chunk, chunkPosition: Vector3i) {
 
   var blockFaces: List[BlockFace] = List.empty
-  private val w = Vector3i(chunkPosition.x * Chunk.size.x, chunkPosition.y * Chunk.size.y, chunkPosition.z * Chunk.size.z)
+  private val w = Vector3i(
+    chunkPosition.x * Chunk.size.x,
+    chunkPosition.y * Chunk.size.y,
+    chunkPosition.z * Chunk.size.z
+  )
   for (i <- 0 until Chunk.size.x; j <- 0 until Chunk.size.y; k <- 0 until Chunk.size.z) {
     chunk.blockStates(i)(j)(k) match
       case state: BlockState if state.block == Block.AIR =>

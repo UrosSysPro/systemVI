@@ -10,7 +10,13 @@ uniform float time;
 uniform mat4 view;
 uniform mat4 projection;
 
-out vec4 color;
+out struct VERTEX_OUT{
+    vec2 uv;
+    vec3 tangent;
+    vec3 bitangent;
+    vec3 normal;
+    vec3 worldPosition;
+}vertexOut;
 
 //enum BlockSide(val index:Int):
 //  case Left extends BlockSide(0)
@@ -72,21 +78,49 @@ mat4 identity() {
 void main() {
     int index = int(sideIndex);
 
-//    color = vec4(1.0);
-//    if (index == 0)color = vec4(0.3, 0.5, 0.7, 1.0);
+    mat4 worldTransform = translate(worldPosition);
+    mat4 rotation,translation;
 
-    color=vec4(position,0.0,1.0);
-
-    mat4 model = translate(worldPosition);
     //left right
-    if (index == 0)model = translate(worldPosition) * translate(vec3(-0.5, 0.0, 0.0)) * rotateY(-PI/2);
-    if (index == 1)model = translate(worldPosition) * translate(vec3(0.5, 0.0, 0.0)) * rotateY(PI/2);
+    if (index == 0){
+        translation=translate(vec3(-0.5, 0.0, 0.0));
+        rotation=rotateY(-PI/2);
+    }
+    if (index == 1){
+        translation= translate(vec3(0.5, 0.0, 0.0));
+        rotation=rotateY(PI/2);
+    }
     //top bottom
-    if (index == 2)model = translate(worldPosition) * translate(vec3(0.0, 0.5, 0.0)) * rotateX(PI/2);
-    if (index == 3)model = translate(worldPosition) * translate(vec3(0.0, -0.5, 0.0)) * rotateX(-PI/2);
+    if (index == 2){
+        translation=translate(vec3(0.0, 0.5, 0.0));
+        rotation=rotateX(PI/2);
+    }
+    if (index == 3){
+        translation=translate(vec3(0.0, -0.5, 0.0));
+        rotation=rotateX(-PI/2);
+    }
     //fort back
-    if (index == 4)model = translate(worldPosition) * translate(vec3(0.0, 0.0, 0.5)) * rotateY(0);
-    if (index == 5)model = translate(worldPosition) * translate(vec3(0.0, 0.0, -0.5)) * rotateY(PI);
+    if (index == 4){
+        translation=translate(vec3(0.0, 0.0, 0.5));
+        rotation=rotateY(0);
+    }
+    if (index == 5){
+        translation=translate(vec3(0.0, 0.0, -0.5));
+        rotation=rotateY(PI);
+    }
+
+    vec4 tangent=rotation*vec4(1.0,0.0,0.0,1.0);
+    vec4 bitangent=rotation*vec4(0.0,1.0,0.0,1.0);
+    vec4 normal=rotation*vec4(0.0,0.0,1.0,1.0);
+
+    mat4 model=worldTransform*translation*rotation;
+
+    vec4 worldPosition=model * vec4(position-0.5 , 0.0, 1.0);
+    vertexOut.uv=position;
+    vertexOut.worldPosition=worldPosition.xyz;
+    vertexOut.tangent=tangent.xyz;
+    vertexOut.bitangent=bitangent.xyz;
+    vertexOut.normal=normal.xyz;
 
     gl_Position = projection * view * model * vec4(position-0.5 , 0.0, 1.0);
 }
