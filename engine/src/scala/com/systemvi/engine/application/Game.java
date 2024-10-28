@@ -1,10 +1,11 @@
 package com.systemvi.engine.application;
 
-import com.systemvi.engine.window.InputAdapter;
 import com.systemvi.engine.window.InputProcessor;
 import com.systemvi.engine.window.Window;
 
+
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL33.*;
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
 public abstract class Game implements InputProcessor {
@@ -27,7 +28,13 @@ public abstract class Game implements InputProcessor {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,openglVersionMinor);
         glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER,GLFW_FALSE);
+
+//        glfwWindowHint(GLFW_SAMPLES, 10);
+
         window=new Window(windowWidth,windowHeight,title);
+
+//        glEnable(GL_MULTISAMPLE);
+
         window.setInputProcessor(this);
     }
 
