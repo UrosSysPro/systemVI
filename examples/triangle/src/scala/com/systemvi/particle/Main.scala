@@ -62,10 +62,7 @@ object Main extends Game(3, 3, 60,800,600,"Triangle") {
   override def loop(delta: Float): Unit = {
     cameraController.update(delta)
     val startTime = System.nanoTime()
-
-    val window=getWindow
-    window.pollEvents()
-    if (window.shouldClose()) break
+    
     Utils.clear(Colors.green400, Buffer.COLOR_BUFFER)
 
     //        Utils.enableLines(2)
