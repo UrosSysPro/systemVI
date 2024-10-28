@@ -34,6 +34,12 @@ object DemoApp extends Game(3,3,60,800,600, "Demo Game"){
     setInputProcessor(controller)
     gbuffer=GBuffer(800,600)
     texture=Texture("assets/examples/minecraft/textures/diffuse.png")
+    for {
+      col0 <- worldCache.chunkCache
+      col1 <- col0
+      chunkCache <- col1
+    } blockRenderer.draw(chunkCache.blockFaces)
+    blockRenderer.upload()
   }
 
   override def loop(delta: Float): Unit ={
@@ -47,12 +53,13 @@ object DemoApp extends Game(3,3,60,800,600, "Demo Game"){
     blockRenderer.time=GLFW.glfwGetTime().toFloat
     blockRenderer.view(controller.camera.view)
     blockRenderer.projection(controller.camera.projection)
-    for {
-      col0 <- worldCache.chunkCache
-      col1 <- col0
-      chunkCache <- col1
-    } blockRenderer.draw(chunkCache.blockFaces)
-    blockRenderer.flush()
+    blockRenderer.drawUploaded()
+//    for {
+//      col0 <- worldCache.chunkCache
+//      col1 <- col0
+//      chunkCache <- col1
+//    } blockRenderer.draw(chunkCache.blockFaces)
+//    blockRenderer.flush()
     Utils.disableFaceCulling()
     Utils.disableDepthTest()
   }

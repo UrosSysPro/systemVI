@@ -43,6 +43,12 @@ class BlockFaceRenderer {
   def projection(mat: Matrix4f): Unit = projection.set(mat)
 
   def flush(): Unit = {
+    upload()
+    drawUploaded()
+    clear()
+  }
+
+  def upload():Unit={
     given Conversion[Int, Float] = (x: Int) => x.toFloat
 
     val verticesPerFace = 4
@@ -81,6 +87,9 @@ class BlockFaceRenderer {
     vertexArray.bind()
     arrayBuffer.setData(vertexData)
     elementBuffer.setData(elementData)
+  }
+  def drawUploaded(): Unit = {
+    vertexArray.bind()
 
     shader.use()
     texture.bind(0)
@@ -90,11 +99,16 @@ class BlockFaceRenderer {
     shader.setUniform("projection", projection)
     shader.drawElements(
       Primitive.TRIANGLES,
-      faces.length * trianglesPerFace,
+      faces.length * 2,
       ElementsDataType.UNSIGNED_INT,
       3
     )
+  }
 
-    faces = List.empty[BlockFace]
+  def clear(): Unit = {
+    faces=List.empty[BlockFace]
+    vertexArray.bind()
+    arrayBuffer.setData(Array.empty[Float])
+    elementBuffer.setData(Array.empty[Int])
   }
 }
