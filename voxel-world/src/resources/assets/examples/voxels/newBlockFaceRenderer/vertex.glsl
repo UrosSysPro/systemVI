@@ -4,7 +4,8 @@
 
 layout (location = 0) in vec3 worldPosition;
 layout (location = 1) in vec2 position;
-layout (location = 2) in float sideIndex;
+layout (location = 2) in vec2 uv;
+layout (location = 3) in float sideIndex;
 
 uniform float time;
 uniform mat4 view;
@@ -116,7 +117,7 @@ void main() {
     mat4 model=worldTransform*translation*rotation;
 
     vec4 worldPosition=model * vec4(position-0.5 , 0.0, 1.0);
-    vertexOut.uv=position;
+    vertexOut.uv=uv;
     vertexOut.worldPosition=worldPosition.xyz;
     vertexOut.tangent=tangent.xyz;
     vertexOut.bitangent=bitangent.xyz;

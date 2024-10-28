@@ -10,6 +10,8 @@ in struct VERTEX_OUT{
     vec3 worldPosition;
 }vertexOut;
 
+uniform sampler2D diffuseTexture;
+
 void main(){
-    FragColor=vec4(vertexOut.tangent,1.0);
+    FragColor=texture(diffuseTexture,vertexOut.uv);
 }

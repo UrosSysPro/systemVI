@@ -3,10 +3,12 @@ package com.systemvi.voxel.world.renderer
 import com.systemvi.engine.buffer.{ArrayBuffer, ElementsBuffer, VertexArray}
 import com.systemvi.engine.model.VertexAttribute
 import com.systemvi.engine.shader.{ElementsDataType, Primitive, Shader}
-import com.systemvi.voxel.world.world2.BlockFace
+import com.systemvi.engine.texture.Texture
+import com.systemvi.voxel.world.world2.{BlockFace, BlockSide}
 import org.joml.Matrix4f
 
 class BlockFaceRenderer {
+  var texture: Texture = null
   var time: Float = 0
   private val view = Matrix4f()
   private val projection = Matrix4f()
@@ -21,6 +23,7 @@ class BlockFaceRenderer {
   arrayBuffer.setVertexAttributes(Array(
     VertexAttribute("worldPosition", 3),
     VertexAttribute("position", 2),
+    VertexAttribute("uv", 2),
     VertexAttribute("sideIndex", 1),
   ))
 
@@ -49,11 +52,18 @@ class BlockFaceRenderer {
       val p = face.worldPosition
       val sideIndex = face.side.index
       val s = 1f
+      val region = face.side match
+        case BlockSide.Back => face.blockState.block.back
+        case BlockSide.Front => face.blockState.block.front
+        case BlockSide.Left => face.blockState.block.left
+        case BlockSide.Right => face.blockState.block.right
+        case BlockSide.Top => face.blockState.block.top
+        case BlockSide.Bottom => face.blockState.block.bottom
       List[Float](
-        p.x, p.y, p.z, 0f, 0f, sideIndex,
-        p.x, p.y, p.z, s, 0f, sideIndex,
-        p.x, p.y, p.z, 0f, s, sideIndex,
-        p.x, p.y, p.z, s, s, sideIndex
+        p.x, p.y, p.z, 0, 0, region.getLeft, region.getBottom, sideIndex,
+        p.x, p.y, p.z, s, 0, region.getRight, region.getBottom, sideIndex,
+        p.x, p.y, p.z, 0, s, region.getLeft, region.getTop, sideIndex,
+        p.x, p.y, p.z, s, s, region.getRight, region.getTop, sideIndex
       )
     }.toArray
     val elementData = faces.zipWithIndex.flatMap { (face, index) =>
@@ -73,6 +83,8 @@ class BlockFaceRenderer {
     elementBuffer.setData(elementData)
 
     shader.use()
+    texture.bind(0)
+    shader.setUniform("diffuseTexture", 0)
     shader.setUniform("time", time)
     shader.setUniform("view", view)
     shader.setUniform("projection", projection)

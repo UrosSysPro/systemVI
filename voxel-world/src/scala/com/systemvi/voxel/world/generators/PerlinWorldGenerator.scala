@@ -11,7 +11,9 @@ class PerlinWorldGenerator extends WorldGenerator {
     val base=5
     val variation=10
     val floorLevel:Int=(base+noise.get(Vector2f(worldPosition.x.toFloat/16,worldPosition.z.toFloat/16))*variation).toInt
-    val block=if worldPosition.y<floorLevel then Block.STONE else Block.AIR
-    block
+    floorLevel match
+      case y:Int if y==worldPosition.y=>Block.DIRT
+      case y:Int if y>worldPosition.y=>Block.STONE
+      case y:Int if y<worldPosition.y=>Block.AIR
   }
 }
