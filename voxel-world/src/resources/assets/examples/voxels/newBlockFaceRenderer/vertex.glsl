@@ -79,14 +79,14 @@ void main() {
 
     mat4 model = translate(worldPosition);
     //left right
-    if (index == 0)model = translate(worldPosition) * translate(vec3(-0.5, 0.0, 0.0)) * rotateY(PI/2);
-    if (index == 1)model = translate(worldPosition) * translate(vec3(0.5, 0.0, 0.0)) * rotateY(-PI/2);
+    if (index == 0)model = translate(worldPosition) * translate(vec3(-0.5, 0.0, 0.0)) * rotateY(-PI/2);
+    if (index == 1)model = translate(worldPosition) * translate(vec3(0.5, 0.0, 0.0)) * rotateY(PI/2);
     //top bottom
-    if (index == 2)model = translate(worldPosition) * translate(vec3(0.0, 0.5, 0.0)) * rotateX(-PI/2);
-    if (index == 3)model = translate(worldPosition) * translate(vec3(0.0, -0.5, 0.0)) * rotateX(PI/2);
+    if (index == 2)model = translate(worldPosition) * translate(vec3(0.0, 0.5, 0.0)) * rotateX(PI/2);
+    if (index == 3)model = translate(worldPosition) * translate(vec3(0.0, -0.5, 0.0)) * rotateX(-PI/2);
     //fort back
-    if (index == 4)model = translate(worldPosition) * translate(vec3(0.0, 0.0, 0.5)) * rotateY(PI);
-    if (index == 5)model = translate(worldPosition) * translate(vec3(0.0, 0.0, -0.5)) * rotateY(0);
+    if (index == 4)model = translate(worldPosition) * translate(vec3(0.0, 0.0, 0.5)) * rotateY(0);
+    if (index == 5)model = translate(worldPosition) * translate(vec3(0.0, 0.0, -0.5)) * rotateY(PI);
 
     gl_Position = projection * view * model * vec4(position-0.5 , 0.0, 1.0);
 }

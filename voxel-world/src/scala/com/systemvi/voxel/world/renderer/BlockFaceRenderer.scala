@@ -59,8 +59,8 @@ class BlockFaceRenderer {
     val elementData = faces.zipWithIndex.flatMap { (face, index) =>
       Array(
         index * verticesPerFace,
-        index * verticesPerFace + 1,
         index * verticesPerFace + 2,
+        index * verticesPerFace + 1,
 
         index * verticesPerFace + 1,
         index * verticesPerFace + 2,

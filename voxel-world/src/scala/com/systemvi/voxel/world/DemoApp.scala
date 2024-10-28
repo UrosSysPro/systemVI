@@ -4,7 +4,7 @@ import com.systemvi.engine.application.Game
 import com.systemvi.engine.camera.CameraController3
 import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.utils.Utils
-import com.systemvi.engine.utils.Utils.Buffer
+import com.systemvi.engine.utils.Utils.{Buffer, Face}
 import com.systemvi.engine.window.Window
 import com.systemvi.voxel.world.buffer.GBuffer
 import com.systemvi.voxel.world.generators.{PerlinWorldGenerator, WorldGenerator}
@@ -39,7 +39,7 @@ object DemoApp extends Game(3,3,60,800,600, "Demo Game"){
     Utils.clear(Colors.black,Buffer.COLOR_BUFFER,Buffer.DEPTH_BUFFER)
 
     Utils.enableDepthTest()
-
+    Utils.enableFaceCulling()
     blockRenderer.time=GLFW.glfwGetTime().toFloat
     blockRenderer.view(controller.camera.view)
     blockRenderer.projection(controller.camera.projection)
@@ -49,6 +49,7 @@ object DemoApp extends Game(3,3,60,800,600, "Demo Game"){
       chunkCache <- col1
     } blockRenderer.draw(chunkCache.blockFaces)
     blockRenderer.flush()
+    Utils.disableFaceCulling()
     Utils.disableDepthTest()
   }
 }
