@@ -12,15 +12,18 @@ import com.systemvi.engine.window.Window
 import com.systemvi.voxel.world.buffer.GBuffer
 import com.systemvi.voxel.world.generators.{PerlinWorldGenerator, WorldGenerator}
 import com.systemvi.voxel.world.renderer.BlockFaceRenderer
-import com.systemvi.voxel.world.world2.{World, WorldCache}
-import org.joml.Vector4f
+import com.systemvi.voxel.world.world2.{Chunk, World, WorldCache}
+import org.joml.{Vector3i, Vector4f}
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL11.{GL_NEAREST, GL_NEAREST_MIPMAP_LINEAR}
 
 object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
 
+
+  val numberOfChunks=Vector3i(10,1,10)
+
   val generator: WorldGenerator = PerlinWorldGenerator()
-  val world: World = World()
+  val world: World = World(numberOfChunks)
   world.generate(generator)
   val worldCache: WorldCache = WorldCache(world)
   val blockRenderer: BlockFaceRenderer = BlockFaceRenderer()
@@ -36,7 +39,8 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
   var tbnBufferViewer: Shader = null
 
   val near=0.1f
-  val far=100f
+  val far=1000f
+
 
   override def setup(window: Window): Unit = {
     controller = CameraController3.builder()
@@ -105,6 +109,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     gbuffer.position.bind(0)
     positionBufferViewer.setUniform("view", viewerCamera.view)
     positionBufferViewer.setUniform("projection", viewerCamera.projection)
+    positionBufferViewer.setUniform("worldSize",new Vector3i(numberOfChunks).mul(Chunk.size))
     positionBufferViewer.setUniform("positionBuffer", 0)
     positionBufferViewer.setUniform("rect", Vector4f(0, 0, 400, 300))
     positionBufferViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
@@ -128,7 +133,6 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     depthBufferViewer.setUniform("depthBuffer", 0)
     depthBufferViewer.setUniform("rect", Vector4f(0, 300, 400, 300))
     depthBufferViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
-
 
     tbnBufferViewer.use()
     gbuffer.normal.bind(0)

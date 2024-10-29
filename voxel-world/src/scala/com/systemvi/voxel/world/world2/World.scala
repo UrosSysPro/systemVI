@@ -6,7 +6,7 @@ import com.systemvi.voxel.world.world.Block
 import org.joml.Vector3i
 
 
-class World {
+class World(val numberOfChunks:Vector3i) {
 
   val texture=Texture("assets/examples/minecraft/textures/diffuse.png")
   val regions: Array[Array[TextureRegion]] =TextureRegion.split(texture,16,16)
@@ -14,7 +14,7 @@ class World {
   Block.STONE = new Block(regions(7)(0), regions(7)(0), regions(7)(0), true)
   Block.DIRT = new Block(regions(2)(3), regions(1)(2), regions(1)(3), true)
 
-  val chunks:Array[Array[Array[Chunk]]]=Array.ofDim(2,1,2)
+  val chunks:Array[Array[Array[Chunk]]]=Array.ofDim(numberOfChunks.x,numberOfChunks.y,numberOfChunks.z)
   
   
   def generate(generator: WorldGenerator): Unit = {
