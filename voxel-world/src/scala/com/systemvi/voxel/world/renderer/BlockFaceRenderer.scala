@@ -5,7 +5,7 @@ import com.systemvi.engine.model.VertexAttribute
 import com.systemvi.engine.shader.{ElementsDataType, Primitive, Shader}
 import com.systemvi.engine.texture.Texture
 import com.systemvi.voxel.world.world2.{BlockFace, BlockSide}
-import org.joml.Matrix4f
+import org.joml.{Matrix4f, Vector4f}
 
 class BlockFaceRenderer {
   var time: Float = 0
@@ -23,6 +23,7 @@ class BlockFaceRenderer {
     VertexAttribute("worldPosition", 3),
     VertexAttribute("position", 2),
     VertexAttribute("uv", 2),
+    VertexAttribute("occlusion", 4),
     VertexAttribute("sideIndex", 1),
   ))
 
@@ -47,7 +48,7 @@ class BlockFaceRenderer {
     clear()
   }
 
-  def upload():Unit={
+  def upload(): Unit = {
     given Conversion[Int, Float] = (x: Int) => x.toFloat
 
     val verticesPerFace = 4
@@ -64,11 +65,13 @@ class BlockFaceRenderer {
         case BlockSide.Right => face.blockState.block.right
         case BlockSide.Top => face.blockState.block.top
         case BlockSide.Bottom => face.blockState.block.bottom
+      val occlusion = Vector4f(0, 0, 1, 1)
+      val o = occlusion
       List[Float](
-        p.x, p.y, p.z, 0, 0, region.getLeft, region.getBottom, sideIndex,
-        p.x, p.y, p.z, s, 0, region.getRight, region.getBottom, sideIndex,
-        p.x, p.y, p.z, 0, s, region.getLeft, region.getTop, sideIndex,
-        p.x, p.y, p.z, s, s, region.getRight, region.getTop, sideIndex
+        p.x, p.y, p.z, 0, 0, region.getLeft, region.getBottom, o.x, o.y, o.z, o.w, sideIndex,
+        p.x, p.y, p.z, s, 0, region.getRight, region.getBottom, o.x, o.y, o.z, o.w, sideIndex,
+        p.x, p.y, p.z, 0, s, region.getLeft, region.getTop, o.x, o.y, o.z, o.w, sideIndex,
+        p.x, p.y, p.z, s, s, region.getRight, region.getTop, o.x, o.y, o.z, o.w, sideIndex
       )
     }.toArray
     val elementData = faces.zipWithIndex.flatMap { (face, index) =>
@@ -87,6 +90,7 @@ class BlockFaceRenderer {
     arrayBuffer.setData(vertexData)
     elementBuffer.setData(elementData)
   }
+
   def drawUploaded(): Unit = {
     vertexArray.bind()
 
@@ -103,7 +107,7 @@ class BlockFaceRenderer {
   }
 
   def clear(): Unit = {
-    faces=List.empty[BlockFace]
+    faces = List.empty[BlockFace]
     vertexArray.bind()
     arrayBuffer.setData(Array.empty[Float])
     elementBuffer.setData(Array.empty[Int])

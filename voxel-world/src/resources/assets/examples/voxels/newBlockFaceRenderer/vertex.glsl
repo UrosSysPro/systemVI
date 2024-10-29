@@ -5,7 +5,8 @@
 layout (location = 0) in vec3 worldPosition;
 layout (location = 1) in vec2 position;
 layout (location = 2) in vec2 uv;
-layout (location = 3) in float sideIndex;
+layout (location = 3) in vec4 occlusion;
+layout (location = 4) in float sideIndex;
 
 uniform float time;
 uniform mat4 view;
