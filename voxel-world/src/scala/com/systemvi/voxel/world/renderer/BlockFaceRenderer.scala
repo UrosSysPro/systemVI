@@ -8,7 +8,6 @@ import com.systemvi.voxel.world.world2.{BlockFace, BlockSide}
 import org.joml.Matrix4f
 
 class BlockFaceRenderer {
-  var texture: Texture = null
   var time: Float = 0
   private val view = Matrix4f()
   private val projection = Matrix4f()
@@ -92,8 +91,6 @@ class BlockFaceRenderer {
     vertexArray.bind()
 
     shader.use()
-    texture.bind(0)
-    shader.setUniform("diffuseTexture", 0)
     shader.setUniform("time", time)
     shader.setUniform("view", view)
     shader.setUniform("projection", projection)

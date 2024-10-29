@@ -8,10 +8,11 @@ uniform sampler2D positionBuffer;
 uniform sampler2D normalBuffer;
 uniform sampler2D uvBuffer;
 uniform sampler2D depthBuffer;
-uniform sampler2D textureBuff;
+uniform sampler2D diffuseMap;
+uniform sampler2D normalMap;
 
 void main(){
     vec2 samplepoint=vec2(uv.x,1.0-uv.y);
     samplepoint=texture(uvBuffer,samplepoint).xy;
-    FragColor=texture(textureBuff,samplepoint);
+    FragColor=texture(normalMap,samplepoint);
 }

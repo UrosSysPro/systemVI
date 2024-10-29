@@ -12,8 +12,6 @@ in struct VERTEX_OUT{
     vec3 worldPosition;
 }vertexOut;
 
-uniform sampler2D diffuseTexture;
-
 void main(){
     positionBuffer=vertexOut.worldPosition;
     normalBuffer=vertexOut.normal;

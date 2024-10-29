@@ -28,8 +28,11 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
   val worldCache: WorldCache = WorldCache(world)
   val blockRenderer: BlockFaceRenderer = BlockFaceRenderer()
   var controller: CameraController3 = null
+
   var gbuffer: GBuffer = null
-  var texture: Texture = null
+
+  var diffuseMap: Texture = null
+  var normalMap: Texture = null
 
   var viewerCamera: Camera3 = null
   var emptyVertexArray: VertexArray = null
@@ -54,8 +57,10 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
       .build()
     setInputProcessor(controller)
     gbuffer = GBuffer(800, 600)
-    texture = Texture("assets/examples/minecraft/textures/diffuse.png")
-    texture.setSamplerFilter(GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST)
+    diffuseMap = Texture("assets/examples/minecraft/textures/diffuse.png")
+    normalMap = Texture("assets/examples/minecraft/textures/normal.png")
+    diffuseMap.setSamplerFilter(GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST)
+    normalMap.setSamplerFilter(GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST)
     for {
       col0 <- worldCache.chunkCache
       col1 <- col0
@@ -99,7 +104,6 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
 
     Utils.enableDepthTest()
     Utils.enableFaceCulling()
-    blockRenderer.texture = texture
     blockRenderer.time = GLFW.glfwGetTime().toFloat
     blockRenderer.view(controller.camera.view)
     blockRenderer.projection(controller.camera.projection)
@@ -122,7 +126,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
 
     uvBufferViewer.use()
     gbuffer.uv.bind(0)
-    texture.bind(1)
+    diffuseMap.bind(1)
     uvBufferViewer.setUniform("view", viewerCamera.view)
     uvBufferViewer.setUniform("projection", viewerCamera.projection)
     uvBufferViewer.setUniform("uvBuffer", 0)
@@ -150,14 +154,16 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
 
     combinedViewer.use()
     gbuffer.bind()
-    texture.bind(4)
+    diffuseMap.bind(4)
+    normalMap.bind(5)
     combinedViewer.setUniform("view", viewerCamera.view)
     combinedViewer.setUniform("projection", viewerCamera.projection)
     combinedViewer.setUniform("positionBuffer", 0)
     combinedViewer.setUniform("normalBuffer", 1)
     combinedViewer.setUniform("uvBuffer", 2)
     combinedViewer.setUniform("depthBuffer", 3)
-    combinedViewer.setUniform("textureBuff", 4)
+    combinedViewer.setUniform("diffuseMap", 4)
+    combinedViewer.setUniform("normalMap", 5)
     combinedViewer.setUniform("rect", Vector4f(200, 150, 400, 300))
     combinedViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
   }
