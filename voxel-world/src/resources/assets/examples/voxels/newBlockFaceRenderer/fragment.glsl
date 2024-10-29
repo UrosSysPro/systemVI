@@ -1,6 +1,8 @@
 #version 330
 
-out vec4 FragColor;
+out vec3 positionBuffer;
+out vec3 normalBuffer;
+out vec2 uvBuffer;
 
 in struct VERTEX_OUT{
     vec2 uv;
@@ -13,5 +15,7 @@ in struct VERTEX_OUT{
 uniform sampler2D diffuseTexture;
 
 void main(){
-    FragColor=texture(diffuseTexture,vertexOut.uv);
+    positionBuffer=vertexOut.worldPosition;
+    normalBuffer=vertexOut.normal;
+    uvBuffer=vertexOut.uv;
 }
