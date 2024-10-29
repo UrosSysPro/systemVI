@@ -17,32 +17,38 @@ import org.joml.Vector4f
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL11.{GL_NEAREST, GL_NEAREST_MIPMAP_LINEAR}
 
-object DemoApp extends Game(3,3,60,800,600, "Demo Game"){
+object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
 
-  val generator:WorldGenerator=PerlinWorldGenerator()
-  val world:World=World()
+  val generator: WorldGenerator = PerlinWorldGenerator()
+  val world: World = World()
   world.generate(generator)
-  val worldCache:WorldCache=WorldCache(world)
-  val blockRenderer:BlockFaceRenderer=BlockFaceRenderer()
-  var controller:CameraController3=null
-  var gbuffer:GBuffer=null
-  var texture:Texture=null
+  val worldCache: WorldCache = WorldCache(world)
+  val blockRenderer: BlockFaceRenderer = BlockFaceRenderer()
+  var controller: CameraController3 = null
+  var gbuffer: GBuffer = null
+  var texture: Texture = null
 
-  var viewerCamera:Camera3=null
-  var emptyVertexArray:VertexArray=null
-  var positionBufferViewer:Shader=null
-  var uvBufferViewer:Shader=null
-  
+  var viewerCamera: Camera3 = null
+  var emptyVertexArray: VertexArray = null
+  var positionBufferViewer: Shader = null
+  var uvBufferViewer: Shader = null
+  var depthBufferViewer: Shader = null
+  var tbnBufferViewer: Shader = null
+
+  val near=0.1f
+  val far=100f
+
   override def setup(window: Window): Unit = {
-    controller=CameraController3.builder()
+    controller = CameraController3.builder()
       .window(window)
-      .aspect(window.getWidth.toFloat/window.getHeight.toFloat)
-      .far(1000)
+      .aspect(window.getWidth.toFloat / window.getHeight.toFloat)
+      .far(far)
+      .near(near)
       .speed(20)
       .build()
     setInputProcessor(controller)
-    gbuffer=GBuffer(800,600)
-    texture=Texture("assets/examples/minecraft/textures/diffuse.png")
+    gbuffer = GBuffer(800, 600)
+    texture = Texture("assets/examples/minecraft/textures/diffuse.png")
     texture.setSamplerFilter(GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST)
     for {
       col0 <- worldCache.chunkCache
@@ -52,11 +58,11 @@ object DemoApp extends Game(3,3,60,800,600, "Demo Game"){
     blockRenderer.upload()
 
 
-    viewerCamera=Camera3.builder2d()
-      .position(400,300)
-      .size(800,600)
+    viewerCamera = Camera3.builder2d()
+      .position(400, 300)
+      .size(800, 600)
       .build()
-    positionBufferViewer=Shader.builder()
+    positionBufferViewer = Shader.builder()
       .fragment("assets/examples/voxels/positionBufferViewer/fragment.glsl")
       .vertex("assets/examples/voxels/positionBufferViewer/vertex.glsl")
       .build()
@@ -64,19 +70,27 @@ object DemoApp extends Game(3,3,60,800,600, "Demo Game"){
       .fragment("assets/examples/voxels/uvBufferViewer/fragment.glsl")
       .vertex("assets/examples/voxels/uvBufferViewer/vertex.glsl")
       .build()
-    emptyVertexArray=VertexArray()
+    depthBufferViewer = Shader.builder()
+      .fragment("assets/examples/voxels/depthBufferViewer/fragment.glsl")
+      .vertex("assets/examples/voxels/depthBufferViewer/vertex.glsl")
+      .build()
+    tbnBufferViewer = Shader.builder()
+      .fragment("assets/examples/voxels/tbnBufferViewer/fragment.glsl")
+      .vertex("assets/examples/voxels/tbnBufferViewer/vertex.glsl")
+      .build()
+    emptyVertexArray = VertexArray()
   }
 
-  override def loop(delta: Float): Unit ={
+  override def loop(delta: Float): Unit = {
     controller.update(delta)
 
     gbuffer.begin()
-    Utils.clear(Colors.black,Buffer.COLOR_BUFFER,Buffer.DEPTH_BUFFER)
+    Utils.clear(Colors.black, Buffer.COLOR_BUFFER, Buffer.DEPTH_BUFFER)
 
     Utils.enableDepthTest()
     Utils.enableFaceCulling()
-    blockRenderer.texture=texture
-    blockRenderer.time=GLFW.glfwGetTime().toFloat
+    blockRenderer.texture = texture
+    blockRenderer.time = GLFW.glfwGetTime().toFloat
     blockRenderer.view(controller.camera.view)
     blockRenderer.projection(controller.camera.projection)
     blockRenderer.drawUploaded()
@@ -84,16 +98,16 @@ object DemoApp extends Game(3,3,60,800,600, "Demo Game"){
     Utils.disableDepthTest()
     gbuffer.end()
 
-    Utils.clear(Colors.green500,Buffer.COLOR_BUFFER)
+    Utils.clear(Colors.green500, Buffer.COLOR_BUFFER)
 
     emptyVertexArray.bind()
     positionBufferViewer.use()
     gbuffer.position.bind(0)
-    positionBufferViewer.setUniform("view",viewerCamera.view)
-    positionBufferViewer.setUniform("projection",viewerCamera.projection)
-    positionBufferViewer.setUniform("positionBuffer",0)
-    positionBufferViewer.setUniform("rect",Vector4f(0,0,400,300))
-    positionBufferViewer.drawArrays(Primitive.TRIANGLE_STRIP,0,4)
+    positionBufferViewer.setUniform("view", viewerCamera.view)
+    positionBufferViewer.setUniform("projection", viewerCamera.projection)
+    positionBufferViewer.setUniform("positionBuffer", 0)
+    positionBufferViewer.setUniform("rect", Vector4f(0, 0, 400, 300))
+    positionBufferViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
 
     uvBufferViewer.use()
     gbuffer.uv.bind(0)
@@ -104,5 +118,24 @@ object DemoApp extends Game(3,3,60,800,600, "Demo Game"){
     uvBufferViewer.setUniform("textureBuff", 1)
     uvBufferViewer.setUniform("rect", Vector4f(400, 0, 400, 300))
     uvBufferViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
+
+    depthBufferViewer.use()
+    gbuffer.depth.bind(0)
+    depthBufferViewer.setUniform("view", viewerCamera.view)
+    depthBufferViewer.setUniform("projection", viewerCamera.projection)
+    depthBufferViewer.setUniform("near", near)
+    depthBufferViewer.setUniform("far", far)
+    depthBufferViewer.setUniform("depthBuffer", 0)
+    depthBufferViewer.setUniform("rect", Vector4f(0, 300, 400, 300))
+    depthBufferViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
+
+
+    tbnBufferViewer.use()
+    gbuffer.normal.bind(0)
+    tbnBufferViewer.setUniform("view", viewerCamera.view)
+    tbnBufferViewer.setUniform("projection", viewerCamera.projection)
+    tbnBufferViewer.setUniform("textureBuff", 0)
+    tbnBufferViewer.setUniform("rect", Vector4f(400, 300, 400, 300))
+    tbnBufferViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
   }
 }
