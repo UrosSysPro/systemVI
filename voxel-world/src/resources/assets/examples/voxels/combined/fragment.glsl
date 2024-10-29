@@ -22,6 +22,7 @@ uniform sampler2D positionBuffer;
 uniform sampler2D normalBuffer;
 uniform sampler2D uvBuffer;
 uniform sampler2D depthBuffer;
+uniform sampler2D occlusionBuffer;
 uniform sampler2D diffuseMap;
 uniform sampler2D normalMap;
 uniform Camera camera;

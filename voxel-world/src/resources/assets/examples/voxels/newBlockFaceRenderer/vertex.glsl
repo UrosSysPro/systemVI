@@ -5,7 +5,7 @@
 layout (location = 0) in vec3 worldPosition;
 layout (location = 1) in vec2 position;
 layout (location = 2) in vec2 uv;
-layout (location = 3) in vec4 occlusion;
+layout (location = 3) in float occlusion;
 layout (location = 4) in float sideIndex;
 
 uniform float time;
@@ -18,6 +18,7 @@ out struct VERTEX_OUT{
     vec3 bitangent;
     vec3 normal;
     vec3 worldPosition;
+    float occlusion;
 }vertexOut;
 
 //enum BlockSide(val index:Int):
@@ -123,6 +124,7 @@ void main() {
     vertexOut.tangent=tangent.xyz;
     vertexOut.bitangent=bitangent.xyz;
     vertexOut.normal=normal.xyz;
+    vertexOut.occlusion=occlusion;
 
     gl_Position = projection * view * model * vec4(position-0.5 , 0.0, 1.0);
 }

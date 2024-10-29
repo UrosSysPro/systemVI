@@ -6,12 +6,14 @@ class GBuffer(width: Int, height: Int) {
   val position: Texture = Texture(width, height, Format.RGB32F)
   val normal: Texture = Texture(width, height, Format.RGB32F)
   val uv: Texture = Texture(width, height, Format.RG16F)
+  val occlusion: Texture = Texture(width, height, Format.R16F)
   val depth: Texture = Texture(width, height, Format.DEPTH24)
 
   val frameBuffer = FrameBuffer.builder()
     .color(position)
     .color(normal)
     .color(uv)
+    .color(occlusion)
     .depth(depth)
     .build()
 
@@ -23,5 +25,6 @@ class GBuffer(width: Int, height: Int) {
     position.bind(0)
     normal.bind(1)
     uv.bind(2)
-    depth.bind(3)
+    occlusion.bind(3)
+    depth.bind(4)
 }

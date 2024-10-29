@@ -23,7 +23,7 @@ class BlockFaceRenderer {
     VertexAttribute("worldPosition", 3),
     VertexAttribute("position", 2),
     VertexAttribute("uv", 2),
-    VertexAttribute("occlusion", 4),
+    VertexAttribute("occlusion", 1),
     VertexAttribute("sideIndex", 1),
   ))
 
@@ -65,13 +65,13 @@ class BlockFaceRenderer {
         case BlockSide.Right => face.blockState.block.right
         case BlockSide.Top => face.blockState.block.top
         case BlockSide.Bottom => face.blockState.block.bottom
-      val occlusion = Vector4f(0, 0, 1, 1)
+      val occlusion = Vector4f(0, 1, 1, 1)
       val o = occlusion
       List[Float](
-        p.x, p.y, p.z, 0, 0, region.getLeft, region.getBottom, o.x, o.y, o.z, o.w, sideIndex,
-        p.x, p.y, p.z, s, 0, region.getRight, region.getBottom, o.x, o.y, o.z, o.w, sideIndex,
-        p.x, p.y, p.z, 0, s, region.getLeft, region.getTop, o.x, o.y, o.z, o.w, sideIndex,
-        p.x, p.y, p.z, s, s, region.getRight, region.getTop, o.x, o.y, o.z, o.w, sideIndex
+        p.x, p.y, p.z, 0, 0, region.getLeft, region.getBottom, o.x, sideIndex,
+        p.x, p.y, p.z, s, 0, region.getRight, region.getBottom, o.y, sideIndex,
+        p.x, p.y, p.z, 0, s, region.getLeft, region.getTop, o.z, sideIndex,
+        p.x, p.y, p.z, s, s, region.getRight, region.getTop, o.w, sideIndex
       )
     }.toArray
     val elementData = faces.zipWithIndex.flatMap { (face, index) =>

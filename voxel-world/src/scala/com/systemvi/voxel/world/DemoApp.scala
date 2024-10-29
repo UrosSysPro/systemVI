@@ -17,7 +17,7 @@ import org.joml.{Vector3i, Vector4f}
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL11.{GL_NEAREST, GL_NEAREST_MIPMAP_LINEAR}
 
-object DemoApp extends Game(3, 3, 60, 1200, 500, "Demo Game") {
+object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
 
 
   val numberOfChunks = Vector3i(2, 1, 2)
@@ -160,16 +160,17 @@ object DemoApp extends Game(3, 3, 60, 1200, 500, "Demo Game") {
 
     combinedViewer.use()
     gbuffer.bind()
-    diffuseMap.bind(4)
-    normalMap.bind(5)
+    diffuseMap.bind(5)
+    normalMap.bind(6)
     combinedViewer.setUniform("view", viewerCamera.view)
     combinedViewer.setUniform("projection", viewerCamera.projection)
     combinedViewer.setUniform("positionBuffer", 0)
     combinedViewer.setUniform("normalBuffer", 1)
     combinedViewer.setUniform("uvBuffer", 2)
-    combinedViewer.setUniform("depthBuffer", 3)
-    combinedViewer.setUniform("diffuseMap", 4)
-    combinedViewer.setUniform("normalMap", 5)
+    combinedViewer.setUniform("occlusionBuffer",3)
+    combinedViewer.setUniform("depthBuffer", 4)
+    combinedViewer.setUniform("diffuseMap", 5)
+    combinedViewer.setUniform("normalMap", 6)
     combinedViewer.setUniform("camera.position", controller.camera.position)
     combinedViewer.setUniform("rect", Vector4f(width / 4, height / 4, width / 2, height / 2))
     combinedViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
