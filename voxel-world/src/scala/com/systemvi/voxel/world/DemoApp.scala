@@ -20,7 +20,7 @@ import org.lwjgl.opengl.GL11.{GL_NEAREST, GL_NEAREST_MIPMAP_LINEAR}
 object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
 
 
-  val numberOfChunks=Vector3i(10,1,10)
+  val numberOfChunks=Vector3i(2,1,2)
 
   val generator: WorldGenerator = PerlinWorldGenerator()
   val world: World = World(numberOfChunks)
@@ -38,8 +38,10 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
   var depthBufferViewer: Shader = null
   var tbnBufferViewer: Shader = null
 
+  var combinedViewer: Shader = null
+
   val near=0.1f
-  val far=1000f
+  val far=50f
 
 
   override def setup(window: Window): Unit = {
@@ -81,6 +83,10 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     tbnBufferViewer = Shader.builder()
       .fragment("assets/examples/voxels/tbnBufferViewer/fragment.glsl")
       .vertex("assets/examples/voxels/tbnBufferViewer/vertex.glsl")
+      .build()
+    combinedViewer = Shader.builder()
+      .fragment("assets/examples/voxels/combined/fragment.glsl")
+      .vertex("assets/examples/voxels/combined/vertex.glsl")
       .build()
     emptyVertexArray = VertexArray()
   }
@@ -141,5 +147,18 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     tbnBufferViewer.setUniform("textureBuff", 0)
     tbnBufferViewer.setUniform("rect", Vector4f(400, 300, 400, 300))
     tbnBufferViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
+
+    combinedViewer.use()
+    gbuffer.bind()
+    texture.bind(4)
+    combinedViewer.setUniform("view", viewerCamera.view)
+    combinedViewer.setUniform("projection", viewerCamera.projection)
+    combinedViewer.setUniform("positionBuffer", 0)
+    combinedViewer.setUniform("normalBuffer", 1)
+    combinedViewer.setUniform("uvBuffer", 2)
+    combinedViewer.setUniform("depthBuffer", 3)
+    combinedViewer.setUniform("textureBuff", 4)
+    combinedViewer.setUniform("rect", Vector4f(200, 150, 400, 300))
+    combinedViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
   }
 }
