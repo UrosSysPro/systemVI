@@ -17,10 +17,10 @@ import org.joml.{Vector3i, Vector4f}
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL11.{GL_NEAREST, GL_NEAREST_MIPMAP_LINEAR}
 
-object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
+object DemoApp extends Game(3, 3, 60, 1200, 500, "Demo Game") {
 
 
-  val numberOfChunks=Vector3i(2,1,2)
+  val numberOfChunks = Vector3i(2, 1, 2)
 
   val generator: WorldGenerator = PerlinWorldGenerator()
   val world: World = World(numberOfChunks)
@@ -43,20 +43,23 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
 
   var combinedViewer: Shader = null
 
-  val near=0.1f
-  val far=50f
+  val near = 0.1f
+  val far = 100f
 
 
   override def setup(window: Window): Unit = {
+    val width = window.getWidth.toFloat
+    val height = window.getHeight.toFloat
+
     controller = CameraController3.builder()
       .window(window)
-      .aspect(window.getWidth.toFloat / window.getHeight.toFloat)
+      .aspect(width / height)
       .far(far)
       .near(near)
       .speed(20)
       .build()
     setInputProcessor(controller)
-    gbuffer = GBuffer(800, 600)
+    gbuffer = GBuffer(width.toInt, height.toInt)
     diffuseMap = Texture("assets/examples/minecraft/textures/diffuse.png")
     normalMap = Texture("assets/examples/minecraft/textures/normal.png")
     diffuseMap.setSamplerFilter(GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST)
@@ -70,9 +73,10 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
 
 
     viewerCamera = Camera3.builder2d()
-      .position(400, 300)
-      .size(800, 600)
+      .position(width / 2, height / 2)
+      .size(width, height)
       .build()
+
     positionBufferViewer = Shader.builder()
       .fragment("assets/examples/voxels/positionBufferViewer/fragment.glsl")
       .vertex("assets/examples/voxels/positionBufferViewer/vertex.glsl")
@@ -97,6 +101,8 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
   }
 
   override def loop(delta: Float): Unit = {
+    val width = getWindow.getWidth.toFloat
+    val height = getWindow.getHeight.toFloat
     controller.update(delta)
 
     gbuffer.begin()
@@ -119,9 +125,9 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     gbuffer.position.bind(0)
     positionBufferViewer.setUniform("view", viewerCamera.view)
     positionBufferViewer.setUniform("projection", viewerCamera.projection)
-    positionBufferViewer.setUniform("worldSize",new Vector3i(numberOfChunks).mul(Chunk.size))
+    positionBufferViewer.setUniform("worldSize", new Vector3i(numberOfChunks).mul(Chunk.size))
     positionBufferViewer.setUniform("positionBuffer", 0)
-    positionBufferViewer.setUniform("rect", Vector4f(0, 0, 400, 300))
+    positionBufferViewer.setUniform("rect", Vector4f(0, 0, width / 2, height / 2))
     positionBufferViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
 
     uvBufferViewer.use()
@@ -131,7 +137,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     uvBufferViewer.setUniform("projection", viewerCamera.projection)
     uvBufferViewer.setUniform("uvBuffer", 0)
     uvBufferViewer.setUniform("textureBuff", 1)
-    uvBufferViewer.setUniform("rect", Vector4f(400, 0, 400, 300))
+    uvBufferViewer.setUniform("rect", Vector4f(width / 2, 0, width / 2, height / 2))
     uvBufferViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
 
     depthBufferViewer.use()
@@ -141,7 +147,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     depthBufferViewer.setUniform("near", near)
     depthBufferViewer.setUniform("far", far)
     depthBufferViewer.setUniform("depthBuffer", 0)
-    depthBufferViewer.setUniform("rect", Vector4f(0, 300, 400, 300))
+    depthBufferViewer.setUniform("rect", Vector4f(0, height / 2, width / 2, height / 2))
     depthBufferViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
 
     tbnBufferViewer.use()
@@ -149,7 +155,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     tbnBufferViewer.setUniform("view", viewerCamera.view)
     tbnBufferViewer.setUniform("projection", viewerCamera.projection)
     tbnBufferViewer.setUniform("textureBuff", 0)
-    tbnBufferViewer.setUniform("rect", Vector4f(400, 300, 400, 300))
+    tbnBufferViewer.setUniform("rect", Vector4f(width / 2, height / 2, width / 2, height / 2))
     tbnBufferViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
 
     combinedViewer.use()
@@ -164,8 +170,8 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     combinedViewer.setUniform("depthBuffer", 3)
     combinedViewer.setUniform("diffuseMap", 4)
     combinedViewer.setUniform("normalMap", 5)
-    combinedViewer.setUniform("camera.position",controller.camera.position)
-    combinedViewer.setUniform("rect", Vector4f(200, 150, 400, 300))
+    combinedViewer.setUniform("camera.position", controller.camera.position)
+    combinedViewer.setUniform("rect", Vector4f(width / 4, height / 4, width / 2, height / 2))
     combinedViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
   }
 }
