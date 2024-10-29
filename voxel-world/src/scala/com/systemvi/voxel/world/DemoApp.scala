@@ -164,6 +164,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     combinedViewer.setUniform("depthBuffer", 3)
     combinedViewer.setUniform("diffuseMap", 4)
     combinedViewer.setUniform("normalMap", 5)
+    combinedViewer.setUniform("camera.position",controller.camera.position)
     combinedViewer.setUniform("rect", Vector4f(200, 150, 400, 300))
     combinedViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
   }
