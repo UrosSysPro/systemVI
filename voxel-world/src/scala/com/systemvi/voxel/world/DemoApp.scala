@@ -10,6 +10,7 @@ import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.Window
 import com.systemvi.voxel.world.buffer.GBuffer
+import com.systemvi.voxel.world.debug.PositionViewer
 import com.systemvi.voxel.world.generators.{PerlinWorldGenerator, WorldGenerator}
 import com.systemvi.voxel.world.renderer.BlockFaceRenderer
 import com.systemvi.voxel.world.world2.{Chunk, World, WorldCache}
@@ -18,7 +19,6 @@ import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL11.{GL_NEAREST, GL_NEAREST_MIPMAP_LINEAR}
 
 object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
-
 
   val numberOfChunks = Vector3i(2, 1, 2)
 
@@ -36,7 +36,8 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
 
   var viewerCamera: Camera3 = null
   var emptyVertexArray: VertexArray = null
-  var positionBufferViewer: Shader = null
+//  var positionBufferViewer: Shader = null
+  var positionBufferViewer: PositionViewer = null
   var uvBufferViewer: Shader = null
   var depthBufferViewer: Shader = null
   var tbnBufferViewer: Shader = null
@@ -77,10 +78,11 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
       .size(width, height)
       .build()
 
-    positionBufferViewer = Shader.builder()
-      .fragment("assets/examples/voxels/positionBufferViewer/fragment.glsl")
-      .vertex("assets/examples/voxels/positionBufferViewer/vertex.glsl")
-      .build()
+//    positionBufferViewer = Shader.builder()
+//      .fragment("assets/examples/voxels/positionBufferViewer/fragment.glsl")
+//      .vertex("assets/examples/voxels/positionBufferViewer/vertex.glsl")
+//      .build()
+    positionBufferViewer=PositionViewer(Vector3i(numberOfChunks).mul(Chunk.size))
     uvBufferViewer = Shader.builder()
       .fragment("assets/examples/voxels/uvBufferViewer/fragment.glsl")
       .vertex("assets/examples/voxels/uvBufferViewer/vertex.glsl")
@@ -120,15 +122,16 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
 
     Utils.clear(Colors.green500, Buffer.COLOR_BUFFER)
 
-    emptyVertexArray.bind()
-    positionBufferViewer.use()
-    gbuffer.position.bind(0)
-    positionBufferViewer.setUniform("view", viewerCamera.view)
-    positionBufferViewer.setUniform("projection", viewerCamera.projection)
-    positionBufferViewer.setUniform("worldSize", new Vector3i(numberOfChunks).mul(Chunk.size))
-    positionBufferViewer.setUniform("positionBuffer", 0)
-    positionBufferViewer.setUniform("rect", Vector4f(0, 0, width / 2, height / 2))
-    positionBufferViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
+//    emptyVertexArray.bind()
+//    positionBufferViewer.use()
+//    gbuffer.position.bind(0)
+//    positionBufferViewer.setUniform("view", viewerCamera.view)
+//    positionBufferViewer.setUniform("projection", viewerCamera.projection)
+//    positionBufferViewer.setUniform("worldSize", new Vector3i(numberOfChunks).mul(Chunk.size))
+//    positionBufferViewer.setUniform("positionBuffer", 0)
+//    positionBufferViewer.setUniform("rect", Vector4f(0, 0, width / 2, height / 2))
+//    positionBufferViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
+    positionBufferViewer.draw(gbuffer.position,viewerCamera.view,viewerCamera.projection,Vector4f(0,0,width/2,height/2))
 
     uvBufferViewer.use()
     gbuffer.uv.bind(0)
