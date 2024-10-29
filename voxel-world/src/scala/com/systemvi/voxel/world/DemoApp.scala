@@ -2,10 +2,11 @@ package com.systemvi.voxel.world
 
 import com.systemvi.engine.application.Game
 import com.systemvi.engine.camera.CameraController3
+import com.systemvi.engine.shader.Shader
 import com.systemvi.engine.texture.Texture
 import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.utils.Utils
-import com.systemvi.engine.utils.Utils.{Buffer, Face}
+import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.Window
 import com.systemvi.voxel.world.buffer.GBuffer
 import com.systemvi.voxel.world.generators.{PerlinWorldGenerator, WorldGenerator}
@@ -24,6 +25,7 @@ object DemoApp extends Game(3,3,60,800,600, "Demo Game"){
   var controller:CameraController3=null
   var gbuffer:GBuffer=null
   var texture:Texture=null
+  var gbufferViewer:Shader=null
   
   override def setup(window: Window): Unit = {
     controller=CameraController3.builder()
@@ -47,6 +49,7 @@ object DemoApp extends Game(3,3,60,800,600, "Demo Game"){
   override def loop(delta: Float): Unit ={
     controller.update(delta)
 
+    gbuffer.begin()
     Utils.clear(Colors.black,Buffer.COLOR_BUFFER,Buffer.DEPTH_BUFFER)
 
     Utils.enableDepthTest()
@@ -56,13 +59,12 @@ object DemoApp extends Game(3,3,60,800,600, "Demo Game"){
     blockRenderer.view(controller.camera.view)
     blockRenderer.projection(controller.camera.projection)
     blockRenderer.drawUploaded()
-//    for {
-//      col0 <- worldCache.chunkCache
-//      col1 <- col0
-//      chunkCache <- col1
-//    } blockRenderer.draw(chunkCache.blockFaces)
-//    blockRenderer.flush()
     Utils.disableFaceCulling()
     Utils.disableDepthTest()
+    gbuffer.end()
+
+    Utils.clear(Colors.green500,Buffer.COLOR_BUFFER)
+
+
   }
 }
