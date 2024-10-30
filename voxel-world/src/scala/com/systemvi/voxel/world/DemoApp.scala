@@ -10,7 +10,7 @@ import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.Window
 import com.systemvi.voxel.world.buffer.GBuffer
-import com.systemvi.voxel.world.debug.PositionViewer
+import com.systemvi.voxel.world.debug.{DepthViewer, PositionViewer, UVViewer}
 import com.systemvi.voxel.world.generators.{PerlinWorldGenerator, WorldGenerator}
 import com.systemvi.voxel.world.renderer.BlockFaceRenderer
 import com.systemvi.voxel.world.world2.{Chunk, World, WorldCache}
@@ -38,8 +38,10 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
   var emptyVertexArray: VertexArray = null
 //  var positionBufferViewer: Shader = null
   var positionBufferViewer: PositionViewer = null
-  var uvBufferViewer: Shader = null
-  var depthBufferViewer: Shader = null
+//  var uvBufferViewer: Shader = null
+  var uvBufferViewer: UVViewer = null
+//  var depthBufferViewer: Shader = null
+  var depthBufferViewer: DepthViewer = null
   var tbnBufferViewer: Shader = null
 
   var combinedViewer: Shader = null
@@ -78,19 +80,10 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
       .size(width, height)
       .build()
 
-//    positionBufferViewer = Shader.builder()
-//      .fragment("assets/examples/voxels/positionBufferViewer/fragment.glsl")
-//      .vertex("assets/examples/voxels/positionBufferViewer/vertex.glsl")
-//      .build()
     positionBufferViewer=PositionViewer(Vector3i(numberOfChunks).mul(Chunk.size))
-    uvBufferViewer = Shader.builder()
-      .fragment("assets/examples/voxels/uvBufferViewer/fragment.glsl")
-      .vertex("assets/examples/voxels/uvBufferViewer/vertex.glsl")
-      .build()
-    depthBufferViewer = Shader.builder()
-      .fragment("assets/examples/voxels/depthBufferViewer/fragment.glsl")
-      .vertex("assets/examples/voxels/depthBufferViewer/vertex.glsl")
-      .build()
+    uvBufferViewer=UVViewer()
+    depthBufferViewer=DepthViewer()
+    
     tbnBufferViewer = Shader.builder()
       .fragment("assets/examples/voxels/tbnBufferViewer/fragment.glsl")
       .vertex("assets/examples/voxels/tbnBufferViewer/vertex.glsl")
@@ -122,36 +115,9 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
 
     Utils.clear(Colors.green500, Buffer.COLOR_BUFFER)
 
-//    emptyVertexArray.bind()
-//    positionBufferViewer.use()
-//    gbuffer.position.bind(0)
-//    positionBufferViewer.setUniform("view", viewerCamera.view)
-//    positionBufferViewer.setUniform("projection", viewerCamera.projection)
-//    positionBufferViewer.setUniform("worldSize", new Vector3i(numberOfChunks).mul(Chunk.size))
-//    positionBufferViewer.setUniform("positionBuffer", 0)
-//    positionBufferViewer.setUniform("rect", Vector4f(0, 0, width / 2, height / 2))
-//    positionBufferViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
     positionBufferViewer.draw(gbuffer.position,viewerCamera.view,viewerCamera.projection,Vector4f(0,0,width/2,height/2))
-
-    uvBufferViewer.use()
-    gbuffer.uv.bind(0)
-    diffuseMap.bind(1)
-    uvBufferViewer.setUniform("view", viewerCamera.view)
-    uvBufferViewer.setUniform("projection", viewerCamera.projection)
-    uvBufferViewer.setUniform("uvBuffer", 0)
-    uvBufferViewer.setUniform("textureBuff", 1)
-    uvBufferViewer.setUniform("rect", Vector4f(width / 2, 0, width / 2, height / 2))
-    uvBufferViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
-
-    depthBufferViewer.use()
-    gbuffer.depth.bind(0)
-    depthBufferViewer.setUniform("view", viewerCamera.view)
-    depthBufferViewer.setUniform("projection", viewerCamera.projection)
-    depthBufferViewer.setUniform("near", near)
-    depthBufferViewer.setUniform("far", far)
-    depthBufferViewer.setUniform("depthBuffer", 0)
-    depthBufferViewer.setUniform("rect", Vector4f(0, height / 2, width / 2, height / 2))
-    depthBufferViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
+    uvBufferViewer.draw(gbuffer.uv,diffuseMap,viewerCamera.view,viewerCamera.projection,Vector4f(width/2,0,width/2,height/2))
+    depthBufferViewer.draw(gbuffer.depth,viewerCamera.view,viewerCamera.projection, Vector4f(0, height / 2, width / 2, height / 2))
 
     tbnBufferViewer.use()
     gbuffer.normal.bind(0)
