@@ -10,7 +10,7 @@ import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.Window
 import com.systemvi.voxel.world.buffer.GBuffer
-import com.systemvi.voxel.world.debug.{DepthViewer, PositionViewer, UVViewer}
+import com.systemvi.voxel.world.debug.{DepthViewer, PositionViewer, TBNViewer, UVViewer}
 import com.systemvi.voxel.world.generators.{PerlinWorldGenerator, WorldGenerator}
 import com.systemvi.voxel.world.renderer.BlockFaceRenderer
 import com.systemvi.voxel.world.world2.{Chunk, World, WorldCache}
@@ -36,13 +36,10 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
 
   var viewerCamera: Camera3 = null
   var emptyVertexArray: VertexArray = null
-//  var positionBufferViewer: Shader = null
   var positionBufferViewer: PositionViewer = null
-//  var uvBufferViewer: Shader = null
   var uvBufferViewer: UVViewer = null
-//  var depthBufferViewer: Shader = null
   var depthBufferViewer: DepthViewer = null
-  var tbnBufferViewer: Shader = null
+  var tbnBufferViewer: TBNViewer = null
 
   var combinedViewer: Shader = null
 
@@ -84,10 +81,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     uvBufferViewer=UVViewer()
     depthBufferViewer=DepthViewer()
     
-    tbnBufferViewer = Shader.builder()
-      .fragment("assets/examples/voxels/tbnBufferViewer/fragment.glsl")
-      .vertex("assets/examples/voxels/tbnBufferViewer/vertex.glsl")
-      .build()
+    tbnBufferViewer = TBNViewer()
     combinedViewer = Shader.builder()
       .fragment("assets/examples/voxels/combined/fragment.glsl")
       .vertex("assets/examples/voxels/combined/vertex.glsl")
@@ -117,15 +111,8 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
 
     positionBufferViewer.draw(gbuffer.position,viewerCamera.view,viewerCamera.projection,Vector4f(0,0,width/2,height/2))
     uvBufferViewer.draw(gbuffer.uv,diffuseMap,viewerCamera.view,viewerCamera.projection,Vector4f(width/2,0,width/2,height/2))
-    depthBufferViewer.draw(gbuffer.depth,viewerCamera.view,viewerCamera.projection, Vector4f(0, height / 2, width / 2, height / 2))
-
-    tbnBufferViewer.use()
-    gbuffer.normal.bind(0)
-    tbnBufferViewer.setUniform("view", viewerCamera.view)
-    tbnBufferViewer.setUniform("projection", viewerCamera.projection)
-    tbnBufferViewer.setUniform("textureBuff", 0)
-    tbnBufferViewer.setUniform("rect", Vector4f(width / 2, height / 2, width / 2, height / 2))
-    tbnBufferViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
+    depthBufferViewer.draw(gbuffer.depth,near,far,viewerCamera.view,viewerCamera.projection, Vector4f(0, height / 2, width / 2, height / 2))
+    tbnBufferViewer.draw(gbuffer.normal, view = viewerCamera.view, projection = viewerCamera.projection, rect = Vector4f(width/2,height/2,width/2,height/2))
 
     combinedViewer.use()
     gbuffer.bind()

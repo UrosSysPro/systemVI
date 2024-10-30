@@ -46,13 +46,30 @@ class UVViewer extends TextureViewer {
 class DepthViewer extends TextureViewer {
   val shader: Shader = compileShader("assets/examples/voxels/depthBufferViewer/fragment.glsl")
   val emptyVertexArray:VertexArray=VertexArray()
-  def draw(depthBuffer:Texture,view:Matrix4f,projection:Matrix4f,rect:Vector4f): Unit = {
+  def draw(depthBuffer:Texture,near:Float,far:Float,view:Matrix4f,projection:Matrix4f,rect:Vector4f): Unit = {
     emptyVertexArray.bind()
     shader.use()
     depthBuffer.bind(0)
+    shader.setUniform("near", near)
+    shader.setUniform("far", far)
     shader.setUniform("view", view)
     shader.setUniform("projection", projection)
     shader.setUniform("depthBuffer", 0)
+    shader.setUniform("rect", rect)
+    shader.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
+  }
+}
+
+class TBNViewer extends TextureViewer {
+  val shader: Shader = compileShader("assets/examples/voxels/tbnBufferViewer/fragment.glsl")
+  val emptyVertexArray:VertexArray=VertexArray()
+  def draw(texture:Texture,view:Matrix4f,projection:Matrix4f,rect:Vector4f): Unit = {
+    emptyVertexArray.bind()
+    shader.use()
+    texture.bind(0)
+    shader.setUniform("view", view)
+    shader.setUniform("projection", projection)
+    shader.setUniform("textureBuff", 0)
     shader.setUniform("rect", rect)
     shader.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
   }
