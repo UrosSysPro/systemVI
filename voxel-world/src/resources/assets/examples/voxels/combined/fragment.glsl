@@ -46,7 +46,7 @@ void main(){
     //ambient
     float ambient=0.2;
 
-    vec4 color=(ambient+diffuse+specular)*albedo;
+    vec4 color=(ambient+(diffuse+specular)*light.color)*albedo;
 
     FragColor=color;
 }
