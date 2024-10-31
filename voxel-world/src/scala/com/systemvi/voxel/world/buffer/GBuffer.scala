@@ -1,13 +1,58 @@
 package com.systemvi.voxel.world.buffer
 
+import com.systemvi.engine.texture.Texture.{FilterMag, FilterMin}
 import com.systemvi.engine.texture.{Format, FrameBuffer, Texture}
 
 class GBuffer(width: Int, height: Int) {
-  val position: Texture = Texture(width, height, Format.RGB32F)
-  val normal: Texture = Texture(width, height, Format.RGB32F)
-  val uv: Texture = Texture(width, height, Format.RG16F)
-  val occlusion: Texture = Texture(width, height, Format.R16F)
-  val depth: Texture = Texture(width, height, Format.DEPTH24)
+//  val formats: Tuple5[Format,Format,Format,Format,Format] = (Format.RGB32F,Format.RGB32F,Format.RG16F,Format.R16F,Format.DEPTH32)
+//  val (position,normal,uv,occlusion,depth)=formats.map(
+//    [T] =>(a:Format)=> { a match
+//      case format: Format =>
+//        Texture.builder()
+//          .width(width)
+//          .height(height)
+//          .format(Format.RGB32F)
+//          .filterMag(FilterMag.NEAREST)
+//          .filterMin(FilterMin.LINEAR)
+//          .build()
+//    }
+//  )
+
+  val position: Texture = Texture.builder()
+    .width(width)
+    .height(height)
+    .format(Format.RGB32F)
+    .filterMag(FilterMag.NEAREST)
+    .filterMin(FilterMin.LINEAR)
+    .build()
+  val normal: Texture = Texture.builder()
+    .width(width)
+    .height(height)
+    .format(Format.RGB32F)
+    .filterMag(FilterMag.NEAREST)
+    .filterMin(FilterMin.LINEAR)
+    .build()
+  val uv: Texture = Texture.builder()
+    .width(width)
+    .height(height)
+    .format(Format.RG16F)
+    .filterMag(FilterMag.NEAREST)
+    .filterMin(FilterMin.LINEAR)
+    .build()
+  val occlusion: Texture = Texture.builder()
+    .width(width)
+    .height(height)
+    .format(Format.R16F)
+    .filterMag(FilterMag.NEAREST)
+    .filterMin(FilterMin.LINEAR)
+    .build()
+  val depth: Texture = Texture.builder()
+    .width(width)
+    .height(height)
+    .filterMag(FilterMag.NEAREST)
+    .filterMin(FilterMin.LINEAR)
+    .format(Format.DEPTH32)
+    .build()
 
   val frameBuffer = FrameBuffer.builder()
     .color(position)
@@ -20,7 +65,7 @@ class GBuffer(width: Int, height: Int) {
   def begin(): Unit = frameBuffer.begin()
 
   def end(): Unit = frameBuffer.end()
-  
+
   def bind(): Unit =
     position.bind(0)
     normal.bind(1)

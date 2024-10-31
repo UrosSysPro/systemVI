@@ -149,9 +149,21 @@ public class Texture {
         this.width = width;
         this.height = height;
         this.format = format;
-        this.multisampled = multisampled;
-        glTexImage2D(GL_TEXTURE_2D, 0, this.format.id, this.width, this.height, 0, Format.RGBA.id, GL_UNSIGNED_BYTE, (ByteBuffer) null);
-        glGenerateMipmap(GL_TEXTURE_2D);
+
+        glBindTexture(GL_TEXTURE_2D, id);
+        switch (format.id) {
+            case GL_DEPTH_COMPONENT:
+            case GL_DEPTH_COMPONENT16:
+            case GL_DEPTH_COMPONENT24:
+            case GL_DEPTH_COMPONENT32: {
+                glTexImage2D(GL_TEXTURE_2D, 0, format.id, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, (ByteBuffer) null);
+            }
+            break;
+            default: {
+                glTexImage2D(GL_TEXTURE_2D, 0, format.id, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
+            }
+            break;
+        }
         glBindTexture(GL_TEXTURE_2D, 0);
         return this;
     }

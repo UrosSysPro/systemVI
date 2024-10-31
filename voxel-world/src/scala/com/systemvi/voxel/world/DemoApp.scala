@@ -5,6 +5,7 @@ import com.systemvi.engine.buffer.VertexArray
 import com.systemvi.engine.camera.{Camera3, CameraController3}
 import com.systemvi.engine.shader.{Primitive, Shader}
 import com.systemvi.engine.texture.Texture
+import com.systemvi.engine.texture.Texture.{FilterMag, FilterMin}
 import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
@@ -62,8 +63,8 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     gbuffer = GBuffer(width.toInt, height.toInt)
     diffuseMap = Texture("assets/examples/minecraft/textures/diffuse.png")
     normalMap = Texture("assets/examples/minecraft/textures/normal.png")
-    diffuseMap.setSamplerFilter(GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST)
-    normalMap.setSamplerFilter(GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST)
+    diffuseMap.setSamplerFilter(FilterMin.NEAREST_MIPMAP_LINEAR,FilterMag.NEAREST)
+    normalMap.setSamplerFilter(FilterMin.NEAREST_MIPMAP_LINEAR,FilterMag.NEAREST)
     for {
       col0 <- worldCache.chunkCache
       col1 <- col0
