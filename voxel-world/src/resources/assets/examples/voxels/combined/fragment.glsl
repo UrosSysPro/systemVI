@@ -28,32 +28,34 @@ uniform sampler2D diffuseMap;
 uniform sampler2D normalMap;
 uniform Camera camera;
 
-void main(){
-    Light light=lightOf(vec4(1.0),vec3(0.0,30.0,0.0));
-    vec2 samplepoint=vec2(uv.x,1.0-uv.y);
-
-    vec3 normal=texture(normalBuffer,samplepoint).xyz;
-    vec3 tangent=texture(tangentBuffer,samplepoint).xyz;
-    vec3 bitangent=cross(normal,tangent);
-    mat3 tbn=mat3(tangent,bitangent,normal);
-
-    vec3 position=texture(positionBuffer,samplepoint).xyz;
-    samplepoint=texture(uvBuffer,samplepoint).xy;
-    //albedo
-    vec4 albedo=texture(diffuseMap,samplepoint);
-    normal=tbn*(texture(normalMap,samplepoint).xyz*vec3(2.0)-vec3(1.0));
-    //diffuse
-    vec3 lightDir=normalize(light.position-position);
+vec3 blinPhong(vec3 lightDir,vec3 cameraDir,vec3 normal,Light light){
     float diffuse=max(0.0,dot(lightDir,normal));
-    //specular
-    vec3 cameraDir=normalize(camera.position-position);
     vec3 halfDir=normalize(lightDir+cameraDir);
     float specular=max(0.0,dot(halfDir,normal));
     specular=pow(specular,32);
     //ambient
     float ambient=0.2;
+    return vec3(ambient)+vec3(diffuse+specular)*light.color.rgb;
+}
 
-    vec4 color=(ambient+(diffuse+specular)*light.color)*albedo;
+void main(){
+    Light light=lightOf(vec4(1.0),vec3(0.0,30.0,0.0));
+    vec2 screenSamplePoint =vec2(uv.x,1.0-uv.y);
+    vec2 uvSamplePoint =texture(uvBuffer, screenSamplePoint).xy;
 
-    FragColor=color;
+    vec3 normal=texture(normalBuffer, screenSamplePoint).xyz;
+    vec3 tangent=texture(tangentBuffer, screenSamplePoint).xyz;
+    vec3 bitangent=cross(normal,tangent);
+    mat3 tbn=mat3(tangent,bitangent,normal);
+
+    vec3 position=texture(positionBuffer, screenSamplePoint).xyz;
+    vec4 albedo=texture(diffuseMap, uvSamplePoint);
+    normal=tbn*(texture(normalMap, uvSamplePoint).xyz*vec3(2.0)-vec3(1.0));
+
+    vec3 lightDir=normalize(light.position-position);
+    vec3 cameraDir=normalize(camera.position-position);
+
+    vec3 color=blinPhong(lightDir,cameraDir,normal,light)*albedo.xyz;
+
+    FragColor=vec4(color,1.0);
 }
