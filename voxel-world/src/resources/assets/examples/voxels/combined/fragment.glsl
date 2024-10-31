@@ -31,11 +31,17 @@ uniform Camera camera;
 void main(){
     Light light=lightOf(vec4(1.0),vec3(0.0,30.0,0.0));
     vec2 samplepoint=vec2(uv.x,1.0-uv.y);
+
     vec3 normal=texture(normalBuffer,samplepoint).xyz;
+    vec3 tangent=texture(tangentBuffer,samplepoint).xyz;
+    vec3 bitangent=cross(normal,tangent);
+    mat3 tbn=mat3(tangent,bitangent,normal);
+
     vec3 position=texture(positionBuffer,samplepoint).xyz;
     samplepoint=texture(uvBuffer,samplepoint).xy;
     //albedo
     vec4 albedo=texture(diffuseMap,samplepoint);
+    normal=tbn*(texture(normalMap,samplepoint).xyz*vec3(2.0)-vec3(1.0));
     //diffuse
     vec3 lightDir=normalize(light.position-position);
     float diffuse=max(0.0,dot(lightDir,normal));
