@@ -5,7 +5,7 @@ import com.systemvi.engine.buffer.VertexArray
 import com.systemvi.engine.camera.{Camera3, CameraController3}
 import com.systemvi.engine.shader.{Primitive, Shader}
 import com.systemvi.engine.texture.{Format, FrameBuffer, Texture}
-import com.systemvi.engine.texture.Texture.{FilterMag, FilterMin, Repeat}
+import com.systemvi.engine.texture.Texture.{FilterMag, FilterMin, Repeat, TextureType}
 import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
@@ -14,7 +14,7 @@ import com.systemvi.voxel.world.buffer.GBuffer
 import com.systemvi.voxel.world.debug.{DepthViewer, PositionViewer, TBNViewer, ToneMapper, UVViewer}
 import com.systemvi.voxel.world.generators.{PerlinWorldGenerator, WorldGenerator}
 import com.systemvi.voxel.world.renderer.BlockFaceRenderer
-import com.systemvi.voxel.world.world2.{Chunk, World, WorldCache}
+import com.systemvi.voxel.world.world2.{Chunk, SkyBoxMesh, World, WorldCache}
 import org.joml.{Vector2f, Vector3i, Vector4f}
 
 object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
@@ -31,6 +31,13 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
   var gbuffer: GBuffer = null
   var hdrTexture: Texture = null
   var frameBuffer: FrameBuffer = null
+
+  //skybox
+  var skyboxTexture:Texture=null
+  var skyBoxMesh:SkyBoxMesh=null
+  var skyboxFrameBuffer:FrameBuffer=null
+  var skyBoxRenderer:Shader=null
+  var cubeMap:Texture = null
 
   var diffuseMap: Texture = null
   var normalMap: Texture = null
@@ -85,6 +92,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
       .file("assets/examples/minecraft/textures/normal.png")
       .build()
 
+
     for {
       col0 <- worldCache.chunkCache
       col1 <- col0
@@ -109,6 +117,24 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
       .fragment("assets/examples/voxels/combined/fragment.glsl")
       .vertex("assets/examples/voxels/combined/vertex.glsl")
       .build()
+
+    //skybox
+//    skyBoxRenderer=Shader.builder()
+//      .fragment("assets/examples/voxels/skyboxRenderer/fragment.glsl")
+//      .vertex("assets/examples/voxels/skyboxRenderer/vertex.glsl")
+//      .build()
+//    skyboxFrameBuffer=FrameBuffer.builder().build()
+//    cubeMap = Texture.builder()
+//      .`type`(TextureType.CUBE_MAP)
+//      .cubeSides(
+//        "assets/examples/minecraft/cubemaps/random/negx.jpg",
+//        "assets/examples/minecraft/cubemaps/random/negy.jpg",
+//        "assets/examples/minecraft/cubemaps/random/negz.jpg",
+//        "assets/examples/minecraft/cubemaps/random/posx.jpg",
+//        "assets/examples/minecraft/cubemaps/random/posy.jpg",
+//        "assets/examples/minecraft/cubemaps/random/posz.jpg",
+//      )
+//      .build()
 
     emptyVertexArray = VertexArray()
   }

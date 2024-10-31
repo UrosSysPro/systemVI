@@ -2,14 +2,18 @@ package com.systemvi.engine.texture;
 
 import static org.lwjgl.opengl.GL33.*;
 import static org.lwjgl.opengl.GL42.glBindImageTexture;
+import static org.lwjgl.stb.STBImage.stbi_image_free;
+import static org.lwjgl.stb.STBImage.stbi_load;
 
 import com.systemvi.engine.ui.utils.data.Colors;
 import com.systemvi.engine.utils.Utils;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.MemoryStack;
 
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
 public class Texture {
     public enum Repeat {
@@ -70,7 +74,7 @@ public class Texture {
     private int width;
     private int height;
     private Format format;
-    private TextureType type;
+    private TextureType type=TextureType.TEXTURE_2D;
     private FilterMin filterMin;
     private FilterMag filterMag;
     private Repeat horizontalRepeat, verticalRepeat;
@@ -95,7 +99,7 @@ public class Texture {
         id = glGenTextures();
         setRepeat(GL_REPEAT, GL_REPEAT);
         setSamplerFilter(GL_NEAREST, GL_NEAREST);
-        loadFromFile(fileName);
+        fromFile(fileName);
     }
 
     public Texture(int width, int height, Format format) {
@@ -136,11 +140,12 @@ public class Texture {
         return this;
     }
 
-    public Texture loadFromFile(String fileName) {
+    public Texture fromFile(String fileName) {
+        this.type= TextureType.TEXTURE_2D;
         glBindTexture(GL_TEXTURE_2D, id);
 
         int[] width = new int[1], height = new int[1], chanels = new int[1];
-        ByteBuffer buffer = STBImage.stbi_load(Utils.assetsFolder + fileName, width, height, chanels, 0);
+        ByteBuffer buffer = stbi_load(Utils.assetsFolder + fileName, width, height, chanels, 0);
         if (buffer == null) {
             System.out.println("[ERROR] Loading Image");
             return this;
@@ -161,6 +166,7 @@ public class Texture {
     }
 
     public Texture fromFormat(int width, int height, Format format) {
+        this.type=TextureType.TEXTURE_2D;
         this.width = width;
         this.height = height;
         this.format = format;
@@ -183,13 +189,37 @@ public class Texture {
         return this;
     }
 
+    public Texture fromCubeMap(String[] fileNames) {
+        type=TextureType.CUBE_MAP;
+        glBindTexture(type.id, id);
+        int[] width = new int[1], height = new int[1], nrChannels = new int[1];
+
+        for (int i = 0; i < fileNames.length; i++) {
+            ByteBuffer data = stbi_load(fileNames[i], width, height, nrChannels, 0);
+            glTexImage2D(
+                    GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                    0, GL_RGB, width[0], height[0], 0, GL_RGB, GL_UNSIGNED_BYTE, data
+            );
+            if (data != null) stbi_image_free(data);
+            this.width = width[0];
+            this.height = height[0];
+            format = switch (nrChannels[0]) {
+                case 1 -> Format.R;
+                case 2 -> Format.RG;
+                case 3 -> Format.RGB;
+                default -> Format.RGBA;
+            };
+        }
+        return this;
+    }
+
     public void bind() {
         bind(0);
     }
 
     public void bind(int i) {
         glActiveTexture(GL_TEXTURE0 + i);
-        glBindTexture(GL_TEXTURE_2D, id);
+        glBindTexture(type.id, id);
     }
 
     public void bindAsImage(int i) {
@@ -310,6 +340,7 @@ public class Texture {
         private int height = 1;
         private Format format = Format.RGBA;
         private TextureType type = TextureType.TEXTURE_2D;
+        private String cubeNegX, cubeNegY, cubeNegZ, cubePosX, cubePosY, cubePosZ;
         private FilterMin filterMin = FilterMin.NEAREST;
         private FilterMag filterMag = FilterMag.NEAREST;
         private Repeat horizontalRepeat = Repeat.REPEAT, verticalRepeat = Repeat.REPEAT;
@@ -366,12 +397,29 @@ public class Texture {
             return this;
         }
 
+        public Builder cubeSides(String cubeNegX, String cubeNegY, String cubeNegZ, String cubePosX, String cubePosY, String cubePosZ) {
+            this.cubeNegX = cubeNegX;
+            this.cubeNegY = cubeNegY;
+            this.cubeNegZ = cubeNegZ;
+            this.cubePosX = cubePosX;
+            this.cubePosY = cubePosY;
+            this.cubePosZ = cubePosZ;
+            return this;
+        }
+
         public Texture build() {
             Texture texture = new Texture();
-            if (file != null) {
-                texture.loadFromFile(file);
-            } else {
-                texture.fromFormat(width, height, format);
+            switch (type) {
+                case CUBE_MAP -> {
+                    texture.fromCubeMap(new String[]{cubeNegX, cubeNegY, cubeNegZ, cubePosX, cubePosY, cubePosZ});
+                }
+                default -> {
+                    if (file != null) {
+                        texture.fromFile(file);
+                    } else {
+                        texture.fromFormat(width, height, format);
+                    }
+                }
             }
             texture.setRepeat(horizontalRepeat, verticalRepeat);
             texture.setSamplerFilter(filterMin, filterMag);
