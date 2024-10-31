@@ -15,6 +15,7 @@ class BlockFaceRenderer {
   private val vertexArray = VertexArray()
   private val arrayBuffer = ArrayBuffer()
   private val elementBuffer = ElementsBuffer()
+  
 
   vertexArray.bind()
   arrayBuffer.bind()

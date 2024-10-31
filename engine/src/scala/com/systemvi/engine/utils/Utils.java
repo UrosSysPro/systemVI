@@ -2,6 +2,7 @@ package com.systemvi.engine.utils;
 
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
 import java.io.InputStream;
@@ -139,5 +140,9 @@ public class Utils {
             e.printStackTrace();
             return "";
         }
+    }
+    
+    public static double getTime(){
+        return GLFW.glfwGetTime();
     }
 }
