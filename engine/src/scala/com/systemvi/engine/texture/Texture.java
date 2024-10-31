@@ -51,18 +51,34 @@ public class Texture {
         }
     }
 
+    public enum TextureType {
+        TEXTURE_1D(GL_TEXTURE_1D),
+        TEXTURE_2D(GL_TEXTURE_2D),
+        TEXTURE_3D(GL_TEXTURE_3D),
+        TEXTURE_2D_MULTISAMPLE(GL_TEXTURE_2D_MULTISAMPLE),
+        CUBE_MAP(GL_TEXTURE_CUBE_MAP),
+        ;
+
+        public final int id;
+
+        TextureType(int id) {
+            this.id = id;
+        }
+    }
+
     private final int id;
     private int width;
     private int height;
     private Format format;
+    private TextureType type;
     private FilterMin filterMin;
     private FilterMag filterMag;
     private Repeat horizontalRepeat, verticalRepeat;
-    private boolean multisampled;
     private final Vector4f borderColor = new Vector4f();
 
     private Texture() {
         id = glGenTextures();
+        type = TextureType.TEXTURE_2D;
     }
 
     public Texture(int width, int height, Format format, FilterMin filterMin, FilterMag filterMag, Repeat horizontalRepeat, Repeat verticalRepeat, boolean multisampled, Vector4f borderColor) {
@@ -72,7 +88,6 @@ public class Texture {
         this.format = format;
         setSamplerFilter(filterMin, filterMag);
         setRepeat(horizontalRepeat, verticalRepeat);
-        this.multisampled = multisampled;
         setBorderColor(borderColor);
     }
 
@@ -92,7 +107,7 @@ public class Texture {
         setRepeat(GL_REPEAT, GL_REPEAT);
         setSamplerFilter(GL_NEAREST, GL_NEAREST);
 
-        glBindTexture(GL_TEXTURE_2D, id);
+        glBindTexture(type.id, id);
         switch (format.id) {
             case GL_DEPTH_COMPONENT:
             case GL_DEPTH_COMPONENT16:
@@ -145,7 +160,7 @@ public class Texture {
         return this;
     }
 
-    public Texture fromFormat(int width, int height, Format format,boolean multisampled) {
+    public Texture fromFormat(int width, int height, Format format) {
         this.width = width;
         this.height = height;
         this.format = format;
@@ -204,6 +219,10 @@ public class Texture {
         return format;
     }
 
+    public TextureType getType() {
+        return type;
+    }
+
     public Repeat getVerticalRepeat() {
         return verticalRepeat;
     }
@@ -218,10 +237,6 @@ public class Texture {
 
     public FilterMag getFilterMag() {
         return filterMag;
-    }
-
-    public boolean isMultisampled() {
-        return multisampled;
     }
 
     public Vector4f getBorderColor() {
@@ -294,10 +309,10 @@ public class Texture {
         private int width = 1;
         private int height = 1;
         private Format format = Format.RGBA;
+        private TextureType type = TextureType.TEXTURE_2D;
         private FilterMin filterMin = FilterMin.NEAREST;
         private FilterMag filterMag = FilterMag.NEAREST;
         private Repeat horizontalRepeat = Repeat.REPEAT, verticalRepeat = Repeat.REPEAT;
-        private boolean multisampled = false;
         private final Vector4f borderColor = new Vector4f(Colors.black());
         private String file = null;
 
@@ -313,6 +328,11 @@ public class Texture {
 
         public Builder format(Format format) {
             this.format = format;
+            return this;
+        }
+
+        public Builder type(TextureType type) {
+            this.type = type;
             return this;
         }
 
@@ -336,11 +356,6 @@ public class Texture {
             return this;
         }
 
-        public Builder multisampled(boolean multisampled) {
-            this.multisampled = multisampled;
-            return this;
-        }
-
         public Builder borderColor(Vector4f borderColor) {
             this.borderColor.set(borderColor);
             return this;
@@ -353,10 +368,10 @@ public class Texture {
 
         public Texture build() {
             Texture texture = new Texture();
-            if(file != null) {
+            if (file != null) {
                 texture.loadFromFile(file);
-            }else{
-                texture.fromFormat(width,height,format,multisampled);
+            } else {
+                texture.fromFormat(width, height, format);
             }
             texture.setRepeat(horizontalRepeat, verticalRepeat);
             texture.setSamplerFilter(filterMin, filterMag);
