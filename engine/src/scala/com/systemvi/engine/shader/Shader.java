@@ -1,7 +1,9 @@
 package com.systemvi.engine.shader;
 import com.systemvi.engine.buffer.UniformBuffer;
+import com.systemvi.engine.texture.FrameBuffer;
 import com.systemvi.engine.utils.Utils;
 import org.joml.*;
+import org.lwjgl.opengl.GL33;
 
 import java.io.File;
 import java.util.Scanner;
@@ -218,7 +220,7 @@ public class Shader {
     public void delete(){
         glDeleteProgram(id);
     }
-    
+
     //seting uniforms
     public void setUniform(String name, Matrix4f mat){
         float[] data=new float[16];
@@ -275,9 +277,22 @@ public class Shader {
     public void bindUniformBuffer(String name, UniformBuffer buffer){
         int index=glGetUniformBlockIndex(id,name);
     }
-    
+
     //target names
-    
+    public void setRenderTarget(int index, FrameBuffer.Attachment attachment){
+        use();
+        GL33.glBindFragDataLocation(id,index,attachment.name);
+    }
+    public void setRenderTarget(int index, String name){
+        use();
+        GL33.glBindFragDataLocation(id,index,name);
+    }
+    public void setRenderTarget(String[] names){
+        for(int i=0;i<names.length;i++)setRenderTarget(i,names[i]);
+    }
+    public void setRenderTarget(FrameBuffer.Attachment[] attachments){
+        for(int i=0;i<attachments.length;i++)setRenderTarget(i,attachments[i]);
+    }
 
     //draw calls
     /**

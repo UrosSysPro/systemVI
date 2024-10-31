@@ -1,5 +1,6 @@
 package com.systemvi.voxel.world.buffer
 
+import com.systemvi.engine.texture.FrameBuffer.Attachment
 import com.systemvi.engine.texture.Texture.{FilterMag, FilterMin}
 import com.systemvi.engine.texture.{Format, FrameBuffer, Texture}
 
@@ -61,12 +62,12 @@ class GBuffer(width: Int, height: Int) {
     .format(Format.DEPTH32)
     .build()
 
-  val frameBuffer = FrameBuffer.builder()
-    .color(position)
-    .color(normal)
-    .color(tangent)
-    .color(uv)
-    .color(occlusion)
+  val frameBuffer: FrameBuffer = FrameBuffer.builder()
+    .color(Attachment(position,true,"positionBuffer"))
+    .color(Attachment(normal,true,"normalBuffer"))
+    .color(Attachment(tangent,true,"tangentBuffer"))
+    .color(Attachment(uv,true,"uvBuffer"))
+    .color(Attachment(occlusion,true,"occlusionBuffer"))
     .depth(depth)
     .build()
 

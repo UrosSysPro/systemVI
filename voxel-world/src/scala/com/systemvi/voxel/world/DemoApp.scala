@@ -8,7 +8,7 @@ import com.systemvi.engine.texture.{Format, FrameBuffer, Texture}
 import com.systemvi.engine.texture.Texture.{FilterMag, FilterMin, Repeat, TextureType}
 import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.utils.Utils
-import com.systemvi.engine.utils.Utils.Buffer
+import com.systemvi.engine.utils.Utils.{Buffer, getTime}
 import com.systemvi.engine.window.Window
 import com.systemvi.voxel.world.buffer.GBuffer
 import com.systemvi.voxel.world.debug.{DepthViewer, PositionViewer, TBNViewer, ToneMapper, UVViewer}
@@ -70,6 +70,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     setInputProcessor(controller)
 
     gbuffer = GBuffer(width.toInt, height.toInt)
+    blockRenderer.setRenderTargets(gbuffer.frameBuffer.getAttachments)
     hdrTexture = Texture.builder()
       .width(width.toInt)
       .height(height.toInt)

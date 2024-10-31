@@ -11,10 +11,12 @@ public class FrameBuffer {
     public static class Attachment {
         public Texture texture;
         public boolean enabled;
+        public String name;
 
-        public Attachment(Texture texture, boolean enabled) {
+        public Attachment(Texture texture, boolean enabled,String name) {
             this.texture = texture;
             this.enabled = enabled;
+            this.name = name;
         }
     }
 
@@ -72,12 +74,20 @@ public class FrameBuffer {
         }
 
         public Builder color(Texture color) {
-            colorAttachments.add(new Attachment(color, true));
+            colorAttachments.add(new Attachment(color, true,""));
+            return this;
+        }
+        public Builder color(Attachment attachment) {
+            colorAttachments.add(attachment);
             return this;
         }
 
         public Builder depth(Texture depth) {
-            depthAttachment = new Attachment(depth, true);
+            depthAttachment = new Attachment(depth, true,"");
+            return this;
+        }
+        public Builder depth(Attachment attachment) {
+            depthAttachment = attachment;
             return this;
         }
 

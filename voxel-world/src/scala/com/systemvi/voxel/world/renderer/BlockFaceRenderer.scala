@@ -3,6 +3,7 @@ package com.systemvi.voxel.world.renderer
 import com.systemvi.engine.buffer.{ArrayBuffer, ElementsBuffer, VertexArray}
 import com.systemvi.engine.model.VertexAttribute
 import com.systemvi.engine.shader.{ElementsDataType, Primitive, Shader}
+import com.systemvi.engine.texture.FrameBuffer.Attachment
 import com.systemvi.engine.texture.Texture
 import com.systemvi.voxel.world.world2.{BlockFace, BlockSide}
 import org.joml.{Matrix4f, Vector4f}
@@ -34,6 +35,9 @@ class BlockFaceRenderer {
     .build()
 
   private var faces = List.empty[BlockFace]
+  
+  def setRenderTargets(attachments: Array[Attachment]): Unit = shader.setRenderTarget(attachments)
+  
 
   def draw(face: BlockFace): Unit = faces = faces.prepended(face)
 
