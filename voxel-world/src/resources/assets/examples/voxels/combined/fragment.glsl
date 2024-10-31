@@ -20,6 +20,7 @@ Light lightOf(vec4 color,vec3 position){
 
 uniform sampler2D positionBuffer;
 uniform sampler2D normalBuffer;
+uniform sampler2D tangentBuffer;
 uniform sampler2D uvBuffer;
 uniform sampler2D depthBuffer;
 uniform sampler2D occlusionBuffer;

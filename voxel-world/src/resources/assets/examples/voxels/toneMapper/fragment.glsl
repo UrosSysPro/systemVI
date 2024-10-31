@@ -5,6 +5,37 @@ uniform sampler2D textureBuff;
 uniform vec2 size;
 in vec2 uv;
 
+mat4 rotateX(float angle) {
+    float s = sin(angle);
+    float c = cos(angle);
+    return mat4(
+    vec4(1.0, 0.0, 0.0, 0.0),
+    vec4(0.0, c, -s, 0.0),
+    vec4(0.0, s, c, 0.0),
+    vec4(0.0, 0.0, 0.0, 1.0)
+    );
+}
+mat4 rotateY(float angle) {
+    float s = sin(angle);
+    float c = cos(angle);
+    return mat4(
+    vec4(c, 0.0, -s, 0.0),
+    vec4(0.0, 1.0, 0.0, 0.0),
+    vec4(s, 0.0, c, 0.0),
+    vec4(0.0, 0.0, 0.0, 1.0)
+    );
+}
+mat4 rotateZ(float angle) {
+    float s = sin(angle);
+    float c = cos(angle);
+    return mat4(
+    vec4(c, -s, 0.0, 0.0),
+    vec4(s, c, 0.0, 0.0),
+    vec4(0.0, 0.0, 1.0, 0.0),
+    vec4(0.0, 0.0, 0.0, 1.0)
+    );
+}
+
 vec3 reinhardToneMapping(vec3 color) {
     return color / (1.0 + color);
 }
@@ -65,6 +96,13 @@ vec3 adjustHue(vec3 color, float hue) {
     return color * hueRotation;
 }
 
+vec3 colorRotation(vec3 color,vec3 rotation){
+    mat4 mat=rotateX(rotation.x)*rotateY(rotation.y)*rotateZ(rotation.z);
+    vec4 result=mat*vec4(color-vec3(0.5),1.0);
+    return result.xyz+0.5;
+}
+
+//gamma correction
 vec3 gammaCorrection(vec3 color, float gamma) {
     return pow(color, vec3(1.0 / gamma));
 }
@@ -75,24 +113,25 @@ void main() {
     vec3 hdrColor = texture(textureBuff, uv).rgb;
 
     //tone mapping
-    vec3 mapped=hdrColor;
-//    vec3 mapped = acesFilmToneMapping(hdrColor);
-//    vec3 mapped = exponentialToneMapping(hdrColor);
-//    vec3 mapped = uncharted2ToneMapping(hdrColor);
-//    vec3 mapped = reinhardToneMapping(hdrColor);
+    vec3 mapped = hdrColor;
+    //    vec3 mapped = acesFilmToneMapping(hdrColor);
+    //    vec3 mapped = exponentialToneMapping(hdrColor);
+    //    vec3 mapped = uncharted2ToneMapping(hdrColor);
+    //    vec3 mapped = reinhardToneMapping(hdrColor);
 
     //color correction
-    vec3 corrected=mapped;
-//    vec3 corrected=whiteBalance(mapped,0.5);
-//    vec3 corrected=adjustSaturation(mapped,2);
-//    vec3 corrected=adjustBrightnessContrast(mapped,0.3,2);
-//    vec3 corrected=adjustHue(mapped,100);
+    vec3 corrected = mapped;
+//    vec3 corrected = colorRotation(mapped,vec3(0.0,0.0,1.0));
+    //    vec3 corrected=whiteBalance(mapped,0.5);
+    //    vec3 corrected=adjustSaturation(mapped,2);
+    //    vec3 corrected=adjustBrightnessContrast(mapped,0.3,2);
+    //    vec3 corrected=adjustHue(mapped,100);
 
     //gamma correction
-//    vec3 gammaCorrected=corrected;
-    vec3 gammaCorrected=gammaCorrection(corrected,2.2);
-//    vec3 gammaCorrected=gammaCorrection(corrected,0.5);
-//    vec3 gammaCorrected=gammaCorrection(corrected,3.5);
+    //    vec3 gammaCorrected=corrected;
+    vec3 gammaCorrected = gammaCorrection(corrected, 2.2);
+    //    vec3 gammaCorrected=gammaCorrection(corrected,0.5);
+    //    vec3 gammaCorrected=gammaCorrection(corrected,3.5);
 
     FragColor = vec4(gammaCorrected, 1.0);
 }

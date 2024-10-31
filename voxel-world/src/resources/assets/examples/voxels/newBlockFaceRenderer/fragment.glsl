@@ -2,6 +2,7 @@
 
 out vec3 positionBuffer;
 out vec3 normalBuffer;
+out vec3 tangentBuffer;
 out vec2 uvBuffer;
 out float occlusionBuffer;
 
@@ -17,6 +18,7 @@ in struct VERTEX_OUT{
 void main(){
     positionBuffer=vertexOut.worldPosition;
     normalBuffer=vertexOut.normal;
+    tangentBuffer=vertexOut.tangent;
     uvBuffer=vertexOut.uv;
     occlusionBuffer=vertexOut.occlusion;
 }
