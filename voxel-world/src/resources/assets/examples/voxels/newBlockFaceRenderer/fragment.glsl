@@ -17,8 +17,8 @@ in struct VERTEX_OUT{
 
 void main(){
     positionBuffer=vertexOut.worldPosition;
-    normalBuffer=vertexOut.tangent;
-    tangentBuffer=vertexOut.normal;
+    normalBuffer=vertexOut.normal;
+    tangentBuffer=vertexOut.tangent;
     uvBuffer=vertexOut.uv;
     occlusionBuffer=vertexOut.occlusion;
 }

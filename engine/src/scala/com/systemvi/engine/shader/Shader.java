@@ -19,6 +19,7 @@ public class Shader {
         this.compilationLog=log;
     }
 
+    //builder
     public static class Builder{
         private String fragment,vertex,geometry,compute,tesselationEvaluation,tesselationControl;
 
@@ -197,6 +198,7 @@ public class Shader {
         return new Builder();
     }
 
+    //getters
     public boolean isCompiled() {
         return compiled;
     }
@@ -209,13 +211,15 @@ public class Shader {
         return id;
     }
 
+    //utils
     public void use(){
         glUseProgram(id);
     }
     public void delete(){
         glDeleteProgram(id);
     }
-
+    
+    //seting uniforms
     public void setUniform(String name, Matrix4f mat){
         float[] data=new float[16];
         int uniformId=glGetUniformLocation(id,name);
@@ -271,7 +275,11 @@ public class Shader {
     public void bindUniformBuffer(String name, UniformBuffer buffer){
         int index=glGetUniformBlockIndex(id,name);
     }
+    
+    //target names
+    
 
+    //draw calls
     /**
      * @param primitive type of primitive to draw
      * @param count number of vertices, so 3 for one triangle or 2 for a line
