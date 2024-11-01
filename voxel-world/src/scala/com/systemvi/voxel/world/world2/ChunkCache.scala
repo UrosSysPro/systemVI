@@ -62,11 +62,11 @@ class ChunkCache(world: World, chunk: Chunk, chunkPosition: Vector3i) {
           val rightFront = world.getBlockState(worldPosition.x + 1, worldPosition.y - 1, worldPosition.z + 1)
           val rightBack = world.getBlockState(worldPosition.x + 1, worldPosition.y - 1, worldPosition.z - 1)
           val x = Array(left, front, leftFront).map(state => if state.block != Block.AIR then 1 else 0).sum
-          val y = Array(right, back, rightBack).map(state => if state.block != Block.AIR then 1 else 0).sum
-          val z = Array(left, front, leftFront).map(state => if state.block != Block.AIR then 1 else 0).sum
+          val y = Array(right, front, rightFront).map(state => if state.block != Block.AIR then 1 else 0).sum
+          val z = Array(left, back, leftBack).map(state => if state.block != Block.AIR then 1 else 0).sum
           val w = Array(right, back, rightBack).map(state => if state.block != Block.AIR then 1 else 0).sum
           val occlusion = Vector4f(occlusions(x), occlusions(y), occlusions(z), occlusions(w))
-          //          val occlusion = Vector4f(occlusions(x),1,1,1)
+          //          val occlusion = Vector4f(0,1,1,1),1,1)
           blockFaces :+= BlockFace(state, worldPosition, occlusion, BlockSide.Bottom)
         //add top side
         if world.getBlockState(worldPosition.x, worldPosition.y + 1, worldPosition.z).block == Block.AIR then
@@ -79,11 +79,11 @@ class ChunkCache(world: World, chunk: Chunk, chunkPosition: Vector3i) {
           val rightFront = world.getBlockState(worldPosition.x + 1, worldPosition.y + 1, worldPosition.z + 1)
           val rightBack = world.getBlockState(worldPosition.x + 1, worldPosition.y + 1, worldPosition.z - 1)
           val x = Array(left, front, leftFront).map(state => if state.block != Block.AIR then 1 else 0).sum
-          val y = Array(right, back, rightBack).map(state => if state.block != Block.AIR then 1 else 0).sum
-          val z = Array(left, front, leftFront).map(state => if state.block != Block.AIR then 1 else 0).sum
+          val y = Array(right, front, rightFront).map(state => if state.block != Block.AIR then 1 else 0).sum
+          val z = Array(left, back, leftBack).map(state => if state.block != Block.AIR then 1 else 0).sum
           val w = Array(right, back, rightBack).map(state => if state.block != Block.AIR then 1 else 0).sum
           val occlusion = Vector4f(occlusions(x), occlusions(y), occlusions(z), occlusions(w))
-          //          val occlusion = Vector4f(occlusions(x),1,1,1)
+//          val occlusion = Vector4f(0,1,1,1)
           blockFaces :+= BlockFace(state, worldPosition, occlusion, BlockSide.Top)
         //add front
         if world.getBlockState(worldPosition.x, worldPosition.y, worldPosition.z + 1).block == Block.AIR then
