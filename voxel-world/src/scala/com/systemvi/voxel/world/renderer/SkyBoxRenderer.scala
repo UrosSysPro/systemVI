@@ -77,12 +77,12 @@ class SkyBoxRenderer {
   private val texture:Texture=Texture.builder()
     .`type`(TextureType.CUBE_MAP)
     .cubeSides(
-      "assets/examples/minecraft/cubemaps/random/negx.jpg",
-      "assets/examples/minecraft/cubemaps/random/negy.jpg",
-      "assets/examples/minecraft/cubemaps/random/negz.jpg",
       "assets/examples/minecraft/cubemaps/random/posx.jpg",
+      "assets/examples/minecraft/cubemaps/random/negx.jpg",
       "assets/examples/minecraft/cubemaps/random/posy.jpg",
-      "assets/examples/minecraft/cubemaps/random/posz.jpg"
+      "assets/examples/minecraft/cubemaps/random/negy.jpg",
+      "assets/examples/minecraft/cubemaps/random/posz.jpg",
+      "assets/examples/minecraft/cubemaps/random/negz.jpg",
     )
     .build()
   private val view:Matrix4f=Matrix4f()

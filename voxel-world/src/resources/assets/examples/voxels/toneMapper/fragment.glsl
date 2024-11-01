@@ -96,10 +96,10 @@ vec3 adjustHue(vec3 color, float hue) {
     return color * hueRotation;
 }
 
-vec3 colorRotation(vec3 color,vec3 rotation){
-    mat4 mat=rotateX(rotation.x)*rotateY(rotation.y)*rotateZ(rotation.z);
-    vec4 result=mat*vec4(color-vec3(0.5),1.0);
-    return result.xyz+0.5;
+vec3 colorRotation(vec3 color, vec3 rotation) {
+    mat4 mat = rotateX(rotation.x) * rotateY(rotation.y) * rotateZ(rotation.z);
+    vec4 result = mat * vec4(color - vec3(0.5), 1.0);
+    return result.xyz + 0.5;
 }
 
 //gamma correction
@@ -121,15 +121,15 @@ void main() {
 
     //color correction
     vec3 corrected = mapped;
-//    vec3 corrected = colorRotation(mapped,vec3(0.0,0.0,1.0));
-//        vec3 corrected=whiteBalance(mapped,0.5);
+    //    vec3 corrected = colorRotation(mapped,vec3(0.0,0.0,1.0));
+    //    vec3 corrected=whiteBalance(mapped,0.5);
     //    vec3 corrected=adjustSaturation(mapped,2);
     //    vec3 corrected=adjustBrightnessContrast(mapped,0.3,2);
     //    vec3 corrected=adjustHue(mapped,100);
 
     //gamma correction
-        vec3 gammaCorrected=corrected;
-//    vec3 gammaCorrected = gammaCorrection(corrected, 2.2);
+    //   vec3 gammaCorrected=corrected;
+    vec3 gammaCorrected = gammaCorrection(corrected, 2.2);
     //    vec3 gammaCorrected=gammaCorrection(corrected,0.5);
     //    vec3 gammaCorrected=gammaCorrection(corrected,3.5);
 
