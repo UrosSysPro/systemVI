@@ -169,7 +169,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
       Vector4f(0, height / 2, width / 2, height / 2)
     )
     tbnBufferViewer.draw(
-      texture = gbuffer.normal,
+      texture = gbuffer.occlusion,
       view = viewerCamera.view,
       projection = viewerCamera.projection,
       rect = Vector4f(width / 2, height / 2, width / 2, height / 2)

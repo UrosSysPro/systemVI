@@ -4,7 +4,6 @@ import com.systemvi.engine.buffer.{ArrayBuffer, ElementsBuffer, VertexArray}
 import com.systemvi.engine.model.VertexAttribute
 import com.systemvi.engine.shader.{ElementsDataType, Primitive, Shader}
 import com.systemvi.engine.texture.FrameBuffer.Attachment
-import com.systemvi.engine.texture.Texture
 import com.systemvi.voxel.world.world2.{BlockFace, BlockSide}
 import org.joml.{Matrix4f, Vector4f}
 
@@ -70,7 +69,7 @@ class BlockFaceRenderer {
         case BlockSide.Right => face.blockState.block.right
         case BlockSide.Top => face.blockState.block.top
         case BlockSide.Bottom => face.blockState.block.bottom
-      val occlusion = Vector4f(0, 1, 1, 1)
+      val occlusion = face.occlusion
       val o = occlusion
       List[Float](
         p.x, p.y, p.z, 0, 0, region.getLeft, region.getBottom, o.x, sideIndex,

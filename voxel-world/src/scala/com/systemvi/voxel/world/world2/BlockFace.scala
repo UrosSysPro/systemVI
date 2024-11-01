@@ -1,7 +1,7 @@
 package com.systemvi.voxel.world.world2
 
 import com.systemvi.voxel.world.world.BlockState
-import org.joml.Vector3i
+import org.joml.{Vector3i, Vector4f}
 
 enum BlockSide(val index:Int):
   case Left extends BlockSide(0)
@@ -11,4 +11,4 @@ enum BlockSide(val index:Int):
   case Front extends BlockSide(4)
   case Back extends BlockSide(5)
 
-case class BlockFace(blockState:BlockState,worldPosition:Vector3i,side:BlockSide)
+case class BlockFace(blockState:BlockState, worldPosition:Vector3i, occlusion:Vector4f, side:BlockSide)

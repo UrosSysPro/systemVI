@@ -9,7 +9,7 @@ class WorldCache(world: World) {
     world.chunks(0)(0).length,
   )
   for(i<-chunkCache.indices;j<-chunkCache(0).indices;k<-chunkCache(0)(0).indices){
-    chunkCache(i)(j)(k)=ChunkCache(world.chunks(i)(j)(k),Vector3i(i,j,k))
+    chunkCache(i)(j)(k)=ChunkCache(world,world.chunks(i)(j)(k),Vector3i(i,j,k))
   }
 
 }
