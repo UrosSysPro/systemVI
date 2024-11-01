@@ -26,6 +26,7 @@ uniform sampler2D depthBuffer;
 uniform sampler2D occlusionBuffer;
 uniform sampler2D diffuseMap;
 uniform sampler2D normalMap;
+uniform sampler2D skybox;
 uniform Camera camera;
 
 vec3 blinPhong(vec3 lightDir,vec3 cameraDir,vec3 normal,Light light){
@@ -48,6 +49,12 @@ void main(){
     vec3 bitangent=cross(normal,tangent);
     mat3 tbn=mat3(tangent,bitangent,normal);
 
+    float near=0.1,far=100.0;
+    float depth = texture(depthBuffer, screenSamplePoint).r;
+    depth = (2.0 * near) / (far + near - depth * (far - near));
+
+    vec3 skybox=texture(skybox,screenSamplePoint).xyz;
+
     vec3 position=texture(positionBuffer, screenSamplePoint).xyz;
     vec4 albedo=texture(diffuseMap, uvSamplePoint);
     normal=tbn*(texture(normalMap, uvSamplePoint).xyz*vec3(2.0)-vec3(1.0));
@@ -56,6 +63,8 @@ void main(){
     vec3 cameraDir=normalize(camera.position-position);
 
     vec3 color=blinPhong(lightDir,cameraDir,normal,light)*albedo.xyz;
+
+    if(depth>0.99)color=skybox;
 
     FragColor=vec4(color,1.0);
 }

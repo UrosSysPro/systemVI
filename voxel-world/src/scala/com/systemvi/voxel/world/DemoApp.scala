@@ -4,17 +4,17 @@ import com.systemvi.engine.application.Game
 import com.systemvi.engine.buffer.VertexArray
 import com.systemvi.engine.camera.{Camera3, CameraController3}
 import com.systemvi.engine.shader.{Primitive, Shader}
+import com.systemvi.engine.texture.Texture.{FilterMag, FilterMin, Repeat}
 import com.systemvi.engine.texture.{Format, FrameBuffer, Texture}
-import com.systemvi.engine.texture.Texture.{FilterMag, FilterMin, Repeat, TextureType}
 import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.utils.Utils
-import com.systemvi.engine.utils.Utils.{Buffer, getTime}
+import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.Window
 import com.systemvi.voxel.world.buffer.GBuffer
-import com.systemvi.voxel.world.debug.{DepthViewer, PositionViewer, TBNViewer, ToneMapper, UVViewer}
+import com.systemvi.voxel.world.debug.*
 import com.systemvi.voxel.world.generators.{PerlinWorldGenerator, WorldGenerator}
-import com.systemvi.voxel.world.renderer.BlockFaceRenderer
-import com.systemvi.voxel.world.world2.{Chunk, SkyBoxMesh, World, WorldCache}
+import com.systemvi.voxel.world.renderer.{BlockFaceRenderer, SkyBoxRenderer}
+import com.systemvi.voxel.world.world2.{Chunk, World, WorldCache}
 import org.joml.{Vector2f, Vector3i, Vector4f}
 
 object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
@@ -25,19 +25,15 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
   val world: World = World(numberOfChunks)
   world.generate(generator)
   val worldCache: WorldCache = WorldCache(world)
-  val blockRenderer: BlockFaceRenderer = BlockFaceRenderer()
+  var blockRenderer: BlockFaceRenderer = null
+  var skyboxRenderer: SkyBoxRenderer = null
   var controller: CameraController3 = null
 
   var gbuffer: GBuffer = null
   var hdrTexture: Texture = null
   var frameBuffer: FrameBuffer = null
-
-  //skybox
-  var skyboxTexture:Texture=null
-  var skyBoxMesh:SkyBoxMesh=null
-  var skyboxFrameBuffer:FrameBuffer=null
-  var skyBoxRenderer:Shader=null
-  var cubeMap:Texture = null
+  var skyboxTexture: Texture = null
+  var skyboxFrameBuffer: FrameBuffer = null
 
   var diffuseMap: Texture = null
   var normalMap: Texture = null
@@ -70,6 +66,8 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     setInputProcessor(controller)
 
     gbuffer = GBuffer(width.toInt, height.toInt)
+    blockRenderer = BlockFaceRenderer()
+    skyboxRenderer = SkyBoxRenderer()
     blockRenderer.setRenderTargets(gbuffer.frameBuffer.getAttachments)
     hdrTexture = Texture.builder()
       .width(width.toInt)
@@ -80,6 +78,15 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
       .build()
     frameBuffer = FrameBuffer.builder()
       .color(hdrTexture)
+      .build()
+
+    skyboxTexture=Texture.builder()
+      .width(width.toInt)
+      .height(height.toInt)
+      .format(Format.RGB)
+      .build()
+    skyboxFrameBuffer=FrameBuffer.builder()
+      .color(skyboxTexture)
       .build()
 
     diffuseMap = Texture.builder()
@@ -93,7 +100,6 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
       .file("assets/examples/minecraft/textures/normal.png")
       .build()
 
-
     for {
       col0 <- worldCache.chunkCache
       col1 <- col0
@@ -104,7 +110,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     viewerCamera = Camera3.builder2d()
       .position(width / 2, height / 2)
       .size(width, height)
-      .scale(1,-1)
+      .scale(1, -1)
       .build()
 
     positionBufferViewer = PositionViewer(Vector3i(numberOfChunks).mul(Chunk.size))
@@ -119,24 +125,6 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
       .vertex("assets/examples/voxels/combined/vertex.glsl")
       .build()
 
-    //skybox
-//    skyBoxRenderer=Shader.builder()
-//      .fragment("assets/examples/voxels/skyboxRenderer/fragment.glsl")
-//      .vertex("assets/examples/voxels/skyboxRenderer/vertex.glsl")
-//      .build()
-//    skyboxFrameBuffer=FrameBuffer.builder().build()
-//    cubeMap = Texture.builder()
-//      .`type`(TextureType.CUBE_MAP)
-//      .cubeSides(
-//        "assets/examples/minecraft/cubemaps/random/negx.jpg",
-//        "assets/examples/minecraft/cubemaps/random/negy.jpg",
-//        "assets/examples/minecraft/cubemaps/random/negz.jpg",
-//        "assets/examples/minecraft/cubemaps/random/posx.jpg",
-//        "assets/examples/minecraft/cubemaps/random/posy.jpg",
-//        "assets/examples/minecraft/cubemaps/random/posz.jpg",
-//      )
-//      .build()
-
     emptyVertexArray = VertexArray()
   }
 
@@ -145,9 +133,10 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     val height = getWindow.getHeight.toFloat
     controller.update(delta)
 
+    Utils.clear(Colors.green500, Buffer.COLOR_BUFFER)
+
     gbuffer.begin()
     Utils.clear(Colors.black, Buffer.COLOR_BUFFER, Buffer.DEPTH_BUFFER)
-
     Utils.enableDepthTest()
     Utils.enableFaceCulling()
     blockRenderer.time = Utils.getTime.toFloat
@@ -157,8 +146,6 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     Utils.disableFaceCulling()
     Utils.disableDepthTest()
     gbuffer.end()
-
-    Utils.clear(Colors.green500, Buffer.COLOR_BUFFER)
 
     positionBufferViewer.draw(
       gbuffer.position,
@@ -188,11 +175,19 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
       rect = Vector4f(width / 2, height / 2, width / 2, height / 2)
     )
 
+    skyboxFrameBuffer.begin()
+    skyboxRenderer.view(controller.camera.view)
+    skyboxRenderer.projection(controller.camera.projection)
+    skyboxRenderer.position(controller.camera.position)
+    skyboxRenderer.draw()
+    skyboxFrameBuffer.end()
+
     frameBuffer.begin()
     combinedViewer.use()
     gbuffer.bind()
     diffuseMap.bind(6)
     normalMap.bind(7)
+    skyboxTexture.bind(8)
     combinedViewer.setUniform("view", viewerCamera.view)
     combinedViewer.setUniform("projection", viewerCamera.projection)
     combinedViewer.setUniform("positionBuffer", 0)
@@ -203,6 +198,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     combinedViewer.setUniform("depthBuffer", 5)
     combinedViewer.setUniform("diffuseMap", 6)
     combinedViewer.setUniform("normalMap", 7)
+    combinedViewer.setUniform("skybox", 8)
     combinedViewer.setUniform("camera.position", controller.camera.position)
     combinedViewer.setUniform("rect", Vector4f(0, 0, width, height))
     combinedViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
@@ -213,8 +209,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
       size = Vector2f(width, height),
       view = viewerCamera.view,
       projection = viewerCamera.projection,
-      rect = Vector4f(width/4, 3*height/4, width/2, -height/2)
+      rect = Vector4f(width / 4, 3 * height / 4, width / 2, -height / 2)
     )
   }
-
 }

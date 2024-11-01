@@ -35,5 +35,4 @@ class ChunkCache(chunk: Chunk, chunkPosition: Vector3i) {
         if k - 1 < 0 || chunk.blockStates(i)(j)(k - 1).block == Block.AIR then
           blockFaces :+= BlockFace(state, Vector3i(w.x + i, w.y + j, w.z + k), BlockSide.Back)
   }
-  println(blockFaces.length)
 }
