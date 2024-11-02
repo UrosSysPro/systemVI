@@ -13,13 +13,13 @@ import com.systemvi.engine.window.Window
 import com.systemvi.voxel.world.buffer.GBuffer
 import com.systemvi.voxel.world.debug.*
 import com.systemvi.voxel.world.generators.{PerlinWorldGenerator, WorldGenerator}
-import com.systemvi.voxel.world.renderer.{BlockFaceRenderer, SkyBoxRenderer}
+import com.systemvi.voxel.world.renderer.{BlockFaceRenderer, ShadowMapRenderer, SkyBoxRenderer}
 import com.systemvi.voxel.world.world2.{Chunk, World, WorldCache}
 import org.joml.{Vector2f, Vector3i, Vector4f}
 
 object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
 
-  val numberOfChunks = Vector3i(20, 1, 20)
+  val numberOfChunks = Vector3i(2, 1, 2)
 
   val generator: WorldGenerator = PerlinWorldGenerator()
   val world: World = World(numberOfChunks)
@@ -45,11 +45,12 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
   var depthBufferViewer: DepthViewer = null
   var tbnBufferViewer: TBNViewer = null
   var toneMapper: ToneMapper = null
+  var shadowMapRenderer:ShadowMapRenderer=null
 
   var combinedViewer: Shader = null
 
   val near = 0.1f
-  val far = 10000f
+  val far = 100f
 
 
   override def setup(window: Window): Unit = {
@@ -117,6 +118,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     uvBufferViewer = UVViewer()
     depthBufferViewer = DepthViewer()
     tbnBufferViewer = TBNViewer()
+    shadowMapRenderer = ShadowMapRenderer()
 
     toneMapper = ToneMapper()
 
@@ -146,6 +148,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     Utils.disableFaceCulling()
     Utils.disableDepthTest()
     gbuffer.end()
+    
 
     positionBufferViewer.draw(
       gbuffer.position,

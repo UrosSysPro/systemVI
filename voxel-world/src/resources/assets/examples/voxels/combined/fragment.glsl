@@ -64,6 +64,7 @@ void main() {
     vec3 cameraDir = normalize(camera.position - position);
 
     vec3 color = blinPhong(lightDir, cameraDir, normal, light) * occlusion * albedo.xyz;
+//    vec3 color = blinPhong(lightDir, cameraDir, normal, light) * occlusion * albedo.xyz;
 //    vec3 color = blinPhong(lightDir, cameraDir, normal, light)*albedo.xyz;
 
     if (depth > 0.99)color = skybox;

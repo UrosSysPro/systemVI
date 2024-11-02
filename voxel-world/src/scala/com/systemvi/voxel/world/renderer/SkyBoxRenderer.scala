@@ -100,7 +100,6 @@ class SkyBoxRenderer {
     shader.setUniform("position",position)
     mesh.bind()
     texture.bind()
-//    shader.setUniform("skybox",0)
     shader.drawArrays(Primitive.TRIANGLES,36)
   }
 }

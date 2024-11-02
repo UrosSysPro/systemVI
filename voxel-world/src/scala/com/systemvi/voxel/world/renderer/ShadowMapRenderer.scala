@@ -38,8 +38,8 @@ class ShadowMapRenderer {
   ))
 
   private val shader: Shader = Shader.builder()
-    .fragment("assets/examples/voxels/newBlockFaceRenderer/fragment.glsl")
-    .vertex("assets/examples/voxels/newBlockFaceRenderer/vertex.glsl")
+    .fragment("assets/examples/voxels/shadowMapRenderer/fragment.glsl")
+    .vertex("assets/examples/voxels/shadowMapRenderer/vertex.glsl")
     .build()
 
   private var faces = List.empty[BlockFace]
