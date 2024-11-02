@@ -1,7 +1,7 @@
 package com.systemvi.shapes
 
 import com.systemvi.engine.buffer.{ArrayBuffer, ElementsBuffer, VertexArray}
-import com.systemvi.engine.shader.Shader
+import com.systemvi.engine.shader.{ElementsDataType, Primitive, Shader}
 import org.joml.Matrix4f
 
 trait Shape {
@@ -30,19 +30,17 @@ class ShapeRenderer {
   def draw(shape: Shape): Unit = shapes :+= shape
   
   def flush(): Unit = {
-    val vertexData=(for(shape<-shapes)yield 
-      shape.vertexData()
-    ).flatten.toArray
+    val vertexData= shapes.flatMap(shape => shape.vertexData()).toArray
     
-    val elementData = (for (shape <- shapes) yield 
-      shape.elementData()
-    ).flatten.toArray
+    val elementData = shapes.flatMap(shape => shape.elementData()).toArray
     
     vertexArray.bind()
     arrayBuffer.setData(vertexData)
     elementBuffer.setData(elementData)
     
-    
-    
+    shader.use()
+    shader.setUniform("view",view)
+    shader.setUniform("projection",projection)
+    shader.drawElements(Primitive.TRIANGLES,elementData.length/3,ElementsDataType.UNSIGNED_INT,3)
   }
 }

@@ -19,7 +19,7 @@ import org.joml.{Vector2f, Vector3i, Vector4f}
 
 object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
 
-  val numberOfChunks = Vector3i(2, 1, 2)
+  val numberOfChunks = Vector3i(20, 1, 20)
 
   val generator: WorldGenerator = PerlinWorldGenerator()
   val world: World = World(numberOfChunks)
@@ -49,7 +49,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
   var combinedViewer: Shader = null
 
   val near = 0.1f
-  val far = 100f
+  val far = 10000f
 
 
   override def setup(window: Window): Unit = {
