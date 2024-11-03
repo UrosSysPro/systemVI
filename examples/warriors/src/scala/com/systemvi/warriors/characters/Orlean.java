@@ -20,4 +20,24 @@ public class Orlean extends Warrior implements Ranger {
         specialCooldown = 2;
         utilityCooldown = 2;
     }
+
+    @Override
+    public void lightAttack() {
+        
+    }
+
+    @Override
+    public void heavyAttack() {
+
+    }
+
+    @Override
+    public void specialAttack() {
+
+    }
+
+    @Override
+    public void utility() {
+
+    }
 }

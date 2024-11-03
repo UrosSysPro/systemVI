@@ -118,7 +118,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     uvBufferViewer = UVViewer()
     depthBufferViewer = DepthViewer()
     tbnBufferViewer = TBNViewer()
-    shadowMapRenderer = ShadowMapRenderer()
+//    shadowMapRenderer = ShadowMapRenderer()
 
     toneMapper = ToneMapper()
 
