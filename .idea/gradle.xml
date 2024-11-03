@@ -46,6 +46,7 @@
             <option value="$PROJECT_DIR$/examples/text-platformer" />
             <option value="$PROJECT_DIR$/examples/triangle" />
             <option value="$PROJECT_DIR$/examples/ui-tests" />
+            <option value="$PROJECT_DIR$/examples/warriors" />
             <option value="$PROJECT_DIR$/ktor-server" />
             <option value="$PROJECT_DIR$/voxel-world" />
             <option value="$PROJECT_DIR$/website" />
