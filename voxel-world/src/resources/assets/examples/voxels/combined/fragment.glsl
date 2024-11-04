@@ -10,16 +10,24 @@ uniform float far;
 struct Camera {
     vec3 position;
 };
+
 struct Light {
     vec4 color;
     vec3 position;
 };
+
 Light lightOf(vec4 color, vec3 position) {
     Light light;
     light.color = color;
     light.position = position;
     return light;
 }
+
+struct ShadowMapInfo {
+    vec3 position,rotation;
+    mat4 view,projection;
+    float fov,aspect,near,far;
+};
 
 uniform sampler2D positionBuffer;
 uniform sampler2D normalBuffer;
@@ -30,7 +38,9 @@ uniform sampler2D occlusionBuffer;
 uniform sampler2D diffuseMap;
 uniform sampler2D normalMap;
 uniform sampler2D skybox;
+uniform sampler2D shadowMap;
 uniform Camera camera;
+uniform ShadowMapInfo shadowMapInfo;
 
 void blinPhong(vec3 lightDir, vec3 cameraDir, vec3 normal, Light light, out vec3 ambient, out vec3 diffuse, out vec3 specular) {
     //diffuse

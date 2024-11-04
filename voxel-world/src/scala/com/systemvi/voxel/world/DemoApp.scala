@@ -19,7 +19,7 @@ import org.joml.{Vector2f, Vector3f, Vector3i, Vector4f}
 
 object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
 
-  val numberOfChunks = Vector3i(2, 9, 2)
+  val numberOfChunks = Vector3i(2, 1, 2)
 
   val generator: WorldGenerator = PerlinWorldGenerator()
   val world: World = World(numberOfChunks)
@@ -207,6 +207,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     diffuseMap.bind(6)
     normalMap.bind(7)
     skyboxTexture.bind(8)
+    shadowMapRenderer.shadowMap.bind(9)
     combinedViewer.setUniform("view", viewerCamera.view)
     combinedViewer.setUniform("projection", viewerCamera.projection)
     combinedViewer.setUniform("positionBuffer", 0)
@@ -218,19 +219,28 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     combinedViewer.setUniform("diffuseMap", 6)
     combinedViewer.setUniform("normalMap", 7)
     combinedViewer.setUniform("skybox", 8)
+    combinedViewer.setUniform("shadowMap", 9)
     combinedViewer.setUniform("camera.position", controller.camera.position)
     combinedViewer.setUniform("rect", Vector4f(0, 0, width, height))
     combinedViewer.setUniform("far", far)
     combinedViewer.setUniform("near", near)
+    combinedViewer.setUniform("shadowMapInfo.position",shadowMapRenderer.light.position)
+    combinedViewer.setUniform("shadowMapInfo.rotation",shadowMapRenderer.light.rotation)
+    combinedViewer.setUniform("shadowMapInfo.view",shadowMapRenderer.getView)
+    combinedViewer.setUniform("shadowMapInfo.projection",shadowMapRenderer.getProjection)
+    combinedViewer.setUniform("shadowMapInfo.fov",shadowMapRenderer.light.projection.fov)
+    combinedViewer.setUniform("shadowMapInfo.aspect",shadowMapRenderer.light.projection.aspect)
+    combinedViewer.setUniform("shadowMapInfo.near",shadowMapRenderer.light.projection.near)
+    combinedViewer.setUniform("shadowMapInfo.far",shadowMapRenderer.light.projection.far)
     combinedViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
     frameBuffer.end()
 
-    //    toneMapper.draw(
-    //      texture = hdrTexture,
-    //      size = Vector2f(width, height),
-    //      view = viewerCamera.view,
-    //      projection = viewerCamera.projection,
-    //      rect = Vector4f(width / 4, 3 * height / 4, width / 2, -height / 2)
-    //    )
+        toneMapper.draw(
+          texture = hdrTexture,
+          size = Vector2f(width, height),
+          view = viewerCamera.view,
+          projection = viewerCamera.projection,
+          rect = Vector4f(width / 4, 3 * height / 4, width / 2, -height / 2)
+        )
   }
 }

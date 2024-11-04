@@ -95,31 +95,26 @@ class ShadowMapRenderer(width: Int, height: Int, val light: Light) {
     elementBuffer.setData(elementData)
   }
 
+  def getView: Matrix4f = Matrix4f().rotateXYZ(
+    -light.rotation.x,
+    -light.rotation.y,
+    -light.rotation.z
+  ).translate(
+    -light.position.x,
+    -light.position.y,
+    -light.position.z,
+  )
+
+  def getProjection: Matrix4f = Matrix4f().perspective(
+    light.projection.fov,
+    light.projection.aspect,
+    light.projection.near,
+    light.projection.far
+  )
+
   def drawUploaded(): Unit = {
-    //    val view = Matrix4f().translate(
-    //      -light.position.x,
-    //      -light.position.y,
-    //      -light.position.z,
-    //    ).rotateXYZ(
-    //      -light.rotation.x,
-    //      -light.rotation.y,
-    //      -light.rotation.z
-    //    )
-    val view = Matrix4f().rotateXYZ(
-      -light.rotation.x,
-      -light.rotation.y,
-      -light.rotation.z
-    ).translate(
-      -light.position.x,
-      -light.position.y,
-      -light.position.z,
-    )
-    val projection = Matrix4f().perspective(
-      light.projection.fov,
-      light.projection.aspect,
-      light.projection.near,
-      light.projection.far
-    )
+    val view = getView
+    val projection = getProjection
 
     frameBuffer.begin()
     Utils.clearDepth()
