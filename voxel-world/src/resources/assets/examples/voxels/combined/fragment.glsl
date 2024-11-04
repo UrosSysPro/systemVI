@@ -4,6 +4,9 @@ out vec4 FragColor;
 
 in vec2 uv;
 
+uniform float near;
+uniform float far;
+
 struct Camera {
     vec3 position;
 };
@@ -42,7 +45,6 @@ void blinPhong(vec3 lightDir, vec3 cameraDir, vec3 normal, Light light, out vec3
     ambient=vec3(ambientF);
     diffuse=vec3(diffuseF);
     specular=vec3(specularF);
-//    return vec3(ambient) + vec3(diffuse + specular) * light.color.rgb;
 }
 
 void main() {
@@ -55,7 +57,6 @@ void main() {
     vec3 bitangent = cross(normal, tangent);
     mat3 tbn = mat3(tangent, bitangent, normal);
 
-    float near = 0.1, far = 100.0;
     float depth = texture(depthBuffer, screenSamplePoint).r;
     depth = (2.0 * near) / (far + near - depth * (far - near));
 
@@ -72,8 +73,6 @@ void main() {
     vec3 ambient,diffuse,specular;
     blinPhong(lightDir,cameraDir,normal,light,ambient,diffuse,specular);
     vec3 color = (ambient + diffuse + specular) * occlusion * albedo.xyz;
-//    vec3 color = blinPhong(lightDir, cameraDir, normal, light) * occlusion * albedo.xyz;
-//    vec3 color = blinPhong(lightDir, cameraDir, normal, light)*albedo.xyz;
 
     if (depth > 0.99)color = skybox;
 

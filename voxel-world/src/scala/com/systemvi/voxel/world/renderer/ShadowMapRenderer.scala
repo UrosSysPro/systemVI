@@ -5,17 +5,21 @@ import com.systemvi.engine.model.VertexAttribute
 import com.systemvi.engine.shader.{ElementsDataType, Primitive, Shader}
 import com.systemvi.engine.texture.{Format, FrameBuffer, Texture}
 import com.systemvi.engine.ui.utils.data.Colors
-import com.systemvi.voxel.world.world2.{BlockFace, BlockSide}
+import com.systemvi.engine.utils.Utils
+import com.systemvi.voxel.world.world2.BlockFace
 import org.joml.{Matrix4f, Vector3f, Vector4f}
 
+case class Projection(aspect: Float, fov: Float, near: Float, far: Float)
+
 case class Light(
-                  position:Vector3f=Vector3f(),
-                  rotation:Vector3f=Vector3f(),
-                  color:Vector4f=Colors.white,
-                  attenuation:Vector3f=Vector3f(0,0,1)
+                  position: Vector3f = Vector3f(),
+                  rotation: Vector3f = Vector3f(),
+                  color: Vector4f = Colors.white,
+                  attenuation: Vector3f = Vector3f(0, 0, 1),
+                  projection: Projection = Projection(aspect = 800f / 600f, fov = Math.PI.toFloat / 3f, near = 0.1f, far = 100f)
                 )
 
-class ShadowMapRenderer(width: Int, height: Int,val light:Light) {
+class ShadowMapRenderer(width: Int, height: Int, val light: Light) {
   val shadowMap: Texture = Texture.builder()
     .format(Format.DEPTH32)
     .width(width)
@@ -51,10 +55,6 @@ class ShadowMapRenderer(width: Int, height: Int,val light:Light) {
 
   def draw(faces: List[BlockFace]): Unit = this.faces ++= faces
 
-//  def view(mat: Matrix4f): Unit = view.set(mat)
-
-//  def projection(mat: Matrix4f): Unit = projection.set(mat)
-
   def flush(): Unit = {
     upload()
     drawUploaded()
@@ -70,11 +70,12 @@ class ShadowMapRenderer(width: Int, height: Int,val light:Light) {
     val vertexData = faces.flatMap { face =>
       val p = face.worldPosition
       val sideIndex = face.side.index
+      val s = 1f
       List[Float](
-        p.x, p.y, p.z, sideIndex,
-        p.x, p.y, p.z, sideIndex,
-        p.x, p.y, p.z, sideIndex,
-        p.x, p.y, p.z, sideIndex
+        p.x, p.y, p.z, 0, 0, sideIndex,
+        p.x, p.y, p.z, s, 0, sideIndex,
+        p.x, p.y, p.z, 0, s, sideIndex,
+        p.x, p.y, p.z, s, s, sideIndex
       )
     }.toArray
     val elementData = faces.zipWithIndex.flatMap { (face, index) =>
@@ -95,16 +96,39 @@ class ShadowMapRenderer(width: Int, height: Int,val light:Light) {
   }
 
   def drawUploaded(): Unit = {
+    val view = Matrix4f().translate(
+      -light.position.x,
+      -light.position.y,
+      -light.position.z,
+    ).rotationXYZ(
+      -light.rotation.x,
+      -light.rotation.y,
+      -light.rotation.z
+    )
+    val projection = Matrix4f().perspective(
+      light.projection.fov,
+      light.projection.aspect,
+      light.projection.near,
+      light.projection.far
+    )
+
+    frameBuffer.begin()
+    Utils.clearDepth()
+    Utils.enableDepthTest()
+    Utils.enableFaceCulling()
     vertexArray.bind()
     shader.use()
-//    shader.setUniform("view", view)
-//    shader.setUniform("projection", projection)
+    shader.setUniform("view", view)
+    shader.setUniform("projection", projection)
     shader.drawElements(
       Primitive.TRIANGLES,
       faces.length * 2,
       ElementsDataType.UNSIGNED_INT,
       3
     )
+    Utils.disableFaceCulling()
+    Utils.disableDepthTest()
+    frameBuffer.end()
   }
 
   def clear(): Unit = {

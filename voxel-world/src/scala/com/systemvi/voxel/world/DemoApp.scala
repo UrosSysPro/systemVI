@@ -15,11 +15,11 @@ import com.systemvi.voxel.world.debug.*
 import com.systemvi.voxel.world.generators.{PerlinWorldGenerator, WorldGenerator}
 import com.systemvi.voxel.world.renderer.{BlockFaceRenderer, Light, ShadowMapRenderer, SkyBoxRenderer}
 import com.systemvi.voxel.world.world2.{Chunk, World, WorldCache}
-import org.joml.{Vector2f, Vector3i, Vector4f}
+import org.joml.{Vector2f, Vector3f, Vector3i, Vector4f}
 
 object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
 
-  val numberOfChunks = Vector3i(2, 1, 2)
+  val numberOfChunks = Vector3i(2, 9,2)
 
   val generator: WorldGenerator = PerlinWorldGenerator()
   val world: World = World(numberOfChunks)
@@ -50,7 +50,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
   var combinedViewer: Shader = null
 
   val near = 0.1f
-  val far = 100f
+  val far = 1000f
 
 
   override def setup(window: Window): Unit = {
@@ -68,6 +68,13 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
 
     gbuffer = GBuffer(width.toInt, height.toInt)
     blockRenderer = BlockFaceRenderer()
+    shadowMapRenderer = ShadowMapRenderer(
+      width = width.toInt,
+      height = height.toInt,
+      light = Light(
+        rotation = Vector3f(0,Math.PI.toFloat/2,0)
+      )
+    )
     skyboxRenderer = SkyBoxRenderer()
     blockRenderer.setRenderTargets(gbuffer.frameBuffer.getAttachments)
     hdrTexture = Texture.builder()
@@ -101,12 +108,16 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
       .file("assets/examples/minecraft/textures/normal.png")
       .build()
 
-    for {
-      col0 <- worldCache.chunkCache
-      col1 <- col0
+    for (
+      col0 <- worldCache.chunkCache;
+      col1 <- col0;
       chunkCache <- col1
-    } blockRenderer.draw(chunkCache.blockFaces)
+    ) {
+      blockRenderer.draw(chunkCache.blockFaces)
+      shadowMapRenderer.draw(chunkCache.blockFaces)
+    }
     blockRenderer.upload()
+    shadowMapRenderer.upload()
 
     viewerCamera = Camera3.builder2d()
       .position(width / 2, height / 2)
@@ -118,7 +129,6 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     uvBufferViewer = UVViewer()
     depthBufferViewer = DepthViewer()
     tbnBufferViewer = TBNViewer()
-    shadowMapRenderer = ShadowMapRenderer(width = width.toInt, height = height.toInt, light = Light())
 
     toneMapper = ToneMapper()
 
@@ -148,7 +158,10 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     Utils.disableFaceCulling()
     Utils.disableDepthTest()
     gbuffer.end()
-    
+
+    shadowMapRenderer.light.rotation.set(controller.camera.rotation)
+    shadowMapRenderer.light.position.set(controller.camera.position)
+    shadowMapRenderer.drawUploaded()
 
     positionBufferViewer.draw(
       gbuffer.position,
@@ -164,7 +177,8 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
       Vector4f(width / 2, 0, width / 2, height / 2)
     )
     depthBufferViewer.draw(
-      gbuffer.depth,
+//      gbuffer.depth,
+      shadowMapRenderer.shadowMap,
       near,
       far,
       viewerCamera.view,
@@ -204,15 +218,17 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     combinedViewer.setUniform("skybox", 8)
     combinedViewer.setUniform("camera.position", controller.camera.position)
     combinedViewer.setUniform("rect", Vector4f(0, 0, width, height))
+    combinedViewer.setUniform("far",far)
+    combinedViewer.setUniform("near",near)
     combinedViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
     frameBuffer.end()
 
-    toneMapper.draw(
-      texture = hdrTexture,
-      size = Vector2f(width, height),
-      view = viewerCamera.view,
-      projection = viewerCamera.projection,
-      rect = Vector4f(width / 4, 3 * height / 4, width / 2, -height / 2)
-    )
+//    toneMapper.draw(
+//      texture = hdrTexture,
+//      size = Vector2f(width, height),
+//      view = viewerCamera.view,
+//      projection = viewerCamera.projection,
+//      rect = Vector4f(width / 4, 3 * height / 4, width / 2, -height / 2)
+//    )
   }
 }
