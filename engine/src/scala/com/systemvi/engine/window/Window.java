@@ -209,6 +209,16 @@ public class Window {
         return glGetString(GL_SHADING_LANGUAGE_VERSION);
     }
     
+    public void setTitle(String title){
+        glfwSetWindowTitle(id, title);
+    }
+    public void setSize(int width, int height){
+        glfwSetWindowSize(id, width, height);
+    }
+    public void setPosition(int x, int y){
+        glfwSetWindowPos(id,x,y);
+    }
+    
     public static class Builder{
         private int width=-1,height=-1;
         private String title="";

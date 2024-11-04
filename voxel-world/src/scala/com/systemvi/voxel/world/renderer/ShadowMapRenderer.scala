@@ -96,14 +96,23 @@ class ShadowMapRenderer(width: Int, height: Int, val light: Light) {
   }
 
   def drawUploaded(): Unit = {
-    val view = Matrix4f().translate(
-      -light.position.x,
-      -light.position.y,
-      -light.position.z,
-    ).rotationXYZ(
+    //    val view = Matrix4f().translate(
+    //      -light.position.x,
+    //      -light.position.y,
+    //      -light.position.z,
+    //    ).rotateXYZ(
+    //      -light.rotation.x,
+    //      -light.rotation.y,
+    //      -light.rotation.z
+    //    )
+    val view = Matrix4f().rotateXYZ(
       -light.rotation.x,
       -light.rotation.y,
       -light.rotation.z
+    ).translate(
+      -light.position.x,
+      -light.position.y,
+      -light.position.z,
     )
     val projection = Matrix4f().perspective(
       light.projection.fov,
