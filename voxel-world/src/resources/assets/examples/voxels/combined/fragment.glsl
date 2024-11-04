@@ -1,5 +1,7 @@
 #version 330
 
+#define output(a) FragColor=a;return;
+
 out vec4 FragColor;
 
 in vec2 uv;
@@ -81,15 +83,22 @@ void main() {
     vec3 cameraDir = normalize(camera.position - position);
 
     vec4 shadowMapProjectionSpace=shadowMapInfo.projection*shadowMapInfo.view*vec4(position,1.0);
-//    shadowMapProjectionSpace.xy=texture(shadowMap,shadowMapProjectionSpace.xy).xy;
-//    shadowMapProjectionSpace.xy*=vec2(0.5);
-//    shadowMapProjectionSpace.xy+=vec2(0.5);
-    shadowMapProjectionSpace.z=(2.0 * shadowMapInfo.near) / (shadowMapInfo.far + shadowMapInfo.near - shadowMapProjectionSpace.z * (shadowMapInfo.far - shadowMapInfo.near));
+    shadowMapProjectionSpace.xyz/=shadowMapProjectionSpace.w;
+    shadowMapProjectionSpace.xy*=vec2(0.5);
+    shadowMapProjectionSpace.xy+=vec2(0.5);
+    float shadowMapDepth=texture(shadowMap,shadowMapProjectionSpace.xy).x;
+    float shadowNear=0.1,shadowFar=100.0;
+    shadowMapDepth=(2.0 * shadowNear) / (shadowFar + shadowNear - shadowMapDepth * (shadowFar - shadowNear));
+    output(vec4(shadowMapDepth))
+    float shadowMapProjectionDepth=0;
+    shadowMapProjectionDepth=(2.0 * shadowMapInfo.near) / (shadowMapInfo.far + shadowMapInfo.near - shadowMapProjectionSpace.z * (shadowMapInfo.far - shadowMapInfo.near));
 
     vec3 ambient,diffuse,specular;
     blinPhong(lightDir,cameraDir,normal,light,ambient,diffuse,specular);
     vec3 color = (ambient + diffuse + specular) * occlusion * albedo.xyz;
-//    vec3 color = (ambient + diffuse + specular) * occlusion * shadowMapProjectionSpace.xyz;
+    //vec3 color = (ambient + diffuse + specular) * occlusion * shadowMapProjectionSpace.xyz;
+    //vec3 color = (ambient + diffuse + specular) * occlusion * vec3(shadowMapDepth);
+    //vec3 color = (ambient + diffuse + specular) * occlusion * vec3(shadowMapProjectionDepth);
 
     if (depth > 0.99)color = skybox;
 
