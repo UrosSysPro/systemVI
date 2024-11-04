@@ -29,14 +29,20 @@ uniform sampler2D normalMap;
 uniform sampler2D skybox;
 uniform Camera camera;
 
-vec3 blinPhong(vec3 lightDir, vec3 cameraDir, vec3 normal, Light light) {
-    float diffuse = max(0.0, dot(lightDir, normal));
+void blinPhong(vec3 lightDir, vec3 cameraDir, vec3 normal, Light light, out vec3 ambient, out vec3 diffuse, out vec3 specular) {
+    //diffuse
+    float diffuseF = max(0.0, dot(lightDir, normal));
     vec3 halfDir = normalize(lightDir + cameraDir);
-    float specular = max(0.0, dot(halfDir, normal));
-    specular = pow(specular, 32);
+    //specular
+    float specularF = max(0.0, dot(halfDir, normal));
+    specularF = pow(specularF, 32);
     //ambient
-    float ambient = 0.2;
-    return vec3(ambient) + vec3(diffuse + specular) * light.color.rgb;
+    float ambientF = 0.2;
+
+    ambient=vec3(ambientF);
+    diffuse=vec3(diffuseF);
+    specular=vec3(specularF);
+//    return vec3(ambient) + vec3(diffuse + specular) * light.color.rgb;
 }
 
 void main() {
@@ -63,7 +69,9 @@ void main() {
     vec3 lightDir = normalize(light.position - position);
     vec3 cameraDir = normalize(camera.position - position);
 
-    vec3 color = blinPhong(lightDir, cameraDir, normal, light) * occlusion * albedo.xyz;
+    vec3 ambient,diffuse,specular;
+    blinPhong(lightDir,cameraDir,normal,light,ambient,diffuse,specular);
+    vec3 color = (ambient + diffuse + specular) * occlusion * albedo.xyz;
 //    vec3 color = blinPhong(lightDir, cameraDir, normal, light) * occlusion * albedo.xyz;
 //    vec3 color = blinPhong(lightDir, cameraDir, normal, light)*albedo.xyz;
 
