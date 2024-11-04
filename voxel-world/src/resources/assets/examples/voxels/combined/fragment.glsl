@@ -80,9 +80,16 @@ void main() {
     vec3 lightDir = normalize(light.position - position);
     vec3 cameraDir = normalize(camera.position - position);
 
+    vec4 shadowMapProjectionSpace=shadowMapInfo.projection*shadowMapInfo.view*vec4(position,1.0);
+//    shadowMapProjectionSpace.xy=texture(shadowMap,shadowMapProjectionSpace.xy).xy;
+//    shadowMapProjectionSpace.xy*=vec2(0.5);
+//    shadowMapProjectionSpace.xy+=vec2(0.5);
+    shadowMapProjectionSpace.z=(2.0 * shadowMapInfo.near) / (shadowMapInfo.far + shadowMapInfo.near - shadowMapProjectionSpace.z * (shadowMapInfo.far - shadowMapInfo.near));
+
     vec3 ambient,diffuse,specular;
     blinPhong(lightDir,cameraDir,normal,light,ambient,diffuse,specular);
     vec3 color = (ambient + diffuse + specular) * occlusion * albedo.xyz;
+//    vec3 color = (ambient + diffuse + specular) * occlusion * shadowMapProjectionSpace.xyz;
 
     if (depth > 0.99)color = skybox;
 
