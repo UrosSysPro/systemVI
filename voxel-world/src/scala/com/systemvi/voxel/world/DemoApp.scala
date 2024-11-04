@@ -13,7 +13,7 @@ import com.systemvi.engine.window.Window
 import com.systemvi.voxel.world.buffer.GBuffer
 import com.systemvi.voxel.world.debug.*
 import com.systemvi.voxel.world.generators.{PerlinWorldGenerator, WorldGenerator}
-import com.systemvi.voxel.world.renderer.{BlockFaceRenderer, ShadowMapRenderer, SkyBoxRenderer}
+import com.systemvi.voxel.world.renderer.{BlockFaceRenderer, Light, ShadowMapRenderer, SkyBoxRenderer}
 import com.systemvi.voxel.world.world2.{Chunk, World, WorldCache}
 import org.joml.{Vector2f, Vector3i, Vector4f}
 
@@ -118,7 +118,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     uvBufferViewer = UVViewer()
     depthBufferViewer = DepthViewer()
     tbnBufferViewer = TBNViewer()
-//    shadowMapRenderer = ShadowMapRenderer()
+    shadowMapRenderer = ShadowMapRenderer(width = width.toInt, height = height.toInt, light = Light())
 
     toneMapper = ToneMapper()
 

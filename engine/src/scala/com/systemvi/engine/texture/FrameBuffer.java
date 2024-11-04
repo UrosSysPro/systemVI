@@ -39,8 +39,17 @@ public class FrameBuffer {
         id = glGenFramebuffers();
         glBindFramebuffer(GL_FRAMEBUFFER, id);
 
-        width = attachments[0].texture.getWidth();
-        height = attachments[0].texture.getHeight();
+        if(attachments.length>0){
+            width = attachments[0].texture.getWidth();
+            height = attachments[0].texture.getHeight();
+        }else if(depthAttachment!=null){
+            width=depthAttachment.texture.getWidth();
+            height=depthAttachment.texture.getHeight();
+        }else{
+            width=-1;
+            height=-1;
+        }
+       
 
         if (createRenderBuffer) {
             renderBuffer = glGenRenderbuffers();
