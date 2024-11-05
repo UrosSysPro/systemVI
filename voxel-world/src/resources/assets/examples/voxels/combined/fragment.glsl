@@ -1,6 +1,6 @@
 #version 330
 
-#define output(a) FragColor=a;return;
+#define output(a) FragColor = a; return;
 
 out vec4 FragColor;
 
@@ -12,7 +12,7 @@ uniform float far;
 struct Camera {
     vec3 position;
     mat4 view, projection;
-    float far,near;
+    float far, near;
 };
 
 struct Light {
@@ -28,9 +28,9 @@ Light lightOf(vec4 color, vec3 position) {
 }
 
 struct ShadowMapInfo {
-    vec3 position,rotation;
-    mat4 view,projection;
-    float fov,aspect,near,far;
+    vec3 position, rotation;
+    mat4 view, projection;
+    float fov, aspect, near, far;
 };
 
 uniform sampler2D positionBuffer;
@@ -56,9 +56,9 @@ void blinPhong(vec3 lightDir, vec3 cameraDir, vec3 normal, Light light, out vec3
     //ambient
     float ambientF = 0.2;
 
-    ambient=vec3(ambientF);
-    diffuse=vec3(diffuseF);
-    specular=vec3(specularF);
+    ambient = vec3(ambientF);
+    diffuse = vec3(diffuseF);
+    specular = vec3(specularF);
 }
 
 void main() {
@@ -85,34 +85,35 @@ void main() {
     float occlusion = texture(occlusionBuffer, screenSamplePoint).x;
     vec4 albedo = texture(diffuseMap, uvSamplePoint);
 
-
-//    vec4 projectionSpace=camera.projection*camera.view*vec4(position,1.0);
-////    vec4 projectionSpace=camera.view*vec4(position,1.0);
-//    float calculatedDepth=projectionSpace.z;
-//    calculatedDepth/=projectionSpace.w;
-////    calculatedDepth=(2.0 * camera.near) / (camera.far + camera.near - projectionSpace.z * (camera.far - camera.near));
-//    output(vec4(calculatedDepth))
-
     //light i camera dir
     vec3 lightDir = normalize(light.position - position);
     vec3 cameraDir = normalize(camera.position - position);
 
     //reading value from shadow map
-    vec4 shadowMapProjectionSpace=shadowMapInfo.projection*shadowMapInfo.view*vec4(position,1.0);
-    shadowMapProjectionSpace.xyz/=vec3(shadowMapProjectionSpace.w);
-    shadowMapProjectionSpace.xy*=vec2(0.5);
-    shadowMapProjectionSpace.xy+=vec2(0.5);
-//    output(vec4(shadowMapProjectionSpace))
-    float shadowMapDepth=texture(shadowMap,shadowMapProjectionSpace.xy).x;
-    float shadowNear=0.1,shadowFar=1000.0;
-    shadowMapDepth=(2.0 * shadowNear) / (shadowFar + shadowNear - shadowMapDepth * (shadowFar - shadowNear));
-    output(vec4(shadowMapDepth))
+    vec4 shadowMapProjectionSpace = shadowMapInfo.projection * shadowMapInfo.view * vec4(position, 1.0);
+    shadowMapProjectionSpace.xyz /= vec3(shadowMapProjectionSpace.w);
+    shadowMapProjectionSpace.xy *= vec2(0.5);
+    shadowMapProjectionSpace.xy += vec2(0.5);
+    //    output(vec4(shadowMapProjectionSpace))
+    float mapDepth = texture(shadowMap, shadowMapProjectionSpace.xy).r;
+    float screenDepth = shadowMapProjectionSpace.z;
+    float shadowNear = shadowMapInfo.near, shadowFar = shadowMapInfo.far;
+    mapDepth = (2.0 * shadowNear) / (shadowFar + shadowNear - mapDepth * (shadowFar - shadowNear));
+
+    output(vec4(mapDepth))
+//    screenDepth = (2.0 * shadowNear) / (shadowFar + shadowNear - screenDepth * (shadowFar - shadowNear));
+    bool inShadow=screenDepth<mapDepth;
+    if(inShadow){
+        output(vec4(1.0,0.0, 0.0, 1.0))
+    }else{
+        output(vec4(0.0,1.0, 0.0, 1.0))
+    }
     //    float shadowMapProjectionDepth=0;
-//    shadowMapProjectionDepth=(2.0 * shadowMapInfo.near) / (shadowMapInfo.far + shadowMapInfo.near - shadowMapProjectionSpace.z * (shadowMapInfo.far - shadowMapInfo.near));
+    //    shadowMapProjectionDepth=(2.0 * shadowMapInfo.near) / (shadowMapInfo.far + shadowMapInfo.near - shadowMapProjectionSpace.z * (shadowMapInfo.far - shadowMapInfo.near));
 
     //shading
-    vec3 ambient,diffuse,specular;
-    blinPhong(lightDir,cameraDir,normal,light,ambient,diffuse,specular);
+    vec3 ambient, diffuse, specular;
+    blinPhong(lightDir, cameraDir, normal, light, ambient, diffuse, specular);
     vec3 color = (ambient + diffuse + specular) * occlusion * albedo.xyz;
     //vec3 color = (ambient + diffuse + specular) * occlusion * shadowMapProjectionSpace.xyz;
     //vec3 color = (ambient + diffuse + specular) * occlusion * vec3(shadowMapDepth);
