@@ -126,5 +126,5 @@ void main() {
     vertexOut.normal=normal.xyz;
     vertexOut.occlusion=occlusion;
 
-    gl_Position = projection * view * model * vec4(position-0.5 , 0.0, 1.0);
+    gl_Position = projection * view * worldPosition;
 }

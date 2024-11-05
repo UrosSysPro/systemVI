@@ -11,6 +11,8 @@ uniform float far;
 
 struct Camera {
     vec3 position;
+    mat4 view, projection;
+    float far,near;
 };
 
 struct Light {
@@ -64,35 +66,51 @@ void main() {
     vec2 screenSamplePoint = vec2(uv.x, 1.0 - uv.y);
     vec2 uvSamplePoint = texture(uvBuffer, screenSamplePoint).xy;
 
+    //normal tangent bitangent
     vec3 normal = texture(normalBuffer, screenSamplePoint).xyz;
     vec3 tangent = texture(tangentBuffer, screenSamplePoint).xyz;
     vec3 bitangent = cross(normal, tangent);
     mat3 tbn = mat3(tangent, bitangent, normal);
+    normal = tbn * (texture(normalMap, uvSamplePoint).xyz * vec3(2.0) - vec3(1.0));
 
+    //depth from depth buffer
     float depth = texture(depthBuffer, screenSamplePoint).r;
     depth = (2.0 * near) / (far + near - depth * (far - near));
 
+    //value from skybox
     vec3 skybox = texture(skybox, screenSamplePoint).xyz;
 
+    //position occlusion albedo
     vec3 position = texture(positionBuffer, screenSamplePoint).xyz;
     float occlusion = texture(occlusionBuffer, screenSamplePoint).x;
     vec4 albedo = texture(diffuseMap, uvSamplePoint);
-    normal = tbn * (texture(normalMap, uvSamplePoint).xyz * vec3(2.0) - vec3(1.0));
 
+
+//    vec4 projectionSpace=camera.projection*camera.view*vec4(position,1.0);
+////    vec4 projectionSpace=camera.view*vec4(position,1.0);
+//    float calculatedDepth=projectionSpace.z;
+//    calculatedDepth/=projectionSpace.w;
+////    calculatedDepth=(2.0 * camera.near) / (camera.far + camera.near - projectionSpace.z * (camera.far - camera.near));
+//    output(vec4(calculatedDepth))
+
+    //light i camera dir
     vec3 lightDir = normalize(light.position - position);
     vec3 cameraDir = normalize(camera.position - position);
 
+    //reading value from shadow map
     vec4 shadowMapProjectionSpace=shadowMapInfo.projection*shadowMapInfo.view*vec4(position,1.0);
-    shadowMapProjectionSpace.xyz/=shadowMapProjectionSpace.w;
+    shadowMapProjectionSpace.xyz/=vec3(shadowMapProjectionSpace.w);
     shadowMapProjectionSpace.xy*=vec2(0.5);
     shadowMapProjectionSpace.xy+=vec2(0.5);
+//    output(vec4(shadowMapProjectionSpace))
     float shadowMapDepth=texture(shadowMap,shadowMapProjectionSpace.xy).x;
-    float shadowNear=0.1,shadowFar=100.0;
+    float shadowNear=0.1,shadowFar=1000.0;
     shadowMapDepth=(2.0 * shadowNear) / (shadowFar + shadowNear - shadowMapDepth * (shadowFar - shadowNear));
     output(vec4(shadowMapDepth))
-    float shadowMapProjectionDepth=0;
-    shadowMapProjectionDepth=(2.0 * shadowMapInfo.near) / (shadowMapInfo.far + shadowMapInfo.near - shadowMapProjectionSpace.z * (shadowMapInfo.far - shadowMapInfo.near));
+    //    float shadowMapProjectionDepth=0;
+//    shadowMapProjectionDepth=(2.0 * shadowMapInfo.near) / (shadowMapInfo.far + shadowMapInfo.near - shadowMapProjectionSpace.z * (shadowMapInfo.far - shadowMapInfo.near));
 
+    //shading
     vec3 ambient,diffuse,specular;
     blinPhong(lightDir,cameraDir,normal,light,ambient,diffuse,specular);
     vec3 color = (ambient + diffuse + specular) * occlusion * albedo.xyz;
