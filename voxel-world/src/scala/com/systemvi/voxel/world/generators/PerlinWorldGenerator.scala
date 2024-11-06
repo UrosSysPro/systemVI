@@ -8,9 +8,10 @@ class PerlinWorldGenerator extends WorldGenerator {
   val noise=Perlin2()
 
   override def get(worldPosition: Vector3i): Block = {
-    val base=5
-    val variation=10
-    val floorLevel:Int=(base+noise.get(Vector2f(worldPosition.x.toFloat/16,worldPosition.z.toFloat/16))*variation).toInt
+    val base=50f
+    val variation=100f
+    val scale=0.5f
+    val floorLevel:Int=(base+noise.get(Vector2f(worldPosition.x.toFloat/16*scale,worldPosition.z.toFloat/16*scale))*variation).toInt
     floorLevel match
       case y:Int if y==worldPosition.y=>Block.DIRT
       case y:Int if y>worldPosition.y=>Block.STONE

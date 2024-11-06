@@ -19,7 +19,7 @@ import org.joml.{Vector2f, Vector3f, Vector3i, Vector4f}
 
 object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
 
-  val numberOfChunks = Vector3i(2, 1, 2)
+  val numberOfChunks = Vector3i(10, 10, 10)
 
   val generator: WorldGenerator = PerlinWorldGenerator()
   val world: World = World(numberOfChunks)
@@ -72,7 +72,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
       width = width.toInt,
       height = height.toInt,
       light = Light(
-        position = Vector3f(-10, 30, -10),
+        position = Vector3f(-50, 200, -50),
         rotation = Vector3f(-Math.PI.toFloat / 4f, -Math.PI.toFloat * 3f / 4f, 0),
         projection = Projection(width / height, Math.PI.toFloat / 3f, 0.1f, 50f)
       )
@@ -236,6 +236,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     combinedViewer.setUniform("shadowMapInfo.aspect",shadowMapRenderer.light.projection.aspect)
     combinedViewer.setUniform("shadowMapInfo.near",shadowMapRenderer.light.projection.near)
     combinedViewer.setUniform("shadowMapInfo.far",shadowMapRenderer.light.projection.far)
+    combinedViewer.setUniform("shadowMapInfo.bias",0.0001f)
     combinedViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
     frameBuffer.end()
 
@@ -244,7 +245,8 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
           size = Vector2f(width, height),
           view = viewerCamera.view,
           projection = viewerCamera.projection,
-          rect = Vector4f(width /2, height / 4, width / 2, height / 2)
+//          rect = Vector4f(width /2, height / 4, width / 2, height / 2)
+          rect = Vector4f(0,0,width,height)
         )
   }
 }

@@ -30,7 +30,7 @@ Light lightOf(vec4 color, vec3 position) {
 struct ShadowMapInfo {
     vec3 position, rotation;
     mat4 view, projection;
-    float fov, aspect, near, far;
+    float fov, aspect, near, far,bias;
 };
 
 uniform sampler2D positionBuffer;
@@ -62,7 +62,7 @@ void blinPhong(vec3 lightDir, vec3 cameraDir, vec3 normal, Light light, out vec3
 }
 
 void main() {
-    Light light = lightOf(vec4(1.0), vec3(0.0, 30.0, 0.0));
+    Light light = lightOf(vec4(1.0), shadowMapInfo.position);
     vec2 screenSamplePoint = vec2(uv.x, uv.y);
     vec2 uvSamplePoint = texture(uvBuffer, screenSamplePoint).xy;
 
@@ -92,31 +92,19 @@ void main() {
     //reading value from shadow map
     vec4 shadowMapProjectionSpace = shadowMapInfo.projection * shadowMapInfo.view * vec4(position, 1.0);
     shadowMapProjectionSpace.xyz /= vec3(shadowMapProjectionSpace.w);
-    shadowMapProjectionSpace.xy *= vec2(0.5);
-    shadowMapProjectionSpace.xy += vec2(0.5);
-    //        output(vec4(shadowMapProjectionSpace))
-    float mapDepth = texture(shadowMap, shadowMapProjectionSpace.xy).r;
-//    float mapDepth = texture(shadowMap, uvSamplePoint).r;
-    float screenDepth = shadowMapProjectionSpace.z;
-    float shadowNear = shadowMapInfo.near, shadowFar = shadowMapInfo.far;
-    mapDepth = (2.0 * shadowNear) / (shadowFar + shadowNear - mapDepth * (shadowFar - shadowNear));
-    screenDepth =(2.0 * shadowNear) / (shadowFar + shadowNear - screenDepth * (shadowFar - shadowNear));
+    shadowMapProjectionSpace.xyz *= vec3(0.5);
+    shadowMapProjectionSpace.xyz += vec3(0.5);
 
-    output(vec4(screenDepth))
-//    output(vec4(mapDepth))
-    float diff=abs(screenDepth-mapDepth);
-    if (diff>0.1){
-        output(vec4(1.0,0.0, 0.0, 1.0))
-    } else {
-        output(vec4(0.0,1.0, 0.0, 1.0))
-    }
-    //    float shadowMapProjectionDepth=0;
-    //    shadowMapProjectionDepth=(2.0 * shadowMapInfo.near) / (shadowMapInfo.far + shadowMapInfo.near - shadowMapProjectionSpace.z * (shadowMapInfo.far - shadowMapInfo.near));
+    float shadowNear = shadowMapInfo.near, shadowFar = shadowMapInfo.far;
+    float screenDepth = shadowMapProjectionSpace.z;
+
+    float mapDepth = texture(shadowMap, shadowMapProjectionSpace.xy).r;
+    float inShadow=float(screenDepth-shadowMapInfo.bias<mapDepth);
 
     //shading
     vec3 ambient, diffuse, specular;
     blinPhong(lightDir, cameraDir, normal, light, ambient, diffuse, specular);
-    vec3 color = (ambient + diffuse + specular) * occlusion * albedo.xyz;
+    vec3 color = (ambient + (diffuse + specular)*inShadow) * occlusion * albedo.xyz;
     //vec3 color = (ambient + diffuse + specular) * occlusion * shadowMapProjectionSpace.xyz;
     //vec3 color = (ambient + diffuse + specular) * occlusion * vec3(shadowMapDepth);
     //vec3 color = (ambient + diffuse + specular) * occlusion * vec3(shadowMapProjectionDepth);
