@@ -74,7 +74,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
       light = Light(
         position = Vector3f(-50, 200, -50),
         rotation = Vector3f(-Math.PI.toFloat / 4f, -Math.PI.toFloat * 3f / 4f, 0),
-        projection = Projection(width / height, Math.PI.toFloat / 3f, 0.1f, 50f)
+        projection = Projection(width / height, Math.PI.toFloat / 3f, 0.1f, 1000f)
       )
     )
     skyboxRenderer = SkyBoxRenderer()
