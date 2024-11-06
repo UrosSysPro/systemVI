@@ -125,7 +125,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     viewerCamera = Camera3.builder2d()
       .position(width / 2, height / 2)
       .size(width, height)
-      .scale(1, -1)
+      .scale(1, 1)
       .build()
 
     positionBufferViewer = PositionViewer(Vector3i(numberOfChunks).mul(Chunk.size))
@@ -244,7 +244,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
           size = Vector2f(width, height),
           view = viewerCamera.view,
           projection = viewerCamera.projection,
-          rect = Vector4f(width / 4, 3 * height / 4, width / 2, -height / 2)
+          rect = Vector4f(width /2, height / 4, width / 2, height / 2)
         )
   }
 }

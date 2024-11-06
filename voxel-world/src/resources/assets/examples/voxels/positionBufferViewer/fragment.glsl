@@ -9,6 +9,6 @@ uniform sampler2D positionBuffer;
 uniform ivec3 worldSize;
 
 void main(){
-    vec2 samplepoint=vec2(uv.x,1.0-uv.y);
+    vec2 samplepoint=vec2(uv.x,uv.y);
     FragColor=texture(positionBuffer,samplepoint)/vec4(worldSize,1.0);
 }

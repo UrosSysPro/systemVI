@@ -63,7 +63,7 @@ void blinPhong(vec3 lightDir, vec3 cameraDir, vec3 normal, Light light, out vec3
 
 void main() {
     Light light = lightOf(vec4(1.0), vec3(0.0, 30.0, 0.0));
-    vec2 screenSamplePoint = vec2(uv.x, 1.0 - uv.y);
+    vec2 screenSamplePoint = vec2(uv.x, uv.y);
     vec2 uvSamplePoint = texture(uvBuffer, screenSamplePoint).xy;
 
     //normal tangent bitangent

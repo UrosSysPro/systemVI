@@ -7,6 +7,6 @@ in vec2 uv;
 uniform sampler2D textureBuff;
 
 void main(){
-    vec2 samplepoint=vec2(uv.x,1.0-uv.y);
+    vec2 samplepoint=vec2(uv.x,uv.y);
     FragColor=texture(textureBuff,samplepoint)*0.5+0.5;
 }

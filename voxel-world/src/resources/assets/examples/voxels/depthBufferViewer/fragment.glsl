@@ -9,7 +9,7 @@ uniform float near;
 uniform float far;
 
 void main() {
-    vec2 samplepoint = vec2(uv.x, 1.0 - uv.y);
+    vec2 samplepoint = vec2(uv.x, uv.y);
     float depth = texture(depthBuffer, samplepoint).r;
     depth = (2.0 * near) / (far + near - depth * (far - near));
     FragColor = vec4(depth);
