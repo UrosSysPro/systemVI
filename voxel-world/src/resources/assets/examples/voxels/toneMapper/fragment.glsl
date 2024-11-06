@@ -76,7 +76,7 @@ vec3 whiteBalance(vec3 color, float temperature) {
 }
 
 vec3 adjustSaturation(vec3 color, float saturation) {
-    float gray = dot(color, vec3(0.3, 0.59, 0.11)); // luminance (approximation)
+    float gray = dot(color, vec3(0.3, 0.59, 0.11));// luminance (approximation)
     return mix(vec3(gray), color, saturation);
 }
 
@@ -120,16 +120,16 @@ void main() {
     //    vec3 mapped = reinhardToneMapping(hdrColor);
 
     //color correction
-    //    vec3 corrected = mapped;
+    vec3 corrected = mapped;
     //    vec3 corrected = colorRotation(mapped,vec3(0.0,0.0,1.0));
-    vec3 corrected = whiteBalance(mapped, 0.2);
+    //    vec3 corrected = whiteBalance(mapped, 0.2);
     //    vec3 corrected=adjustSaturation(mapped,2);
     //    vec3 corrected=adjustBrightnessContrast(mapped,0.3,2);
     //    vec3 corrected=adjustHue(mapped,100);
 
     //gamma correction
-    //    vec3 gammaCorrected=corrected;
-    vec3 gammaCorrected = gammaCorrection(corrected, 2.2);
+    vec3 gammaCorrected=corrected;
+    //    vec3 gammaCorrected = gammaCorrection(corrected, 2.2);
     //    vec3 gammaCorrected=gammaCorrection(corrected,0.5);
     //    vec3 gammaCorrected=gammaCorrection(corrected,3.5);
 

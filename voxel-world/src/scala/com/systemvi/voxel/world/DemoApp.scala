@@ -180,9 +180,9 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     )
     depthBufferViewer.draw(
       //      gbuffer.depth,
-      shadowMapRenderer.shadowMap,
-      near,
-      far,
+      depthBuffer=shadowMapRenderer.shadowMap,
+      near=shadowMapRenderer.light.projection.near,
+      far=shadowMapRenderer.light.projection.far,
       viewerCamera.view,
       viewerCamera.projection,
       Vector4f(0, height / 2, width / 2, height / 2)

@@ -94,18 +94,20 @@ void main() {
     shadowMapProjectionSpace.xyz /= vec3(shadowMapProjectionSpace.w);
     shadowMapProjectionSpace.xy *= vec2(0.5);
     shadowMapProjectionSpace.xy += vec2(0.5);
-    //    output(vec4(shadowMapProjectionSpace))
+    //        output(vec4(shadowMapProjectionSpace))
     float mapDepth = texture(shadowMap, shadowMapProjectionSpace.xy).r;
+//    float mapDepth = texture(shadowMap, uvSamplePoint).r;
     float screenDepth = shadowMapProjectionSpace.z;
     float shadowNear = shadowMapInfo.near, shadowFar = shadowMapInfo.far;
     mapDepth = (2.0 * shadowNear) / (shadowFar + shadowNear - mapDepth * (shadowFar - shadowNear));
+    screenDepth =(2.0 * shadowNear) / (shadowFar + shadowNear - screenDepth * (shadowFar - shadowNear));
 
-    output(vec4(mapDepth))
-//    screenDepth = (2.0 * shadowNear) / (shadowFar + shadowNear - screenDepth * (shadowFar - shadowNear));
-    bool inShadow=screenDepth<mapDepth;
-    if(inShadow){
+    output(vec4(screenDepth))
+//    output(vec4(mapDepth))
+    float diff=abs(screenDepth-mapDepth);
+    if (diff>0.1){
         output(vec4(1.0,0.0, 0.0, 1.0))
-    }else{
+    } else {
         output(vec4(0.0,1.0, 0.0, 1.0))
     }
     //    float shadowMapProjectionDepth=0;
