@@ -117,6 +117,7 @@ class ShadowMapRenderer(width: Int, height: Int, val light: Light) {
     val projection = getProjection
 
     frameBuffer.begin()
+    Utils.viewport(0,0,width,height)
     Utils.clearDepth()
     Utils.enableDepthTest()
     Utils.enableFaceCulling()
@@ -133,6 +134,7 @@ class ShadowMapRenderer(width: Int, height: Int, val light: Light) {
     Utils.disableFaceCulling()
     Utils.disableDepthTest()
     frameBuffer.end()
+    Utils.viewport(0,0,800,600)
   }
 
   def clear(): Unit = {
