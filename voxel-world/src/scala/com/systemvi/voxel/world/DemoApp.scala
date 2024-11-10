@@ -12,16 +12,16 @@ import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.Window
 import com.systemvi.voxel.world.buffer.GBuffer
 import com.systemvi.voxel.world.debug.*
-import com.systemvi.voxel.world.generators.{PerlinWorldGenerator, WorldGenerator}
+import com.systemvi.voxel.world.generators.{PerlinWorldGenerator, VoronoiWorldGenerator, WorldGenerator}
 import com.systemvi.voxel.world.renderer.{BlockFaceRenderer, Light, Projection, ShadowMapRenderer, SkyBoxRenderer}
 import com.systemvi.voxel.world.world2.{Chunk, World, WorldCache}
 import org.joml.{Vector2f, Vector3f, Vector3i, Vector4f}
 
-object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
+object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
 
-  val numberOfChunks = Vector3i(10, 10, 10)
+  val numberOfChunks = Vector3i(20, 10, 20)
 
-  val generator: WorldGenerator = PerlinWorldGenerator()
+  val generator: WorldGenerator = VoronoiWorldGenerator()
   val world: World = World(numberOfChunks)
   world.generate(generator)
   val worldCache: WorldCache = WorldCache(world)
@@ -52,7 +52,6 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
   val near = 0.1f
   val far = 1000f
 
-
   override def setup(window: Window): Unit = {
     val width = window.getWidth.toFloat
     val height = window.getHeight.toFloat
@@ -69,8 +68,8 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     gbuffer = GBuffer(width.toInt, height.toInt)
     blockRenderer = BlockFaceRenderer()
 
-    val shadowMapWidth=2000
-    val shadowMapHeight=2000
+    val shadowMapWidth=4000
+    val shadowMapHeight=4000
     shadowMapRenderer = ShadowMapRenderer(
       width = shadowMapWidth,
       height = shadowMapHeight,
@@ -121,9 +120,13 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
       blockRenderer.draw(chunkCache.blockFaces)
       shadowMapRenderer.draw(chunkCache.blockFaces)
     }
-    blockRenderer.upload()
+
+    Utils.viewport(0,0,shadowMapRenderer.width,shadowMapRenderer.height)
     shadowMapRenderer.upload()
     shadowMapRenderer.drawUploaded()
+    
+    Utils.viewport(0,0,width.toInt,height.toInt)
+    blockRenderer.upload()
 
     viewerCamera = Camera3.builder2d()
       .position(width / 2, height / 2)
@@ -144,9 +147,6 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
       .build()
 
     emptyVertexArray = VertexArray()
-
-    //    window.setPosition(100,100)
-    //    window.setSize(1600,1200)
   }
 
   override def loop(delta: Float): Unit = {
@@ -188,7 +188,8 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
       far=shadowMapRenderer.light.projection.far,
       viewerCamera.view,
       viewerCamera.projection,
-      Vector4f(0, height / 2, width / 2, height / 2)
+//      Vector4f(0, height / 2, width / 2, height / 2)
+      Vector4f(0, height / 2, height / 2, height / 2)
     )
     tbnBufferViewer.draw(
       texture = gbuffer.occlusion,
@@ -239,7 +240,7 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
     combinedViewer.setUniform("shadowMapInfo.aspect",shadowMapRenderer.light.projection.aspect)
     combinedViewer.setUniform("shadowMapInfo.near",shadowMapRenderer.light.projection.near)
     combinedViewer.setUniform("shadowMapInfo.far",shadowMapRenderer.light.projection.far)
-    combinedViewer.setUniform("shadowMapInfo.bias",0.0001f)
+    combinedViewer.setUniform("shadowMapInfo.bias",0.00001f)
     combinedViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
     frameBuffer.end()
 
@@ -248,8 +249,8 @@ object DemoApp extends Game(3, 3, 60, 800, 600, "Demo Game") {
           size = Vector2f(width, height),
           view = viewerCamera.view,
           projection = viewerCamera.projection,
-//          rect = Vector4f(width /2, height / 4, width / 2, height / 2)
-          rect = Vector4f(0,0,width,height)
+          rect = Vector4f(width /2, height / 4, width / 2, height / 2)
+//          rect = Vector4f(0,0,width,height)
         )
   }
 }

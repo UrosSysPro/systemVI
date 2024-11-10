@@ -4,7 +4,7 @@ import org.joml.{Vector2f, Vector2i, Vector3f, Vector3i}
 
 import scala.util.Random
 
-class Perlin2(gridSize: Vector2i = new Vector2i(10, 10), seed: Int = System.nanoTime().toInt) extends Noise[Vector2f] {
+class Perlin2d(gridSize: Vector2i = new Vector2i(10, 10), seed: Int = System.nanoTime().toInt) extends Noise[Vector2f] {
   private val random: Random = new Random(seed)
   private val grid: Seq[Seq[Vector2f]] =
     for (i <- 0 until gridSize.x) yield
@@ -57,7 +57,7 @@ class Perlin2(gridSize: Vector2i = new Vector2i(10, 10), seed: Int = System.nano
     value
   }
 
-  def apply(gridSize: Vector2i, seed: Int): Perlin2 = new Perlin2(gridSize, seed)
+  def apply(gridSize: Vector2i, seed: Int): Perlin2d = new Perlin2d(gridSize, seed)
 }
 
 class Perlin3(gridSize: Vector3i = new Vector3i(10, 10, 10), seed: Int = System.nanoTime().toInt) extends Noise[Vector3f] {
@@ -115,5 +115,5 @@ class Perlin3(gridSize: Vector3i = new Vector3i(10, 10, 10), seed: Int = System.
     value
   }
 
-  def apply(gridSize: Vector2i, seed: Int): Perlin2 = new Perlin2(gridSize, seed)
+  def apply(gridSize: Vector2i, seed: Int): Perlin2d = new Perlin2d(gridSize, seed)
 }

@@ -2,7 +2,7 @@ package com.systemvi.noise
 
 import com.systemvi.engine.application.Game
 import com.systemvi.engine.camera.Camera3
-import com.systemvi.engine.noise.{Octave2, Perlin2, PerlinNoise, Voronoi2}
+import com.systemvi.engine.noise.{FractalNoise2d, Octave2, OldPerlin2d, PerlinNoise, Voronoi2}
 import com.systemvi.engine.renderers.TextureRenderer
 import com.systemvi.engine.texture.{Format, Texture, TextureData}
 import com.systemvi.engine.ui.utils.data.Colors
@@ -45,12 +45,12 @@ object Main extends Game(3, 3, 60, 800, 600, "Noise") {
     true
 
   private def redraw(width: Int, height: Int): Unit = {
-
+    val fractalNoise=FractalNoise2d.harmonicsPerlin(4)
     val n = 1
     val octaves = for (i <- 1 to n) yield
       val scale = Math.pow(2f, i).toFloat
       Octave2(
-        noise = Perlin2(Vector2i(100,100)),
+        noise = Perlin2d(Vector2i(100,100)),
 //        noise = Voronoi2(Vector2i(10,10)),
         frequency = scale,
 //        amplitude = 1f/scale,
@@ -61,18 +61,20 @@ object Main extends Game(3, 3, 60, 800, 600, "Noise") {
 
     for (i <- 0 until width; j <- 0 until height)
       val point = new Vector2f(i.toFloat * scale, j.toFloat * scale)
-      var value = octaves.foldLeft(0f) {
-        case (acc, octave) =>
-          acc+octave.get(point)
-      }
+//      var value = octaves.foldLeft(0f) {
+//        case (acc, octave) =>
+//          acc+octave.get(point)
+//      }
 
-      value= value match
-        case x if x<0.1 => 0.01
-        case x if x<0.3 => 0.2
-        case x if x<0.5 => 0.5
-        case x if x<0.7 => 0.8
-        case _=>0.99
+//      value= value match
+//        case x if x<0.1 => 0.01
+//        case x if x<0.3 => 0.2
+//        case x if x<0.5 => 0.5
+//        case x if x<0.7 => 0.8
+//        case _=>0.99
 
+      val value=fractalNoise.get(point)
+      
       value match
         case x if x > 1 => textureData.set(i, j, Colors.blue400)
         case x if x < 0 => textureData.set(i, j, Colors.red400)

@@ -19,7 +19,7 @@ case class Light(
                   projection: Projection = Projection(aspect = 800f / 600f, fov = Math.PI.toFloat / 3f, near = 0.1f, far = 100f)
                 )
 
-class ShadowMapRenderer(width: Int, height: Int, val light: Light) {
+class ShadowMapRenderer(val width: Int, val height: Int, val light: Light) {
   val shadowMap: Texture = Texture.builder()
     .format(Format.DEPTH32)
     .width(width)
@@ -117,7 +117,6 @@ class ShadowMapRenderer(width: Int, height: Int, val light: Light) {
     val projection = getProjection
 
     frameBuffer.begin()
-    Utils.viewport(0,0,width,height)
     Utils.clearDepth()
     Utils.enableDepthTest()
     Utils.enableFaceCulling()

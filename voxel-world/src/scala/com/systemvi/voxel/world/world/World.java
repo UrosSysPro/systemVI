@@ -1,14 +1,14 @@
 package com.systemvi.voxel.world.world;
 
-import com.systemvi.engine.noise.Perlin2d;
+import com.systemvi.engine.noise.OldPerlin2d;
 import org.joml.Vector3i;
 
 public class World {
     private Chunk[][][] chunks;
     private ChunkCache[][][] caches;
-    private Perlin2d noise;
+    private OldPerlin2d noise;
     public World(){
-        noise=new Perlin2d((int)System.currentTimeMillis(),100,100);
+        noise=new OldPerlin2d((int)System.currentTimeMillis(),100,100);
         Vector3i worldSize=new Vector3i(8,8,8);
         chunks=new Chunk[worldSize.x][worldSize.y][worldSize.z];
         caches=new ChunkCache[worldSize.x][worldSize.y][worldSize.z];

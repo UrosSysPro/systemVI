@@ -2,7 +2,7 @@ package com.systemvi.test;
 
 import com.systemvi.engine.application.Application;
 import com.systemvi.engine.camera.Camera;
-import com.systemvi.engine.noise.Perlin2d;
+import com.systemvi.engine.noise.OldPerlin2d;
 import com.systemvi.engine.renderers.ShapeRenderer;
 import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
@@ -18,7 +18,7 @@ public class ShapeRendererTest extends Application {
     Camera camera;
     float angle=0;
 
-    Perlin2d noise;
+    OldPerlin2d noise;
     float scale=10;
     int octaves=4;
     @Override
@@ -35,7 +35,7 @@ public class ShapeRendererTest extends Application {
             camera.setScreenSize(width,height);
             camera.update();
         });
-        noise=new Perlin2d((int)System.currentTimeMillis(),2000,2000);
+        noise=new OldPerlin2d((int)System.currentTimeMillis(),2000,2000);
         window.addOnMouseMoveListener((x,y) -> {
             scale=(float)(5+x/800*40);
             octaves=(int)(y/600*4);

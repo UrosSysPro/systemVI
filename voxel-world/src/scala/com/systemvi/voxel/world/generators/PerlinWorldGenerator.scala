@@ -1,11 +1,12 @@
 package com.systemvi.voxel.world.generators
 
-import com.systemvi.engine.noise.Perlin2
+import com.systemvi.engine.noise.{FractalNoise2d, Perlin2d}
 import com.systemvi.voxel.world.world.Block
 import org.joml.{Vector2f, Vector3i}
 
 class PerlinWorldGenerator extends WorldGenerator {
-  val noise=Perlin2()
+  
+  val noise=FractalNoise2d.harmonicsPerlin(4)
 
   override def get(worldPosition: Vector3i): Block = {
     val base=50f

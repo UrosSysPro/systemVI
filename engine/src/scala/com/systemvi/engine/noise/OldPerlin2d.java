@@ -4,9 +4,9 @@ import org.joml.Vector2f;
 
 import java.util.Random;
 
-public class Perlin2d {
+public class OldPerlin2d {
     private Vector2f[][] grid;
-    public Perlin2d(int seed,int width,int height){
+    public OldPerlin2d(int seed, int width, int height){
         Random random=new Random(seed);
         grid=new Vector2f[width][height];
         for(int i=0;i<width;i++){
