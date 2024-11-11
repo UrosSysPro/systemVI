@@ -68,17 +68,17 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
     gbuffer = GBuffer(width.toInt, height.toInt)
     blockRenderer = BlockFaceRenderer()
 
-    val shadowMapWidth=4000
-    val shadowMapHeight=4000
+    val shadowMapWidth = 4000
+    val shadowMapHeight = 4000
     shadowMapRenderer = ShadowMapRenderer(
       width = shadowMapWidth,
       height = shadowMapHeight,
       light = Light(
-        color=Vector3f(1000),
-        attenuation= Vector3f(0.5f,0.5,1.0f),
+        color = Vector3f(1000),
+        attenuation = Vector3f(0.5f, 0.5, 1.0f),
         position = Vector3f(-10, 60, -10),
         rotation = Vector3f(-Math.PI.toFloat / 4f, -Math.PI.toFloat * 3f / 4f, 0),
-        projection = Projection(shadowMapWidth.toFloat/shadowMapHeight.toFloat, Math.PI.toFloat / 3f, 0.1f, 100f)
+        projection = Projection(shadowMapWidth.toFloat / shadowMapHeight.toFloat, Math.PI.toFloat / 3f, 0.1f, 100f)
       )
     )
     skyboxRenderer = SkyBoxRenderer()
@@ -123,11 +123,11 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
       shadowMapRenderer.draw(chunkCache.blockFaces)
     }
 
-    Utils.viewport(0,0,shadowMapRenderer.width,shadowMapRenderer.height)
+    Utils.viewport(0, 0, shadowMapRenderer.width, shadowMapRenderer.height)
     shadowMapRenderer.upload()
     shadowMapRenderer.drawUploaded()
-    
-    Utils.viewport(0,0,width.toInt,height.toInt)
+
+    Utils.viewport(0, 0, width.toInt, height.toInt)
     blockRenderer.upload()
 
     viewerCamera = Camera3.builder2d()
@@ -144,8 +144,8 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
     toneMapper = ToneMapper()
 
     combinedViewer = Shader.builder()
-      .fragment("assets/examples/voxels/combined/fragment.glsl")
-      .vertex("assets/examples/voxels/combined/vertex.glsl")
+      .fragment("assets/examples/voxels/combined_pbr/fragment.glsl")
+      .vertex("assets/examples/voxels/combined_pbr/vertex.glsl")
       .build()
 
     emptyVertexArray = VertexArray()
@@ -185,12 +185,12 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
     )
     depthBufferViewer.draw(
       //      gbuffer.depth,
-      depthBuffer=shadowMapRenderer.shadowMap,
-      near=shadowMapRenderer.light.projection.near,
-      far=shadowMapRenderer.light.projection.far,
+      depthBuffer = shadowMapRenderer.shadowMap,
+      near = shadowMapRenderer.light.projection.near,
+      far = shadowMapRenderer.light.projection.far,
       viewerCamera.view,
       viewerCamera.projection,
-//      Vector4f(0, height / 2, width / 2, height / 2)
+      //      Vector4f(0, height / 2, width / 2, height / 2)
       Vector4f(0, height / 2, height / 2, height / 2)
     )
     tbnBufferViewer.draw(
@@ -234,27 +234,27 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
     combinedViewer.setUniform("rect", Vector4f(0, 0, width, height))
     combinedViewer.setUniform("far", far)
     combinedViewer.setUniform("near", near)
-    combinedViewer.setUniform("shadowMapInfo.position",shadowMapRenderer.light.position)
-    combinedViewer.setUniform("shadowMapInfo.rotation",shadowMapRenderer.light.rotation)
-    combinedViewer.setUniform("shadowMapInfo.view",shadowMapRenderer.getView)
-    combinedViewer.setUniform("shadowMapInfo.projection",shadowMapRenderer.getProjection)
-    combinedViewer.setUniform("shadowMapInfo.fov",shadowMapRenderer.light.projection.fov)
-    combinedViewer.setUniform("shadowMapInfo.aspect",shadowMapRenderer.light.projection.aspect)
-    combinedViewer.setUniform("shadowMapInfo.near",shadowMapRenderer.light.projection.near)
-    combinedViewer.setUniform("shadowMapInfo.far",shadowMapRenderer.light.projection.far)
-    combinedViewer.setUniform("shadowMapInfo.bias",0.000002f)
-    combinedViewer.setUniform("shadowMapInfo.attenuation",shadowMapRenderer.light.attenuation)
-    combinedViewer.setUniform("shadowMapInfo.color",shadowMapRenderer.light.color)
+    combinedViewer.setUniform("shadowMapInfo.position", shadowMapRenderer.light.position)
+    combinedViewer.setUniform("shadowMapInfo.rotation", shadowMapRenderer.light.rotation)
+    combinedViewer.setUniform("shadowMapInfo.view", shadowMapRenderer.getView)
+    combinedViewer.setUniform("shadowMapInfo.projection", shadowMapRenderer.getProjection)
+    combinedViewer.setUniform("shadowMapInfo.fov", shadowMapRenderer.light.projection.fov)
+    combinedViewer.setUniform("shadowMapInfo.aspect", shadowMapRenderer.light.projection.aspect)
+    combinedViewer.setUniform("shadowMapInfo.near", shadowMapRenderer.light.projection.near)
+    combinedViewer.setUniform("shadowMapInfo.far", shadowMapRenderer.light.projection.far)
+    combinedViewer.setUniform("shadowMapInfo.bias", 0.000002f)
+    combinedViewer.setUniform("shadowMapInfo.attenuation", shadowMapRenderer.light.attenuation)
+    combinedViewer.setUniform("shadowMapInfo.color", shadowMapRenderer.light.color)
     combinedViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
     frameBuffer.end()
 
-        toneMapper.draw(
-          texture = hdrTexture,
-          size = Vector2f(width, height),
-          view = viewerCamera.view,
-          projection = viewerCamera.projection,
-          rect = Vector4f(width /2, height / 4, width / 2, height / 2)
-//          rect = Vector4f(0,0,width,height)
-        )
+    toneMapper.draw(
+      texture = hdrTexture,
+      size = Vector2f(width, height),
+      view = viewerCamera.view,
+      projection = viewerCamera.projection,
+      rect = Vector4f(width / 2, height / 4, width / 2, height / 2)
+      //          rect = Vector4f(0,0,width,height)
+    )
   }
 }
