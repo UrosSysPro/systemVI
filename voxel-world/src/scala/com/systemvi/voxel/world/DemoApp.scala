@@ -19,9 +19,9 @@ import org.joml.{Vector2f, Vector3f, Vector3i, Vector4f}
 
 object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
 
-  val numberOfChunks = Vector3i(20, 10, 20)
+  val numberOfChunks = Vector3i(2, 2, 2)
 
-  val generator: WorldGenerator = VoronoiWorldGenerator()
+  val generator: WorldGenerator = PerlinWorldGenerator()
   val world: World = World(numberOfChunks)
   world.generate(generator)
   val worldCache: WorldCache = WorldCache(world)
@@ -61,7 +61,7 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
       .aspect(width / height)
       .far(far)
       .near(near)
-      .speed(20)
+      .speed(5)
       .build()
     setInputProcessor(controller)
 
@@ -74,9 +74,9 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
       width = shadowMapWidth,
       height = shadowMapHeight,
       light = Light(
-        position = Vector3f(-50, 200, -50),
+        position = Vector3f(-10, 60, -10),
         rotation = Vector3f(-Math.PI.toFloat / 4f, -Math.PI.toFloat * 3f / 4f, 0),
-        projection = Projection(shadowMapWidth.toFloat/shadowMapHeight.toFloat, Math.PI.toFloat / 3f, 0.1f, 1000f)
+        projection = Projection(shadowMapWidth.toFloat/shadowMapHeight.toFloat, Math.PI.toFloat / 3f, 0.1f, 100f)
       )
     )
     skyboxRenderer = SkyBoxRenderer()
@@ -240,7 +240,7 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
     combinedViewer.setUniform("shadowMapInfo.aspect",shadowMapRenderer.light.projection.aspect)
     combinedViewer.setUniform("shadowMapInfo.near",shadowMapRenderer.light.projection.near)
     combinedViewer.setUniform("shadowMapInfo.far",shadowMapRenderer.light.projection.far)
-    combinedViewer.setUniform("shadowMapInfo.bias",0.00001f)
+    combinedViewer.setUniform("shadowMapInfo.bias",0.000002f)
     combinedViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
     frameBuffer.end()
 
