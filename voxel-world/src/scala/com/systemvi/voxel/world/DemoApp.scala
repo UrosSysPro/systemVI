@@ -74,6 +74,8 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
       width = shadowMapWidth,
       height = shadowMapHeight,
       light = Light(
+        color=Vector3f(1000),
+        attenuation= Vector3f(0.5f,0.5,1.0f),
         position = Vector3f(-10, 60, -10),
         rotation = Vector3f(-Math.PI.toFloat / 4f, -Math.PI.toFloat * 3f / 4f, 0),
         projection = Projection(shadowMapWidth.toFloat/shadowMapHeight.toFloat, Math.PI.toFloat / 3f, 0.1f, 100f)
@@ -241,6 +243,8 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
     combinedViewer.setUniform("shadowMapInfo.near",shadowMapRenderer.light.projection.near)
     combinedViewer.setUniform("shadowMapInfo.far",shadowMapRenderer.light.projection.far)
     combinedViewer.setUniform("shadowMapInfo.bias",0.000002f)
+    combinedViewer.setUniform("shadowMapInfo.attenuation",shadowMapRenderer.light.attenuation)
+    combinedViewer.setUniform("shadowMapInfo.color",shadowMapRenderer.light.color)
     combinedViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
     frameBuffer.end()
 

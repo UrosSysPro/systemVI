@@ -1,5 +1,7 @@
 #version 330
 
+#define output(a) FragColor = a; return;
+
 out vec4 FragColor;
 
 in vec2 uv;
@@ -26,7 +28,7 @@ Light lightOf(vec4 color, vec3 position) {
 }
 
 struct ShadowMapInfo {
-    vec3 position, rotation, attenuation, color;
+    vec3 position, rotation;
     mat4 view, projection;
     float fov, aspect, near, far,bias;
 };
@@ -57,11 +59,6 @@ void blinPhong(vec3 lightDir, vec3 cameraDir, vec3 normal, Light light, out vec3
     ambient = vec3(ambientF);
     diffuse = vec3(diffuseF);
     specular = vec3(specularF);
-}
-
-float calculateAttenuation(vec3 attenuation,vec3 position, vec3 lightPosition){
-    float x=distance(position,lightPosition);
-    return 1.0/(x*x*attenuation.x+x*attenuation.y+attenuation.z);
 }
 
 void main() {
@@ -107,8 +104,7 @@ void main() {
     //shading
     vec3 ambient, diffuse, specular;
     blinPhong(lightDir, cameraDir, normal, light, ambient, diffuse, specular);
-    float attenuation=calculateAttenuation(shadowMapInfo.attenuation,position,shadowMapInfo.position);
-    vec3 color = (ambient + (diffuse + specular)*vec3(inShadow)*vec3(attenuation)*shadowMapInfo.color) * vec3(occlusion) * albedo.xyz;
+    vec3 color = (ambient + (diffuse + specular)*inShadow) * occlusion * albedo.xyz;
     //vec3 color = (ambient + diffuse + specular) * occlusion * shadowMapProjectionSpace.xyz;
     //vec3 color = (ambient + diffuse + specular) * occlusion * vec3(shadowMapDepth);
     //vec3 color = (ambient + diffuse + specular) * occlusion * vec3(shadowMapProjectionDepth);

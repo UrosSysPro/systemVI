@@ -3,18 +3,19 @@ package com.systemvi.voxel.world.renderer
 import com.systemvi.engine.buffer.{ArrayBuffer, ElementsBuffer, VertexArray}
 import com.systemvi.engine.model.VertexAttribute
 import com.systemvi.engine.shader.{ElementsDataType, Primitive, Shader}
+import com.systemvi.engine.texture.Texture.Repeat
 import com.systemvi.engine.texture.{Format, FrameBuffer, Texture}
 import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.utils.Utils
 import com.systemvi.voxel.world.world2.BlockFace
-import org.joml.{Matrix4f, Vector3f, Vector4f}
+import org.joml.{Matrix4f, Vector3f}
 
 case class Projection(aspect: Float, fov: Float, near: Float, far: Float)
 
 case class Light(
                   position: Vector3f = Vector3f(),
                   rotation: Vector3f = Vector3f(),
-                  color: Vector4f = Colors.white,
+                  color: Vector3f = Vector3f(1.0f),
                   attenuation: Vector3f = Vector3f(0, 0, 1),
                   projection: Projection = Projection(aspect = 800f / 600f, fov = Math.PI.toFloat / 3f, near = 0.1f, far = 100f)
                 )
@@ -24,6 +25,9 @@ class ShadowMapRenderer(val width: Int, val height: Int, val light: Light) {
     .format(Format.DEPTH32)
     .width(width)
     .height(height)
+    .verticalRepeat(Repeat.CLAMP_BORDER)
+    .horizontalRepeat(Repeat.CLAMP_BORDER)
+    .borderColor(Colors.black)
     .build()
   val frameBuffer: FrameBuffer = FrameBuffer.builder()
     .depth(shadowMap)
