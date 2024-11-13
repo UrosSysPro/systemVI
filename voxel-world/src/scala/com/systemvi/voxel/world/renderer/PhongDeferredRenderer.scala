@@ -34,7 +34,7 @@ class PhongDeferredRenderer(
 
   val shader: Shader = Shader.builder()
     .fragment("assets/examples/voxels/combined_pbr/fragment.glsl")
-    .vertex("assets/examples/voxels/combined_pbr/vertex.glsl")
+    .vertex("assets/examples/voxels/textureViewer/vertex.glsl")
     .build()
 
   def draw(rect:Vector4f): Unit = {
