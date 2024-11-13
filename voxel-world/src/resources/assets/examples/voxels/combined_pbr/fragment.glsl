@@ -64,6 +64,9 @@ float calculateAttenuation(vec3 attenuation,vec3 position, vec3 lightPosition){
     return 1.0/(x*x*attenuation.x+x*attenuation.y+attenuation.z);
 }
 
+
+
+
 void main() {
     Light light = lightOf(vec4(1.0), shadowMapInfo.position);
     vec2 screenSamplePoint = vec2(uv.x, uv.y);
@@ -104,14 +107,14 @@ void main() {
     float mapDepth = texture(shadowMap, shadowMapProjectionSpace.xy).r;
     float inShadow=float(screenDepth-shadowMapInfo.bias<mapDepth);
 
-    //shading
+    //blin-phong shading
     vec3 ambient, diffuse, specular;
     blinPhong(lightDir, cameraDir, normal, light, ambient, diffuse, specular);
     float attenuation=calculateAttenuation(shadowMapInfo.attenuation,position,shadowMapInfo.position);
     vec3 color = (ambient + (diffuse + specular)*vec3(inShadow)*vec3(attenuation)*shadowMapInfo.color) * vec3(occlusion) * albedo.xyz;
-    //vec3 color = (ambient + diffuse + specular) * occlusion * shadowMapProjectionSpace.xyz;
-    //vec3 color = (ambient + diffuse + specular) * occlusion * vec3(shadowMapDepth);
-    //vec3 color = (ambient + diffuse + specular) * occlusion * vec3(shadowMapProjectionDepth);
+
+    //pbr shading
+
 
     if (depth > 0.99)color = skybox;
 

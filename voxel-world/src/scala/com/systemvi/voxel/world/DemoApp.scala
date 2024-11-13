@@ -13,7 +13,7 @@ import com.systemvi.engine.window.Window
 import com.systemvi.voxel.world.buffer.GBuffer
 import com.systemvi.voxel.world.debug.*
 import com.systemvi.voxel.world.generators.{PerlinWorldGenerator, VoronoiWorldGenerator, WorldGenerator}
-import com.systemvi.voxel.world.renderer.{BlockFaceRenderer, Light, Projection, ShadowMapRenderer, SkyBoxRenderer}
+import com.systemvi.voxel.world.renderer.{BlockFaceRenderer, Light, PhongDeferredRenderer, Projection, ShadowMapLight, ShadowMapRenderer, SkyBoxRenderer}
 import com.systemvi.voxel.world.world2.{Chunk, World, WorldCache}
 import org.joml.{Vector2f, Vector3f, Vector3i, Vector4f}
 
@@ -27,6 +27,7 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
   val worldCache: WorldCache = WorldCache(world)
   var blockRenderer: BlockFaceRenderer = null
   var skyboxRenderer: SkyBoxRenderer = null
+  var phongDeferredRenderer: PhongDeferredRenderer = null
   var controller: CameraController3 = null
 
   var gbuffer: GBuffer = null
@@ -45,6 +46,7 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
   var depthBufferViewer: DepthViewer = null
   var tbnBufferViewer: TBNViewer = null
   var toneMapper: ToneMapper = null
+  var aoViewer:AOViewer=null
   var shadowMapRenderer: ShadowMapRenderer = null
 
   var combinedViewer: Shader = null
@@ -140,9 +142,32 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
     uvBufferViewer = UVViewer()
     depthBufferViewer = DepthViewer()
     tbnBufferViewer = TBNViewer()
+    aoViewer=AOViewer()
 
     toneMapper = ToneMapper()
 
+    phongDeferredRenderer=PhongDeferredRenderer(
+      gbuffer = gbuffer,
+      diffuseMap = diffuseMap,
+      normalMap = normalMap,
+      skyboxTexture = skyboxTexture,
+      shadowMap = shadowMapRenderer.shadowMap,
+      viewerCamera = viewerCamera,
+      worldCamera = controller.camera,
+      shadowMapLight = ShadowMapLight(
+        position = shadowMapRenderer.light.position,
+        rotation = shadowMapRenderer.light.rotation,
+        view = shadowMapRenderer.getView,
+        projection = shadowMapRenderer.getProjection,
+        fov = shadowMapRenderer.light.projection.fov,
+        near = shadowMapRenderer.light.projection.near,
+        aspect = shadowMapRenderer.light.projection.aspect,
+        far = shadowMapRenderer.light.projection.far,
+        bias = 0.00002f,
+        attenuation = Vector3f(0.5f,0.5f,1.0f),
+        color = shadowMapRenderer.light.color
+      )
+    )
     combinedViewer = Shader.builder()
       .fragment("assets/examples/voxels/combined_pbr/fragment.glsl")
       .vertex("assets/examples/voxels/combined_pbr/vertex.glsl")
@@ -184,16 +209,14 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
       Vector4f(width / 2, 0, width / 2, height / 2)
     )
     depthBufferViewer.draw(
-      //      gbuffer.depth,
       depthBuffer = shadowMapRenderer.shadowMap,
       near = shadowMapRenderer.light.projection.near,
       far = shadowMapRenderer.light.projection.far,
       viewerCamera.view,
       viewerCamera.projection,
-      //      Vector4f(0, height / 2, width / 2, height / 2)
       Vector4f(0, height / 2, height / 2, height / 2)
     )
-    tbnBufferViewer.draw(
+    aoViewer.draw(
       texture = gbuffer.occlusion,
       view = viewerCamera.view,
       projection = viewerCamera.projection,
@@ -208,44 +231,7 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
     skyboxFrameBuffer.end()
 
     frameBuffer.begin()
-    combinedViewer.use()
-    gbuffer.bind()
-    diffuseMap.bind(6)
-    normalMap.bind(7)
-    skyboxTexture.bind(8)
-    shadowMapRenderer.shadowMap.bind(9)
-    combinedViewer.setUniform("view", viewerCamera.view)
-    combinedViewer.setUniform("projection", viewerCamera.projection)
-    combinedViewer.setUniform("positionBuffer", 0)
-    combinedViewer.setUniform("normalBuffer", 1)
-    combinedViewer.setUniform("tangentBuffer", 2)
-    combinedViewer.setUniform("uvBuffer", 3)
-    combinedViewer.setUniform("occlusionBuffer", 4)
-    combinedViewer.setUniform("depthBuffer", 5)
-    combinedViewer.setUniform("diffuseMap", 6)
-    combinedViewer.setUniform("normalMap", 7)
-    combinedViewer.setUniform("skybox", 8)
-    combinedViewer.setUniform("shadowMap", 9)
-    combinedViewer.setUniform("camera.position", controller.camera.position)
-    combinedViewer.setUniform("camera.view", controller.camera.view)
-    combinedViewer.setUniform("camera.projection", controller.camera.projection)
-    combinedViewer.setUniform("camera.far", far)
-    combinedViewer.setUniform("camera.near", near)
-    combinedViewer.setUniform("rect", Vector4f(0, 0, width, height))
-    combinedViewer.setUniform("far", far)
-    combinedViewer.setUniform("near", near)
-    combinedViewer.setUniform("shadowMapInfo.position", shadowMapRenderer.light.position)
-    combinedViewer.setUniform("shadowMapInfo.rotation", shadowMapRenderer.light.rotation)
-    combinedViewer.setUniform("shadowMapInfo.view", shadowMapRenderer.getView)
-    combinedViewer.setUniform("shadowMapInfo.projection", shadowMapRenderer.getProjection)
-    combinedViewer.setUniform("shadowMapInfo.fov", shadowMapRenderer.light.projection.fov)
-    combinedViewer.setUniform("shadowMapInfo.aspect", shadowMapRenderer.light.projection.aspect)
-    combinedViewer.setUniform("shadowMapInfo.near", shadowMapRenderer.light.projection.near)
-    combinedViewer.setUniform("shadowMapInfo.far", shadowMapRenderer.light.projection.far)
-    combinedViewer.setUniform("shadowMapInfo.bias", 0.000002f)
-    combinedViewer.setUniform("shadowMapInfo.attenuation", shadowMapRenderer.light.attenuation)
-    combinedViewer.setUniform("shadowMapInfo.color", shadowMapRenderer.light.color)
-    combinedViewer.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)
+    phongDeferredRenderer.draw(Vector4f(0,0,width,height))
     frameBuffer.end()
 
     toneMapper.draw(
