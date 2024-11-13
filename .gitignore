@@ -10,3 +10,4 @@ out/**
 out/*
 out/
 gradle/
+.kotlin/

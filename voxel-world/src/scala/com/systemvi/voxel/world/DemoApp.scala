@@ -3,7 +3,6 @@ package com.systemvi.voxel.world
 import com.systemvi.engine.application.Game
 import com.systemvi.engine.buffer.VertexArray
 import com.systemvi.engine.camera.{Camera3, CameraController3}
-import com.systemvi.engine.shader.{Primitive, Shader}
 import com.systemvi.engine.texture.Texture.{FilterMag, FilterMin, Repeat}
 import com.systemvi.engine.texture.{Format, FrameBuffer, Texture}
 import com.systemvi.engine.ui.utils.data.Colors
@@ -12,8 +11,8 @@ import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.Window
 import com.systemvi.voxel.world.buffer.GBuffer
 import com.systemvi.voxel.world.debug.*
-import com.systemvi.voxel.world.generators.{PerlinWorldGenerator, VoronoiWorldGenerator, WorldGenerator}
-import com.systemvi.voxel.world.renderer.{BlockFaceRenderer, Light, PhongDeferredRenderer, Projection, ShadowMapLight, ShadowMapRenderer, SkyBoxRenderer}
+import com.systemvi.voxel.world.generators.{PerlinWorldGenerator, WorldGenerator}
+import com.systemvi.voxel.world.renderer.*
 import com.systemvi.voxel.world.world2.{Chunk, World, WorldCache}
 import org.joml.{Vector2f, Vector3f, Vector3i, Vector4f}
 
@@ -45,11 +44,9 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
   var uvBufferViewer: UVViewer = null
   var depthBufferViewer: DepthViewer = null
   var tbnBufferViewer: TBNViewer = null
-  var toneMapper: ToneMapper = null
   var aoViewer:AOViewer=null
+  var toneMapper: ToneMapper = null
   var shadowMapRenderer: ShadowMapRenderer = null
-
-  var combinedViewer: Shader = null
 
   val near = 0.1f
   val far = 1000f
@@ -168,10 +165,6 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
         color = shadowMapRenderer.light.color
       )
     )
-    combinedViewer = Shader.builder()
-      .fragment("assets/examples/voxels/combined_pbr/fragment.glsl")
-      .vertex("assets/examples/voxels/combined_pbr/vertex.glsl")
-      .build()
 
     emptyVertexArray = VertexArray()
   }
