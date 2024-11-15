@@ -113,8 +113,8 @@ void main() {
     vec3 hdrColor = texture(textureBuff, uv).rgb;
 
     //tone mapping
-    vec3 mapped = hdrColor;
-    //    vec3 mapped = acesFilmToneMapping(hdrColor);
+//    vec3 mapped = hdrColor;
+        vec3 mapped = acesFilmToneMapping(hdrColor);
     //    vec3 mapped = exponentialToneMapping(hdrColor);
     //    vec3 mapped = uncharted2ToneMapping(hdrColor);
     //    vec3 mapped = reinhardToneMapping(hdrColor);

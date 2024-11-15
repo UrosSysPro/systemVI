@@ -17,11 +17,16 @@ import com.systemvi.voxel.world.world2.{Chunk, World, WorldCache}
 import org.joml.{Vector2f, Vector3f, Vector3i, Vector4f}
 import org.lwjgl.glfw.GLFW
 
-object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
+case class DemoAppConfig(
+                          generator: WorldGenerator = PerlinWorldGenerator(),
+                          numberOfChunks: Vector3i = Vector3i(2, 2, 2),
+                        )
 
-  val numberOfChunks = Vector3i(2, 2, 2)
+class DemoApp(config:DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Game") {
 
-  val generator: WorldGenerator = PerlinWorldGenerator()
+  val generator: WorldGenerator = config.generator
+  val numberOfChunks: Vector3i = config.numberOfChunks
+
   val world: World = World(numberOfChunks)
   world.generate(generator)
   val worldCache: WorldCache = WorldCache(world)
