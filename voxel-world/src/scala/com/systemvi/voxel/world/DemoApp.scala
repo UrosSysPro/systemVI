@@ -2,19 +2,20 @@ package com.systemvi.voxel.world
 
 import com.systemvi.engine.application.Game
 import com.systemvi.engine.buffer.VertexArray
-import com.systemvi.engine.camera.{Camera3, CameraController3}
+import com.systemvi.engine.camera.{Camera3, CameraController3, ProjectionType}
 import com.systemvi.engine.texture.Texture.{FilterMag, FilterMin, Repeat}
 import com.systemvi.engine.texture.{Format, FrameBuffer, Texture}
 import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
-import com.systemvi.engine.window.Window
+import com.systemvi.engine.window.{InputMultiplexer, Window}
 import com.systemvi.voxel.world.buffer.GBuffer
 import com.systemvi.voxel.world.debug.*
 import com.systemvi.voxel.world.generators.{PerlinWorldGenerator, WorldGenerator}
 import com.systemvi.voxel.world.renderer.*
 import com.systemvi.voxel.world.world2.{Chunk, World, WorldCache}
 import org.joml.{Vector2f, Vector3f, Vector3i, Vector4f}
+import org.lwjgl.glfw.GLFW
 
 object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
 
@@ -29,6 +30,7 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
   var phongDeferredRenderer: PhongDeferredRenderer = null
   var pbrDeferredRenderer: PBRDeferredRenderer = null
   var controller: CameraController3 = null
+  var shadowController: CameraController3 = null
 
   var gbuffer: GBuffer = null
   var hdrTexture: Texture = null
@@ -56,6 +58,9 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
     val width = window.getWidth.toFloat
     val height = window.getHeight.toFloat
 
+    val shadowMapWidth = 4000
+    val shadowMapHeight = 4000
+
     controller = CameraController3.builder()
       .window(window)
       .aspect(width / height)
@@ -63,22 +68,39 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
       .near(near)
       .speed(5)
       .build()
-    setInputProcessor(controller)
+    shadowController = CameraController3.builder()
+      .camera(Camera3.builder3d()
+        .position(-10, 60, -10)
+        .rotation(-Math.PI.toFloat / 4f, -Math.PI.toFloat * 3f / 4f, 0)
+        .aspect(shadowMapWidth.toFloat / shadowMapHeight.toFloat)
+        .fov(Math.PI.toFloat / 3f)
+        .near(0.1f)
+        .far(100.0f)
+        .build())
+      .window(window)
+      .aspect(width / height)
+      .far(far)
+      .near(near)
+      .speed(5)
+      .build()
+    setInputProcessor(InputMultiplexer(
+      shadowController, this
+    ))
 
     gbuffer = GBuffer(width.toInt, height.toInt)
     blockRenderer = BlockFaceRenderer()
 
-    val shadowMapWidth = 4000
-    val shadowMapHeight = 4000
     shadowMapRenderer = ShadowMapRenderer(
       width = shadowMapWidth,
       height = shadowMapHeight,
       light = Light(
         color = Vector3f(1000),
         attenuation = Vector3f(0.5f, 0.5, 1.0f),
-        position = Vector3f(-10, 60, -10),
-        rotation = Vector3f(-Math.PI.toFloat / 4f, -Math.PI.toFloat * 3f / 4f, 0),
-        projection = Projection(shadowMapWidth.toFloat / shadowMapHeight.toFloat, Math.PI.toFloat / 3f, 0.1f, 100f)
+        position = shadowController.camera.position,
+        rotation = shadowController.camera.rotation,
+        projection = shadowController.camera.projectionType match
+          case ProjectionType.Perspective(aspect, fov, near, far) => Projection(aspect, fov, near, far)
+          case _ => Projection(shadowMapWidth.toFloat / shadowMapHeight.toFloat, Math.PI.toFloat / 3f, 0.1f, 100f)
       )
     )
     skyboxRenderer = SkyBoxRenderer()
@@ -125,7 +147,7 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
 
     Utils.viewport(0, 0, shadowMapRenderer.width, shadowMapRenderer.height)
     shadowMapRenderer.upload()
-    shadowMapRenderer.drawUploaded()
+    //    shadowMapRenderer.drawUploaded()
 
     Utils.viewport(0, 0, width.toInt, height.toInt)
     blockRenderer.upload()
@@ -185,6 +207,7 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
     val width = getWindow.getWidth.toFloat
     val height = getWindow.getHeight.toFloat
     controller.update(delta)
+    shadowController.update(delta)
 
     Utils.clear(Colors.green500, Buffer.COLOR_BUFFER)
 
@@ -199,6 +222,13 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
     Utils.disableFaceCulling()
     Utils.disableDepthTest()
     gbuffer.end()
+
+
+    shadowMapRenderer.light.position.set(shadowController.camera.position)
+    shadowMapRenderer.light.rotation.set(shadowController.camera.rotation)
+    Utils.viewport(0, 0, shadowMapRenderer.width, shadowMapRenderer.height)
+    shadowMapRenderer.drawUploaded()
+    Utils.viewport(0, 0, getWindow.getWidth, getWindow.getHeight)
 
     positionBufferViewer.draw(
       gbuffer.position,
@@ -248,5 +278,20 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
       rect = Vector4f(width / 2, height / 4, width / 2, height / 2)
       //          rect = Vector4f(0,0,width,height)
     )
+  }
+
+  override def keyDown(key: Int, scancode: Int, mods: Int): Boolean = {
+    key match
+      case GLFW.GLFW_KEY_1 =>
+        setInputProcessor(InputMultiplexer(
+          controller, this
+        ))
+        true
+      case GLFW.GLFW_KEY_2 =>
+        setInputProcessor(InputMultiplexer(
+          shadowController, this
+        ))
+        true
+      case _ => false
   }
 }
