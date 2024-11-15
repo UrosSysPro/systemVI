@@ -9,25 +9,26 @@ import org.joml.Vector4f
 
 
 class PBRDeferredRenderer(
-                           val gbuffer:GBuffer,
-                           val diffuseMap:Texture,
-                           val normalMap:Texture,
-                           val skyboxTexture:Texture,
-                           val shadowMap:Texture,
-                           val playerCamera:Camera3,
-                           val viewerCamera:Camera3,
+                           val gbuffer: GBuffer,
+                           val diffuseMap: Texture,
+                           val normalMap: Texture,
+                           val skyboxTexture: Texture,
+                           val shadowMap: Texture,
+                           val playerCamera: Camera3,
+                           val viewerCamera: Camera3,
                            val shadowMapRenderer: ShadowMapRenderer,
+                           val bias: Float,
                          ) {
-  val shader:Shader=Shader.builder()
+  val shader: Shader = Shader.builder()
     .vertex("assets/examples/voxels/textureViewer/vertex.glsl")
     .fragment("assets/examples/voxels/combined_pbr/fragment.glsl")
     .build()
 
-  def draw(rect:Vector4f): Unit = {
+  def draw(rect: Vector4f): Unit = {
     val (far, near) = playerCamera.projectionType match
       case Perspective(fov, aspect, near, far) => (far, near)
       case _ => (0f, 0f)
-    val light=shadowMapRenderer.light
+    val light = shadowMapRenderer.light
     shader.use()
     gbuffer.bind()
     diffuseMap.bind(6)
@@ -62,7 +63,7 @@ class PBRDeferredRenderer(
     shader.setUniform("shadowMapInfo.aspect", light.projection.aspect)
     shader.setUniform("shadowMapInfo.near", light.projection.near)
     shader.setUniform("shadowMapInfo.far", light.projection.far)
-    shader.setUniform("shadowMapInfo.bias", 0.00001f)
+    shader.setUniform("shadowMapInfo.bias", bias)
     shader.setUniform("shadowMapInfo.attenuation", light.attenuation)
     shader.setUniform("shadowMapInfo.color", light.color)
     shader.drawArrays(Primitive.TRIANGLE_STRIP, 0, 4)

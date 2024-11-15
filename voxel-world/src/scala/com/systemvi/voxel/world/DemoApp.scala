@@ -45,7 +45,7 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
   var uvBufferViewer: UVViewer = null
   var depthBufferViewer: DepthViewer = null
   var tbnBufferViewer: TBNViewer = null
-  var aoViewer:AOViewer=null
+  var aoViewer: AOViewer = null
   var toneMapper: ToneMapper = null
   var shadowMapRenderer: ShadowMapRenderer = null
 
@@ -140,33 +140,33 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
     uvBufferViewer = UVViewer()
     depthBufferViewer = DepthViewer()
     tbnBufferViewer = TBNViewer()
-    aoViewer=AOViewer()
+    aoViewer = AOViewer()
 
     toneMapper = ToneMapper()
 
-//    phongDeferredRenderer=PhongDeferredRenderer(
-//      gbuffer = gbuffer,
-//      diffuseMap = diffuseMap,
-//      normalMap = normalMap,
-//      skyboxTexture = skyboxTexture,
-//      shadowMap = shadowMapRenderer.shadowMap,
-//      viewerCamera = viewerCamera,
-//      worldCamera = controller.camera,
-//      shadowMapLight = ShadowMapLight(
-//        position = shadowMapRenderer.light.position,
-//        rotation = shadowMapRenderer.light.rotation,
-//        view = shadowMapRenderer.getView,
-//        projection = shadowMapRenderer.getProjection,
-//        fov = shadowMapRenderer.light.projection.fov,
-//        near = shadowMapRenderer.light.projection.near,
-//        aspect = shadowMapRenderer.light.projection.aspect,
-//        far = shadowMapRenderer.light.projection.far,
-//        bias = 0.000002f,
-//        attenuation = Vector3f(0.5f,0.5f,1.0f),
-//        color = shadowMapRenderer.light.color
-//      )
-//    )
-    pbrDeferredRenderer=PBRDeferredRenderer(
+    //    phongDeferredRenderer=PhongDeferredRenderer(
+    //      gbuffer = gbuffer,
+    //      diffuseMap = diffuseMap,
+    //      normalMap = normalMap,
+    //      skyboxTexture = skyboxTexture,
+    //      shadowMap = shadowMapRenderer.shadowMap,
+    //      viewerCamera = viewerCamera,
+    //      worldCamera = controller.camera,
+    //      shadowMapLight = ShadowMapLight(
+    //        position = shadowMapRenderer.light.position,
+    //        rotation = shadowMapRenderer.light.rotation,
+    //        view = shadowMapRenderer.getView,
+    //        projection = shadowMapRenderer.getProjection,
+    //        fov = shadowMapRenderer.light.projection.fov,
+    //        near = shadowMapRenderer.light.projection.near,
+    //        aspect = shadowMapRenderer.light.projection.aspect,
+    //        far = shadowMapRenderer.light.projection.far,
+    //        bias = 0.000002f,
+    //        attenuation = Vector3f(0.5f,0.5f,1.0f),
+    //        color = shadowMapRenderer.light.color
+    //      )
+    //    )
+    pbrDeferredRenderer = PBRDeferredRenderer(
       gbuffer = gbuffer,
       diffuseMap = diffuseMap,
       normalMap = normalMap,
@@ -175,6 +175,7 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
       playerCamera = controller.camera,
       viewerCamera = viewerCamera,
       shadowMapRenderer = shadowMapRenderer,
+      bias = 0.000002f,
     )
 
     emptyVertexArray = VertexArray()
@@ -235,8 +236,8 @@ object DemoApp extends Game(3, 3, 60, 1400, 900, "Demo Game") {
     skyboxFrameBuffer.end()
 
     frameBuffer.begin()
-//    phongDeferredRenderer.draw(Vector4f(0,0,width,height))
-    pbrDeferredRenderer.draw(Vector4f(0,0,width,height))
+    //    phongDeferredRenderer.draw(Vector4f(0,0,width,height))
+    pbrDeferredRenderer.draw(Vector4f(0, 0, width, height))
     frameBuffer.end()
 
     toneMapper.draw(
