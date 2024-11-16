@@ -2,7 +2,8 @@ package com.systemvi.shapes
 
 import com.systemvi.engine.application.Game
 import com.systemvi.engine.camera.Camera3
-import com.systemvi.engine.texture.Texture
+import com.systemvi.engine.texture.Texture.Repeat
+import com.systemvi.engine.texture.{Texture, TextureRegion}
 import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
@@ -14,6 +15,8 @@ object Main extends Game(3,3,60,800,600,"Polygon Renderer"){
   var shapeRenderer:ShapeRenderer=null
   var texture:Texture=null
   var camera:Camera3=null
+  var textureRegion:Array[Array[TextureRegion]]=null
+  var emptyRegion:TextureRegion=null
 
   override def setup(window: Window): Unit = {
     val width=window.getWidth.toFloat
@@ -26,11 +29,17 @@ object Main extends Game(3,3,60,800,600,"Polygon Renderer"){
     shapeRenderer=ShapeRenderer()
     texture=Texture.builder()
       .file("assets/tiles.png")
+      .borderColor(Colors.white)
+      .verticalRepeat(Repeat.CLAMP_BORDER)
+      .horizontalRepeat(Repeat.CLAMP_BORDER)
       .build()
+    textureRegion=TextureRegion.split(texture,18,18)
+    emptyRegion=TextureRegion(texture,-1,-1,0,0)
   }
 
   override def loop(delta: Float): Unit = {
     Utils.clear(Colors.black,Buffer.COLOR_BUFFER)
+    shapeRenderer.texture=texture
     shapeRenderer.view(camera.view)
     shapeRenderer.projection(camera.projection)
 
@@ -40,20 +49,9 @@ object Main extends Game(3,3,60,800,600,"Polygon Renderer"){
       val size=50f
       val x=i*size+50f
       val y=50f
-//      shapeRenderer.draw(Triangle(
-//        p0 = Vector2f(x, y),
-//        p1 = Vector2f(x+size, y),
-//        p2 = Vector2f(x, y+size),
-//        color = Colors.green400,
-//        transform = Matrix4f()
-//          .translate(x+size/2,y+size/2,0)
-//          .rotateY(time.toFloat/2)
-//          .translate(-x-size/2,-y-size/2,0)
-//      ))
-      shapeRenderer.draw(Square(x,y,40,Colors.red500))
+      shapeRenderer.draw(Square(x,y,40,Colors.white,textureRegion(5)(0)))
+//      shapeRenderer.draw(Square(x,y,40,Colors.red500,emptyRegion))
     }
-//    shapeRenderer.draw(Square())
-//    shapeRenderer.draw(Line())
     
     shapeRenderer.flush()
   }
