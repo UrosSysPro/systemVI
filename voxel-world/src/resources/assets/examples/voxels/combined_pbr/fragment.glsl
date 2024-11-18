@@ -44,6 +44,10 @@ uniform sampler2D shadowMap;
 uniform Camera camera;
 uniform ShadowMapInfo shadowMapInfo;
 
+float metalic=0.5;
+float roughness=0.5;
+
+
 void blinPhong(vec3 lightDir, vec3 cameraDir, vec3 normal, Light light, out vec3 ambient, out vec3 diffuse, out vec3 specular) {
     //diffuse
     float diffuseF = max(0.0, dot(lightDir, normal));

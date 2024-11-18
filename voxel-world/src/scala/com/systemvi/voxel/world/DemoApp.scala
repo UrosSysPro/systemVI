@@ -235,12 +235,12 @@ class DemoApp(config:DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Game
     shadowMapRenderer.drawUploaded()
     Utils.viewport(0, 0, getWindow.getWidth, getWindow.getHeight)
 
-    positionBufferViewer.draw(
-      gbuffer.position,
-      viewerCamera.view,
-      viewerCamera.projection,
-      Vector4f(0, 0, width / 2, height / 2)
-    )
+//    positionBufferViewer.draw(
+//      gbuffer.position,
+//      viewerCamera.view,
+//      viewerCamera.projection,
+//      Vector4f(0, 0, width / 2, height / 2)
+//    )
     uvBufferViewer.draw(
       gbuffer.uv,
       diffuseMap,
@@ -280,8 +280,8 @@ class DemoApp(config:DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Game
       size = Vector2f(width, height),
       view = viewerCamera.view,
       projection = viewerCamera.projection,
-      rect = Vector4f(width / 2, height / 4, width / 2, height / 2)
-      //          rect = Vector4f(0,0,width,height)
+      rect = Vector4f(0, 0, width / 2, height / 2)
+//                rect = Vector4f(0,0,width,height)
     )
   }
 
