@@ -11,10 +11,7 @@ object SnakePart {
 
 class Player {
   val color:Vector4f=Colors.green400
-  var parts:Array[SnakePart]=Array(
-    SnakePart(Vector2i(10,10)),
-    SnakePart(Vector2i(11,10)),
-  )
+  var parts:Array[SnakePart]=(for(i<-0 until 10)yield SnakePart(position = Vector2i(10,10))).toArray
   val direction:Vector2i=Vector2i()
 
   def move(): Unit = {
@@ -29,11 +26,17 @@ class Player {
     parts:+=SnakePart(Vector2i(parts.last.position))
   }
 
+  private def getPadding(i:Int): Int = {
+    Math.max(20-i*3,0)
+  }
+
   def draw(renderer:ShapeRenderer,region:TextureRegion,a:Float): Unit = {
     parts.tail.zipWithIndex.foreach((part,index)=>{
-      val i=parts.tail.length
+      val i=index
       val len=parts.tail.length
-      val padding=((1-a)*SnakePart.size)
+      val p1=getPadding(len-i).toFloat
+      val p2=getPadding(len-i-1).toFloat
+      val padding=p2*a+(1-a)*p1
       renderer.draw(Square(
         part.position.x.toFloat*SnakePart.size+padding/2,
         part.position.y.toFloat*SnakePart.size+padding/2,
