@@ -2,27 +2,35 @@ package com.systemvi.cats.caseclasses
 
 import cats.*
 import cats.implicits.*
-import org.joml.Vector2f
 
-case class Node[F](value:F,left:Node[F],right:Node[F])
+case class Node[F](value: F, left: Node[F]=null, right: Node[F]=null)
 
 object FunctorExample {
-  
-  given Show[Node[Int]] = (node:Node[Int]) => {
-    ""
+
+  given Show[Node[Int]] = (node: Node[Int]) => {
+    def show[F](padding: String, node: Node[F]): String =
+      if node != null then
+        s"""${node.value}
+           |$padding${show(padding++"\t", node.left)}
+           |$padding${show(padding++"\t", node.right)}""".stripMargin
+      else "null"
+
+    show("", node)
   }
-    
-  import SemigroupExample.Implicits.given_Show_Vector2f
 
   def main(args: Array[String]): Unit = {
-    val tree=Node[Int](
-      1,
-      Node[Int](
-        2,null,null
+    val tree = Node(1,
+      Node(2,
+        Node(10,
+          Node(10),
+          Node(10),
+        )
       ),
-      Node[Int](
-        3,null,null
+      Node(3,
+        Node(3),
+        Node(3),
       ),
     )
+    println(tree.show)
   }
 }
