@@ -2,10 +2,8 @@ package com.systemvi.character;
 
 import com.systemvi.engine.application.Game;
 import com.systemvi.engine.camera.Camera3;
-import com.systemvi.engine.renderers.Shape2Renderer2;
-import com.systemvi.engine.renderers.ShapeRenderer;
+import com.systemvi.engine.renderers.ShapeRenderer2;
 import com.systemvi.engine.renderers.Square;
-import com.systemvi.engine.renderers.TextureRenderer;
 import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.texture.TextureRegion;
 import com.systemvi.engine.ui.utils.data.Colors;
@@ -13,12 +11,9 @@ import com.systemvi.engine.utils.Utils;
 import com.systemvi.engine.window.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
-import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
-import org.w3c.dom.UserDataHandler;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -29,7 +24,7 @@ public class Main extends Game {
         super(3, 3, 60, 800, 600, "Character");
     }
 
-    Shape2Renderer2 renderer2;
+    ShapeRenderer2 renderer2;
     Camera3 camera;
     Texture texture;
     TextureRegion[][] regions;
@@ -63,7 +58,7 @@ public class Main extends Game {
             .position(window.getWidth() / 2, window.getHeight() / 2)
             .build();
 
-        renderer2 = new Shape2Renderer2();
+        renderer2 = new ShapeRenderer2();
 
         map = new LinkedList<>();
         try {
