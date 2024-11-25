@@ -8,6 +8,7 @@ import com.systemvi.engine.texture.Texture;
 import com.systemvi.engine.texture.TextureRegion;
 import com.systemvi.engine.ui.utils.data.Colors;
 import com.systemvi.engine.utils.Utils;
+import com.systemvi.engine.window.Input;
 import com.systemvi.engine.window.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -174,10 +175,10 @@ public class Main extends Game {
 
     @Override
     public boolean keyDown(int key, int scancode, int mods) {
-        if (key == GLFW.GLFW_KEY_D) right = true;
-        if (key == GLFW.GLFW_KEY_A) left = true;
-        if (key == GLFW.GLFW_KEY_W) up = true;
-        if (key == GLFW.GLFW_KEY_S) down = true;
+        if (key == Input.Keys.keyD()) right = true;
+        if (key == Input.Keys.A()) left = true;
+        if (key == Input.Keys.W()) up = true;
+        if (key == Input.Keys.S()) down = true;
 
         if (key == GLFW.GLFW_KEY_RIGHT) cameraRight = true;
         if (key == GLFW.GLFW_KEY_LEFT) cameraLeft = true;
