@@ -12,7 +12,6 @@ import com.systemvi.engine.window.Input;
 import com.systemvi.engine.window.Window;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
-import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -176,29 +175,20 @@ public class Main extends Game {
     @Override
     public boolean keyDown(int key, int scancode, int mods) {
         if (key == Input.Keys.keyD()) right = true;
-        if (key == Input.Keys.A()) left = true;
-        if (key == Input.Keys.W()) up = true;
-        if (key == Input.Keys.S()) down = true;
-
-        if (key == GLFW.GLFW_KEY_RIGHT) cameraRight = true;
-        if (key == GLFW.GLFW_KEY_LEFT) cameraLeft = true;
-        if (key == GLFW.GLFW_KEY_UP) cameraUp = true;
-        if (key == GLFW.GLFW_KEY_DOWN) cameraDown = true;
+        if (key == Input.Keys.keyA()) left = true;
+        if (key == Input.Keys.keyW()) up = true;
+        if (key == Input.Keys.keyS()) down = true;
 
         return true;
     }
 
     @Override
     public boolean keyUp(int key, int scancode, int mods) {
-        if (key == GLFW.GLFW_KEY_D) right = false;
-        if (key == GLFW.GLFW_KEY_A) left = false;
-        if (key == GLFW.GLFW_KEY_W) up = false;
-        if (key == GLFW.GLFW_KEY_S) down = false;
+        if (key == Input.Keys.keyD()) right = false;
+        if (key == Input.Keys.keyA()) left = false;
+        if (key == Input.Keys.keyW()) up = false;
+        if (key == Input.Keys.keyS()) down = false;
 
-        if (key == GLFW.GLFW_KEY_RIGHT) cameraRight = false;
-        if (key == GLFW.GLFW_KEY_LEFT) cameraLeft = false;
-        if (key == GLFW.GLFW_KEY_UP) cameraUp = false;
-        if (key == GLFW.GLFW_KEY_DOWN) cameraDown = false;
         return true;
     }
 

@@ -1,4 +1,4 @@
-import java.io.File
+import java.io.{File, FileWriter}
 import java.util.Scanner
 
 @main def main(): Unit =
@@ -10,7 +10,7 @@ import java.util.Scanner
     lines :+= scanner.nextLine()
   scanner.close()
 
-  val pairs = lines.map { line =>
+  var pairs = lines.map { line =>
     val entries = line.split(" ")
     var underScore = false
 
@@ -32,7 +32,13 @@ import java.util.Scanner
 
   val keywords=List("key","mod","joystick","hat")
 
-  pairs.filter { (name, _) =>
+  pairs=pairs.filter { (name, _) =>
     keywords.foldLeft(false){(acc,keyword)=>acc || name.contains(keyword)}
-  }.foreach(println(_))
+  }
+
+  val output=FileWriter(File("output.txt"))
+  pairs.foreach((name,value)=>{
+    output.write(s"val $name:Int = $value\n")
+  })
+  output.close()
 
