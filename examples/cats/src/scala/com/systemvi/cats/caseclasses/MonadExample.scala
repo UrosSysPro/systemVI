@@ -26,5 +26,20 @@ object MonadExample {
 
     println(mapped.show)
     println(flatMapped.show)
+
+    val composition: Option[Int] = Some(2)
+      .map(value => value * 2)
+      .flatMap(value=>Some(value))
+      .map(value =>
+        println(s"print inside map $value")
+        value
+      )
+
+    for{
+      x<-composition
+      y<-composition
+    } {
+      println(s"print inside for ${x+y}")
+    }
   }
 }
