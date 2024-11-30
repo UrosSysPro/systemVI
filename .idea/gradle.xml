@@ -29,6 +29,7 @@
             <option value="$PROJECT_DIR$/examples/jni-lib" />
             <option value="$PROJECT_DIR$/examples/lanterna-powerline" />
             <option value="$PROJECT_DIR$/examples/maze" />
+            <option value="$PROJECT_DIR$/examples/model-viewer" />
             <option value="$PROJECT_DIR$/examples/multi-window" />
             <option value="$PROJECT_DIR$/examples/new-shape-renderer" />
             <option value="$PROJECT_DIR$/examples/noise" />
