@@ -6,6 +6,7 @@ import com.systemvi.engine.buffer.{ArrayBuffer, ElementsBuffer, VertexArray}
 import com.systemvi.engine.camera.CameraController3
 import com.systemvi.engine.model.{Model, ModelLoaderParams, ModelUtils, VertexAttribute}
 import com.systemvi.engine.shader.{ElementsDataType, Primitive, Shader}
+import com.systemvi.engine.texture.Texture
 import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
@@ -22,6 +23,22 @@ object Main extends Game(3, 3, 60, 800, 600, "Model Viewer") {
   // postaviti kameru
   // postaviti shader
 
+
+  //1 geometrija
+  // rasterization
+  // ray tracing
+  // spectral renderring
+
+  //2 light transport
+  // ray tracing
+  // trikovi
+  // talasi
+
+  //3 brdf
+  // blin-phong
+  // lambert
+  // pbr
+
   case class MeshGpuData(vertexArray: VertexArray, arrayBuffer: ArrayBuffer, elementBuffer: ElementsBuffer)
 
   var gpuData: List[MeshGpuData] = null
@@ -32,11 +49,17 @@ object Main extends Game(3, 3, 60, 800, 600, "Model Viewer") {
 
   var model: Model = null
 
+  var texture: Texture = null
+
   override def setup(window: Window): Unit = {
+
+    texture = Texture.builder()
+      .file("assets/textures/colormap.png")
+      .build()
 
     controller = CameraController3.builder()
       .window(window)
-      .aspect(window.getWidth.toFloat/window.getHeight.toFloat)
+      .aspect(window.getWidth.toFloat / window.getHeight.toFloat)
       .build()
     setInputProcessor(controller)
 
@@ -61,18 +84,20 @@ object Main extends Game(3, 3, 60, 800, 600, "Model Viewer") {
         arrayBuffer.bind()
         elementsBuffer.bind()
         arrayBuffer.setVertexAttributes(Array(
+          VertexAttribute("position", 3),
+          VertexAttribute("normal", 3),
+          VertexAttribute("uv", 2),
           //          VertexAttribute("color",4),
-          //          VertexAttribute("normal",3),
           //          VertexAttribute("tangent",3),
           //          VertexAttribute("bitangent",3),
-          VertexAttribute("position", 3),
-          //          VertexAttribute("texCoords",3),
         ))
 
         arrayBuffer.setData(mesh.vertices.toArray.flatMap {
           case vertex: Model.Vertex =>
             val p = vertex.position
-            Array(p.x, p.y, p.z)
+            val n = vertex.normal
+            val uv = vertex.texCoords.get(0)
+            Array(p.x, p.y, p.z, n.x, n.y, n.z, uv.x, uv.y)
         })
 
         elementsBuffer.setData(mesh.faces.toArray.flatMap {
@@ -86,6 +111,8 @@ object Main extends Game(3, 3, 60, 800, 600, "Model Viewer") {
       .vertex("vertex.glsl")
       .fragment("fragment.glsl")
       .build()
+
+    if (!shader.isCompiled) println(shader.getLog)
   }
 
   override def loop(delta: Float): Unit = {
@@ -102,9 +129,12 @@ object Main extends Game(3, 3, 60, 800, 600, "Model Viewer") {
 
       node.meshIndices.toArray().foreach {
         case index: Int =>
-          val data=gpuData(index)
+          val data = gpuData(index)
           data.vertexArray.bind()
-          shader.setUniform("model",t)
+          shader.setUniform("model", t)
+          texture.bind(0)
+          shader.setUniform("colormap", 0)
+          shader.setUniform("cameraPosition",controller.camera.position)
           shader.drawElements(
             Primitive.TRIANGLES,
             model.meshes.get(index).faces.size(),
@@ -113,13 +143,13 @@ object Main extends Game(3, 3, 60, 800, 600, "Model Viewer") {
           )
       }
 
-      node.children.toArray().foreach{
-        case node:Model.Node=>
-          drawNode(node,t)
+      node.children.toArray().foreach {
+        case node: Model.Node =>
+          drawNode(node, t)
       }
     }
 
-    drawNode(model.root,Matrix4f())
+    drawNode(model.root, Matrix4f())
   }
 
   def main(args: Array[String]): Unit = {
