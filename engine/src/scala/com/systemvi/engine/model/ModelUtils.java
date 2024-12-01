@@ -76,7 +76,7 @@ public class ModelUtils {
                         AIVector3D texCoord=texCoordsBuffer.get(i);
                         texCoords.add(new Vector3f(texCoord.x(),texCoord.y(),texCoord.z()));
                     }else{
-                        texCoords.add(new Vector3f(0.5f));
+                        texCoords.add(new Vector3f(-1f));
                     }
 
                     if(colorsBuffer!=null){

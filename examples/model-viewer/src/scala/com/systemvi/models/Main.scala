@@ -7,11 +7,12 @@ import com.systemvi.engine.camera.CameraController3
 import com.systemvi.engine.model.{Model, ModelLoaderParams, ModelUtils, VertexAttribute}
 import com.systemvi.engine.shader.{ElementsDataType, Primitive, Shader}
 import com.systemvi.engine.texture.Texture
+import com.systemvi.engine.texture.Texture.Repeat
 import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.Window
-import org.joml.Matrix4f
+import org.joml.{Matrix4f, Vector4f}
 
 import scala.concurrent.duration.*
 
@@ -55,6 +56,9 @@ object Main extends Game(3, 3, 60, 800, 600, "Model Viewer") {
 
     texture = Texture.builder()
       .file("assets/textures/colormap.png")
+      .borderColor(Vector4f(1,0,1,1))
+      .verticalRepeat(Repeat.CLAMP_BORDER)
+      .horizontalRepeat(Repeat.CLAMP_BORDER)
       .build()
 
     controller = CameraController3.builder()
@@ -67,6 +71,7 @@ object Main extends Game(3, 3, 60, 800, 600, "Model Viewer") {
       .fileName("assets/glb/vehicle-speedster.glb")
       .triangulate()
       .calcTangentSpace()
+      .genUVCoords()
       .genSmoothNormals()
       .fixInfacingNormals()
       .genSmoothNormals()
@@ -87,7 +92,7 @@ object Main extends Game(3, 3, 60, 800, 600, "Model Viewer") {
           VertexAttribute("position", 3),
           VertexAttribute("normal", 3),
           VertexAttribute("uv", 2),
-          //          VertexAttribute("color",4),
+          VertexAttribute("color", 4),
           //          VertexAttribute("tangent",3),
           //          VertexAttribute("bitangent",3),
         ))
@@ -97,7 +102,13 @@ object Main extends Game(3, 3, 60, 800, 600, "Model Viewer") {
             val p = vertex.position
             val n = vertex.normal
             val uv = vertex.texCoords.get(0)
-            Array(p.x, p.y, p.z, n.x, n.y, n.z, uv.x, uv.y)
+            val c = vertex.colors.get(0)
+            Array(
+              p.x, p.y, p.z,
+              n.x, n.y, n.z,
+              uv.x, uv.y,
+              c.x, c.y, c.z, c.w
+            )
         })
 
         elementsBuffer.setData(mesh.faces.toArray.flatMap {
@@ -134,7 +145,7 @@ object Main extends Game(3, 3, 60, 800, 600, "Model Viewer") {
           shader.setUniform("model", t)
           texture.bind(0)
           shader.setUniform("colormap", 0)
-          shader.setUniform("cameraPosition",controller.camera.position)
+          shader.setUniform("cameraPosition", controller.camera.position)
           shader.drawElements(
             Primitive.TRIANGLES,
             model.meshes.get(index).faces.size(),
