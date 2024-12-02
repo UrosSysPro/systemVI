@@ -10,6 +10,8 @@ import com.systemvi.engine.utils.Utils.{Barrier, Buffer}
 import com.systemvi.engine.window.Window
 
 class App extends Game(4,3,60,800,600,"Ray Marching"){
+  given Conversion[Int,Float] = (a:Int)=>a.toFloat
+
   var texture:Texture=null
   var controller:CameraController3=null
   var rendererCamera:Camera3=null

@@ -8,9 +8,10 @@ import org.joml.Vector3f
 
 import scala.util.Random
 import scala.util.control.Breaks.*
+import scala.util.boundary.Break
 
 object Map {
-  val epsilon=0.001f
+  val epsilon = 0.001f
   val random = new Random()
 
   val materials: Array[Material] = Array[Material](
@@ -18,19 +19,19 @@ object Map {
     Material(0.3f, 0f, Colors.orange500),
     Material(0.3f, 0f, Colors.green500)
   )
-  val floor=Material(0.1f,0.5f,Colors.yellow500)
-  val sky=Material(0,0,Colors.blue200)
+  val floor = Material(0.1f, 0.5f, Colors.yellow500)
+  val sky = Material(0, 0, Colors.blue200)
 
-  val spawnRadius=300
-  val sphereCount=150
+  val spawnRadius = 300
+  val sphereCount = 150
 
-  case class Ball(center:Vector3f,radius:Float,material: Material)
+  case class Ball(center: Vector3f, radius: Float, material: Material)
 
-  var spheres: Array[Ball] = (0 until sphereCount).map{_=>
-    var x=0f
-    var y=0f
-    var z=0f
-    var r=0f
+  var spheres: Array[Ball] = (0 until sphereCount).map { _ =>
+    var x = 0f
+    var y = 0f
+    var z = 0f
+    var r = 0f
     breakable {
       while (true) {
         x = random.nextInt(spawnRadius * 2).toFloat - spawnRadius
@@ -41,25 +42,32 @@ object Map {
         if (d < spawnRadius) break()
       }
     }
-    Ball(new Vector3f(x,y,z),r,materials(random.nextInt(materials.length)))
+    Ball(new Vector3f(x, y, z), r, materials(random.nextInt(materials.length)))
   }.toArray
 
   def getMaterial(p: Vector3f): Material = {
-    spheres.foreach{
-      case Ball(center, radius, material) => if(Sphere(p,center,radius)<epsilon) return material
+    var m:Material=null
+    breakable{
+      spheres.foreach {
+        case Ball(center, radius, material) => if (Sphere(p, center, radius) < epsilon) {
+          m=material
+          break
+        }
+      }
     }
+    if(m!=null)return m    
     if (Plane(p) < epsilon) return floor
     sky
   }
 
   def getDistance(p: Vector3f): Float = {
     Union(
-      spheres.map { s => Sphere(p, s.center, s.radius)}:+
-      Plane(p)*
+      spheres.map { s => Sphere(p, s.center, s.radius) } :+
+        Plane(p) *
     )
   }
 
-  def renderer():RayMarchRenderer = {
+  def renderer(): RayMarchRenderer = {
     new RayMarchRenderer(
       Map.getDistance,
       Map.getMaterial,

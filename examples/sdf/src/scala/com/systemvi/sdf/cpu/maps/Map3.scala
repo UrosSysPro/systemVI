@@ -7,6 +7,7 @@ import com.systemvi.sdf.cpu.{Material, RayMarchRenderer}
 import org.joml.{Vector3f, Vector4f}
 
 object Map3 {
+  given Conversion[Int,Float] = (a:Int)=>a.toFloat
 
   val epsilon=0.001f
   val left=Material(0.1f,0f,Colors.red500)

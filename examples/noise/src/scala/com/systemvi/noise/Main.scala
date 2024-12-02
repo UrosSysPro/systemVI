@@ -2,14 +2,14 @@ package com.systemvi.noise
 
 import com.systemvi.engine.application.Game
 import com.systemvi.engine.camera.Camera3
-import com.systemvi.engine.noise.{FractalNoise2d, Octave2, OldPerlin2d, PerlinNoise, Voronoi2}
+import com.systemvi.engine.noise.{FractalNoise2d, Octave2, Perlin2d}
 import com.systemvi.engine.renderers.TextureRenderer
 import com.systemvi.engine.texture.{Format, Texture, TextureData}
 import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
 import com.systemvi.engine.window.Window
-import org.joml.{Matrix4f, Vector2f, Vector2i, Vector4f}
+import org.joml.{Vector2f, Vector2i, Vector4f}
 
 object Main extends Game(3, 3, 60, 800, 600, "Noise") {
   var textureRenderer: TextureRenderer = null
