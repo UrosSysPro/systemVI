@@ -73,14 +73,14 @@ public class ModelUtils {
                     AIColor4D.Buffer colorsBuffer=aiMesh.mColors(k);
 
                     if(texCoordsBuffer!=null) {
-                        AIVector3D texCoord=texCoordsBuffer.get(i);
+                        AIVector3D texCoord=texCoordsBuffer.get(j);
                         texCoords.add(new Vector3f(texCoord.x(),texCoord.y(),texCoord.z()));
                     }else{
                         texCoords.add(new Vector3f(-1f));
                     }
 
                     if(colorsBuffer!=null){
-                        AIColor4D color=colorsBuffer.get(i);
+                        AIColor4D color=colorsBuffer.get(j);
                         colors.add(new Vector4f(color.r(),color.g(),color.b(),color.a()));
                     }else{
                         colors.add(new Vector4f(1,0,1,1));
