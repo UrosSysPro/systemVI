@@ -36,8 +36,8 @@ object IOExample extends IOApp {
   override def run(args: List[String]): IO[ExitCode] = {
     //    readAndPrint().as(ExitCode.Success)
     (countDown(20), countDown(10))
-      .parMapN[IO[Int]](
-        (_, _) => IO(0)
+      .parMapN(
+        (_,_)=>IO.unit
       ).as(ExitCode.Success)
   }
 }
