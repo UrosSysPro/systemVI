@@ -17,12 +17,18 @@ import com.systemvi.voxel.world.world2.{Chunk, World, WorldCache}
 import org.joml.{Vector2f, Vector3f, Vector3i, Vector4f}
 import org.lwjgl.glfw.GLFW
 
+case class InitialLightParams(position: Vector3f, rotation: Vector3f)
+
 case class DemoAppConfig(
                           generator: WorldGenerator = PerlinWorldGenerator(),
                           numberOfChunks: Vector3i = Vector3i(2, 2, 2),
+                          initialLightParams: InitialLightParams = InitialLightParams(
+                            position = Vector3f(-10, 60, -10),
+                            rotation = Vector3f(-Math.PI.toFloat / 4f, -Math.PI.toFloat * 3f / 4f, 0)
+                          )
                         )
 
-class DemoApp(config:DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Game") {
+class DemoApp(config: DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Game") {
 
   val generator: WorldGenerator = config.generator
   val numberOfChunks: Vector3i = config.numberOfChunks
@@ -73,10 +79,12 @@ class DemoApp(config:DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Game
       .near(near)
       .speed(5)
       .build()
+    val p = config.initialLightParams.position
+    val r = config.initialLightParams.rotation
     shadowController = CameraController3.builder()
       .camera(Camera3.builder3d()
-        .position(-10, 60, -10)
-        .rotation(-Math.PI.toFloat / 4f, -Math.PI.toFloat * 3f / 4f, 0)
+        .position(p.x, p.y, p.z)
+        .rotation(r.x, r.y, r.z)
         .aspect(shadowMapWidth.toFloat / shadowMapHeight.toFloat)
         .fov(Math.PI.toFloat / 3f)
         .near(0.1f)
@@ -89,7 +97,7 @@ class DemoApp(config:DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Game
       .speed(5)
       .build()
     setInputProcessor(InputMultiplexer(
-      shadowController, this
+      controller, this
     ))
 
     gbuffer = GBuffer(width.toInt, height.toInt)
@@ -235,12 +243,12 @@ class DemoApp(config:DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Game
     shadowMapRenderer.drawUploaded()
     Utils.viewport(0, 0, getWindow.getWidth, getWindow.getHeight)
 
-//    positionBufferViewer.draw(
-//      gbuffer.position,
-//      viewerCamera.view,
-//      viewerCamera.projection,
-//      Vector4f(0, 0, width / 2, height / 2)
-//    )
+    //    positionBufferViewer.draw(
+    //      gbuffer.position,
+    //      viewerCamera.view,
+    //      viewerCamera.projection,
+    //      Vector4f(0, 0, width / 2, height / 2)
+    //    )
     uvBufferViewer.draw(
       gbuffer.uv,
       diffuseMap,
@@ -281,7 +289,7 @@ class DemoApp(config:DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Game
       view = viewerCamera.view,
       projection = viewerCamera.projection,
       rect = Vector4f(0, 0, width / 2, height / 2)
-//                rect = Vector4f(0,0,width,height)
+      //                rect = Vector4f(0,0,width,height)
     )
   }
 
