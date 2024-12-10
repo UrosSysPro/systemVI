@@ -19,6 +19,7 @@
             <option value="$PROJECT_DIR$/examples/compute-graph" />
             <option value="$PROJECT_DIR$/examples/diffusion" />
             <option value="$PROJECT_DIR$/examples/fabrik" />
+            <option value="$PROJECT_DIR$/examples/firmata" />
             <option value="$PROJECT_DIR$/examples/flappybird" />
             <option value="$PROJECT_DIR$/examples/fluid" />
             <option value="$PROJECT_DIR$/examples/fractals" />
