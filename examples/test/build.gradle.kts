@@ -7,7 +7,7 @@ scala {
     zincVersion = "1.6.1"
 }
 application {
-    mainClass = "com.systemvi.test.Main"
+    mainClass = "com.systemvi.test.Fractal"
 }
 
 val run: JavaExec by tasks
