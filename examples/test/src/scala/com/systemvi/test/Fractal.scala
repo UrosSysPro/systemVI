@@ -25,20 +25,21 @@ object Fractal extends Game(3, 3, 60, 800, 600, "Fractal") {
   def drawTriangle(): Array[Float] = {
     val random = Random()
     val points = Array(
-      Point(0, 1),
-      Point(-1, -1),
-      Point(1, -1),
+      Point(0, 1,0),
+      Point(-1, -1,1),
+      Point(1, -1,1),
+      Point(0, -1,-1),
     )
     var p = Point(
       random.nextFloat(),
       random.nextFloat()
     )
 
-    val vertexData=(for (i <- 0 until 5000) yield{
-      val q = points(random.nextInt(3))
-      p = Point((p.x + q.x) / 2, (p.y + q.y) / 2)
+    val vertexData=(for (i <- 0 until 50000) yield{
+      val q = points(random.nextInt(points.length))
+      p = Point((p.x + q.x) / 2, (p.y + q.y) / 2,(p.z+q.z)/2)
       p
-    }).flatMap(p=>Array(p.x,p.y)).toArray
+    }).flatMap(p=>Array(p.x,p.y,p.z)).toArray
     vertexData
   }
 
@@ -75,22 +76,6 @@ object Fractal extends Game(3, 3, 60, 800, 600, "Fractal") {
     }
   }
 
-  def initScreen(screen: Screen): Unit = {
-    for (j <- 0 until height) {
-      for (i <- 0 until width) {
-        screen(i)(j) = ' '
-      }
-    }
-  }
-
-  def printScreen(screen: Screen) = {
-    for (j <- 0 until height) {
-      for (i <- 0 until width) {
-        print(screen(i)(j))
-      }
-      println("")
-    }
-  }
 
   var shader:Shader=null
   var controller:CameraController3=null
@@ -109,7 +94,7 @@ object Fractal extends Game(3, 3, 60, 800, 600, "Fractal") {
     vertexArray.bind()
     arrayBuffer.bind()
     arrayBuffer.setVertexAttributes(Array(
-      VertexAttribute("position",2)
+      VertexAttribute("position",3)
     ))
     arrayBuffer.setData(drawTriangle())
     controller=CameraController3.builder()
@@ -122,11 +107,13 @@ object Fractal extends Game(3, 3, 60, 800, 600, "Fractal") {
   override def loop(delta: Float): Unit = {
     Utils.clear(Colors.black,Buffer.COLOR_BUFFER,Buffer.DEPTH_BUFFER)
     controller.update(delta)
+    Utils.enableDepthTest()
     shader.use()
     shader.setUniform("view",controller.camera.view)
     shader.setUniform("projection",controller.camera.projection)
     vertexArray.bind()
     shader.drawArrays(Primitive.POINTS,5000)
+    Utils.disableDepthTest()
   }
 
   def main(args: Array[String]): Unit = {
