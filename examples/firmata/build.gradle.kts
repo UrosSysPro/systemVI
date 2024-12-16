@@ -25,8 +25,6 @@ sourceSets {
 }
 
 dependencies {
-    implementation("org.typelevel:cats-effect_3:3.6-0142603")
-    implementation("org.typelevel:cats-core_3:2.12.0")
     implementation("com.github.kurbatov:firmata4j:2.3.8")
     implementation("org.slf4j:slf4j-simple:2.1.0-alpha1")
 }

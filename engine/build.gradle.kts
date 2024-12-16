@@ -94,6 +94,9 @@ val listOfImplementations: DependencyHandlerScope.() -> Unit = {
 
     implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
 
+    implementation("org.typelevel:cats-effect_3:3.6-0142603")
+    implementation("org.typelevel:cats-core_3:2.12.0")
+
     implementation("org.lwjgl:lwjgl")
     implementation("org.lwjgl:lwjgl-assimp")
     implementation("org.lwjgl:lwjgl-bgfx")

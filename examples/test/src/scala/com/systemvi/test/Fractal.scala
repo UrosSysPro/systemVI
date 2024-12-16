@@ -47,7 +47,7 @@ object Fractal extends Game(3, 3, 60, 800, 600, "Fractal") {
     val random = Random()
     val points = (0 until 6).map { index =>
       val angle = index * Math.PI.toFloat / 3
-      val c = Point(width / 2, height / 2)
+      val c = Point(width.toFloat / 2, height.toFloat / 2)
       val l1 = height.toFloat / 2 - 1
       val l2 = width.toFloat / 2 - 1
       Point(

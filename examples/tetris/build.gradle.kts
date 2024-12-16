@@ -26,6 +26,4 @@ sourceSets {
 
 dependencies {
 
-    implementation("org.typelevel:cats-effect_3:3.6-0142603")
-    implementation("org.typelevel:cats-core_3:2.12.0")
 }
