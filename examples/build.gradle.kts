@@ -39,36 +39,8 @@ tasks.register("compile-release") {
         if (it.name == "engine") dependsOn(it.tasks.named("shadowJar"))
     }
     doLast {
-        val jarsFolderName = "build/release/jars"
-        val launchersFolderName = "build/release/launchers"
-        file(jarsFolderName).mkdir()
-        file(launchersFolderName).mkdir()
-        file("../engine/build/libs/engine-$systemVIVersion-all.jar")
-            .copyTo(file("${jarsFolderName}/engine.jar"), true)
-        subprojects.forEach {
-            val launcherFile = file("$launchersFolderName/${it.name}.bat")
-            launcherFile.createNewFile()
-            launcherFile.setExecutable(true)
-            val writer = launcherFile.writer()
-            writer.write("java -cp \"../jars/engine.jar;../jars/${it.name}.jar\" ${it.application.mainClass.get()}")
-            writer.flush()
-            writer.close()
-            val jar = file("${it.name}/build/libs/${it.name}.jar")
-            jar.copyTo(file("$jarsFolderName/${jar.name}"), true)
-        }
-    }
-}
-
-tasks.register("compile-release-with-assets") {
-    val systemVIVersion: String by project
-    subprojects.forEach {
-        dependsOn(it.tasks.named("jar"))
-    }
-    rootProject.subprojects.forEach {
-        if (it.name == "engine") dependsOn(it.tasks.named("shadowJar"))
-    }
-    doLast {
-        val currentDir = file(".")
+        val exclusions= listOf("cats","firmata","test","collections","java-and-scala","jni-lib","multi-window","parallel","tetris","warriors")
+//        val currentDir = file(".")
         val buildDir = file("build")
 
         if (buildDir.exists()) {
@@ -81,24 +53,30 @@ tasks.register("compile-release-with-assets") {
         engineJar.copyTo(file("build/engine.jar"), true)
 
         subprojects.forEach {
-            val subprojectDir = file("build/${it.name}")
-            val subprojectAssetsDir=file("${it.name}/assets")
-            val subprojectJar=file("${it.name}/build/libs/${it.name}.jar")
-            val launcherFile=file("build/${it.name}/launcher.bat")
+            if(it.name !in exclusions) {
+                val subprojectDir = file("build/${it.name}")
+                val subprojectAssetsDir = file("${it.name}/assets")
+                val subprojectJar = file("${it.name}/build/libs/${it.name}.jar")
+                val launcherFile = file("build/${it.name}/launcher.bat")
 
-            subprojectDir.mkdir()
-            if(subprojectAssetsDir.exists())
-                subprojectAssetsDir.copyRecursively(file("build/${it.name}/assets"),true)
-            subprojectJar.copyTo(file("build/${it.name}/lib.jar"),true)
+                subprojectDir.mkdir()
+                if (subprojectAssetsDir.exists())
+                    subprojectAssetsDir.copyRecursively(file("build/${it.name}/assets"), true)
+                subprojectJar.copyTo(file("build/${it.name}/lib.jar"), true)
 
-            launcherFile.createNewFile()
-            val writer = launcherFile.writer()
-            writer.write("java -cp \"lib.jar;../engine.jar\" ${it.application.mainClass.get()}")
-            writer.flush()
-            writer.close()
-            launcherFile.setExecutable(true)
+                launcherFile.createNewFile()
+                val writer = launcherFile.writer()
+                writer.write("java -cp \"lib.jar;../engine.jar\" ${it.application.mainClass.get()}")
+                writer.flush()
+                writer.close()
+                launcherFile.setExecutable(true)
+            }
         }
     }
+}
+
+tasks.register("create-subproject"){
+
 }
 
 repositories {
