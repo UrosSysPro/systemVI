@@ -26,5 +26,7 @@ sourceSets {
 
 dependencies {
     implementation("com.github.kurbatov:firmata4j:2.3.8")
+    implementation("com.fazecast:jSerialComm:2.6.2")
+    implementation("io.github.java-native:jssc:2.9.4")
     implementation("org.slf4j:slf4j-simple:2.1.0-alpha1")
 }
