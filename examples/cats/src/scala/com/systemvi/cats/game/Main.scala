@@ -9,16 +9,29 @@ object Main extends IOApp.Simple {
   override def run: IO[Unit] = for {
     game <- IO(TestGame())
     _ <- game.setup
-    _ <- (for {
-      frameStart<-getTime
-      _ <- game.loop
-      frameEnd<-getTime
-      _<-IO.sleep((frameEnd-frameStart).nanos)
-    } yield ()).foreverM
+    fiber <- renderLoop(game).foreverM.start
+    renderLoopFiberRef <- Ref.of[IO,FiberIO[Nothing]](fiber)
+    _ <- IO.readLine
+    f <- renderLoopFiberRef.get
+    _<-f.cancel
     _ <- game.dispose
   } yield ()
 
   def getTime: IO[Long] = IO {
     System.nanoTime()
   }
+
+  def renderLoop(game:IOGame):IO[Unit]=for{
+    frameStart<-getTime
+    _ <- game.loop
+    frameEnd<-getTime
+    frameTime=(frameEnd-frameStart).nanos
+    _<-IO.println(
+      s"""{
+        |   seconds: ${frameTime.toSeconds%1000}
+        |   milliseconds: ${frameTime.toMillis%1000}
+        |}
+        |""".stripMargin)
+    _<-IO.sleep(1.seconds)
+  }yield()
 }
