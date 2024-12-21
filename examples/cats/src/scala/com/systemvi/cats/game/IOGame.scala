@@ -10,4 +10,9 @@ abstract class IOGame {
   def setup:IO[Unit]
   def loop:IO[Unit]
   def dispose:IO[Unit]
+  def run:IO[Unit]=for{
+    _<-setup
+    _<-loop
+    _<-dispose
+  } yield ()
 }
