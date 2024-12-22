@@ -10,6 +10,9 @@ object Main extends IOApp:
   override def run(args: List[String]): IO[ExitCode] = program.as(ExitCode.Success)
 
   val program: IO[Unit] = for
-    _ <- IO.println("hello")
+    _ <- IO.println("hello").map{value=>
+      println(Thread.currentThread().getName)
+      value
+    }
   yield IO.unit
 
