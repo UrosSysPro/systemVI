@@ -1,10 +1,10 @@
-package com.systemvi.cats.caseclasses
+package com.systemvi.cats.cats_effect_examples
 
+import cats.*
 import cats.effect.{ExitCode, IO, IOApp}
+import cats.implicits.{catsSyntaxTuple2Parallel, *}
 
 import scala.concurrent.duration.*
-import cats.*
-import cats.implicits.{catsSyntaxTuple2Parallel, *}
 
 object IOExample extends IOApp {
 

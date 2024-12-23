@@ -1,9 +1,9 @@
-package com.systemvi.cats.caseclasses
+package com.systemvi.cats.cats_examples
 
 import cats.*
 import cats.implicits.*
-import scala.concurrent.ExecutionContext.Implicits.global
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 object SemigroupalExample {

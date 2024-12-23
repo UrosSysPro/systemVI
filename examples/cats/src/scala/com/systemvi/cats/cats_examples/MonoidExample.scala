@@ -1,4 +1,4 @@
-package com.systemvi.cats.caseclasses
+package com.systemvi.cats.cats_examples
 
 import cats.*
 import cats.implicits.*

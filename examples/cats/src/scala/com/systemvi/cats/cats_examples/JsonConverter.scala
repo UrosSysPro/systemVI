@@ -1,4 +1,4 @@
-package com.systemvi.cats.caseclasses
+package com.systemvi.cats.cats_examples
 
 import com.systemvi.engine.ui.utils.data.Colors
 import org.joml.{Vector2f, Vector4f}

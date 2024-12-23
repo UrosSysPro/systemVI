@@ -1,11 +1,11 @@
-package com.systemvi.cats.caseclasses
+package com.systemvi.cats.cats_examples
 
 import cats.*
 import cats.implicits.*
 
-import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.*
+import scala.concurrent.{Await, Future}
 
 object FoldableExample {
 

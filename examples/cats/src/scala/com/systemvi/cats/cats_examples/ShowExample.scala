@@ -1,7 +1,7 @@
-package com.systemvi.cats.caseclasses
+package com.systemvi.cats.cats_examples
 
-import cats._
-import cats.implicits._
+import cats.*
+import cats.implicits.*
 import org.joml.Vector2f
 
 
