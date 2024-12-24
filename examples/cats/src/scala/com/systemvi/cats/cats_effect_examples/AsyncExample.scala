@@ -17,7 +17,6 @@ object AsyncExample extends IOApp.Simple {
   }
 
   override def run: IO[Unit] = for {
-    ec<-IO.executionContext
     a1 <- IO.async[String] { cb =>
       IO {
         cb("hello".asRight)
