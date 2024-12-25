@@ -13,60 +13,66 @@ object AsyncExample extends IOApp.Simple {
 
   extension [A](io: IO[A]) {
     def printThread: IO[A] = io.map { io =>
-      println(s"thread ${Thread.currentThread().getName}")
+      println(s"${Thread.currentThread().getName}")
       io
     }
   }
 
-  def fixedThreadPool: Resource[IO, ExecutorService] = Resource.make {
+  def customExecutionContext(n: Int): Resource[IO, ExecutionContext] = Resource.make {
     IO {
-      Executors.newFixedThreadPool(4,runnable=> {
-        val thread = Thread(runnable, s"async-context")
+      var id = 0
+      ExecutionContext.fromExecutorService(Executors.newFixedThreadPool(n, runnable => {
+        val thread = Thread(runnable, s"custom-pool-$id")
+        id += 1
         thread.setDaemon(true)
         thread
-      })
+      }))
     }
-  } { pool =>
+  } { ec =>
     IO {
-      pool.awaitTermination(1, TimeUnit.SECONDS)
+      ec.shutdown()
+      ec.awaitTermination(1, TimeUnit.SECONDS)
     }
   }
 
-  def asyncExecutionContext:Resource[IO,ExecutionContext]=fixedThreadPool.map[ExecutionContext](es=>ExecutionContext.fromExecutorService(es))
-
-  override def run: IO[Unit] = asyncExecutionContext.use { ec =>
+  override def run: IO[Unit] = customExecutionContext(4).use { ec =>
     for {
+
       a1 <- IO.async[String] { cb =>
         IO {
           cb("hello".asRight)
           Some(IO.println("return some of first async").printThread)
         }
-      }.printThread.evalOn(ec)
+      }.evalOn(ec)
 
-      _ <- IO.println(a1).printThread
+      _ <- IO.println(a1)
+      _<-IO.cede
+
 
       a2 <- IO.async_[String] { cb =>
         cb("hello".asRight)
-      }.printThread.evalOn(ec)
+      }.evalOn(ec)
 
-      _ <- IO.println(a2).printThread
+      _ <- IO.println(a2)
+
+      _ <- IO.unit.printThread
 
       fiber <- IO.async[String] { cb =>
         for {
           _ <- IO.sleep(10.seconds)
           _ <- IO(cb("hello".asRight))
-        } yield Some(IO(println("return some of second async")).printThread)
+        } yield Some(IO(println("return some of second async")))
       }.evalOn(ec).start
 
       _ <- fiber.cancel
 
       outcome <- fiber.join
-      _ <- IO {
-        outcome match
-          case Succeeded(value) => println(value)
-          case Canceled() => println("outcome is canceled")
-          case Errored(_) => println("error")
-      }
+
+      _ <- outcome match
+        case Succeeded(value) => IO.println(value)
+        case Canceled() => IO.println("outcome is canceled")
+        case Errored(_) => IO.println("error")
+
     } yield ()
   }
 }
