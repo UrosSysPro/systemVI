@@ -24,6 +24,14 @@ sourceSets {
     }
 }
 
-dependencies {
+repositories {
+    mavenCentral()
+}
 
+dependencies {
+    implementation("org.http4s:http4s-ember-client_3:1.0.0-M44")
+    implementation("org.http4s:http4s-ember-server_3:1.0.0-M44")
+    implementation("org.http4s:http4s-dsl_3:1.0.0-M44")
+    implementation("org.typelevel:log4cats-slf4j_3:2.7.0")
+    implementation("org.slf4j:slf4j-simple:2.0.16")
 }
