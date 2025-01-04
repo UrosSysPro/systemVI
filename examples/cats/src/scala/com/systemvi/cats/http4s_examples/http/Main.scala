@@ -1,4 +1,4 @@
-package com.systemvi.cats.http4s_examples.Main
+package com.systemvi.cats.http4s_examples.http
 
 import cats.effect.*
 import com.comcast.ip4s.*
