@@ -1,8 +1,7 @@
 package com.systemvi.cats.game
 
-import cats.effect.*
-import cats.effect.implicits.*
 import cats.*
+import cats.effect.*
 import cats.implicits.*
 
 import java.util.concurrent.Executors
@@ -17,7 +16,7 @@ abstract class IOGame {
     }
   }
 
-  var executionContext: ExecutionContext = null
+  var ec: Option[ExecutionContext] = None
 
   def setup: IO[Unit]
 
@@ -26,32 +25,29 @@ abstract class IOGame {
   def dispose: IO[Unit]
 
   def run: IO[Unit] = {
-    def renderSetup: IO[Unit] = for {
-      _ <- IO {
+
+    def renderExecutionContextResource=Resource.make[IO,Unit]{
+      IO{
         val context = ExecutionContext.fromExecutor(Executors.newSingleThreadExecutor((runnable) => {
           val thread = Thread(runnable)
           thread.setDaemon(true)
           thread.setName(s"[render-thread-${thread.getName}]")
           thread
         }))
-        executionContext = context
+        ec = context.some
       }
-      _ <- setup.evalOn(executionContext)
-    } yield ()
+    }{_=>
+      IO.unit
+    }
 
-    def renderLoop: IO[Unit] = for {
-      _ <- loop.evalOn(executionContext)
-    } yield ()
-
-    def renderDispose: IO[Unit] = for {
-      _ <- dispose.printThread.evalOn(executionContext)
-      _<-IO.println("eee").printThread
-    } yield ()
-
-    for {
-      _ <- renderSetup
-      _ <- renderLoop
-      _ <- renderDispose
-    } yield ()
+    renderExecutionContextResource.use{_=>
+      val ec=this.ec match
+        case Some(ec)=>ec
+      for {
+        _ <- setup.evalOn(ec)
+        _ <- loop.evalOn(ec)
+        _ <- dispose.evalOn(ec)
+      } yield IO.unit
+    }
   }
 }
