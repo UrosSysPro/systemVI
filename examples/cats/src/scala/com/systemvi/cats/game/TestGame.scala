@@ -1,16 +1,15 @@
 package com.systemvi.cats.game
 
-import com.systemvi.engine.window.Window
-import org.lwjgl.glfw.GLFW.*
-import cats.implicits.*
 import cats.*
 import cats.effect.*
-import cats.effect.implicits.*
+import cats.implicits.*
 import com.systemvi.engine.camera.Camera3
 import com.systemvi.engine.renderers.ShapeRenderer2
 import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.utils.Utils
 import com.systemvi.engine.utils.Utils.Buffer
+import com.systemvi.engine.window.Window
+import org.lwjgl.glfw.GLFW.*
 
 class TestGame extends IOGame {
 
