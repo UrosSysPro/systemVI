@@ -12,7 +12,7 @@ import org.joml.Vector2f
 object Main extends Game(3, 3, 60, 800, 600, "Shader Toy") {
   var shader: Shader = null
   var vertexArray: VertexArray = null
-  var time:Double=3
+  var time:Float=3
   override def setup(window: Window): Unit = {
     vertexArray=VertexArray()
     shader = Shader.builder()
@@ -50,8 +50,9 @@ object Main extends Game(3, 3, 60, 800, 600, "Shader Toy") {
 
   override def loop(delta: Float): Unit = {
     Utils.clear(Colors.black, Buffer.COLOR_BUFFER)
-    time=time+delta.toDouble
+    time=time+delta
     val window=getWindow
+    val mousePosition=Utils.Mouse.getPosition(window)
     vertexArray.bind()
     shader.use()
     shader.setUniform("iTime",time)

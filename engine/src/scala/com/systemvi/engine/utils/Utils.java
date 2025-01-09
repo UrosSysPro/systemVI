@@ -12,6 +12,9 @@ import java.util.Scanner;
 import static org.lwjgl.opengl.GL33.*;
 import static org.lwjgl.opengl.GL46.*;
 public class Utils {
+    
+    public static MouseUtils$ Mouse;
+    
     public enum Buffer{
         COLOR_BUFFER(GL_COLOR_BUFFER_BIT),
         DEPTH_BUFFER(GL_DEPTH_BUFFER_BIT),
