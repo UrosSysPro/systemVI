@@ -13,7 +13,7 @@ import static org.lwjgl.opengl.GL33.*;
 import static org.lwjgl.opengl.GL46.*;
 public class Utils {
     
-    public static MouseUtils$ Mouse;
+    public static MouseUtils$ Mouse=MouseUtils$.MODULE$;
     
     public enum Buffer{
         COLOR_BUFFER(GL_COLOR_BUFFER_BIT),
