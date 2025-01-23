@@ -20,7 +20,7 @@ import scala.concurrent.duration.*
 object Main extends Game(3,3,60,800,600,"firmata"){
 
   val columns=Array(10,16,14,15,18,19).reverse
-  val rows=Array(9,8,7)
+  val rows=Array(6,5,4)
 //  val columns=Array(9,8,7)
 //  val rows=Array(10,16,14,15,18,19)
 
@@ -77,17 +77,19 @@ object Main extends Game(3,3,60,800,600,"firmata"){
   override def loop(delta: Float): Unit = {
     Utils.clear(Colors.black)
 
-//    Thread.sleep(20)
+//    Thread.sleep(3)
     rowPins.foreach(pin=>pin.setValue(1))
 
-    rowPins.zipWithIndex.foreach((rowPin,rowIndex)=>{
+    rowPins.zipWithIndex.foreach{(rowPin,rowIndex)=>
       rowPin.setValue(0)
       Thread.sleep(3)
       columnPins.zipWithIndex.foreach((columnPin,columnIndex)=>{
+//        Thread.sleep(3)
         keys(columnIndex)(rowIndex)=columnPin.getValue==1
       })
+//      Thread.sleep(3)
       rowPin.setValue(1)
-    })
+    }
 
     for(i <- keys.indices){
       for(j <- keys(0).indices){
