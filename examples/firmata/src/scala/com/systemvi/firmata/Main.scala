@@ -19,10 +19,10 @@ import scala.concurrent.duration.*
 
 object Main extends Game(3,3,60,800,600,"firmata"){
 
-//  val columns=Array(10,16,14,15,18,19)
-//  val rows=Array(9,8,7)
-  val columns=Array(9,8,7)
-  val rows=Array(10,16,14,15,18,19)
+  val columns=Array(10,16,14,15,18,19).reverse
+  val rows=Array(9,8,7)
+//  val columns=Array(9,8,7)
+//  val rows=Array(10,16,14,15,18,19)
 
   var device:FirmataDevice=null
 
@@ -32,7 +32,7 @@ object Main extends Game(3,3,60,800,600,"firmata"){
   var renderer:ShapeRenderer2=null
   var camera:Camera3=null
 
-  val keys:Array[Array[Boolean]]=Array.ofDim(rows.length,columns.length)
+  val keys:Array[Array[Boolean]]=Array.ofDim(columns.length,rows.length)
 
   override def setup(window: Window): Unit = {
 
@@ -63,13 +63,13 @@ object Main extends Game(3,3,60,800,600,"firmata"){
 
     columnPins=columns.map{i=>
       val pin=device.getPin(i)
-      pin.setMode(Mode.OUTPUT)
-      pin.setValue(0)
+      pin.setMode(Mode.PULLUP)
       pin
     }
     rowPins=rows.map{i=>
       val pin=device.getPin(i)
-      pin.setMode(Mode.PULLUP)
+      pin.setMode(Mode.OUTPUT)
+      pin.setValue(1)
       pin
     }
   }
@@ -77,16 +77,16 @@ object Main extends Game(3,3,60,800,600,"firmata"){
   override def loop(delta: Float): Unit = {
     Utils.clear(Colors.black)
 
-    columnPins.foreach(pin=>pin.setValue(1))
+//    Thread.sleep(20)
+    rowPins.foreach(pin=>pin.setValue(1))
 
-    columnPins.zipWithIndex.foreach((columnPin,columnIndex)=>{
-      columnPin.setValue(0)
-      Thread.sleep(1)
-      rowPins.zipWithIndex.foreach((rowPin,rowIndex)=>{
-        keys(rowIndex)(columnIndex)=rowPin.getValue==1
+    rowPins.zipWithIndex.foreach((rowPin,rowIndex)=>{
+      rowPin.setValue(0)
+      Thread.sleep(3)
+      columnPins.zipWithIndex.foreach((columnPin,columnIndex)=>{
+        keys(columnIndex)(rowIndex)=columnPin.getValue==1
       })
-      columnPin.setValue(1)
-      Thread.sleep(1)
+      rowPin.setValue(1)
     })
 
     for(i <- keys.indices){
