@@ -19,7 +19,7 @@ import scala.concurrent.duration.*
 
 object Main extends Game(3, 3, 60, 800, 600, "firmata") {
 
-  val columns = Array(10, 16, 14, 15, 18, 19).reverse
+  val columns = Array(10, 16, 14, 15, 18, 19,20)
   val rows = Array(9,8,7)
 //    val columns=Array(9,8,7)
 //    val rows=Array(10,16,14,15,18,19)
