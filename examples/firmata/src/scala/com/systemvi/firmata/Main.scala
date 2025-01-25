@@ -63,6 +63,18 @@ object Main extends Game(3, 3, 60, 800, 600, "firmata") {
 
     columnPins = columns.map { i =>
       val pin = device.getPin(i)
+      pin.setMode(Mode.OUTPUT)
+      pin.setValue(1)
+      pin
+    }
+    rowPins = rows.map { i =>
+      val pin = device.getPin(i)
+      pin.setMode(Mode.PULLUP)
+      pin
+    }
+
+    columnPins = columns.map { i =>
+      val pin = device.getPin(i)
       pin.setMode(Mode.PULLUP)
       pin
     }
