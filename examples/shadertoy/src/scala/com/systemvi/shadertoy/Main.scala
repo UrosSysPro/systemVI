@@ -44,8 +44,8 @@ object Main extends Game(3, 3, 60, 800, 600, "Shader Toy") {
           uniform vec4 iMouse;
         """
 //          +Utils.readInternal("rainbow/main.glsl")
-          +Utils.readInternal("2dRayMarching/main.glsl")
 //          +Utils.readInternal("2dRayMarching/main.glsl")
+          +Utils.readInternal("3d ray marching/main.glsl")
         +s"""
           out vec4 fragColor;
           void main(){
