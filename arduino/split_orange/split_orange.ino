@@ -1,8 +1,14 @@
 #include"Arduino.h"
-// #include "Keyboard.h"
-// #include "Wire.h"
 #define COLUMNS_NUMBER 7
 #define ROWS_NUMBER 3
+
+#include <NimBLEDevice.h>
+#include "HIDKeyboardTypes.h"  // Custom HID Report Descriptor
+
+NimBLEServer *pServer;
+NimBLEHIDDevice *hid;
+NimBLECharacteristic *input;
+bool connected = false;
 
 int columns[]={21,20,10,7,6,5,3};
 int rows[]={0,1,2};
@@ -13,11 +19,11 @@ struct Key{
   bool justChanged;//=false;
 };
 
-const byte thisAddress = 9;
-const byte otherAddress = 8;
+// const byte thisAddress = 9;
+// const byte otherAddress = 8;
 
-bool hasNewMessage=false;
-String message;
+// bool hasNewMessage=false;
+// String message;
 
 Key keys[COLUMNS_NUMBER][ROWS_NUMBER]={
   {{' ',false,false},{'a',false,false},{'a',false,false}},
@@ -56,6 +62,24 @@ void setup() {
   // Wire.onReceive(onReceived);
   // Wire.onRequest(onRequest);
   // Keyboard.begin();
+ NimBLEDevice::init("ESP32C3-HID");
+
+  pServer = NimBLEDevice::createServer();
+  pServer->setCallbacks(new ServerCallbacks());
+
+  hid = new NimBLEHIDDevice(pServer);
+  input = hid->inputReport(0); 
+
+  hid->manufacturer()->setValue("ESP32C3");
+  hid->pnp(0x02, 0x1234, 0x5678, 0x0110);
+  hid->hidInfo(0x00, 0x02);
+  hid->reportMap((uint8_t*)hidReportDescriptor, sizeof(hidReportDescriptor));
+  hid->startServices();
+
+  NimBLEAdvertising *advertising = NimBLEDevice::getAdvertising();
+  advertising->addServiceUUID(hid->hidService()->getUUID());
+  advertising->setScanResponse(true);
+  advertising->start();
 }
 
 void loop() {

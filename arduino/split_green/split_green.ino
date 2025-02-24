@@ -14,8 +14,8 @@ struct Key{
   bool justChanged;//=false;
 };
 
-const byte thisAddress = 8; 
-const byte otherAddress = 9;
+// const byte thisAddress = 8; 
+// const byte otherAddress = 9;
 
 Key keys[COLUMNS_NUMBER][ROWS_NUMBER]={
   {{' ',false,false},{KEY_LEFT_SHIFT,false,false},{'a',false,false}},
