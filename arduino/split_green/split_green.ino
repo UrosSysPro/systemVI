@@ -1,6 +1,6 @@
 #include"Arduino.h"
 #include "Keyboard.h"
-#include "Wire.h"
+// #include "Wire.h"
 
 #define COLUMNS_NUMBER 7
 #define ROWS_NUMBER 3
@@ -27,44 +27,44 @@ Key keys[COLUMNS_NUMBER][ROWS_NUMBER]={
   {{KEY_ESC,false,false},{KEY_TAB,false,false},{KEY_LEFT_CTRL,false,false}}
 };
 
-void checkForConnectedI2CDevices(){
-  byte count = 0;
-  for (byte i = 1; i < 120; i++) {
-    if(i==thisAddress)continue;
-    Wire.beginTransmission (i);
-    if (Wire.endTransmission () == 0){
-      Serial.print ("Found address: ");
-      Serial.print (i, DEC);
-      Serial.print (" (0x");
-      Serial.print (i, HEX);
-      Serial.println (")");
-      count++;
-      delay (10);
-    }
-  }
-  Serial.println ("Done.");
-  Serial.print ("Found ");
-  Serial.print (count, DEC);
-  Serial.println (" device(s).");
-}
+// void checkForConnectedI2CDevices(){
+//   byte count = 0;
+//   for (byte i = 1; i < 120; i++) {
+//     if(i==thisAddress)continue;
+//     Wire.beginTransmission (i);
+//     if (Wire.endTransmission () == 0){
+//       Serial.print ("Found address: ");
+//       Serial.print (i, DEC);
+//       Serial.print (" (0x");
+//       Serial.print (i, HEX);
+//       Serial.println (")");
+//       count++;
+//       delay (10);
+//     }
+//   }
+//   Serial.println ("Done.");
+//   Serial.print ("Found ");
+//   Serial.print (count, DEC);
+//   Serial.println (" device(s).");
+// }
 
-void sendMessage(String message){
-  Wire.beginTransmission(otherAddress);
-  Wire.write(message.c_str(), message.length());
-  byte result=Wire.endTransmission();
-  Serial.println(result);
-}
+// void sendMessage(String message){
+//   Wire.beginTransmission(otherAddress);
+//   Wire.write(message.c_str(), message.length());
+//   byte result=Wire.endTransmission();
+//   Serial.println(result);
+// }
 
-String requestMessage(){
- String message = "";
-  Wire.requestFrom(otherAddress, 80);  // Request max 17 bytes
-  while (Wire.available()) {
-    char c = Wire.read();  // Read as char
-    if (c == '\0') break;  // Stop if null-terminator is received
-    message += c;
-  }
-  return message;
-}
+// String requestMessage(){
+//  String message = "";
+//   Wire.requestFrom(otherAddress, 80);  // Request max 17 bytes
+//   while (Wire.available()) {
+//     char c = Wire.read();  // Read as char
+//     if (c == '\0') break;  // Stop if null-terminator is received
+//     message += c;
+//   }
+//   return message;
+// }
 
 void setup() {
   for(int i=0;i<COLUMNS_NUMBER;i++){
@@ -89,10 +89,9 @@ void setup() {
 
   Serial.begin(9600);
 
-  Wire.begin(thisAddress);
-  Wire.setClock(10000);
+  // Wire.begin(thisAddress);
+  // Wire.setClock(10000);
   Keyboard.begin();
-  
 }
 
 void loop() {

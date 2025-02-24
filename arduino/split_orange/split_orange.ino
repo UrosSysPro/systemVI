@@ -1,6 +1,6 @@
 #include"Arduino.h"
 // #include "Keyboard.h"
-#include "Wire.h"
+// #include "Wire.h"
 #define COLUMNS_NUMBER 7
 #define ROWS_NUMBER 3
 
@@ -51,10 +51,10 @@ void setup() {
   }
 
   Serial.begin(9600);
-  Wire.begin(thisAddress);
-  Wire.setClock(10000);
-  Wire.onReceive(onReceived);
-  Wire.onRequest(onRequest);
+  // Wire.begin(thisAddress);
+  // Wire.setClock(10000);
+  // Wire.onReceive(onReceived);
+  // Wire.onRequest(onRequest);
   // Keyboard.begin();
 }
 
@@ -94,23 +94,23 @@ void loop() {
       }
     }
   }
-  if(hasNewMessage){
-    Serial.print("message from i2c: ");
-    Serial.println(message);
-    hasNewMessage=false;
-  }
+  // if(hasNewMessage){
+  //   Serial.print("message from i2c: ");
+  //   Serial.println(message);
+  //   hasNewMessage=false;
+  // }
 }
 
-void onRequest(){
-  String response = "h";
-  char buffer[18];  // 17 chars + null terminator
-  response.toCharArray(buffer, sizeof(buffer));  // Convert to C-string
-  Wire.write((byte*)buffer, strlen(buffer) + 1);  // Send with null-terminator
-}
-void onReceived(int size){
-  message="";
-  while(Wire.available()){
-    message+=String(Wire.read());
-  }
-  hasNewMessage=true;
-}
+// void onRequest(){
+//   String response = "h";
+//   char buffer[18];  // 17 chars + null terminator
+//   response.toCharArray(buffer, sizeof(buffer));  // Convert to C-string
+//   Wire.write((byte*)buffer, strlen(buffer) + 1);  // Send with null-terminator
+// }
+// void onReceived(int size){
+//   message="";
+//   while(Wire.available()){
+//     message+=String(Wire.read());
+//   }
+//   hasNewMessage=true;
+// }
