@@ -28,13 +28,13 @@ Key keys[COLUMNS_NUMBER][ROWS_NUMBER]={
 };
 
 Key keysRight[COLUMNS_NUMBER][ROWS_NUMBER]={
-  {{' ',false,false},{KEY_RIGHT_ALT,false,false},{KEY_LEFT_GUI,false,false}},
+  {{KEY_BACKSPACE,false,false},{KEY_RIGHT_SHIFT,false,false},{'z',false,false}},
   {{'y',false,false},{'h',false,false},{'n',false,false}},
   {{'u',false,false},{'j',false,false},{'m',false,false}},
   {{'i',false,false},{'k',false,false},{',',false,false}},
   {{'o',false,false},{'l',false,false},{'.',false,false}},
   {{'p',false,false},{';',false,false},{'/',false,false}},
-  {{KEY_BACKSPACE,false,false},{KEY_RETURN,false,false},{'z',false,false}}
+  {{'z',false,false},{KEY_RETURN,false,false},{'z',false,false}}
 };
 
 void checkForConnectedI2CDevices(){
