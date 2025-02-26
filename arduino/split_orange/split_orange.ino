@@ -1,17 +1,10 @@
 #include"Arduino.h"
+#include "Wire.h"
 #define COLUMNS_NUMBER 7
 #define ROWS_NUMBER 3
 
-#include <NimBLEDevice.h>
-#include "HIDKeyboardTypes.h"  // Custom HID Report Descriptor
-
-NimBLEServer *pServer;
-NimBLEHIDDevice *hid;
-NimBLECharacteristic *input;
-bool connected = false;
-
-int columns[]={21,20,10,7,6,5,3};
-int rows[]={0,1,2};
+int columns[]={15,22,13,12,11,10,9};
+int rows[]={8,7,6};
 
 struct Key{
   char value;
@@ -19,11 +12,9 @@ struct Key{
   bool justChanged;//=false;
 };
 
-// const byte thisAddress = 9;
-// const byte otherAddress = 8;
+const byte thisAddress = 9;
+const byte otherAddress = 8;
 
-// bool hasNewMessage=false;
-// String message;
 
 Key keys[COLUMNS_NUMBER][ROWS_NUMBER]={
   {{' ',false,false},{'a',false,false},{'a',false,false}},
@@ -36,6 +27,7 @@ Key keys[COLUMNS_NUMBER][ROWS_NUMBER]={
 };
 
 void setup() {
+  pinMode(25, OUTPUT);
   for(int i=0;i<COLUMNS_NUMBER;i++){
     int pin=columns[i];
     pinMode(pin, OUTPUT);
@@ -57,36 +49,16 @@ void setup() {
   }
 
   Serial.begin(9600);
-  // Wire.begin(thisAddress);
-  // Wire.setClock(10000);
-  // Wire.onReceive(onReceived);
-  // Wire.onRequest(onRequest);
+  Wire.begin(thisAddress);
+  Wire.onRequest(onRequest);
   // Keyboard.begin();
- NimBLEDevice::init("ESP32C3-HID");
-
-  pServer = NimBLEDevice::createServer();
-  pServer->setCallbacks(new ServerCallbacks());
-
-  hid = new NimBLEHIDDevice(pServer);
-  input = hid->inputReport(0); 
-
-  hid->manufacturer()->setValue("ESP32C3");
-  hid->pnp(0x02, 0x1234, 0x5678, 0x0110);
-  hid->hidInfo(0x00, 0x02);
-  hid->reportMap((uint8_t*)hidReportDescriptor, sizeof(hidReportDescriptor));
-  hid->startServices();
-
-  NimBLEAdvertising *advertising = NimBLEDevice::getAdvertising();
-  advertising->addServiceUUID(hid->hidService()->getUUID());
-  advertising->setScanResponse(true);
-  advertising->start();
 }
 
 void loop() {
   for(int j=0;j<ROWS_NUMBER;j++){
     int rowPin=rows[j];
     digitalWrite(rowPin, 0);
-    delayMicroseconds(10);
+    delayMicroseconds(1000);
     for(int i=0;i<COLUMNS_NUMBER;i++){
       int columnPin=columns[i];
       bool newState=digitalRead(columnPin) == 0;
@@ -118,23 +90,8 @@ void loop() {
       }
     }
   }
-  // if(hasNewMessage){
-  //   Serial.print("message from i2c: ");
-  //   Serial.println(message);
-  //   hasNewMessage=false;
-  // }
 }
 
-// void onRequest(){
-//   String response = "h";
-//   char buffer[18];  // 17 chars + null terminator
-//   response.toCharArray(buffer, sizeof(buffer));  // Convert to C-string
-//   Wire.write((byte*)buffer, strlen(buffer) + 1);  // Send with null-terminator
-// }
-// void onReceived(int size){
-//   message="";
-//   while(Wire.available()){
-//     message+=String(Wire.read());
-//   }
-//   hasNewMessage=true;
-// }
+void onRequest(){
+  Wire.write("hello from orange");
+}

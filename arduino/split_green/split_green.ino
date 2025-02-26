@@ -1,12 +1,12 @@
 #include"Arduino.h"
 #include "Keyboard.h"
-// #include "Wire.h"
+#include "Wire.h"
 
 #define COLUMNS_NUMBER 7
 #define ROWS_NUMBER 3
 
-int columns[]={10, 16, 14, 15, 18, 19,20};
-int rows[]={9,8,7};
+int columns[]={27,26,22,21,20,19,18};
+int rows[]={0,1,2};
 
 struct Key{
   char value;
@@ -14,8 +14,8 @@ struct Key{
   bool justChanged;//=false;
 };
 
-// const byte thisAddress = 8; 
-// const byte otherAddress = 9;
+const byte thisAddress = 8; 
+const byte otherAddress = 9;
 
 Key keys[COLUMNS_NUMBER][ROWS_NUMBER]={
   {{' ',false,false},{KEY_LEFT_SHIFT,false,false},{'a',false,false}},
@@ -27,44 +27,39 @@ Key keys[COLUMNS_NUMBER][ROWS_NUMBER]={
   {{KEY_ESC,false,false},{KEY_TAB,false,false},{KEY_LEFT_CTRL,false,false}}
 };
 
-// void checkForConnectedI2CDevices(){
-//   byte count = 0;
-//   for (byte i = 1; i < 120; i++) {
-//     if(i==thisAddress)continue;
-//     Wire.beginTransmission (i);
-//     if (Wire.endTransmission () == 0){
-//       Serial.print ("Found address: ");
-//       Serial.print (i, DEC);
-//       Serial.print (" (0x");
-//       Serial.print (i, HEX);
-//       Serial.println (")");
-//       count++;
-//       delay (10);
-//     }
-//   }
-//   Serial.println ("Done.");
-//   Serial.print ("Found ");
-//   Serial.print (count, DEC);
-//   Serial.println (" device(s).");
-// }
+void checkForConnectedI2CDevices(){
+  byte count = 0;
+  for (byte i = 1; i < 120; i++) {
+    if(i==thisAddress)continue;
+    Wire.beginTransmission (i);
+    if (Wire.endTransmission () == 0){
+      Serial.print ("Found address: ");
+      Serial.print (i, DEC);
+      Serial.print (" (0x");
+      Serial.print (i, HEX);
+      Serial.println (")");
+      count++;
+      delay (10);
+    }
+  }
+  Serial.println ("Done.");
+  Serial.print ("Found ");
+  Serial.print (count, DEC);
+  Serial.println (" device(s).");
+}
 
-// void sendMessage(String message){
-//   Wire.beginTransmission(otherAddress);
-//   Wire.write(message.c_str(), message.length());
-//   byte result=Wire.endTransmission();
-//   Serial.println(result);
-// }
 
-// String requestMessage(){
-//  String message = "";
-//   Wire.requestFrom(otherAddress, 80);  // Request max 17 bytes
-//   while (Wire.available()) {
-//     char c = Wire.read();  // Read as char
-//     if (c == '\0') break;  // Stop if null-terminator is received
-//     message += c;
-//   }
-//   return message;
-// }
+void requestMessage(){
+  Wire.requestFrom(otherAddress, 17,false); 
+  String message="";
+  while(Wire.available()){
+    message+=(char)Wire.read();
+  }
+  // char data[80];
+  // Wire.readBytes((byte*)data,15);
+  // message=String(data);
+  Serial.println(message);
+}
 
 void setup() {
   for(int i=0;i<COLUMNS_NUMBER;i++){
@@ -89,8 +84,7 @@ void setup() {
 
   Serial.begin(9600);
 
-  // Wire.begin(thisAddress);
-  // Wire.setClock(10000);
+  Wire.begin();
   Keyboard.begin();
 }
 
@@ -98,7 +92,7 @@ void loop() {
   for(int j=0;j<ROWS_NUMBER;j++){
     int rowPin=rows[j];
     digitalWrite(rowPin, 0);
-    delayMicroseconds(10);
+    delayMicroseconds(1000);
     for(int i=0;i<COLUMNS_NUMBER;i++){
       int columnPin=columns[i];
       bool newState=digitalRead(columnPin) == 0;
@@ -107,25 +101,18 @@ void loop() {
     }
     digitalWrite(rowPin, 1);
   }
-
-
-  // Key* key;
-  // key=&keys[0][0];
-  // if(key->justChanged){
-  //   if(key->pressed)sendMessage("hello from green");
-  //   key->justChanged=false;
-  // }
   
-  // key=&keys[0][1];
-  // if(key->justChanged){
-  //   if(key->pressed)Serial.println(requestMessage());
-  //   key->justChanged=false;
-  // }
-  // key=&keys[0][2];
-  // if(key->justChanged){
-  //   if(key->pressed)checkForConnectedI2CDevices();
-  //   key->justChanged=false;
-  // }
+  Key* key;
+  key=&keys[0][1];
+  if(key->justChanged){
+    if(key->pressed)requestMessage();
+    key->justChanged=false;
+  }
+  key=&keys[0][2];
+  if(key->justChanged){
+    if(key->pressed)checkForConnectedI2CDevices();
+    key->justChanged=false;
+  }
 
   for(int i=0;i<COLUMNS_NUMBER;i++){
     for(int j=0;j<ROWS_NUMBER;j++){
