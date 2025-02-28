@@ -9,32 +9,32 @@ int columns[]={18,19,20,21,22,26,27};
 int rows[]={1,0,2};
 
 struct Key{
-  char value;
-  bool pressed;//=false;
-  bool justChanged;//=false;
+  char value[3];
+  bool pressed;
+  bool justChanged;
 };
 
 const byte thisAddress = 8; 
 const byte otherAddress = 9;
 
 Key keys[COLUMNS_NUMBER][ROWS_NUMBER]={
-  {{' ',false,false},{KEY_LEFT_SHIFT,false,false},{'a',false,false}},
-  {{'t',false,false},{'g',false,false},{'b',false,false}},
-  {{'r',false,false},{'f',false,false},{'v',false,false}},
-  {{'e',false,false},{'d',false,false},{'c',false,false}},
-  {{'w',false,false},{'s',false,false},{'x',false,false}},
-  {{'q',false,false},{'a',false,false},{'z',false,false}},
-  {{KEY_ESC,false,false},{KEY_TAB,false,false},{KEY_LEFT_CTRL,false,false}}
+  {{{' ',' '},false,false},{{KEY_LEFT_SHIFT,KEY_LEFT_SHIFT},false,false},{{'a','a'},false,false}},
+  {{{'t',KEY_F6},false,false},{{'g','6'},false,false},{{'b','b'},false,false}},
+  {{{'r',KEY_F5},false,false},{{'f','5'},false,false},{{'v','v'},false,false}},
+  {{{'e',KEY_F4},false,false},{{'d','4'},false,false},{{'c','c'},false,false}},
+  {{{'w',KEY_F3},false,false},{{'s','3'},false,false},{{'x','x'},false,false}},
+  {{{'q',KEY_F2},false,false},{{'a','2'},false,false},{{'z','z'},false,false}},
+  {{{KEY_ESC,KEY_F1},false,false},{{KEY_TAB,'1'},false,false},{{KEY_LEFT_CTRL,KEY_LEFT_CTRL},false,false}}
 };
 
 Key keysRight[COLUMNS_NUMBER][ROWS_NUMBER]={
-  {{KEY_BACKSPACE,false,false},{KEY_RIGHT_SHIFT,false,false},{'z',false,false}},
-  {{'y',false,false},{'h',false,false},{'n',false,false}},
-  {{'u',false,false},{'j',false,false},{'m',false,false}},
-  {{'i',false,false},{'k',false,false},{',',false,false}},
-  {{'o',false,false},{'l',false,false},{'.',false,false}},
-  {{'p',false,false},{';',false,false},{'/',false,false}},
-  {{'z',false,false},{KEY_RETURN,false,false},{'z',false,false}}
+  {{{KEY_BACKSPACE,KEY_BACKSPACE},false,false},{{' ',' '},false,false},{{'z','z'},false,false}},
+  {{{'y',KEY_F7} ,false,false},{{'h','7'},false,false},{{'n','n'},false,false}},
+  {{{'u',KEY_F8} ,false,false},{{'j','8'},false,false},{{'m','m'},false,false}},
+  {{{'i',KEY_F9} ,false,false},{{'k','9'},false,false},{{',',','},false,false}},
+  {{{'o',KEY_F10},false,false},{{'l','0'},false,false},{{'.','.'},false,false}},
+  {{{'p',KEY_F11},false,false},{{';','-'},false,false},{{'/','/'},false,false}},
+  {{{'z',KEY_F12},false,false},{{KEY_RETURN,'='},false,false},{{'z','z'},false,false}}
 };
 
 void checkForConnectedI2CDevices(){
@@ -63,11 +63,8 @@ void requestMessage(){
   Wire.requestFrom(otherAddress, 4,true); 
   unsigned int state=0;
   Wire.readBytes((byte*)&state,4);
-  // Serial.println(state);
   for(int i=COLUMNS_NUMBER-1;i>=0;i--){
     for(int j=ROWS_NUMBER-1;j>=0;j--){
-      // state = state << 1;
-      // state = state | (int)keys[i][j].pressed;
       bool oldValue=keysRight[i][j].pressed;
       keysRight[i][j].pressed = (state & 1)==1;
       if(oldValue!=keysRight[i][j].pressed){
@@ -119,61 +116,43 @@ void loop() {
     digitalWrite(rowPin, 1);
   }
   
-  // Key* key;
-  // key=&keys[0][1];
-  // if(key->justChanged){
-  //   if(key->pressed)requestMessage();
-  //   key->justChanged=false;
-  // }
-  // key=&keys[0][2];
-  // if(key->justChanged){
-  //   if(key->pressed)checkForConnectedI2CDevices();
-  //   key->justChanged=false;
-  // }
+  requestMessage();
+
+  Key* key;
+  int layer = 0;
+  key=&keysRight[0][1];
+  if(key->pressed){
+    key->justChanged=false;
+    layer = 1;
+  }
+  key=&keysRight[0][2];
+  if(key->pressed){
+    key->justChanged=false;
+    layer = 2;
+  }
+   a way to write numbers 1234
 
   for(int i=0;i<COLUMNS_NUMBER;i++){
     for(int j=0;j<ROWS_NUMBER;j++){
       if(keys[i][j].justChanged){
         keys[i][j].justChanged=false;
         if(keys[i][j].pressed){
-          // Serial.print("key pressed  ");
-          // Serial.print(i);
-          // Serial.print(" ");
-          // Serial.print(j);
-          // Serial.println("");
-          Keyboard.press(keys[i][j].value);
+          Keyboard.press(keys[i][j].value[layer]);
         }else{
-          // Serial.print("key released ");
-          // Serial.print(i);
-          // Serial.print(" ");
-          // Serial.print(j);
-          // Serial.println("");
-          Keyboard.release(keys[i][j].value);
+          Keyboard.release(keys[i][j].value[layer]);
         }
       }
     }
   }
-
-  requestMessage();
 
   for(int i=0;i<COLUMNS_NUMBER;i++){
     for(int j=0;j<ROWS_NUMBER;j++){
       if(keysRight[i][j].justChanged){
         keysRight[i][j].justChanged=false;
         if(keysRight[i][j].pressed){
-          // Serial.print("key pressed  ");
-          // Serial.print(6+i);
-          // Serial.print(" ");
-          // Serial.print(j);
-          // Serial.println("");
-          Keyboard.press(keysRight[i][j].value);
+          Keyboard.press(keysRight[i][j].value[layer]);
         }else{
-          // Serial.print("key released ");
-          // Serial.print(6+i);
-          // Serial.print(" ");
-          // Serial.print(j);
-          // Serial.println(keysRight[i][j].value);
-          Keyboard.release(keysRight[i][j].value);
+          Keyboard.release(keysRight[i][j].value[layer]);
         }
       }
     }
