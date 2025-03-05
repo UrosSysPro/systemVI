@@ -1,5 +1,5 @@
-//>using jar ../lib/engine.jar
-//>using sourceJar ../lib/engine.jar
+//>using jar ../engine.jar
+//>using sourceJar ../engine.jar
 
 import com.systemvi.engine.application.Game
 import com.systemvi.engine.window.Window

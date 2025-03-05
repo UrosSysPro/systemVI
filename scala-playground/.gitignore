@@ -1,3 +1,8 @@
 .idea
 .scala-build
 lib/*
+.bsp/*
+.bsp
+.metals/*
+.metals
+engine.jar
