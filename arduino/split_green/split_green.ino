@@ -4,7 +4,7 @@
 
 #define COLUMNS_NUMBER 7
 #define ROWS_NUMBER 3
-
+ 
 int columns[]={18,19,20,21,22,26,27};
 int rows[]={1,0,2};
 
@@ -18,18 +18,18 @@ const byte thisAddress = 8;
 const byte otherAddress = 9;
 
 Key keys[COLUMNS_NUMBER][ROWS_NUMBER]={
-  {{{' ',' '},false,false},{{KEY_LEFT_SHIFT,KEY_LEFT_SHIFT},false,false},{{'a','a'},false,false}},
-  {{{'t',KEY_F6},false,false},{{'g','6'},false,false},{{'b','b'},false,false}},
-  {{{'r',KEY_F5},false,false},{{'f','5'},false,false},{{'v','v'},false,false}},
-  {{{'e',KEY_F4},false,false},{{'d','4'},false,false},{{'c','c'},false,false}},
-  {{{'w',KEY_F3},false,false},{{'s','3'},false,false},{{'x','x'},false,false}},
-  {{{'q',KEY_F2},false,false},{{'a','2'},false,false},{{'z','z'},false,false}},
-  {{{KEY_ESC,KEY_F1},false,false},{{KEY_TAB,'1'},false,false},{{KEY_LEFT_CTRL,KEY_LEFT_CTRL},false,false}}
+  {{{' ',' ',' '},false,false},{{KEY_LEFT_SHIFT,KEY_LEFT_SHIFT,KEY_LEFT_SHIFT},false,false},{{'a','a','a'},false,false}},
+  {{{'t','5',' '},false,false},{{'g',' ',' '},false,false},{{'b',' ',' '},false,false}},
+  {{{'r','4',' '},false,false},{{'f',' ',' '},false,false},{{'v',' ',' '},false,false}},
+  {{{'e','3',' '},false,false},{{'d',' ',' '},false,false},{{'c',' ',' '},false,false}},
+  {{{'w','2',' '},false,false},{{'s',' ',' '},false,false},{{'x',' ',' '},false,false}},
+  {{{'q','1',' '},false,false},{{'a',' ',' '},false,false},{{'z',' ',' '},false,false}},
+  {{{KEY_ESC,KEY_ESC,KEY_ESC},false,false},{{KEY_TAB,KEY_TAB,KEY_TAB},false,false},{{KEY_LEFT_CTRL,KEY_LEFT_CTRL,KEY_LEFT_CTRL},false,false}}
 };
 
 Key keysRight[COLUMNS_NUMBER][ROWS_NUMBER]={
-  {{{KEY_BACKSPACE,KEY_BACKSPACE},false,false},{{' ',' '},false,false},{{'z','z'},false,false}},
-  {{{'y',KEY_F7} ,false,false},{{'h','7'},false,false},{{'n','n'},false,false}},
+  {{{KEY_BACKSPACE,KEY_BACKSPACE,KEY_BACKSPACE},false,false},{{' ',' ',' '},false,false},{{' ',' ',' '},false,false}},
+  {{{'y','6',' '} ,false,false},{{'h',KEY_LEFT,' '},false,false},{{'n','n'},false,false}},
   {{{'u',KEY_F8} ,false,false},{{'j','8'},false,false},{{'m','m'},false,false}},
   {{{'i',KEY_F9} ,false,false},{{'k','9'},false,false},{{',',','},false,false}},
   {{{'o',KEY_F10},false,false},{{'l','0'},false,false},{{'.','.'},false,false}},
