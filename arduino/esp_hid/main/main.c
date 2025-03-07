@@ -112,30 +112,44 @@ void gap_callback(esp_gap_ble_cb_event_t event, esp_ble_gap_cb_param_t *param){
 	}
 }
 
+bool KeyboardisConnected(){
+	return connected;
+}
+
+void Keyboardpress(uint8_t key){
+	esp_hidd_send_keyboard_value(connection_id,0,&key,1);
+}
+
+void KeyboardRelease(uint8_t key){
+	esp_hidd_send_keyboard_value(connection_id,0,&key,0);
+}
+void delay(int millis){
+	vTaskDelay(millis/portTICK_PERIOD_MS);
+}
 void task_main(void *params){
-	vTaskDelay(1000/portTICK_PERIOD_MS);
 	while(1){
-		vTaskDelay(2000/portTICK_PERIOD_MS);
-		if(connected){
-			printf("send key press");
-			uint8_t key={HID_KEY_A};
-			esp_hidd_send_keyboard_value(connection_id,0,&key,1);
-			vTaskDelay(2000/portTICK_PERIOD_MS);
-			esp_hidd_send_keyboard_value(connection_id,0,&key,0);
-			vTaskDelay(2000/portTICK_PERIOD_MS);
+		delay(3000);
+		if(KeyboardisConnected()){
+			printf("send key press\n");
+			uint8_t key=HID_KEY_D;
+			Keyboardpress(key);
+			delay(100);
+			KeyboardRelease(key);
 		}
 	}
 }
 
-void app_main(void){
+void initFlash(){
 	esp_err_t ret;
-	
+		
 	ret=nvs_flash_init();
 	if(ret==ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND){
 		nvs_flash_erase();
 		ret=nvs_flash_init();
 	}
-
+}
+void enableBleController(){
+	esp_err_t ret;
 	esp_bt_controller_mem_release(ESP_BT_MODE_CLASSIC_BT);
 	esp_bt_controller_config_t bt_config=BT_CONTROLLER_INIT_CONFIG_DEFAULT();
 	ret=esp_bt_controller_init(&bt_config);
@@ -148,6 +162,9 @@ void app_main(void){
 		printf("enable ble controller failed\n");
 		exit(1);
 	}
+}
+void enableBluedroid(){
+	esp_err_t ret;
 	ret=esp_bluedroid_init();
 	if(ret){
 		printf("init bluedroid failed\n");
@@ -158,14 +175,20 @@ void app_main(void){
 		printf("enable bluedroid failedi\n");
 		exit(1);
 	}	
+}
+void enableHidProfile(){
+	esp_err_t ret;
 	ret=esp_hidd_profile_init();
 	if(ret!=ESP_OK){
 		printf("init hidd profile failed\n");
 		exit(1);
 	}
+}
+void setBleHidCallbacks(){
 	esp_ble_gap_register_callback(gap_callback);
 	esp_hidd_register_callbacks(hidd_callback);
-	
+}
+void enableBleSecurity(){
 	esp_ble_auth_req_t auth_req=ESP_LE_AUTH_BOND;
 	esp_ble_io_cap_t iocap=ESP_IO_CAP_NONE;
 	uint8_t key_size=16;
@@ -176,6 +199,14 @@ void app_main(void){
 	esp_ble_gap_set_security_param(ESP_BLE_SM_MAX_KEY_SIZE,&key_size,sizeof(uint8_t));
 	esp_ble_gap_set_security_param(ESP_BLE_SM_MAX_KEY_SIZE,&init_key,sizeof(uint8_t));
 	esp_ble_gap_set_security_param(ESP_BLE_SM_MAX_KEY_SIZE,&rsp_key,sizeof(uint8_t));
-	
+}
+void app_main(void){
+	initFlash();
+	enableBleController();
+	enableBluedroid();
+	enableHidProfile();
+	setBleHidCallbacks();
+	enableBleSecurity();
+
 	xTaskCreate(&task_main,"hid_task", 2048, NULL, 5, NULL);
 }
