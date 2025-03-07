@@ -200,13 +200,23 @@ void enableBleSecurity(){
 	esp_ble_gap_set_security_param(ESP_BLE_SM_MAX_KEY_SIZE,&init_key,sizeof(uint8_t));
 	esp_ble_gap_set_security_param(ESP_BLE_SM_MAX_KEY_SIZE,&rsp_key,sizeof(uint8_t));
 }
-void app_main(void){
+
+void KeyboardInit(){
 	initFlash();
 	enableBleController();
 	enableBluedroid();
 	enableHidProfile();
 	setBleHidCallbacks();
 	enableBleSecurity();
+}
+void init(){
+	
+}
 
+void loop(){
+
+}
+void app_main(void){
+	KeyboardInit();
 	xTaskCreate(&task_main,"hid_task", 2048, NULL, 5, NULL);
 }
