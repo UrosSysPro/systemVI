@@ -29,12 +29,12 @@ Key keys[COLUMNS_NUMBER][ROWS_NUMBER]={
 
 Key keysRight[COLUMNS_NUMBER][ROWS_NUMBER]={
   {{{KEY_BACKSPACE,KEY_BACKSPACE,KEY_BACKSPACE},false,false},{{' ',' ',' '},false,false},{{' ',' ',' '},false,false}},
-  {{{'y','6',' '} ,false,false},{{'h',KEY_LEFT,' '},false,false},{{'n','n'},false,false}},
-  {{{'u',KEY_F8} ,false,false},{{'j','8'},false,false},{{'m','m'},false,false}},
-  {{{'i',KEY_F9} ,false,false},{{'k','9'},false,false},{{',',','},false,false}},
-  {{{'o',KEY_F10},false,false},{{'l','0'},false,false},{{'.','.'},false,false}},
-  {{{'p',KEY_F11},false,false},{{';','-'},false,false},{{'/','/'},false,false}},
-  {{{'z',KEY_F12},false,false},{{KEY_RETURN,'='},false,false},{{'z','z'},false,false}}
+  {{{'y','6',' '} ,false,false},{{'h'       ,KEY_LEFT_ARROW ,' ' },false,false},{{'n',' ',' '},false,false}},
+  {{{'u','7','{'} ,false,false},{{'j'       ,KEY_DOWN_ARROW ,'[' },false,false},{{'m',' ','('},false,false}},
+  {{{'i','8','}'} ,false,false},{{'k'       ,KEY_UP_ARROW   ,']' },false,false},{{',',' ',')'},false,false}},
+  {{{'o','9',' '} ,false,false},{{'l'       ,KEY_RIGHT_ARROW,'\''},false,false},{{'.',' ',' '},false,false}},
+  {{{'p','0',' '} ,false,false},{{';'       ,' '            ,'`' },false,false},{{'/',' ',' '},false,false}},
+  {{{'z','=',' '} ,false,false},{{KEY_RETURN,' '            ,' ' },false,false},{{'z',' ',' '},false,false}}
 };
 
 void checkForConnectedI2CDevices(){
@@ -130,7 +130,6 @@ void loop() {
     key->justChanged=false;
     layer = 2;
   }
-   a way to write numbers 1234
 
   for(int i=0;i<COLUMNS_NUMBER;i++){
     for(int j=0;j<ROWS_NUMBER;j++){
