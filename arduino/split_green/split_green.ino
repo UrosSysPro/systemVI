@@ -32,9 +32,9 @@ Key keysRight[COLUMNS_NUMBER][ROWS_NUMBER]={
   {{{'y','6',' '} ,false,false},{{'h'       ,KEY_LEFT_ARROW ,' ' },false,false},{{'n',' ',' '},false,false}},
   {{{'u','7','{'} ,false,false},{{'j'       ,KEY_DOWN_ARROW ,'[' },false,false},{{'m',' ','('},false,false}},
   {{{'i','8','}'} ,false,false},{{'k'       ,KEY_UP_ARROW   ,']' },false,false},{{',',' ',')'},false,false}},
-  {{{'o','9',' '} ,false,false},{{'l'       ,KEY_RIGHT_ARROW,'\''},false,false},{{'.',' ',' '},false,false}},
-  {{{'p','0',' '} ,false,false},{{';'       ,' '            ,'`' },false,false},{{'/',' ',' '},false,false}},
-  {{{'z','=',' '} ,false,false},{{KEY_RETURN,' '            ,' ' },false,false},{{'z',' ',' '},false,false}}
+  {{{'o','9','-'} ,false,false},{{'l'       ,KEY_RIGHT_ARROW,'\''},false,false},{{'.',' ',' '},false,false}},
+  {{{'p','0','+'} ,false,false},{{';'       ,' '            ,'`' },false,false},{{'/',' ',' '},false,false}},
+  {{{'\\','=',' '} ,false,false},{{KEY_RETURN,' '            ,' ' },false,false},{{'z',' ',' '},false,false}}
 };
 
 void checkForConnectedI2CDevices(){
