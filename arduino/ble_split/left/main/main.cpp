@@ -216,7 +216,7 @@ void init(){
 void loop(){
 
 }
-void app_main(void){
+extern "C" void app_main(void){
 	KeyboardInit();
 	xTaskCreate(&task_main,"hid_task", 2048, NULL, 5, NULL);
 }
