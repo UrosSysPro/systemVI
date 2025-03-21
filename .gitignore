@@ -11,3 +11,4 @@ out/*
 out/
 gradle/
 .kotlin/
+**/.metals
