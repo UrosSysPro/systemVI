@@ -1,0 +1,1696 @@
+{
+    "version": "1.4.0",
+    "project": {
+        "name": "voxel-world",
+        "directory": "C:\\Users\\uros\\projects\\systemVI\\voxel-world",
+        "workspaceDir": "C:\\Users\\uros\\projects\\systemVI",
+        "sources": [
+            "C:\\Users\\uros\\projects\\systemVI\\voxel-world\\src\\main\\java",
+            "C:\\Users\\uros\\projects\\systemVI\\voxel-world\\src\\scala"
+        ],
+        "dependencies": [
+            "engine"
+        ],
+        "classpath": [
+            "C:\\Users\\uros\\projects\\systemVI\\.bloop\\engine\\build\\classes",
+            "C:\\Users\\uros\\projects\\systemVI\\engine\\src\\resources",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\dev.dominion.ecs\\dominion-ecs-engine\\0.9.0\\8c2e41d7b6f179d80c959babef3d63163d445023\\dominion-ecs-engine-0.9.0.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.google.code.gson\\gson\\2.10.1\\b3add478d4382b78ea20b1671390a858002feb6c\\gson-2.10.1.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jbox2d\\jbox2d-library\\2.2.1.1\\4f21646d52bb51b56cbc3359c0f8fb223098ee04\\jbox2d-library-2.2.1.1.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.googlecode.lanterna\\lanterna\\3.0.1\\d2e5226e280c439e6817f98a07beed203e988c5d\\lanterna-3.0.1.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.scala-lang\\scala3-library_3\\3.5.1\\fad444125865e38c6a3870229f4a5d3e05c38ea8\\scala3-library_3-3.5.1.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\commons-collections\\commons-collections\\3.2.2\\8ad72fe39fa8c91eaaf12aadb21e0c3661fe26d5\\commons-collections-3.2.2.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.joml\\joml\\1.10.5\\22566d58af70ad3d72308bab63b8339906deb649\\joml-1.10.5.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-assimp\\3.3.3\\c2c34011cbda30ed8cf98bc5cbf97b49afe5279a\\lwjgl-assimp-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-bgfx\\3.3.3\\a19c4bfd1532863425098f05316726854aed8c51\\lwjgl-bgfx-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-cuda\\3.3.3\\e2de3beeba3e4c826317e31519a40f0585160acf\\lwjgl-cuda-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-egl\\3.3.3\\2f0d613e3f769577548f08b11ae9b7571980aeb1\\lwjgl-egl-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-fmod\\3.3.3\\aa6d1cf95ea97e903f6c733baf2477dbb3c41e3e\\lwjgl-fmod-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-freetype\\3.3.3\\a0db6c84a8becc8ca05f9dbfa985edc348a824c7\\lwjgl-freetype-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-glfw\\3.3.3\\efa1eb78c5ccd840e9f329717109b5e892d72f8e\\lwjgl-glfw-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-harfbuzz\\3.3.3\\7fbe5f968fa4cfa9184798ac1d53a4ef3fc4592a\\lwjgl-harfbuzz-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-hwloc\\3.3.3\\68333a022d5842b7bff95c70e4c3e1b2f126e783\\lwjgl-hwloc-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-jawt\\3.3.3\\15479071013804d88cc810856fcc2548b457376c\\lwjgl-jawt-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-jemalloc\\3.3.3\\b543467b7ff3c6920539a88ee602d34098628be5\\lwjgl-jemalloc-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-ktx\\3.3.3\\97d3e1e5eb919624ddc1238129e53fbdb7c0892a\\lwjgl-ktx-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-libdivide\\3.3.3\\74d15c7f21a1fac6d9dd6cf5f65767f20d976846\\lwjgl-libdivide-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-llvm\\3.3.3\\2c773f1540e8cc26664581899ce277f9fd6602c2\\lwjgl-llvm-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-lmdb\\3.3.3\\8fdcacda7250764e31c4327921d4c4576b2969d8\\lwjgl-lmdb-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-lz4\\3.3.3\\ab599e3fb2bc9e030403200b4801ed14e9dad65e\\lwjgl-lz4-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-meow\\3.3.3\\31dfcc20796cf70d40065e912b8d7cf91cfc2a7\\lwjgl-meow-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-meshoptimizer\\3.3.3\\7965dd4bb9916d6e6bcdc2dc54ad9860e1a4cb8c\\lwjgl-meshoptimizer-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-nanovg\\3.3.3\\37f0b9fc142948c3b2c6cd563db7233b14b9640c\\lwjgl-nanovg-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-nfd\\3.3.3\\f1b41d3a0a2f5cd2a55a6a59a618c87d0348681c\\lwjgl-nfd-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-nuklear\\3.3.3\\d120a8ab01987e285f83f43f862bef728011d97d\\lwjgl-nuklear-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-odbc\\3.3.3\\1719d4813fba2b4272afddcf30db98ec32e8bd37\\lwjgl-odbc-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-openal\\3.3.3\\daada81ceb5fc0c291fbfdd4433cb8d9423577f2\\lwjgl-openal-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opencl\\3.3.3\\fdf4a5cce0b7499914ac96a87d75fa895a4e0699\\lwjgl-opencl-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opengl\\3.3.3\\2f6b0147078396a58979125a4c947664e98293a\\lwjgl-opengl-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opengles\\3.3.3\\b3a29ff95bdb320122839741a3723338e6ecfa28\\lwjgl-opengles-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opus\\3.3.3\\4f4083f667c46299a54dedc2dc2e848759df5c15\\lwjgl-opus-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-par\\3.3.3\\9bf8ec696f9f8852418338e3000e31f3d9a730a4\\lwjgl-par-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-remotery\\3.3.3\\facc35058cb11d8cc26e73b5f5604dea7b65793c\\lwjgl-remotery-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-rpmalloc\\3.3.3\\3f77acc4aeafb0f42762aa7a6a550644b81ff132\\lwjgl-rpmalloc-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-shaderc\\3.3.3\\ae740d58fdc809c4350358a872b076bacbec27c1\\lwjgl-shaderc-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-spvc\\3.3.3\\bce3758f79dd197772f5b8c5709d8aae79a6595\\lwjgl-spvc-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-stb\\3.3.3\\25dd6161988d7e65f71d5065c99902402ee32746\\lwjgl-stb-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-tinyexr\\3.3.3\\4b5715555278987c9097d1ff71d8467609454f4c\\lwjgl-tinyexr-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-tinyfd\\3.3.3\\82d755ca94b102e9ca77283b9e2dc46d1b15fbe5\\lwjgl-tinyfd-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-vma\\3.3.3\\dacf4ee5787dbd17641f2aedd74fc1b04b506081\\lwjgl-vma-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-vulkan\\3.3.3\\2d85b61672fa82ec5045979ac49c7940913eea50\\lwjgl-vulkan-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-xxhash\\3.3.3\\4c0ab4dd55e3623285c03038bfb2e17acb0fc502\\lwjgl-xxhash-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-yoga\\3.3.3\\b5391a448c6a7015f4ee4b144694e70a696bb3e9\\lwjgl-yoga-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-zstd\\3.3.3\\54300388305318de1b94c97dd385bb9a609c2aba\\lwjgl-zstd-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl\\3.3.3\\29589b5f87ed335a6c7e7ee6a5775f81f97ecb84\\lwjgl-3.3.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\dev.dominion.ecs\\dominion-ecs-api\\0.9.0\\4b82b9713570b3eb5f1cafa7466655f1bc20375f\\dominion-ecs-api-0.9.0.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.scala-lang\\scala-library\\2.13.14\\f8b4afe89abe48ca670f620c7da89b71f93e6546\\scala-library-2.13.14.jar"
+        ],
+        "out": "C:\\Users\\uros\\projects\\systemVI\\.bloop\\voxel-world\\build",
+        "classesDir": "C:\\Users\\uros\\projects\\systemVI\\.bloop\\voxel-world\\build\\classes",
+        "resources": [
+            "C:\\Users\\uros\\projects\\systemVI\\voxel-world\\src\\resources"
+        ],
+        "scala": {
+            "organization": "org.scala-lang",
+            "name": "scala-compiler",
+            "version": "3.5.1",
+            "options": [
+                "-deprecation",
+                "-unchecked"
+            ],
+            "jars": [
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.scala-lang\\scaladoc_3\\3.5.1\\dd99894d8f8cb744c8653cf52c03d576b646a612\\scaladoc_3-3.5.1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.scala-lang\\scala3-tasty-inspector_3\\3.5.1\\184897254403350ed5da047d7216d714ecd727c2\\scala3-tasty-inspector_3-3.5.1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.scala-lang\\scala3-compiler_3\\3.5.1\\4f4e0ebd7c2189a414f5893db006352a21a0019\\scala3-compiler_3-3.5.1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.scala-lang\\scala3-sbt-bridge\\3.5.1\\621e3117a799b8a9383ee236ee593e9b7330dfc8\\scala3-sbt-bridge-3.5.1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.scala-lang\\scala3-interfaces\\3.5.1\\4521018748326dc92a60b23762058658cce458e2\\scala3-interfaces-3.5.1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.scala-lang\\tasty-core_3\\3.5.1\\770409769909dc03103efa2d98e11797115b27bc\\tasty-core_3-3.5.1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.scala-lang\\scala3-library_3\\3.5.1\\fad444125865e38c6a3870229f4a5d3e05c38ea8\\scala3-library_3-3.5.1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.scala-lang.modules\\scala-asm\\9.6.0-scala-1\\1bd791f6aad02b356e1dc5de4203b2be29f173b0\\scala-asm-9.6.0-scala-1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.scala-sbt\\compiler-interface\\1.9.6\\3b8871d17259e8c94f3c0e33d033764ecb9344b8\\compiler-interface-1.9.6.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jline\\jline-reader\\3.25.1\\46d87459a98d74be8c77645f2bc3c65bb2fc4f3a\\jline-reader-3.25.1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jline\\jline-terminal-jna\\3.25.1\\7e39efe62b2710b9f2bbefd2911e176b2efe1105\\jline-terminal-jna-3.25.1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jline\\jline-terminal\\3.25.1\\44e0e53397c39d01c525bad3735097596a7d889a\\jline-terminal-3.25.1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark-ext-anchorlink\\0.62.2\\3aa453b87258a448dfd8d01010d94e3a2832884d\\flexmark-ext-anchorlink-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark-ext-autolink\\0.62.2\\e72d9a9beffc30512e0231a2754d65dd32144744\\flexmark-ext-autolink-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark-ext-emoji\\0.62.2\\c1f1b1909bfb6c0f4301a9227745a3ab33b0d08f\\flexmark-ext-emoji-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark-jira-converter\\0.62.2\\c172ad9cde6317d84fc15fae53f8eab42d982ade\\flexmark-jira-converter-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark-ext-gfm-strikethrough\\0.62.2\\7c0657d663269223c7a5bf29f12982d38d382168\\flexmark-ext-gfm-strikethrough-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark-ext-gfm-tasklist\\0.62.2\\1c0fd7a70afac3a93459e49089e2d1b2bf72e590\\flexmark-ext-gfm-tasklist-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark-ext-wikilink\\0.62.2\\e07a39268a2091451f3456cb5d9e955bf276f3f4\\flexmark-ext-wikilink-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark-ext-tables\\0.62.2\\c95068a1450835c2695750ece82c996a7b57bbd3\\flexmark-ext-tables-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark-ext-yaml-front-matter\\0.62.2\\ab1caa230841406bf39fb8f3d69bf82a145fbec3\\flexmark-ext-yaml-front-matter-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark-ext-ins\\0.62.2\\234bf93924c93ee2d6d948da5ed82120b0e455c9\\flexmark-ext-ins-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark-ext-superscript\\0.62.2\\4bbdbed56d2da352177fdd5ae1c64ac07ace52d9\\flexmark-ext-superscript-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark\\0.62.2\\606a88e1d15aa8debd97cb5dfdf788ddc6fb5b5e\\flexmark-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark-util\\0.62.2\\6e38dcd6bb4ccfc13d513aaba350404977fa85bd\\flexmark-util-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark-util-format\\0.62.2\\58548be1fc0682698721c0c278451a41f361d3a\\flexmark-util-format-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark-util-ast\\0.62.2\\c0b998d5570295f104a4ffee4f8eec305d7db327\\flexmark-util-ast-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark-util-builder\\0.62.2\\22c85efb51d4aa25540b8b0d880be7ad4a8baec1\\flexmark-util-builder-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark-util-dependency\\0.62.2\\ae5afa76a669e06b3a65255c2ed775ede5cd3eb1\\flexmark-util-dependency-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark-util-html\\0.62.2\\6d830cb37e48fd9dca44bf15fbc3a86aa7d82c5a\\flexmark-util-html-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark-util-options\\0.62.2\\d871763fff2226c271cc3333e98729ce6211065c\\flexmark-util-options-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark-util-sequence\\0.62.2\\87af2803a63b5b07cc42d9c1d98f8ecd4f83fbcc\\flexmark-util-sequence-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark-util-data\\0.62.2\\2df8ce1abab2e40edc7d340962025ee1dd09fe02\\flexmark-util-data-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\nl.big-o\\liqp\\0.8.2\\ceba9a3456962a22ef0a837af9e4d48b62b63f93\\liqp-0.8.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jsoup\\jsoup\\1.17.2\\1e75b08d7019546a954f1e359477f916f537a34d\\jsoup-1.17.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.fasterxml.jackson.datatype\\jackson-datatype-jsr310\\2.15.1\\21300ba63a6408bbd3505af4287d1b9a911a9718\\jackson-datatype-jsr310-2.15.1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.fasterxml.jackson.core\\jackson-databind\\2.15.1\\ac9ba74d208faf356e4719a49e59c6ea9237c01d\\jackson-databind-2.15.1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.fasterxml.jackson.core\\jackson-core\\2.15.1\\241c054ba8503de092a12acad9f083dd39935cc0\\jackson-core-2.15.1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.fasterxml.jackson.core\\jackson-annotations\\2.15.1\\92a90d3739e970e03b5971839e4fe51f13c1fa3\\jackson-annotations-2.15.1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.fasterxml.jackson.dataformat\\jackson-dataformat-yaml\\2.15.1\\97a9c5867fbacd44a1791c2d0a00bd4f3f061b77\\jackson-dataformat-yaml-2.15.1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.scala-lang\\scala-library\\2.13.14\\f8b4afe89abe48ca670f620c7da89b71f93e6546\\scala-library-2.13.14.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.scala-sbt\\util-interface\\1.9.8\\66e6a0a160e445df79f9b256f66dc2bde9d6b57a\\util-interface-1.9.8.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jline\\jline-native\\3.25.1\\7f58e474f7d94db5bf87b1fddf4fa646475779f2\\jline-native-3.25.1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\net.java.dev.jna\\jna\\5.14.0\\67bf3eaea4f0718cb376a181a629e5f88fa1c9dd\\jna-5.14.0.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark-util-collection\\0.62.2\\85253a62761533ce7709f81b0c581c8473f825ec\\flexmark-util-collection-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark-util-misc\\0.62.2\\18133dd81887c512e2f56feb3c14a8a1210f30ea\\flexmark-util-misc-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.vladsch.flexmark\\flexmark-util-visitor\\0.62.2\\ca49bd94860a5ccedd82bde96ece831f16c66ff1\\flexmark-util-visitor-0.62.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains\\annotations\\15.0\\d40ab99147584cf6cfb5245be67b3fee2c7220f9\\annotations-15.0.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.nibor.autolink\\autolink\\0.6.0\\3986d016a14e8c81afeec752f19af29b20e8367b\\autolink-0.6.0.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.antlr\\antlr4-runtime\\4.7.2\\e27d8ab4f984f9d186f54da984a6ab1cccac755e\\antlr4-runtime-4.7.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\ua.co.k\\strftime4j\\1.0.5\\726bbb2dd522a43c1fd3fb0568693bb5cbdcddf\\strftime4j-1.0.5.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.yaml\\snakeyaml\\2.0\\3aab2116756442bf0d4cd1c089b24d34c3baa253\\snakeyaml-2.0.jar"
+            ],
+            "setup": {
+                "order": "java->scala",
+                "addLibraryToBootClasspath": true,
+                "addCompilerToClasspath": false,
+                "addExtraJarsToClasspath": false,
+                "manageBootClasspath": true,
+                "filterLibraryFromClasspath": true
+            }
+        },
+        "java": {
+            "options": [
+                "-target",
+                "21",
+                "-source",
+                "21",
+                "-h",
+                "C:\\Users\\uros\\projects\\systemVI\\voxel-world\\build\\generated\\sources\\headers\\java\\main",
+                "-g",
+                "-sourcepath",
+                "",
+                "-proc:none",
+                "-XDuseUnsharedTable=true"
+            ]
+        },
+        "platform": {
+            "name": "jvm",
+            "config": {
+                "home": "C:\\Users\\uros\\.sdkman\\candidates\\java\\current",
+                "options": [
+                    
+                ]
+            },
+            "mainClass": [
+                "com.systemvi.voxel.world.Main"
+            ],
+            "classpath": [
+                "C:\\Users\\uros\\projects\\systemVI\\.bloop\\engine\\build\\classes",
+                "C:\\Users\\uros\\projects\\systemVI\\engine\\src\\resources",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\dev.dominion.ecs\\dominion-ecs-engine\\0.9.0\\8c2e41d7b6f179d80c959babef3d63163d445023\\dominion-ecs-engine-0.9.0.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.google.code.gson\\gson\\2.10.1\\b3add478d4382b78ea20b1671390a858002feb6c\\gson-2.10.1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jbox2d\\jbox2d-library\\2.2.1.1\\4f21646d52bb51b56cbc3359c0f8fb223098ee04\\jbox2d-library-2.2.1.1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.googlecode.lanterna\\lanterna\\3.0.1\\d2e5226e280c439e6817f98a07beed203e988c5d\\lanterna-3.0.1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.typelevel\\cats-effect_3\\3.6-0142603\\df5679ca310d55938567736c2dcaef61939a66e2\\cats-effect_3-3.6-0142603.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.typelevel\\cats-effect-std_3\\3.6-0142603\\e5a5569225e05942067a4889c30620c94648ca37\\cats-effect-std_3-3.6-0142603.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.typelevel\\cats-effect-kernel_3\\3.6-0142603\\3880aa6566044e13bff8a76d8e8d8239893d44c5\\cats-effect-kernel_3-3.6-0142603.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.typelevel\\cats-core_3\\2.12.0\\b253dca30971fd04a4ee5e3f5e9f6e623257656b\\cats-core_3-2.12.0.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.typelevel\\cats-kernel_3\\2.12.0\\6839388dbf6385fabceff4e8927c0b79562c4e42\\cats-kernel_3-2.12.0.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.scala-lang\\scala3-library_3\\3.5.1\\fad444125865e38c6a3870229f4a5d3e05c38ea8\\scala3-library_3-3.5.1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\commons-collections\\commons-collections\\3.2.2\\8ad72fe39fa8c91eaaf12aadb21e0c3661fe26d5\\commons-collections-3.2.2.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.joml\\joml\\1.10.5\\22566d58af70ad3d72308bab63b8339906deb649\\joml-1.10.5.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-assimp\\3.3.3\\c2c34011cbda30ed8cf98bc5cbf97b49afe5279a\\lwjgl-assimp-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-assimp\\3.3.3\\d90ccdade594716062975cffd1431d387f770ac4\\lwjgl-assimp-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-bgfx\\3.3.3\\a19c4bfd1532863425098f05316726854aed8c51\\lwjgl-bgfx-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-bgfx\\3.3.3\\2db0ad304f20677e9269311cb6cb5f4f2eed889\\lwjgl-bgfx-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-cuda\\3.3.3\\e2de3beeba3e4c826317e31519a40f0585160acf\\lwjgl-cuda-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-egl\\3.3.3\\2f0d613e3f769577548f08b11ae9b7571980aeb1\\lwjgl-egl-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-fmod\\3.3.3\\aa6d1cf95ea97e903f6c733baf2477dbb3c41e3e\\lwjgl-fmod-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-freetype\\3.3.3\\a0db6c84a8becc8ca05f9dbfa985edc348a824c7\\lwjgl-freetype-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-freetype\\3.3.3\\81091b006dbb43fab04c8c638e9ac87c51b4096d\\lwjgl-freetype-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-glfw\\3.3.3\\efa1eb78c5ccd840e9f329717109b5e892d72f8e\\lwjgl-glfw-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-glfw\\3.3.3\\e449e28b4891fc423c54c85fbc5bb0b9efece67a\\lwjgl-glfw-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-harfbuzz\\3.3.3\\7fbe5f968fa4cfa9184798ac1d53a4ef3fc4592a\\lwjgl-harfbuzz-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-harfbuzz\\3.3.3\\4eacfc1c4e08670e61a83f2cb589fad0c86380c8\\lwjgl-harfbuzz-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-hwloc\\3.3.3\\68333a022d5842b7bff95c70e4c3e1b2f126e783\\lwjgl-hwloc-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-hwloc\\3.3.3\\ea032ea737568d700f43cc9f052d51384ce20ebe\\lwjgl-hwloc-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-jawt\\3.3.3\\15479071013804d88cc810856fcc2548b457376c\\lwjgl-jawt-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-jemalloc\\3.3.3\\b543467b7ff3c6920539a88ee602d34098628be5\\lwjgl-jemalloc-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-jemalloc\\3.3.3\\426222fc027602a5f21b9c0fe79cde6a4c7a011f\\lwjgl-jemalloc-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-ktx\\3.3.3\\97d3e1e5eb919624ddc1238129e53fbdb7c0892a\\lwjgl-ktx-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-ktx\\3.3.3\\810a95432d80d27a3c94d8c2b2ddcbc657cb4f0\\lwjgl-ktx-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-libdivide\\3.3.3\\74d15c7f21a1fac6d9dd6cf5f65767f20d976846\\lwjgl-libdivide-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-libdivide\\3.3.3\\7df24d5b850c6cc417eb8d1f5e9109e146b4335b\\lwjgl-libdivide-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-llvm\\3.3.3\\2c773f1540e8cc26664581899ce277f9fd6602c2\\lwjgl-llvm-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-llvm\\3.3.3\\ba5e4ae35c16ed2c7c994b49a12de3a6afc39e6e\\lwjgl-llvm-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-lmdb\\3.3.3\\8fdcacda7250764e31c4327921d4c4576b2969d8\\lwjgl-lmdb-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-lmdb\\3.3.3\\f67f11cac2616c7f88a91faa9474b4fb9bdbd987\\lwjgl-lmdb-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-lz4\\3.3.3\\ab599e3fb2bc9e030403200b4801ed14e9dad65e\\lwjgl-lz4-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-lz4\\3.3.3\\921187edeeb4b0ae13d28c1d5f49a73f14dff9ed\\lwjgl-lz4-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-meow\\3.3.3\\31dfcc20796cf70d40065e912b8d7cf91cfc2a7\\lwjgl-meow-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-meow\\3.3.3\\78f2dd0573169630f69af5719a6819042b513c34\\lwjgl-meow-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-meshoptimizer\\3.3.3\\7965dd4bb9916d6e6bcdc2dc54ad9860e1a4cb8c\\lwjgl-meshoptimizer-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-meshoptimizer\\3.3.3\\5a1845f465a60effba02ccd17094b1e615d671f5\\lwjgl-meshoptimizer-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-nanovg\\3.3.3\\37f0b9fc142948c3b2c6cd563db7233b14b9640c\\lwjgl-nanovg-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-nanovg\\3.3.3\\ccfbc346c4ce0737b7fe758d6337a3741af2f256\\lwjgl-nanovg-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-nfd\\3.3.3\\f1b41d3a0a2f5cd2a55a6a59a618c87d0348681c\\lwjgl-nfd-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-nfd\\3.3.3\\3a39132eef695dcb7631adc1d02e493527940d10\\lwjgl-nfd-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-nuklear\\3.3.3\\d120a8ab01987e285f83f43f862bef728011d97d\\lwjgl-nuklear-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-nuklear\\3.3.3\\3132690c8cbbdd7c948eb233610151b6a6c62b9a\\lwjgl-nuklear-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-odbc\\3.3.3\\1719d4813fba2b4272afddcf30db98ec32e8bd37\\lwjgl-odbc-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-openal\\3.3.3\\daada81ceb5fc0c291fbfdd4433cb8d9423577f2\\lwjgl-openal-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-openal\\3.3.3\\cf83862ae95d98496b26915024c7e666d8ab1c8f\\lwjgl-openal-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opencl\\3.3.3\\fdf4a5cce0b7499914ac96a87d75fa895a4e0699\\lwjgl-opencl-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opengl\\3.3.3\\2f6b0147078396a58979125a4c947664e98293a\\lwjgl-opengl-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opengl\\3.3.3\\e6c1eec8be8a71951b830a4d69efc01c6531900c\\lwjgl-opengl-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opengles\\3.3.3\\b3a29ff95bdb320122839741a3723338e6ecfa28\\lwjgl-opengles-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opengles\\3.3.3\\22939720fc2737b419dd52db84b8c56bcfab3aac\\lwjgl-opengles-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opus\\3.3.3\\4f4083f667c46299a54dedc2dc2e848759df5c15\\lwjgl-opus-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opus\\3.3.3\\f9b60ec866b57c9188de136d5fd23604b7f7c75e\\lwjgl-opus-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-par\\3.3.3\\9bf8ec696f9f8852418338e3000e31f3d9a730a4\\lwjgl-par-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-par\\3.3.3\\a34de629b882f53f9a3905f0d04e4618fb9ec4a\\lwjgl-par-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-remotery\\3.3.3\\facc35058cb11d8cc26e73b5f5604dea7b65793c\\lwjgl-remotery-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-remotery\\3.3.3\\b45dcc3f68f17d385af86eea8a7d61d3e4b4e494\\lwjgl-remotery-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-rpmalloc\\3.3.3\\3f77acc4aeafb0f42762aa7a6a550644b81ff132\\lwjgl-rpmalloc-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-rpmalloc\\3.3.3\\614aecfc8fd701317cf21ab4d552d67ed848dd28\\lwjgl-rpmalloc-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-shaderc\\3.3.3\\ae740d58fdc809c4350358a872b076bacbec27c1\\lwjgl-shaderc-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-shaderc\\3.3.3\\2bdcb9d4c1a8debf8c82dcb6968c3f23f126af6b\\lwjgl-shaderc-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-spvc\\3.3.3\\bce3758f79dd197772f5b8c5709d8aae79a6595\\lwjgl-spvc-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-spvc\\3.3.3\\75cf9ac771bc01ad9bbae4a50e654b7eef6af731\\lwjgl-spvc-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-stb\\3.3.3\\25dd6161988d7e65f71d5065c99902402ee32746\\lwjgl-stb-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-stb\\3.3.3\\1d9facdf6541de114b0f963be33505b7679c78cb\\lwjgl-stb-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-tinyexr\\3.3.3\\4b5715555278987c9097d1ff71d8467609454f4c\\lwjgl-tinyexr-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-tinyexr\\3.3.3\\7cac11fd2b1c0750f25da89d287429befd972444\\lwjgl-tinyexr-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-tinyfd\\3.3.3\\82d755ca94b102e9ca77283b9e2dc46d1b15fbe5\\lwjgl-tinyfd-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-tinyfd\\3.3.3\\a6697981b0449a5087c1d546fc08b4f73e8f98c9\\lwjgl-tinyfd-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-vma\\3.3.3\\dacf4ee5787dbd17641f2aedd74fc1b04b506081\\lwjgl-vma-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-vma\\3.3.3\\c12a6d51cce0de9c265f71c0540ae3fb3529a8e8\\lwjgl-vma-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-vulkan\\3.3.3\\2d85b61672fa82ec5045979ac49c7940913eea50\\lwjgl-vulkan-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-xxhash\\3.3.3\\4c0ab4dd55e3623285c03038bfb2e17acb0fc502\\lwjgl-xxhash-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-xxhash\\3.3.3\\6bf6b3462e3c9952b67503a3c2f0e4192453d4a3\\lwjgl-xxhash-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-yoga\\3.3.3\\b5391a448c6a7015f4ee4b144694e70a696bb3e9\\lwjgl-yoga-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-yoga\\3.3.3\\fc3e67af6815447fc467cff012819b03a34e50d3\\lwjgl-yoga-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-zstd\\3.3.3\\54300388305318de1b94c97dd385bb9a609c2aba\\lwjgl-zstd-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-zstd\\3.3.3\\97df28483590f182e01598a61d9b47304f52b197\\lwjgl-zstd-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl\\3.3.3\\29589b5f87ed335a6c7e7ee6a5775f81f97ecb84\\lwjgl-3.3.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl\\3.3.3\\a5ed18a2b82fc91b81f40d717cb1f64c9dcb0540\\lwjgl-3.3.3-natives-windows.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\dev.dominion.ecs\\dominion-ecs-api\\0.9.0\\4b82b9713570b3eb5f1cafa7466655f1bc20375f\\dominion-ecs-api-0.9.0.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.scala-lang\\scala-library\\2.13.14\\f8b4afe89abe48ca670f620c7da89b71f93e6546\\scala-library-2.13.14.jar"
+            ]
+        },
+        "resolution": {
+            "modules": [
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-meow",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-meow",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-meow\\3.3.3\\41fb85f541c9cfc65a0d04a61a386c9c5e6aa266\\lwjgl-meow-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-meow",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-meow\\3.3.3\\78f2dd0573169630f69af5719a6819042b513c34\\lwjgl-meow-3.3.3-natives-windows.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-vulkan",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-vulkan",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-vulkan\\3.3.3\\2d85b61672fa82ec5045979ac49c7940913eea50\\lwjgl-vulkan-3.3.3.jar"
+                        },
+                        {
+                            "name": "lwjgl-vulkan",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-vulkan\\3.3.3\\27b33e18aea5c9c6e09ca1f2f167b847130dedc9\\lwjgl-vulkan-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-rpmalloc",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-rpmalloc",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-rpmalloc\\3.3.3\\614aecfc8fd701317cf21ab4d552d67ed848dd28\\lwjgl-rpmalloc-3.3.3-natives-windows.jar"
+                        },
+                        {
+                            "name": "lwjgl-rpmalloc",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-rpmalloc\\3.3.3\\e51a49de4b0381085c3166be75ef84e99b35b9b0\\lwjgl-rpmalloc-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-stb",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-stb",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-stb\\3.3.3\\1d9facdf6541de114b0f963be33505b7679c78cb\\lwjgl-stb-3.3.3-natives-windows.jar"
+                        },
+                        {
+                            "name": "lwjgl-stb",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-stb\\3.3.3\\37c2b604ec4a5ee356dd734dc8167a193e8874ed\\lwjgl-stb-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-nanovg",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-nanovg",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-nanovg\\3.3.3\\403c62baa42e72e4a015f2e99d83179297194f40\\lwjgl-nanovg-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-nanovg",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-nanovg\\3.3.3\\ccfbc346c4ce0737b7fe758d6337a3741af2f256\\lwjgl-nanovg-3.3.3-natives-windows.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-meshoptimizer",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-meshoptimizer",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-meshoptimizer\\3.3.3\\7965dd4bb9916d6e6bcdc2dc54ad9860e1a4cb8c\\lwjgl-meshoptimizer-3.3.3.jar"
+                        },
+                        {
+                            "name": "lwjgl-meshoptimizer",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-meshoptimizer\\3.3.3\\bea2bf4748d7cce5df8a288b1a9a0c16146cf2d1\\lwjgl-meshoptimizer-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-openal",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-openal",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-openal\\3.3.3\\daada81ceb5fc0c291fbfdd4433cb8d9423577f2\\lwjgl-openal-3.3.3.jar"
+                        },
+                        {
+                            "name": "lwjgl-openal",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-openal\\3.3.3\\60a4ce24d71b3376ce53b50cfe3eaaf3277dd727\\lwjgl-openal-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-tinyfd",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-tinyfd",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-tinyfd\\3.3.3\\a6697981b0449a5087c1d546fc08b4f73e8f98c9\\lwjgl-tinyfd-3.3.3-natives-windows.jar"
+                        },
+                        {
+                            "name": "lwjgl-tinyfd",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-tinyfd\\3.3.3\\dcda55223f2f940654d222bf4371baa969c60bb9\\lwjgl-tinyfd-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-libdivide",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-libdivide",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-libdivide\\3.3.3\\50541ba828267a7dcedcacebb20acbb968bc0574\\lwjgl-libdivide-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-libdivide",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-libdivide\\3.3.3\\74d15c7f21a1fac6d9dd6cf5f65767f20d976846\\lwjgl-libdivide-3.3.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-remotery",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-remotery",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-remotery\\3.3.3\\facc35058cb11d8cc26e73b5f5604dea7b65793c\\lwjgl-remotery-3.3.3.jar"
+                        },
+                        {
+                            "name": "lwjgl-remotery",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-remotery\\3.3.3\\1029d598982765cd10756fc4a051726a3da50ff\\lwjgl-remotery-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-opencl",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-opencl",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opencl\\3.3.3\\a4f37ed2b1c65f17b392c5a356da7495fae9c601\\lwjgl-opencl-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-opencl",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opencl\\3.3.3\\fdf4a5cce0b7499914ac96a87d75fa895a4e0699\\lwjgl-opencl-3.3.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-egl",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-egl",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-egl\\3.3.3\\6d2e15098f44567f2bec3a355c8157a400a7b457\\lwjgl-egl-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-egl",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-egl\\3.3.3\\2f0d613e3f769577548f08b11ae9b7571980aeb1\\lwjgl-egl-3.3.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-nanovg",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-nanovg",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-nanovg\\3.3.3\\403c62baa42e72e4a015f2e99d83179297194f40\\lwjgl-nanovg-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-nanovg",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-nanovg\\3.3.3\\37f0b9fc142948c3b2c6cd563db7233b14b9640c\\lwjgl-nanovg-3.3.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-shaderc",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-shaderc",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-shaderc\\3.3.3\\c34ff586bb208897999f2a7959881490dde259d9\\lwjgl-shaderc-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-shaderc",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-shaderc\\3.3.3\\2bdcb9d4c1a8debf8c82dcb6968c3f23f126af6b\\lwjgl-shaderc-3.3.3-natives-windows.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-nuklear",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-nuklear",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-nuklear\\3.3.3\\f075f4ac6e0f6b03fbaf728b225aa8721e658d8d\\lwjgl-nuklear-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-nuklear",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-nuklear\\3.3.3\\3132690c8cbbdd7c948eb233610151b6a6c62b9a\\lwjgl-nuklear-3.3.3-natives-windows.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-cuda",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-cuda",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-cuda\\3.3.3\\c03441be6393cbf249eab2ab29e42de10aec8f90\\lwjgl-cuda-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-cuda",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-cuda\\3.3.3\\e2de3beeba3e4c826317e31519a40f0585160acf\\lwjgl-cuda-3.3.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-opengl",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-opengl",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opengl\\3.3.3\\3353d0b2cac91b84088b01711d33cc403893450b\\lwjgl-opengl-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-opengl",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opengl\\3.3.3\\2f6b0147078396a58979125a4c947664e98293a\\lwjgl-opengl-3.3.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-lz4",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-lz4",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-lz4\\3.3.3\\921187edeeb4b0ae13d28c1d5f49a73f14dff9ed\\lwjgl-lz4-3.3.3-natives-windows.jar"
+                        },
+                        {
+                            "name": "lwjgl-lz4",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-lz4\\3.3.3\\8d0312304b200582706d2b1c77e2a63f96d55324\\lwjgl-lz4-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-ktx",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-ktx",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-ktx\\3.3.3\\cf1444bce395d8d098d87c9948ac7aa24528eba9\\lwjgl-ktx-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-ktx",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-ktx\\3.3.3\\810a95432d80d27a3c94d8c2b2ddcbc657cb4f0\\lwjgl-ktx-3.3.3-natives-windows.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "com.google.code.gson",
+                    "name": "gson",
+                    "version": "2.10.1",
+                    "artifacts": [
+                        {
+                            "name": "gson",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.google.code.gson\\gson\\2.10.1\\982a90132e942f302e6fe79d6e78c4bc2e998569\\gson-2.10.1-sources.jar"
+                        },
+                        {
+                            "name": "gson",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.google.code.gson\\gson\\2.10.1\\b3add478d4382b78ea20b1671390a858002feb6c\\gson-2.10.1.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-hwloc",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-hwloc",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-hwloc\\3.3.3\\5bcea98def19ae63a447f707385d22d1de9bbd80\\lwjgl-hwloc-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-hwloc",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-hwloc\\3.3.3\\68333a022d5842b7bff95c70e4c3e1b2f126e783\\lwjgl-hwloc-3.3.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-par",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-par",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-par\\3.3.3\\59cd59c685606355f2e965febc530574cb6239e5\\lwjgl-par-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-par",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-par\\3.3.3\\a34de629b882f53f9a3905f0d04e4618fb9ec4a\\lwjgl-par-3.3.3-natives-windows.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "dev.dominion.ecs",
+                    "name": "dominion-ecs-api",
+                    "version": "0.9.0",
+                    "artifacts": [
+                        {
+                            "name": "dominion-ecs-api",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\dev.dominion.ecs\\dominion-ecs-api\\0.9.0\\eda167646d84fda7ddf559de4cbb41308e92b3b9\\dominion-ecs-api-0.9.0-sources.jar"
+                        },
+                        {
+                            "name": "dominion-ecs-api",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\dev.dominion.ecs\\dominion-ecs-api\\0.9.0\\4b82b9713570b3eb5f1cafa7466655f1bc20375f\\dominion-ecs-api-0.9.0.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-opengles",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-opengles",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opengles\\3.3.3\\22939720fc2737b419dd52db84b8c56bcfab3aac\\lwjgl-opengles-3.3.3-natives-windows.jar"
+                        },
+                        {
+                            "name": "lwjgl-opengles",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opengles\\3.3.3\\c131a6b911f06e01fca9f16444fd943d74e66ad6\\lwjgl-opengles-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-harfbuzz",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-harfbuzz",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-harfbuzz\\3.3.3\\4eacfc1c4e08670e61a83f2cb589fad0c86380c8\\lwjgl-harfbuzz-3.3.3-natives-windows.jar"
+                        },
+                        {
+                            "name": "lwjgl-harfbuzz",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-harfbuzz\\3.3.3\\a264ef334f5846310d70c883abf81e980d76bd8a\\lwjgl-harfbuzz-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-yoga",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-yoga",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-yoga\\3.3.3\\fc3e67af6815447fc467cff012819b03a34e50d3\\lwjgl-yoga-3.3.3-natives-windows.jar"
+                        },
+                        {
+                            "name": "lwjgl-yoga",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-yoga\\3.3.3\\6f643ae3ad64bfb3ef99d2e6f5adb8eab175e97e\\lwjgl-yoga-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.typelevel",
+                    "name": "cats-core_3",
+                    "version": "2.12.0",
+                    "artifacts": [
+                        {
+                            "name": "cats-core_3",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.typelevel\\cats-core_3\\2.12.0\\3bfaa8e554113f6ad0771a5f20b2584697d9ffa3\\cats-core_3-2.12.0-sources.jar"
+                        },
+                        {
+                            "name": "cats-core_3",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.typelevel\\cats-core_3\\2.12.0\\b253dca30971fd04a4ee5e3f5e9f6e623257656b\\cats-core_3-2.12.0.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-harfbuzz",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-harfbuzz",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-harfbuzz\\3.3.3\\a264ef334f5846310d70c883abf81e980d76bd8a\\lwjgl-harfbuzz-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-harfbuzz",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-harfbuzz\\3.3.3\\7fbe5f968fa4cfa9184798ac1d53a4ef3fc4592a\\lwjgl-harfbuzz-3.3.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-lmdb",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-lmdb",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-lmdb\\3.3.3\\5ed33b6c5a93a721ceaed620ca3b35b39c0667cd\\lwjgl-lmdb-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-lmdb",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-lmdb\\3.3.3\\8fdcacda7250764e31c4327921d4c4576b2969d8\\lwjgl-lmdb-3.3.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-tinyexr",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-tinyexr",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-tinyexr\\3.3.3\\9a8ccb2cd366af634b465da8dab1560db479ce15\\lwjgl-tinyexr-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-tinyexr",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-tinyexr\\3.3.3\\4b5715555278987c9097d1ff71d8467609454f4c\\lwjgl-tinyexr-3.3.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-yoga",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-yoga",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-yoga\\3.3.3\\b5391a448c6a7015f4ee4b144694e70a696bb3e9\\lwjgl-yoga-3.3.3.jar"
+                        },
+                        {
+                            "name": "lwjgl-yoga",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-yoga\\3.3.3\\6f643ae3ad64bfb3ef99d2e6f5adb8eab175e97e\\lwjgl-yoga-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-jemalloc",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-jemalloc",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-jemalloc\\3.3.3\\426222fc027602a5f21b9c0fe79cde6a4c7a011f\\lwjgl-jemalloc-3.3.3-natives-windows.jar"
+                        },
+                        {
+                            "name": "lwjgl-jemalloc",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-jemalloc\\3.3.3\\6a4ea7a9095e1684a9c6adb2c49d28daae2b6e45\\lwjgl-jemalloc-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-freetype",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-freetype",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-freetype\\3.3.3\\d9fba96328a80677edbab28a843f33b847cf1e57\\lwjgl-freetype-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-freetype",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-freetype\\3.3.3\\81091b006dbb43fab04c8c638e9ac87c51b4096d\\lwjgl-freetype-3.3.3-natives-windows.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-glfw",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-glfw",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-glfw\\3.3.3\\fa2c760452674d3eaf336123539b0dd9a83041a4\\lwjgl-glfw-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-glfw",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-glfw\\3.3.3\\efa1eb78c5ccd840e9f329717109b5e892d72f8e\\lwjgl-glfw-3.3.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-remotery",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-remotery",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-remotery\\3.3.3\\b45dcc3f68f17d385af86eea8a7d61d3e4b4e494\\lwjgl-remotery-3.3.3-natives-windows.jar"
+                        },
+                        {
+                            "name": "lwjgl-remotery",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-remotery\\3.3.3\\1029d598982765cd10756fc4a051726a3da50ff\\lwjgl-remotery-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-meow",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-meow",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-meow\\3.3.3\\41fb85f541c9cfc65a0d04a61a386c9c5e6aa266\\lwjgl-meow-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-meow",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-meow\\3.3.3\\31dfcc20796cf70d40065e912b8d7cf91cfc2a7\\lwjgl-meow-3.3.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-bgfx",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-bgfx",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-bgfx\\3.3.3\\2db0ad304f20677e9269311cb6cb5f4f2eed889\\lwjgl-bgfx-3.3.3-natives-windows.jar"
+                        },
+                        {
+                            "name": "lwjgl-bgfx",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-bgfx\\3.3.3\\2bf73fd642cdcbf910917688366782317a3eec47\\lwjgl-bgfx-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "com.googlecode.lanterna",
+                    "name": "lanterna",
+                    "version": "3.0.1",
+                    "artifacts": [
+                        {
+                            "name": "lanterna",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.googlecode.lanterna\\lanterna\\3.0.1\\d2e5226e280c439e6817f98a07beed203e988c5d\\lanterna-3.0.1.jar"
+                        },
+                        {
+                            "name": "lanterna",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.googlecode.lanterna\\lanterna\\3.0.1\\1e6556c24ab63470a284bc60d050dc3912e675d3\\lanterna-3.0.1-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-nfd",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-nfd",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-nfd\\3.3.3\\3a39132eef695dcb7631adc1d02e493527940d10\\lwjgl-nfd-3.3.3-natives-windows.jar"
+                        },
+                        {
+                            "name": "lwjgl-nfd",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-nfd\\3.3.3\\70f1e0b1a772692d555fc5f6119382e22ea41668\\lwjgl-nfd-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-lz4",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-lz4",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-lz4\\3.3.3\\ab599e3fb2bc9e030403200b4801ed14e9dad65e\\lwjgl-lz4-3.3.3.jar"
+                        },
+                        {
+                            "name": "lwjgl-lz4",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-lz4\\3.3.3\\8d0312304b200582706d2b1c77e2a63f96d55324\\lwjgl-lz4-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-assimp",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-assimp",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-assimp\\3.3.3\\f2a66b178935f4b2d599609e182f4a74b3ca260c\\lwjgl-assimp-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-assimp",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-assimp\\3.3.3\\d90ccdade594716062975cffd1431d387f770ac4\\lwjgl-assimp-3.3.3-natives-windows.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-xxhash",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-xxhash",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-xxhash\\3.3.3\\f5c9dbb4d1767c4a6e3cee54d002b7c5f6357e2c\\lwjgl-xxhash-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-xxhash",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-xxhash\\3.3.3\\6bf6b3462e3c9952b67503a3c2f0e4192453d4a3\\lwjgl-xxhash-3.3.3-natives-windows.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl\\3.3.3\\e5949c7bbf4f839afe6d1a631e9b75f63c559e0\\lwjgl-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl\\3.3.3\\29589b5f87ed335a6c7e7ee6a5775f81f97ecb84\\lwjgl-3.3.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-jemalloc",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-jemalloc",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-jemalloc\\3.3.3\\6a4ea7a9095e1684a9c6adb2c49d28daae2b6e45\\lwjgl-jemalloc-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-jemalloc",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-jemalloc\\3.3.3\\b543467b7ff3c6920539a88ee602d34098628be5\\lwjgl-jemalloc-3.3.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-bgfx",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-bgfx",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-bgfx\\3.3.3\\a19c4bfd1532863425098f05316726854aed8c51\\lwjgl-bgfx-3.3.3.jar"
+                        },
+                        {
+                            "name": "lwjgl-bgfx",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-bgfx\\3.3.3\\2bf73fd642cdcbf910917688366782317a3eec47\\lwjgl-bgfx-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-spvc",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-spvc",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-spvc\\3.3.3\\75cf9ac771bc01ad9bbae4a50e654b7eef6af731\\lwjgl-spvc-3.3.3-natives-windows.jar"
+                        },
+                        {
+                            "name": "lwjgl-spvc",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-spvc\\3.3.3\\683d0d388fc3c2d879122a43f8ccf45ac61af30\\lwjgl-spvc-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-vma",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-vma",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-vma\\3.3.3\\e9405f7b33fa04b7408befd5c8802eb7ee6ce261\\lwjgl-vma-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-vma",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-vma\\3.3.3\\c12a6d51cce0de9c265f71c0540ae3fb3529a8e8\\lwjgl-vma-3.3.3-natives-windows.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-llvm",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-llvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-llvm\\3.3.3\\2c773f1540e8cc26664581899ce277f9fd6602c2\\lwjgl-llvm-3.3.3.jar"
+                        },
+                        {
+                            "name": "lwjgl-llvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-llvm\\3.3.3\\14f913a4344a41df605a640c897f81393a9300eb\\lwjgl-llvm-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-llvm",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-llvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-llvm\\3.3.3\\ba5e4ae35c16ed2c7c994b49a12de3a6afc39e6e\\lwjgl-llvm-3.3.3-natives-windows.jar"
+                        },
+                        {
+                            "name": "lwjgl-llvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-llvm\\3.3.3\\14f913a4344a41df605a640c897f81393a9300eb\\lwjgl-llvm-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.typelevel",
+                    "name": "cats-effect-std_3",
+                    "version": "3.6-0142603",
+                    "artifacts": [
+                        {
+                            "name": "cats-effect-std_3",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.typelevel\\cats-effect-std_3\\3.6-0142603\\5c3034de27027a353966fcc70eef05575a3b2c0e\\cats-effect-std_3-3.6-0142603-sources.jar"
+                        },
+                        {
+                            "name": "cats-effect-std_3",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.typelevel\\cats-effect-std_3\\3.6-0142603\\e5a5569225e05942067a4889c30620c94648ca37\\cats-effect-std_3-3.6-0142603.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.scala-lang",
+                    "name": "scala-library",
+                    "version": "2.13.14",
+                    "artifacts": [
+                        {
+                            "name": "scala-library",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.scala-lang\\scala-library\\2.13.14\\f8b4afe89abe48ca670f620c7da89b71f93e6546\\scala-library-2.13.14.jar"
+                        },
+                        {
+                            "name": "scala-library",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.scala-lang\\scala-library\\2.13.14\\8bc99487acecaa157c2f7e5be2b2dde4fc4c9748\\scala-library-2.13.14-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "commons-collections",
+                    "name": "commons-collections",
+                    "version": "3.2.2",
+                    "artifacts": [
+                        {
+                            "name": "commons-collections",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\commons-collections\\commons-collections\\3.2.2\\8ad72fe39fa8c91eaaf12aadb21e0c3661fe26d5\\commons-collections-3.2.2.jar"
+                        },
+                        {
+                            "name": "commons-collections",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\commons-collections\\commons-collections\\3.2.2\\78c50ebda5784937ca1615fc0e1d0cb35857d572\\commons-collections-3.2.2-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.joml",
+                    "name": "joml",
+                    "version": "1.10.5",
+                    "artifacts": [
+                        {
+                            "name": "joml",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.joml\\joml\\1.10.5\\22566d58af70ad3d72308bab63b8339906deb649\\joml-1.10.5.jar"
+                        },
+                        {
+                            "name": "joml",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.joml\\joml\\1.10.5\\c1f2266a7d0386d7643879ed1b93f51d29126180\\joml-1.10.5-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-ktx",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-ktx",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-ktx\\3.3.3\\cf1444bce395d8d098d87c9948ac7aa24528eba9\\lwjgl-ktx-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-ktx",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-ktx\\3.3.3\\97d3e1e5eb919624ddc1238129e53fbdb7c0892a\\lwjgl-ktx-3.3.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-zstd",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-zstd",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-zstd\\3.3.3\\54300388305318de1b94c97dd385bb9a609c2aba\\lwjgl-zstd-3.3.3.jar"
+                        },
+                        {
+                            "name": "lwjgl-zstd",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-zstd\\3.3.3\\e441563a7e0420648b9f5342d4d4393a0c8188be\\lwjgl-zstd-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-assimp",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-assimp",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-assimp\\3.3.3\\c2c34011cbda30ed8cf98bc5cbf97b49afe5279a\\lwjgl-assimp-3.3.3.jar"
+                        },
+                        {
+                            "name": "lwjgl-assimp",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-assimp\\3.3.3\\f2a66b178935f4b2d599609e182f4a74b3ca260c\\lwjgl-assimp-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-odbc",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-odbc",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-odbc\\3.3.3\\6b7b44184a83982b5a867f9b1f1ea7a9cc606f5\\lwjgl-odbc-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-odbc",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-odbc\\3.3.3\\1719d4813fba2b4272afddcf30db98ec32e8bd37\\lwjgl-odbc-3.3.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-nfd",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-nfd",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-nfd\\3.3.3\\f1b41d3a0a2f5cd2a55a6a59a618c87d0348681c\\lwjgl-nfd-3.3.3.jar"
+                        },
+                        {
+                            "name": "lwjgl-nfd",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-nfd\\3.3.3\\70f1e0b1a772692d555fc5f6119382e22ea41668\\lwjgl-nfd-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "dev.dominion.ecs",
+                    "name": "dominion-ecs-engine",
+                    "version": "0.9.0",
+                    "artifacts": [
+                        {
+                            "name": "dominion-ecs-engine",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\dev.dominion.ecs\\dominion-ecs-engine\\0.9.0\\a62d63859119dff5a8613492031a508720148a17\\dominion-ecs-engine-0.9.0-sources.jar"
+                        },
+                        {
+                            "name": "dominion-ecs-engine",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\dev.dominion.ecs\\dominion-ecs-engine\\0.9.0\\8c2e41d7b6f179d80c959babef3d63163d445023\\dominion-ecs-engine-0.9.0.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-nuklear",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-nuklear",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-nuklear\\3.3.3\\f075f4ac6e0f6b03fbaf728b225aa8721e658d8d\\lwjgl-nuklear-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-nuklear",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-nuklear\\3.3.3\\d120a8ab01987e285f83f43f862bef728011d97d\\lwjgl-nuklear-3.3.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-shaderc",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-shaderc",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-shaderc\\3.3.3\\c34ff586bb208897999f2a7959881490dde259d9\\lwjgl-shaderc-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-shaderc",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-shaderc\\3.3.3\\ae740d58fdc809c4350358a872b076bacbec27c1\\lwjgl-shaderc-3.3.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.typelevel",
+                    "name": "cats-effect-kernel_3",
+                    "version": "3.6-0142603",
+                    "artifacts": [
+                        {
+                            "name": "cats-effect-kernel_3",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.typelevel\\cats-effect-kernel_3\\3.6-0142603\\3880aa6566044e13bff8a76d8e8d8239893d44c5\\cats-effect-kernel_3-3.6-0142603.jar"
+                        },
+                        {
+                            "name": "cats-effect-kernel_3",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.typelevel\\cats-effect-kernel_3\\3.6-0142603\\15bcd03f6b46d9419331faced1525978e7e9f1f1\\cats-effect-kernel_3-3.6-0142603-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-opengl",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-opengl",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opengl\\3.3.3\\e6c1eec8be8a71951b830a4d69efc01c6531900c\\lwjgl-opengl-3.3.3-natives-windows.jar"
+                        },
+                        {
+                            "name": "lwjgl-opengl",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opengl\\3.3.3\\3353d0b2cac91b84088b01711d33cc403893450b\\lwjgl-opengl-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-par",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-par",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-par\\3.3.3\\59cd59c685606355f2e965febc530574cb6239e5\\lwjgl-par-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-par",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-par\\3.3.3\\9bf8ec696f9f8852418338e3000e31f3d9a730a4\\lwjgl-par-3.3.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-tinyfd",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-tinyfd",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-tinyfd\\3.3.3\\82d755ca94b102e9ca77283b9e2dc46d1b15fbe5\\lwjgl-tinyfd-3.3.3.jar"
+                        },
+                        {
+                            "name": "lwjgl-tinyfd",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-tinyfd\\3.3.3\\dcda55223f2f940654d222bf4371baa969c60bb9\\lwjgl-tinyfd-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.typelevel",
+                    "name": "cats-effect_3",
+                    "version": "3.6-0142603",
+                    "artifacts": [
+                        {
+                            "name": "cats-effect_3",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.typelevel\\cats-effect_3\\3.6-0142603\\a8ad637da262d5da9f6465dc0a543b5b7753a5f7\\cats-effect_3-3.6-0142603-sources.jar"
+                        },
+                        {
+                            "name": "cats-effect_3",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.typelevel\\cats-effect_3\\3.6-0142603\\df5679ca310d55938567736c2dcaef61939a66e2\\cats-effect_3-3.6-0142603.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-glfw",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-glfw",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-glfw\\3.3.3\\e449e28b4891fc423c54c85fbc5bb0b9efece67a\\lwjgl-glfw-3.3.3-natives-windows.jar"
+                        },
+                        {
+                            "name": "lwjgl-glfw",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-glfw\\3.3.3\\fa2c760452674d3eaf336123539b0dd9a83041a4\\lwjgl-glfw-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-spvc",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-spvc",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-spvc\\3.3.3\\bce3758f79dd197772f5b8c5709d8aae79a6595\\lwjgl-spvc-3.3.3.jar"
+                        },
+                        {
+                            "name": "lwjgl-spvc",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-spvc\\3.3.3\\683d0d388fc3c2d879122a43f8ccf45ac61af30\\lwjgl-spvc-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-libdivide",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-libdivide",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-libdivide\\3.3.3\\50541ba828267a7dcedcacebb20acbb968bc0574\\lwjgl-libdivide-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-libdivide",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-libdivide\\3.3.3\\7df24d5b850c6cc417eb8d1f5e9109e146b4335b\\lwjgl-libdivide-3.3.3-natives-windows.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jbox2d",
+                    "name": "jbox2d-library",
+                    "version": "2.2.1.1",
+                    "artifacts": [
+                        {
+                            "name": "jbox2d-library",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jbox2d\\jbox2d-library\\2.2.1.1\\1c3e61571213e2b5f0ffe0fbd29c4de905228564\\jbox2d-library-2.2.1.1-sources.jar"
+                        },
+                        {
+                            "name": "jbox2d-library",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jbox2d\\jbox2d-library\\2.2.1.1\\4f21646d52bb51b56cbc3359c0f8fb223098ee04\\jbox2d-library-2.2.1.1.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-tinyexr",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-tinyexr",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-tinyexr\\3.3.3\\9a8ccb2cd366af634b465da8dab1560db479ce15\\lwjgl-tinyexr-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-tinyexr",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-tinyexr\\3.3.3\\7cac11fd2b1c0750f25da89d287429befd972444\\lwjgl-tinyexr-3.3.3-natives-windows.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-zstd",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-zstd",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-zstd\\3.3.3\\97df28483590f182e01598a61d9b47304f52b197\\lwjgl-zstd-3.3.3-natives-windows.jar"
+                        },
+                        {
+                            "name": "lwjgl-zstd",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-zstd\\3.3.3\\e441563a7e0420648b9f5342d4d4393a0c8188be\\lwjgl-zstd-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-openal",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-openal",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-openal\\3.3.3\\cf83862ae95d98496b26915024c7e666d8ab1c8f\\lwjgl-openal-3.3.3-natives-windows.jar"
+                        },
+                        {
+                            "name": "lwjgl-openal",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-openal\\3.3.3\\60a4ce24d71b3376ce53b50cfe3eaaf3277dd727\\lwjgl-openal-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-lmdb",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-lmdb",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-lmdb\\3.3.3\\f67f11cac2616c7f88a91faa9474b4fb9bdbd987\\lwjgl-lmdb-3.3.3-natives-windows.jar"
+                        },
+                        {
+                            "name": "lwjgl-lmdb",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-lmdb\\3.3.3\\5ed33b6c5a93a721ceaed620ca3b35b39c0667cd\\lwjgl-lmdb-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-freetype",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-freetype",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-freetype\\3.3.3\\d9fba96328a80677edbab28a843f33b847cf1e57\\lwjgl-freetype-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-freetype",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-freetype\\3.3.3\\a0db6c84a8becc8ca05f9dbfa985edc348a824c7\\lwjgl-freetype-3.3.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-opus",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-opus",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opus\\3.3.3\\43114a53f153ca728c7af9ce9541d68ce7117a05\\lwjgl-opus-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-opus",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opus\\3.3.3\\4f4083f667c46299a54dedc2dc2e848759df5c15\\lwjgl-opus-3.3.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-opengles",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-opengles",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opengles\\3.3.3\\b3a29ff95bdb320122839741a3723338e6ecfa28\\lwjgl-opengles-3.3.3.jar"
+                        },
+                        {
+                            "name": "lwjgl-opengles",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opengles\\3.3.3\\c131a6b911f06e01fca9f16444fd943d74e66ad6\\lwjgl-opengles-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-stb",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-stb",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-stb\\3.3.3\\37c2b604ec4a5ee356dd734dc8167a193e8874ed\\lwjgl-stb-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-stb",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-stb\\3.3.3\\25dd6161988d7e65f71d5065c99902402ee32746\\lwjgl-stb-3.3.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-vma",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-vma",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-vma\\3.3.3\\e9405f7b33fa04b7408befd5c8802eb7ee6ce261\\lwjgl-vma-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-vma",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-vma\\3.3.3\\dacf4ee5787dbd17641f2aedd74fc1b04b506081\\lwjgl-vma-3.3.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl\\3.3.3\\e5949c7bbf4f839afe6d1a631e9b75f63c559e0\\lwjgl-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl\\3.3.3\\a5ed18a2b82fc91b81f40d717cb1f64c9dcb0540\\lwjgl-3.3.3-natives-windows.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-fmod",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-fmod",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-fmod\\3.3.3\\aa6d1cf95ea97e903f6c733baf2477dbb3c41e3e\\lwjgl-fmod-3.3.3.jar"
+                        },
+                        {
+                            "name": "lwjgl-fmod",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-fmod\\3.3.3\\49dc0dadfff787faf5b5d433d758b68e9f7d27e9\\lwjgl-fmod-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-meshoptimizer",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-meshoptimizer",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-meshoptimizer\\3.3.3\\5a1845f465a60effba02ccd17094b1e615d671f5\\lwjgl-meshoptimizer-3.3.3-natives-windows.jar"
+                        },
+                        {
+                            "name": "lwjgl-meshoptimizer",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-meshoptimizer\\3.3.3\\bea2bf4748d7cce5df8a288b1a9a0c16146cf2d1\\lwjgl-meshoptimizer-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-jawt",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-jawt",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-jawt\\3.3.3\\15479071013804d88cc810856fcc2548b457376c\\lwjgl-jawt-3.3.3.jar"
+                        },
+                        {
+                            "name": "lwjgl-jawt",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-jawt\\3.3.3\\697fb666f1cd8aa1f205eb2ca83a646536c9c9ee\\lwjgl-jawt-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-xxhash",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-xxhash",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-xxhash\\3.3.3\\4c0ab4dd55e3623285c03038bfb2e17acb0fc502\\lwjgl-xxhash-3.3.3.jar"
+                        },
+                        {
+                            "name": "lwjgl-xxhash",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-xxhash\\3.3.3\\f5c9dbb4d1767c4a6e3cee54d002b7c5f6357e2c\\lwjgl-xxhash-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-opus",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-opus",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opus\\3.3.3\\43114a53f153ca728c7af9ce9541d68ce7117a05\\lwjgl-opus-3.3.3-sources.jar"
+                        },
+                        {
+                            "name": "lwjgl-opus",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-opus\\3.3.3\\f9b60ec866b57c9188de136d5fd23604b7f7c75e\\lwjgl-opus-3.3.3-natives-windows.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-hwloc",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-hwloc",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-hwloc\\3.3.3\\ea032ea737568d700f43cc9f052d51384ce20ebe\\lwjgl-hwloc-3.3.3-natives-windows.jar"
+                        },
+                        {
+                            "name": "lwjgl-hwloc",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-hwloc\\3.3.3\\5bcea98def19ae63a447f707385d22d1de9bbd80\\lwjgl-hwloc-3.3.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.scala-lang",
+                    "name": "scala3-library_3",
+                    "version": "3.5.1",
+                    "artifacts": [
+                        {
+                            "name": "scala3-library_3",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.scala-lang\\scala3-library_3\\3.5.1\\fad444125865e38c6a3870229f4a5d3e05c38ea8\\scala3-library_3-3.5.1.jar"
+                        },
+                        {
+                            "name": "scala3-library_3",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.scala-lang\\scala3-library_3\\3.5.1\\2701edfbb2213d8f554f5e8284845a6a3bb49ec1\\scala3-library_3-3.5.1-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.typelevel",
+                    "name": "cats-kernel_3",
+                    "version": "2.12.0",
+                    "artifacts": [
+                        {
+                            "name": "cats-kernel_3",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.typelevel\\cats-kernel_3\\2.12.0\\6839388dbf6385fabceff4e8927c0b79562c4e42\\cats-kernel_3-2.12.0.jar"
+                        },
+                        {
+                            "name": "cats-kernel_3",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.typelevel\\cats-kernel_3\\2.12.0\\403515be34b9faed4b6d03eea60ff9d603976a88\\cats-kernel_3-2.12.0-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.lwjgl",
+                    "name": "lwjgl-rpmalloc",
+                    "version": "3.3.3",
+                    "artifacts": [
+                        {
+                            "name": "lwjgl-rpmalloc",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-rpmalloc\\3.3.3\\3f77acc4aeafb0f42762aa7a6a550644b81ff132\\lwjgl-rpmalloc-3.3.3.jar"
+                        },
+                        {
+                            "name": "lwjgl-rpmalloc",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.lwjgl\\lwjgl-rpmalloc\\3.3.3\\e51a49de4b0381085c3166be75ef84e99b35b9b0\\lwjgl-rpmalloc-3.3.3-sources.jar"
+                        }
+                    ]
+                }
+            ]
+        },
+        "tags": [
+            "library"
+        ]
+    }
+}

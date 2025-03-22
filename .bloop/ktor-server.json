@@ -1,0 +1,2515 @@
+{
+    "version": "1.4.0",
+    "project": {
+        "name": "ktor-server",
+        "directory": "C:\\Users\\uros\\projects\\systemVI\\ktor-server",
+        "workspaceDir": "C:\\Users\\uros\\projects\\systemVI",
+        "sources": [
+            "C:\\Users\\uros\\projects\\systemVI\\ktor-server\\src\\main\\kotlin",
+            "C:\\Users\\uros\\projects\\systemVI\\ktor-server\\src\\main\\java"
+        ],
+        "dependencies": [
+            
+        ],
+        "classpath": [
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-netty-jvm\\2.3.11\\23862e5f98d2768d7c3c5d0f15082b9eeb451c09\\ktor-server-netty-jvm-2.3.11.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-host-common-jvm\\2.3.11\\9cbd17af2f6158da532d7b9e5e0cb19d60a8306d\\ktor-server-host-common-jvm-2.3.11.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-core-jvm\\2.3.11\\de002fc6f484be93e61c2f0b29c9299d22304dc4\\ktor-server-core-jvm-2.3.11.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-reflect\\1.8.22\\b52be44bc57cb6fd2169a29aefa4507c4e49c858\\kotlin-reflect-1.8.22.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-serialization-jvm\\2.3.11\\5fd3c07683c145e49ff26d22af898178f20d813d\\ktor-serialization-jvm-2.3.11.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-events-jvm\\2.3.11\\e6a6d901927636a1fad5617397f5d40d2fc1d54b\\ktor-events-jvm-2.3.11.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-websockets-jvm\\2.3.11\\23bd6a7d3d1fed4ffb56a08f93e72eadb9818a1b\\ktor-websockets-jvm-2.3.11.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-http-cio-jvm\\2.3.11\\ac8777580e587b888dc6fe1b51990e00cad9186\\ktor-http-cio-jvm-2.3.11.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-http-jvm\\2.3.11\\80eaa88b1c5f966ef87ca205bb05beb0e50cf99f\\ktor-http-jvm-2.3.11.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-network-jvm\\2.3.11\\af26d49aea71a522eb2a01084d3617b891acc3dd\\ktor-network-jvm-2.3.11.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-utils-jvm\\2.3.11\\db227e84b9b155891262f7376ad22b6fb9e4ae6\\ktor-utils-jvm-2.3.11.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-io-jvm\\2.3.11\\a129eccdd57a710f402661c89498abdd52107e6a\\ktor-io-jvm-2.3.11.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib-jdk8\\1.8.22\\b25c86d47d6b962b9cf0f8c3f320c8a10eea3dd1\\kotlin-stdlib-jdk8-1.8.22.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib-jdk7\\1.8.22\\4dabb8248310d833bb6a8b516024a91fd3d275c\\kotlin-stdlib-jdk7-1.8.22.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-coroutines-jdk8\\1.7.1\\31b0f471577d3c228d331fde355e14ccb071c90a\\kotlinx-coroutines-jdk8-1.7.1.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-coroutines-core-jvm\\1.7.1\\63a0779cf668e2a47d13fda7c3b0c4f8dc7762f4\\kotlinx-coroutines-core-jvm-1.7.1.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib\\2.0.0\\b48df2c4aede9586cc931ead433bc02d6fd7879e\\kotlin-stdlib-2.0.0.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\ch.qos.logback\\logback-classic\\1.4.14\\d98bc162275134cdf1518774da4a2a17ef6fb94d\\logback-classic-1.4.14.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains\\annotations\\23.0.0\\8cc20c07506ec18e0834947b84a864bfc094484e\\annotations-23.0.0.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\ch.qos.logback\\logback-core\\1.4.14\\4d3c2248219ac0effeb380ed4c5280a80bf395e8\\logback-core-1.4.14.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.slf4j\\slf4j-api\\2.0.7\\41eb7184ea9d556f23e18b5cb99cad1f8581fc00\\slf4j-api-2.0.7.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.typesafe\\config\\1.4.3\\b57e0fbdc7270d8ea59c1ba367457a5cc7ba0e98\\config-1.4.3.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-codec-http2\\4.1.106.Final\\41515e8c51eeaaddceabdb4f86fbc5dbfc25b70e\\netty-codec-http2-4.1.106.Final.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.eclipse.jetty.alpn\\alpn-api\\1.1.3.v20160715\\a1bf3a937f91b4c953acd13e8c9552347adc2198\\alpn-api-1.1.3.v20160715.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport-native-kqueue\\4.1.106.Final\\2bc6c92bfac0f6810d6a695e2d53eb3c141f6372\\netty-transport-native-kqueue-4.1.106.Final.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport-native-epoll\\4.1.106.Final\\876aeb4cc952b2f19695e4473df2762353ed9fad\\netty-transport-native-epoll-4.1.106.Final.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-codec-http\\4.1.106.Final\\21a07cdf0fc46b313fe2248f1275cdbdac0ba87b\\netty-codec-http-4.1.106.Final.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-handler\\4.1.106.Final\\874c970c4ff958b1140dde52bc17e6a9e7cde662\\netty-handler-4.1.106.Final.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-codec\\4.1.106.Final\\25171b63aa1e7a5fd8a7e4e660d6d3110241ea7\\netty-codec-4.1.106.Final.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport-classes-kqueue\\4.1.106.Final\\c09ce8927dbf58e7b0fc6291a9df1675dc98a29a\\netty-transport-classes-kqueue-4.1.106.Final.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport-classes-epoll\\4.1.106.Final\\c058d5c712e00e8560e519970b3d27747778b8f2\\netty-transport-classes-epoll-4.1.106.Final.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport-native-unix-common\\4.1.106.Final\\2da179bd95903f0fa73218b8f0d02690c0cfbc94\\netty-transport-native-unix-common-4.1.106.Final.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport\\4.1.106.Final\\8fcca44ae16b98e15965093e7696832019fd6f27\\netty-transport-4.1.106.Final.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-buffer\\4.1.106.Final\\c5495ba59a627641b3a7c23f6bcb801874c7f7b0\\netty-buffer-4.1.106.Final.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-resolver\\4.1.106.Final\\e185ae573db04939215f94d6ba869758dcecbde9\\netty-resolver-4.1.106.Final.jar",
+            "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-common\\4.1.106.Final\\132defb4689f41b51b483b7202b22b6e89fe35fd\\netty-common-4.1.106.Final.jar"
+        ],
+        "out": "C:\\Users\\uros\\projects\\systemVI\\.bloop\\ktor-server\\build",
+        "classesDir": "C:\\Users\\uros\\projects\\systemVI\\.bloop\\ktor-server\\build\\classes",
+        "resources": [
+            "C:\\Users\\uros\\projects\\systemVI\\ktor-server\\src\\main\\resources"
+        ],
+        "java": {
+            "options": [
+                "-target",
+                "21",
+                "-source",
+                "21",
+                "-h",
+                "C:\\Users\\uros\\projects\\systemVI\\ktor-server\\build\\generated\\sources\\headers\\java\\main",
+                "-g",
+                "-sourcepath",
+                "",
+                "-proc:none",
+                "-XDuseUnsharedTable=true"
+            ]
+        },
+        "platform": {
+            "name": "jvm",
+            "config": {
+                "home": "C:\\Users\\uros\\.sdkman\\candidates\\java\\current",
+                "options": [
+                    "-Dio.ktor.development=false"
+                ]
+            },
+            "mainClass": [
+                "com.systemvi.ApplicationKt"
+            ],
+            "classpath": [
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-netty-jvm\\2.3.11\\23862e5f98d2768d7c3c5d0f15082b9eeb451c09\\ktor-server-netty-jvm-2.3.11.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-host-common-jvm\\2.3.11\\9cbd17af2f6158da532d7b9e5e0cb19d60a8306d\\ktor-server-host-common-jvm-2.3.11.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-core-jvm\\2.3.11\\de002fc6f484be93e61c2f0b29c9299d22304dc4\\ktor-server-core-jvm-2.3.11.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-reflect\\1.8.22\\b52be44bc57cb6fd2169a29aefa4507c4e49c858\\kotlin-reflect-1.8.22.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-serialization-jvm\\2.3.11\\5fd3c07683c145e49ff26d22af898178f20d813d\\ktor-serialization-jvm-2.3.11.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-events-jvm\\2.3.11\\e6a6d901927636a1fad5617397f5d40d2fc1d54b\\ktor-events-jvm-2.3.11.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-websockets-jvm\\2.3.11\\23bd6a7d3d1fed4ffb56a08f93e72eadb9818a1b\\ktor-websockets-jvm-2.3.11.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-http-cio-jvm\\2.3.11\\ac8777580e587b888dc6fe1b51990e00cad9186\\ktor-http-cio-jvm-2.3.11.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-http-jvm\\2.3.11\\80eaa88b1c5f966ef87ca205bb05beb0e50cf99f\\ktor-http-jvm-2.3.11.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-network-jvm\\2.3.11\\af26d49aea71a522eb2a01084d3617b891acc3dd\\ktor-network-jvm-2.3.11.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-utils-jvm\\2.3.11\\db227e84b9b155891262f7376ad22b6fb9e4ae6\\ktor-utils-jvm-2.3.11.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-io-jvm\\2.3.11\\a129eccdd57a710f402661c89498abdd52107e6a\\ktor-io-jvm-2.3.11.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib-jdk8\\1.8.22\\b25c86d47d6b962b9cf0f8c3f320c8a10eea3dd1\\kotlin-stdlib-jdk8-1.8.22.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib-jdk7\\1.8.22\\4dabb8248310d833bb6a8b516024a91fd3d275c\\kotlin-stdlib-jdk7-1.8.22.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-coroutines-jdk8\\1.7.1\\31b0f471577d3c228d331fde355e14ccb071c90a\\kotlinx-coroutines-jdk8-1.7.1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-coroutines-core-jvm\\1.7.1\\63a0779cf668e2a47d13fda7c3b0c4f8dc7762f4\\kotlinx-coroutines-core-jvm-1.7.1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib\\2.0.0\\b48df2c4aede9586cc931ead433bc02d6fd7879e\\kotlin-stdlib-2.0.0.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\ch.qos.logback\\logback-classic\\1.4.14\\d98bc162275134cdf1518774da4a2a17ef6fb94d\\logback-classic-1.4.14.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains\\annotations\\23.0.0\\8cc20c07506ec18e0834947b84a864bfc094484e\\annotations-23.0.0.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\ch.qos.logback\\logback-core\\1.4.14\\4d3c2248219ac0effeb380ed4c5280a80bf395e8\\logback-core-1.4.14.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.slf4j\\slf4j-api\\2.0.7\\41eb7184ea9d556f23e18b5cb99cad1f8581fc00\\slf4j-api-2.0.7.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.typesafe\\config\\1.4.3\\b57e0fbdc7270d8ea59c1ba367457a5cc7ba0e98\\config-1.4.3.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.fusesource.jansi\\jansi\\2.4.1\\d5774f204d990c9f5da2809b88f928515577beb4\\jansi-2.4.1.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-codec-http2\\4.1.106.Final\\41515e8c51eeaaddceabdb4f86fbc5dbfc25b70e\\netty-codec-http2-4.1.106.Final.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.eclipse.jetty.alpn\\alpn-api\\1.1.3.v20160715\\a1bf3a937f91b4c953acd13e8c9552347adc2198\\alpn-api-1.1.3.v20160715.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport-native-kqueue\\4.1.106.Final\\2bc6c92bfac0f6810d6a695e2d53eb3c141f6372\\netty-transport-native-kqueue-4.1.106.Final.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport-native-epoll\\4.1.106.Final\\876aeb4cc952b2f19695e4473df2762353ed9fad\\netty-transport-native-epoll-4.1.106.Final.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-codec-http\\4.1.106.Final\\21a07cdf0fc46b313fe2248f1275cdbdac0ba87b\\netty-codec-http-4.1.106.Final.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-handler\\4.1.106.Final\\874c970c4ff958b1140dde52bc17e6a9e7cde662\\netty-handler-4.1.106.Final.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-codec\\4.1.106.Final\\25171b63aa1e7a5fd8a7e4e660d6d3110241ea7\\netty-codec-4.1.106.Final.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport-classes-kqueue\\4.1.106.Final\\c09ce8927dbf58e7b0fc6291a9df1675dc98a29a\\netty-transport-classes-kqueue-4.1.106.Final.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport-classes-epoll\\4.1.106.Final\\c058d5c712e00e8560e519970b3d27747778b8f2\\netty-transport-classes-epoll-4.1.106.Final.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport-native-unix-common\\4.1.106.Final\\2da179bd95903f0fa73218b8f0d02690c0cfbc94\\netty-transport-native-unix-common-4.1.106.Final.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport\\4.1.106.Final\\8fcca44ae16b98e15965093e7696832019fd6f27\\netty-transport-4.1.106.Final.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-buffer\\4.1.106.Final\\c5495ba59a627641b3a7c23f6bcb801874c7f7b0\\netty-buffer-4.1.106.Final.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-resolver\\4.1.106.Final\\e185ae573db04939215f94d6ba869758dcecbde9\\netty-resolver-4.1.106.Final.jar",
+                "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-common\\4.1.106.Final\\132defb4689f41b51b483b7202b22b6e89fe35fd\\netty-common-4.1.106.Final.jar"
+            ]
+        },
+        "resolution": {
+            "modules": [
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-core-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-core-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-core-jvm\\2.3.11\\2f867c98c8805792aa2d64a28c6ce79be492891e\\ktor-server-core-jvm-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-server-core-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-core-jvm\\2.3.11\\2f867c98c8805792aa2d64a28c6ce79be492891e\\ktor-server-core-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.netty",
+                    "name": "netty-transport-native-kqueue",
+                    "version": "4.1.106.Final",
+                    "artifacts": [
+                        {
+                            "name": "netty-transport-native-kqueue",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport-native-kqueue\\4.1.106.Final\\2bc6c92bfac0f6810d6a695e2d53eb3c141f6372\\netty-transport-native-kqueue-4.1.106.Final.jar"
+                        },
+                        {
+                            "name": "netty-transport-native-kqueue",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport-native-kqueue\\4.1.106.Final\\31bf6d3e73639241943fa43399b130181172c4bb\\netty-transport-native-kqueue-4.1.106.Final-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.netty",
+                    "name": "netty-common",
+                    "version": "4.1.106.Final",
+                    "artifacts": [
+                        {
+                            "name": "netty-common",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-common\\4.1.106.Final\\888017cec15ad0eae4093e63dea40000c7a0a249\\netty-common-4.1.106.Final-sources.jar"
+                        },
+                        {
+                            "name": "netty-common",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-common\\4.1.106.Final\\132defb4689f41b51b483b7202b22b6e89fe35fd\\netty-common-4.1.106.Final.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-tests-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-tests-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-tests-jvm\\2.3.11\\f4ae728d7b0d9591033326f6da4bafa218d709be\\ktor-server-tests-jvm-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-server-tests-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-tests-jvm\\2.3.11\\f4ae728d7b0d9591033326f6da4bafa218d709be\\ktor-server-tests-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.netty",
+                    "name": "netty-transport-native-unix-common",
+                    "version": "4.1.106.Final",
+                    "artifacts": [
+                        {
+                            "name": "netty-transport-native-unix-common",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport-native-unix-common\\4.1.106.Final\\710ccdc419fdab13d39c7ae45c74be9fff72c35b\\netty-transport-native-unix-common-4.1.106.Final-sources.jar"
+                        },
+                        {
+                            "name": "netty-transport-native-unix-common",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport-native-unix-common\\4.1.106.Final\\2da179bd95903f0fa73218b8f0d02690c0cfbc94\\netty-transport-native-unix-common-4.1.106.Final.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-host-common-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-host-common-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-host-common-jvm\\2.3.11\\9cbd17af2f6158da532d7b9e5e0cb19d60a8306d\\ktor-server-host-common-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-host-common-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-host-common-jvm\\2.3.11\\5e828052fbd9146dfdb55c2d6b4098cb768f68e\\ktor-server-host-common-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-websocket-serialization-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-websocket-serialization-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-websocket-serialization-jvm\\2.3.11\\195426b52d1647738a12022d1e0728326940a358\\ktor-websocket-serialization-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-websocket-serialization-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-websocket-serialization-jvm\\2.3.11\\cbef7bd8f02f3ab747e6cb3904e33a42ed743b36\\ktor-websocket-serialization-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-stdlib",
+                    "version": "2.0.0",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-stdlib",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib\\2.0.0\\b48df2c4aede9586cc931ead433bc02d6fd7879e\\kotlin-stdlib-2.0.0.jar"
+                        },
+                        {
+                            "name": "kotlin-stdlib",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib\\2.0.0\\84cdfeb1d3e1b3f72cc4e0a3803c85c4727312f1\\kotlin-stdlib-2.0.0-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-method-override",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-method-override",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-method-override\\2.3.11\\153abbdfec3594f8878e8c35ea2dc9632f18fa53\\ktor-server-method-override-metadata-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-method-override",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-method-override\\2.3.11\\f95453c037c0abd93b6cbe23b972ddc93da78d69\\ktor-server-method-override-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-double-receive-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-double-receive-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-double-receive-jvm\\2.3.11\\b8b06f24c1c5c930ce0e11805ce5d2259e794ce0\\ktor-server-double-receive-jvm-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-server-double-receive-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-double-receive-jvm\\2.3.11\\4135e510983c954520728ea4fbaba69f36d9e9d2\\ktor-server-double-receive-jvm-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-partial-content-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-partial-content-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-partial-content-jvm\\2.3.11\\955e87207846de5c03166ca690f08fcf2bb30866\\ktor-server-partial-content-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-partial-content-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-partial-content-jvm\\2.3.11\\e4f06a717b1c54228ee26be0b38e8bf96ebb047b\\ktor-server-partial-content-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "net.bytebuddy",
+                    "name": "byte-buddy",
+                    "version": "1.10.9",
+                    "artifacts": [
+                        {
+                            "name": "byte-buddy",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\net.bytebuddy\\byte-buddy\\1.10.9\\d55329c205327743281825d0d2c8cf163aec2d60\\byte-buddy-1.10.9-sources.jar"
+                        },
+                        {
+                            "name": "byte-buddy",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\net.bytebuddy\\byte-buddy\\1.10.9\\2c03f15cd1131692feca93f190ed81412a3de961\\byte-buddy-1.10.9.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlinx",
+                    "name": "kotlinx-serialization-core",
+                    "version": "1.5.1",
+                    "artifacts": [
+                        {
+                            "name": "kotlinx-serialization-core",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-serialization-core\\1.5.1\\d88471f13c1c460a60fcc6b7c9427f98566a2968\\kotlinx-serialization-core-metadata-1.5.1-all.jar"
+                        },
+                        {
+                            "name": "kotlinx-serialization-core",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-serialization-core\\1.5.1\\3ea781b43a25cae2724b6010461079fc0c624020\\kotlinx-serialization-core-1.5.1-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-events",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-events",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-events\\2.3.11\\476edb91f7190a9887c10fc79609b01d0d850d67\\ktor-events-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-events",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-events\\2.3.11\\16a8d5538be12103d619818ef519ac9c5afec648\\ktor-events-metadata-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-double-receive",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-double-receive",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-double-receive\\2.3.11\\895767bc68e96fde4adaa79acd88145918404087\\ktor-server-double-receive-metadata-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-double-receive",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-double-receive\\2.3.11\\9ff322bcb0b508b28e10fbd33708504e7bf5bb30\\ktor-server-double-receive-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-call-id-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-call-id-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-call-id-jvm\\2.3.11\\6ec7eadf8feb15f284b7aa5e155ec214955340da\\ktor-server-call-id-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-call-id-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-call-id-jvm\\2.3.11\\b4fc35bf4643c509dee1a40de35ee7b9290f4884\\ktor-server-call-id-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlinx",
+                    "name": "atomicfu",
+                    "version": "0.20.2",
+                    "artifacts": [
+                        {
+                            "name": "atomicfu",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\atomicfu\\0.20.2\\47d05598c5d2171ba8ee290d49d08e352d398479\\atomicfu-metadata-0.20.2-all.jar"
+                        },
+                        {
+                            "name": "atomicfu",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\atomicfu\\0.20.2\\8b6c485db5c0560570bfff8bf615a69c8f2fc541\\atomicfu-0.20.2-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "com.typesafe",
+                    "name": "config",
+                    "version": "1.4.3",
+                    "artifacts": [
+                        {
+                            "name": "config",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.typesafe\\config\\1.4.3\\b57e0fbdc7270d8ea59c1ba367457a5cc7ba0e98\\config-1.4.3.jar"
+                        },
+                        {
+                            "name": "config",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\com.typesafe\\config\\1.4.3\\ef4089a5c087855c6b6160c0d93e980b08fd9bc4\\config-1.4.3-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-websockets-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-websockets-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-websockets-jvm\\2.3.11\\d5a4df10ad8189e1a98857f275e7a410be46a5d3\\ktor-server-websockets-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-websockets-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-websockets-jvm\\2.3.11\\9a4f041a39aa02b2741b2776f2699414c067fc9\\ktor-server-websockets-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-cors",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-cors",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-cors\\2.3.11\\83c8f67622f1e3abcd9aa00fe9e61eb287df5af9\\ktor-server-cors-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-server-cors",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-cors\\2.3.11\\357c0e0335aae33c7c2c329ac7f0488bdb772681\\ktor-server-cors-metadata-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server\\2.3.11\\20a99d0945f893137067aae1d2b7364fe2e4fb38\\ktor-server-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-server",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server\\2.3.11\\80be1c508cb76a4dc2c5c954f44f5e3cea880220\\ktor-server-metadata-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-call-logging-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-call-logging-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-call-logging-jvm\\2.3.11\\4b397cefffd0da2f80d3ccdca09f620a0f391f7b\\ktor-server-call-logging-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-call-logging-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-call-logging-jvm\\2.3.11\\5f93b127f16299a3a765c8e46c6366da44d462d8\\ktor-server-call-logging-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-client-core",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-client-core",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-client-core\\2.3.11\\e395ae26f73172f8f0957624f857e704fc34bfa0\\ktor-client-core-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-client-core",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-client-core\\2.3.11\\b4f75ab2bce9d3788efdeb557a39611f072f7a4b\\ktor-client-core-metadata-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-forwarded-header-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-forwarded-header-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-forwarded-header-jvm\\2.3.11\\c23583e6a95cf4cf41842198b56bf5a3c3b9142b\\ktor-server-forwarded-header-jvm-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-server-forwarded-header-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-forwarded-header-jvm\\2.3.11\\bad961f6dfc05191746867ab692188462ee3adf\\ktor-server-forwarded-header-jvm-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-compression-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-compression-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-compression-jvm\\2.3.11\\205d128d40bebe7fdd35d0234f5a3f3e79324828\\ktor-server-compression-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-compression-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-compression-jvm\\2.3.11\\d3efe15b4863889ca467abca293cd572eee770ea\\ktor-server-compression-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.intellij.deps",
+                    "name": "trove4j",
+                    "version": "1.0.20200330",
+                    "artifacts": [
+                        {
+                            "name": "trove4j",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.intellij.deps\\trove4j\\1.0.20200330\\3afb14d5f9ceb459d724e907a21145e8ff394f02\\trove4j-1.0.20200330.jar"
+                        },
+                        {
+                            "name": "trove4j",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.intellij.deps\\trove4j\\1.0.20200330\\5fc2da70caaebed24734161c6c33648a15396917\\trove4j-1.0.20200330-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-client-apache-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-client-apache-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-client-apache-jvm\\2.3.11\\faac568edfa024e5954b065a9e351d56165e7ee6\\ktor-client-apache-jvm-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-client-apache-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-client-apache-jvm\\2.3.11\\99d07e0475b028cbf7a0ea10245598c8ad341219\\ktor-client-apache-jvm-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.hamcrest",
+                    "name": "hamcrest-core",
+                    "version": "1.3",
+                    "artifacts": [
+                        {
+                            "name": "hamcrest-core",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.hamcrest\\hamcrest-core\\1.3\\1dc37250fbc78e23a65a67fbbaf71d2e9cbc3c0b\\hamcrest-core-1.3-sources.jar"
+                        },
+                        {
+                            "name": "hamcrest-core",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.hamcrest\\hamcrest-core\\1.3\\42a25dc3219429f0e5d060061f71acb49bf010a0\\hamcrest-core-1.3.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-serialization",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-serialization",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-serialization\\2.3.11\\173696ff496a3fb4154d0910c38955bbc9dcb33b\\ktor-serialization-metadata-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-serialization",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-serialization\\2.3.11\\85a50d9fd68216cc09f00bc3f88e87785c21613c\\ktor-serialization-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-stdlib-jdk8",
+                    "version": "1.8.22",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-stdlib-jdk8",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib-jdk8\\1.8.22\\20739e7aae2a2bfb66c4081b233ffea7b947cf77\\kotlin-stdlib-jdk8-1.8.22-sources.jar"
+                        },
+                        {
+                            "name": "kotlin-stdlib-jdk8",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib-jdk8\\1.8.22\\b25c86d47d6b962b9cf0f8c3f320c8a10eea3dd1\\kotlin-stdlib-jdk8-1.8.22.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-http-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-http-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-http-jvm\\2.3.11\\afbc4d17642dc2c6850fc4b28a06f5837b3de424\\ktor-http-jvm-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-http-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-http-jvm\\2.3.11\\80eaa88b1c5f966ef87ca205bb05beb0e50cf99f\\ktor-http-jvm-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "ch.qos.logback",
+                    "name": "logback-core",
+                    "version": "1.4.14",
+                    "artifacts": [
+                        {
+                            "name": "logback-core",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\ch.qos.logback\\logback-core\\1.4.14\\7d9dcce57ba091e1e4b4793b244508ea28f52b48\\logback-core-1.4.14-sources.jar"
+                        },
+                        {
+                            "name": "logback-core",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\ch.qos.logback\\logback-core\\1.4.14\\4d3c2248219ac0effeb380ed4c5280a80bf395e8\\logback-core-1.4.14.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-forwarded-header",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-forwarded-header",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-forwarded-header\\2.3.11\\d329bd95b3ae367088b1800a83ffbd9f1365db33\\ktor-server-forwarded-header-metadata-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-forwarded-header",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-forwarded-header\\2.3.11\\c23583e6a95cf4cf41842198b56bf5a3c3b9142b\\ktor-server-forwarded-header-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-scripting-jvm",
+                    "version": "2.0.0",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-scripting-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-scripting-jvm\\2.0.0\\9dcd0643430351d675080e65b30e2fdb60118d4d\\kotlin-scripting-jvm-2.0.0-sources.jar"
+                        },
+                        {
+                            "name": "kotlin-scripting-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-scripting-jvm\\2.0.0\\11209b97b2495fb3755f2e2e4fb64abb7cd9b4c0\\kotlin-scripting-jvm-2.0.0.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-hsts",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-hsts",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-hsts\\2.3.11\\10790392819642177b2a999179d182621f1d4bf6\\ktor-server-hsts-metadata-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-hsts",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-hsts\\2.3.11\\6c8c5eb521f9239e39bd4e1947ae5e5105fed5fc\\ktor-server-hsts-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-build-tools-impl",
+                    "version": "2.0.0",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-build-tools-impl",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-build-tools-impl\\2.0.0\\4806ccf38cdabab22284651545ecf6f05fc386f6\\kotlin-build-tools-impl-2.0.0.jar"
+                        },
+                        {
+                            "name": "kotlin-build-tools-impl",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-build-tools-impl\\2.0.0\\3327b50fced7a0f275537dd4f07e459965e69820\\kotlin-build-tools-impl-2.0.0-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-test-host-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-test-host-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-test-host-jvm\\2.3.11\\eb415fe8ee855b1b993fd141841e54fa8205a424\\ktor-server-test-host-jvm-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-server-test-host-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-test-host-jvm\\2.3.11\\a611dabb28a899161094d457f1c1f20ab1b92c9d\\ktor-server-test-host-jvm-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.apache.httpcomponents",
+                    "name": "httpcore",
+                    "version": "4.4.15",
+                    "artifacts": [
+                        {
+                            "name": "httpcore",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.httpcomponents\\httpcore\\4.4.15\\7f2e0c573eaa7a74bac2e89b359e1f73d92a0a1d\\httpcore-4.4.15.jar"
+                        },
+                        {
+                            "name": "httpcore",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.httpcomponents\\httpcore\\4.4.15\\2ab1724e80d075698903a49f5e8fa90b077937ac\\httpcore-4.4.15-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlinx",
+                    "name": "kotlinx-serialization-json-jvm",
+                    "version": "1.5.1",
+                    "artifacts": [
+                        {
+                            "name": "kotlinx-serialization-json-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-serialization-json-jvm\\1.5.1\\21ac91884e0b9462b9106d1a83e5e0d200170c65\\kotlinx-serialization-json-jvm-1.5.1.jar"
+                        },
+                        {
+                            "name": "kotlinx-serialization-json-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-serialization-json-jvm\\1.5.1\\dbbf28fbd3cdf1e841f40b0e2e349828d65ed008\\kotlinx-serialization-json-jvm-1.5.1-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-websockets",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-websockets",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-websockets\\2.3.11\\149b9bb43cf11dd708fed081f8e1cccc1776e40e\\ktor-websockets-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-websockets",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-websockets\\2.3.11\\24bcc047cd8d4be934a43c004375bb6521688ffd\\ktor-websockets-metadata-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.netty",
+                    "name": "netty-codec-http",
+                    "version": "4.1.106.Final",
+                    "artifacts": [
+                        {
+                            "name": "netty-codec-http",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-codec-http\\4.1.106.Final\\21a07cdf0fc46b313fe2248f1275cdbdac0ba87b\\netty-codec-http-4.1.106.Final.jar"
+                        },
+                        {
+                            "name": "netty-codec-http",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-codec-http\\4.1.106.Final\\85fa84bcb6b417f2724bc9c382bb610a729694ed\\netty-codec-http-4.1.106.Final-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-client-core-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-client-core-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-client-core-jvm\\2.3.11\\1ead4100b66a375ccc808bede2e2c1e480c015f\\ktor-client-core-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-client-core-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-client-core-jvm\\2.3.11\\fa8d8da0d46574059b8359a53de5c426792bb9b4\\ktor-client-core-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-klib-commonizer-embeddable",
+                    "version": "2.0.0",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-klib-commonizer-embeddable",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-klib-commonizer-embeddable\\2.0.0\\2ad14aed781c4a73ed4dbb421966d408a0a06686\\kotlin-klib-commonizer-embeddable-2.0.0-sources.jar"
+                        },
+                        {
+                            "name": "kotlin-klib-commonizer-embeddable",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-klib-commonizer-embeddable\\2.0.0\\2c98bd4b2faa1808f01f153d20159330aa36cab7\\kotlin-klib-commonizer-embeddable-2.0.0.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-method-override-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-method-override-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-method-override-jvm\\2.3.11\\5940d9f1bc739271711b9914ac25e7173ff0e06d\\ktor-server-method-override-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-method-override-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-method-override-jvm\\2.3.11\\f95453c037c0abd93b6cbe23b972ddc93da78d69\\ktor-server-method-override-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-netty-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-netty-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-netty-jvm\\2.3.11\\c04513e79633a2a6c192b175f72e7098b243afc2\\ktor-server-netty-jvm-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-server-netty-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-netty-jvm\\2.3.11\\c04513e79633a2a6c192b175f72e7098b243afc2\\ktor-server-netty-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-reflect",
+                    "version": "1.6.10",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-reflect",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-reflect\\1.6.10\\45a69749441dc0f18fe2c5b27e5e110a6be50e7\\kotlin-reflect-1.6.10-sources.jar"
+                        },
+                        {
+                            "name": "kotlin-reflect",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-reflect\\1.6.10\\1cbe9c92c12a94eea200d23c2bbaedaf3daf5132\\kotlin-reflect-1.6.10.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-auto-head-response",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-auto-head-response",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-auto-head-response\\2.3.11\\2370f6078c93c29e1c98a22eab8fc9b15e17b08e\\ktor-server-auto-head-response-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-server-auto-head-response",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-auto-head-response\\2.3.11\\9dd98ea8a4840d32477ccbd2651be5eeea570cbf\\ktor-server-auto-head-response-metadata-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-stdlib",
+                    "version": "2.0.0",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-stdlib",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib\\2.0.0\\e6142a28b5fa6722cd811dd86278ad056784fa40\\kotlin-stdlib-2.0.0-all.jar"
+                        },
+                        {
+                            "name": "kotlin-stdlib",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib\\2.0.0\\84cdfeb1d3e1b3f72cc4e0a3803c85c4727312f1\\kotlin-stdlib-2.0.0-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-caching-headers",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-caching-headers",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-caching-headers\\2.3.11\\8eaf14a4405c3d440305fb63e01abd725e54950f\\ktor-server-caching-headers-metadata-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-caching-headers",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-caching-headers\\2.3.11\\9f9a2b24f7d0d5a6106a50fa1e41438ff1b0fa60\\ktor-server-caching-headers-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-test-dispatcher-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-test-dispatcher-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-test-dispatcher-jvm\\2.3.11\\b5456ac1cb8d142b7f87a72efc0667426da860e3\\ktor-test-dispatcher-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-test-dispatcher-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-test-dispatcher-jvm\\2.3.11\\1ba7bc04002684a41c2020d8bde9722b1e561790\\ktor-test-dispatcher-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-partial-content",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-partial-content",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-partial-content\\2.3.11\\3acce7e03666898187b7582340b6a3d0df58cfbe\\ktor-server-partial-content-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-server-partial-content",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-partial-content\\2.3.11\\8b9b9cb1a0adb7b089d54ec21f2920e7d1f709b8\\ktor-server-partial-content-metadata-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-conditional-headers-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-conditional-headers-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-conditional-headers-jvm\\2.3.11\\9b8f851332dd8f39594277cfe43cd024b70e37e3\\ktor-server-conditional-headers-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-conditional-headers-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-conditional-headers-jvm\\2.3.11\\332590439dcc86cf55f62e5b3cc03798bb123744\\ktor-server-conditional-headers-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-call-id",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-call-id",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-call-id\\2.3.11\\d0c7ebacef58d557ae87dbe7020843599e8c953b\\ktor-server-call-id-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-server-call-id",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-call-id\\2.3.11\\2b2b59d9e73de149dff0a55c594ab2df969648e8\\ktor-server-call-id-metadata-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-data-conversion-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-data-conversion-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-data-conversion-jvm\\2.3.11\\99ccc58736a048521bf48e89933cb7b1b650ab73\\ktor-server-data-conversion-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-data-conversion-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-data-conversion-jvm\\2.3.11\\35c7225c9a8a00ec150630d95f175bfc90fab55e\\ktor-server-data-conversion-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-network-tls",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-network-tls",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-network-tls\\2.3.11\\64e8500d700bae98a4f733b28fe2d5be147c4cd9\\ktor-network-tls-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-network-tls",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-network-tls\\2.3.11\\7478dfc23e4a8923407dc7299f17ab1821327634\\ktor-network-tls-metadata-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-daemon-client",
+                    "version": "2.0.0",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-daemon-client",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-daemon-client\\2.0.0\\42b189ff60bee1f674bf4bd806014cd8a519b73f\\kotlin-daemon-client-2.0.0.jar"
+                        },
+                        {
+                            "name": "kotlin-daemon-client",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-daemon-client\\2.0.0\\582ac7d4d1d67a5ff4fe4229e2f414225605d402\\kotlin-daemon-client-2.0.0-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-http-redirect",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-http-redirect",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-http-redirect\\2.3.11\\6e1af8e62420e2914f7e751d9b60f6c711d4ae22\\ktor-server-http-redirect-metadata-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-http-redirect",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-http-redirect\\2.3.11\\978a9c7008013bb5366b62241046dc88eb6cd9ae\\ktor-server-http-redirect-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-test-host",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-test-host",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-test-host\\2.3.11\\3f2a2622e74415e35dd8a325f372c97b5638450e\\ktor-server-test-host-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-server-test-host",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-test-host\\2.3.11\\356a03d67674f2812a1a0d1026e86922612c5c95\\ktor-server-test-host-metadata-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-test",
+                    "version": "2.0.0",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-test",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-test\\2.0.0\\b2793875afcd0cf0b070db5e1d06ae9fc98bfdd7\\kotlin-test-2.0.0-sources.jar"
+                        },
+                        {
+                            "name": "kotlin-test",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-test\\2.0.0\\54d065313f746ea93e82b89c79ddbedac927180a\\kotlin-test-2.0.0-all.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-build-tools-api",
+                    "version": "2.0.0",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-build-tools-api",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-build-tools-api\\2.0.0\\a45f2366a6e32563fc9259d35409a373287be17e\\kotlin-build-tools-api-2.0.0.jar"
+                        },
+                        {
+                            "name": "kotlin-build-tools-api",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-build-tools-api\\2.0.0\\bad5b76c1302d74cddd1b8ad5d12f030319bd589\\kotlin-build-tools-api-2.0.0-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-jvm\\2.3.11\\8578688f3783db7d3e770cf44c8457a7157ca86\\ktor-server-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-jvm\\2.3.11\\20a99d0945f893137067aae1d2b7364fe2e4fb38\\ktor-server-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-reflect",
+                    "version": "1.8.22",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-reflect",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-reflect\\1.8.22\\b52be44bc57cb6fd2169a29aefa4507c4e49c858\\kotlin-reflect-1.8.22.jar"
+                        },
+                        {
+                            "name": "kotlin-reflect",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-reflect\\1.8.22\\b0e90795b7693974af8abac3f1b97ffc3cf00916\\kotlin-reflect-1.8.22-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-tests-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-tests-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-tests-jvm\\2.3.11\\f9f59bd89550fa3dfcc232966e1c8d0512e07ff2\\ktor-server-tests-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-tests-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-tests-jvm\\2.3.11\\f4ae728d7b0d9591033326f6da4bafa218d709be\\ktor-server-tests-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-core-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-core-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-core-jvm\\2.3.11\\de002fc6f484be93e61c2f0b29c9299d22304dc4\\ktor-server-core-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-core-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-core-jvm\\2.3.11\\2f867c98c8805792aa2d64a28c6ce79be492891e\\ktor-server-core-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.netty",
+                    "name": "netty-resolver",
+                    "version": "4.1.106.Final",
+                    "artifacts": [
+                        {
+                            "name": "netty-resolver",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-resolver\\4.1.106.Final\\e185ae573db04939215f94d6ba869758dcecbde9\\netty-resolver-4.1.106.Final.jar"
+                        },
+                        {
+                            "name": "netty-resolver",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-resolver\\4.1.106.Final\\1ed2bc61b13ff1212df5b38ead9b4e9a4d3561f1\\netty-resolver-4.1.106.Final-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-websockets-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-websockets-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-websockets-jvm\\2.3.11\\493c63ed88319d849bd4c7914f395e93c4abe9ea\\ktor-websockets-jvm-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-websockets-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-websockets-jvm\\2.3.11\\23bd6a7d3d1fed4ffb56a08f93e72eadb9818a1b\\ktor-websockets-jvm-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "ch.qos.logback",
+                    "name": "logback-core",
+                    "version": "1.4.14",
+                    "artifacts": [
+                        {
+                            "name": "logback-core",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\ch.qos.logback\\logback-core\\1.4.14\\7d9dcce57ba091e1e4b4793b244508ea28f52b48\\logback-core-1.4.14-sources.jar"
+                        },
+                        {
+                            "name": "logback-core",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\ch.qos.logback\\logback-core\\1.4.14\\7d9dcce57ba091e1e4b4793b244508ea28f52b48\\logback-core-1.4.14-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains",
+                    "name": "annotations",
+                    "version": "13.0",
+                    "artifacts": [
+                        {
+                            "name": "annotations",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains\\annotations\\13.0\\919f0dfe192fb4e063e7dacadee7f8bb9a2672a9\\annotations-13.0.jar"
+                        },
+                        {
+                            "name": "annotations",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains\\annotations\\13.0\\5991ca87ef1fb5544943d9abc5a9a37583fabe03\\annotations-13.0-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-network-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-network-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-network-jvm\\2.3.11\\97194816bbdf3d6c00a82277d8e70e55ec5866e1\\ktor-network-jvm-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-network-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-network-jvm\\2.3.11\\af26d49aea71a522eb2a01084d3617b891acc3dd\\ktor-network-jvm-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-websocket-serialization",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-websocket-serialization",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-websocket-serialization\\2.3.11\\59f3fb094f9471b70882f5d78ebf167f88e78ccd\\ktor-websocket-serialization-metadata-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-websocket-serialization",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-websocket-serialization\\2.3.11\\cbef7bd8f02f3ab747e6cb3904e33a42ed743b36\\ktor-websocket-serialization-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-rate-limit-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-rate-limit-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-rate-limit-jvm\\2.3.11\\a24b60cc382e547a11399f4144521455118f87b2\\ktor-server-rate-limit-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-rate-limit-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-rate-limit-jvm\\2.3.11\\38d93934b47b9bd360bf1d9219f617f73f5c18a6\\ktor-server-rate-limit-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-content-negotiation",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-content-negotiation",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-content-negotiation\\2.3.11\\9b501cefe3a918feb5a9da346dbc4034a264547\\ktor-server-content-negotiation-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-server-content-negotiation",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-content-negotiation\\2.3.11\\ac4d6e6d52a7f773bb04811f16a9036d0d253758\\ktor-server-content-negotiation-metadata-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-stdlib",
+                    "version": "2.0.0",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-stdlib",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib\\2.0.0\\84cdfeb1d3e1b3f72cc4e0a3803c85c4727312f1\\kotlin-stdlib-2.0.0-sources.jar"
+                        },
+                        {
+                            "name": "kotlin-stdlib",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib\\2.0.0\\84cdfeb1d3e1b3f72cc4e0a3803c85c4727312f1\\kotlin-stdlib-2.0.0-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlinx",
+                    "name": "kotlinx-coroutines-core",
+                    "version": "1.7.1",
+                    "artifacts": [
+                        {
+                            "name": "kotlinx-coroutines-core",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-coroutines-core\\1.7.1\\e17cbf8f9698a3ccecea95b6f94c7c5d7f088223\\kotlinx-coroutines-core-1.7.1-sources.jar"
+                        },
+                        {
+                            "name": "kotlinx-coroutines-core",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-coroutines-core\\1.7.1\\3569df32127e05b4c4aefc0327399927454e2e36\\kotlinx-coroutines-core-metadata-1.7.1-all.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.slf4j",
+                    "name": "slf4j-api",
+                    "version": "2.0.7",
+                    "artifacts": [
+                        {
+                            "name": "slf4j-api",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.slf4j\\slf4j-api\\2.0.7\\f887f95694cd20d51a062446b6e3d09dd02d98ff\\slf4j-api-2.0.7-sources.jar"
+                        },
+                        {
+                            "name": "slf4j-api",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.slf4j\\slf4j-api\\2.0.7\\f887f95694cd20d51a062446b6e3d09dd02d98ff\\slf4j-api-2.0.7-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-conditional-headers",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-conditional-headers",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-conditional-headers\\2.3.11\\a0ce860b3e995ee7d466c814514b5b2920f811df\\ktor-server-conditional-headers-metadata-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-conditional-headers",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-conditional-headers\\2.3.11\\332590439dcc86cf55f62e5b3cc03798bb123744\\ktor-server-conditional-headers-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-sessions-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-sessions-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-sessions-jvm\\2.3.11\\5300fa98952037f42c5954d69fa460f94e13d632\\ktor-server-sessions-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-sessions-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-sessions-jvm\\2.3.11\\cb45af330878a8e49196e159758a44fb7643a543\\ktor-server-sessions-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlinx",
+                    "name": "kotlinx-coroutines-core-jvm",
+                    "version": "1.7.1",
+                    "artifacts": [
+                        {
+                            "name": "kotlinx-coroutines-core-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-coroutines-core-jvm\\1.7.1\\9ba46d8eb284ab4db835daebb561d8e5e918467e\\kotlinx-coroutines-core-jvm-1.7.1-sources.jar"
+                        },
+                        {
+                            "name": "kotlinx-coroutines-core-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-coroutines-core-jvm\\1.7.1\\63a0779cf668e2a47d13fda7c3b0c4f8dc7762f4\\kotlinx-coroutines-core-jvm-1.7.1.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "commons-codec",
+                    "name": "commons-codec",
+                    "version": "1.11",
+                    "artifacts": [
+                        {
+                            "name": "commons-codec",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\commons-codec\\commons-codec\\1.11\\bce4ba84fd527950e35040b20a991c63e90e2850\\commons-codec-1.11-sources.jar"
+                        },
+                        {
+                            "name": "commons-codec",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\commons-codec\\commons-codec\\1.11\\3acb4705652e16236558f0f4f2192cc33c3bd189\\commons-codec-1.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.netty",
+                    "name": "netty-handler",
+                    "version": "4.1.106.Final",
+                    "artifacts": [
+                        {
+                            "name": "netty-handler",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-handler\\4.1.106.Final\\874c970c4ff958b1140dde52bc17e6a9e7cde662\\netty-handler-4.1.106.Final.jar"
+                        },
+                        {
+                            "name": "netty-handler",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-handler\\4.1.106.Final\\4bf8406235f78ce985b38246778c955783c1f4b8\\netty-handler-4.1.106.Final-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-auto-head-response-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-auto-head-response-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-auto-head-response-jvm\\2.3.11\\2370f6078c93c29e1c98a22eab8fc9b15e17b08e\\ktor-server-auto-head-response-jvm-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-server-auto-head-response-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-auto-head-response-jvm\\2.3.11\\4445a1a0310810ae1232aa6ce5be63692817518c\\ktor-server-auto-head-response-jvm-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-compiler-runner",
+                    "version": "2.0.0",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-compiler-runner",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-compiler-runner\\2.0.0\\207a0cb7fc5054fa0d9e7fdb102210bd55524aa7\\kotlin-compiler-runner-2.0.0-sources.jar"
+                        },
+                        {
+                            "name": "kotlin-compiler-runner",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-compiler-runner\\2.0.0\\f5f0c82e836512e35de2ca710d553bec447b7718\\kotlin-compiler-runner-2.0.0.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlinx",
+                    "name": "kotlinx-serialization-core-jvm",
+                    "version": "1.5.1",
+                    "artifacts": [
+                        {
+                            "name": "kotlinx-serialization-core-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-serialization-core-jvm\\1.5.1\\e26cf5dfbcfe3e82ca196694dfd305753b1a49b9\\kotlinx-serialization-core-jvm-1.5.1.jar"
+                        },
+                        {
+                            "name": "kotlinx-serialization-core-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-serialization-core-jvm\\1.5.1\\ab64903f6ac788a84aa630ecb6a59da88a4b96db\\kotlinx-serialization-core-jvm-1.5.1-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-host-common",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-host-common",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-host-common\\2.3.11\\fc5f59e5763ebf02c04dfa93feaf422316f06d8b\\ktor-server-host-common-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-server-host-common",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-host-common\\2.3.11\\c3ad1e8656a3e635e48ea5814830790590df286a\\ktor-server-host-common-metadata-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-core",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-core",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-core\\2.3.11\\292147a474cd3bb5f9cd8d278f4e6043e2b307d2\\ktor-server-core-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-server-core",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-core\\2.3.11\\7a7e40f3485ecfe233b2e5d6d9c3cf441df9290b\\ktor-server-core-metadata-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "ch.qos.logback",
+                    "name": "logback-classic",
+                    "version": "1.4.14",
+                    "artifacts": [
+                        {
+                            "name": "logback-classic",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\ch.qos.logback\\logback-classic\\1.4.14\\1b0b0b96069e3ec3b4d8e5cbffc0a56e633063de\\logback-classic-1.4.14-sources.jar"
+                        },
+                        {
+                            "name": "logback-classic",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\ch.qos.logback\\logback-classic\\1.4.14\\1b0b0b96069e3ec3b4d8e5cbffc0a56e633063de\\logback-classic-1.4.14-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.netty",
+                    "name": "netty-transport-classes-epoll",
+                    "version": "4.1.106.Final",
+                    "artifacts": [
+                        {
+                            "name": "netty-transport-classes-epoll",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport-classes-epoll\\4.1.106.Final\\c058d5c712e00e8560e519970b3d27747778b8f2\\netty-transport-classes-epoll-4.1.106.Final.jar"
+                        },
+                        {
+                            "name": "netty-transport-classes-epoll",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport-classes-epoll\\4.1.106.Final\\2949af181e494ff7ce71f8942e6890b6df7978f1\\netty-transport-classes-epoll-4.1.106.Final-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlinx",
+                    "name": "kotlinx-coroutines-jdk8",
+                    "version": "1.7.1",
+                    "artifacts": [
+                        {
+                            "name": "kotlinx-coroutines-jdk8",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-coroutines-jdk8\\1.7.1\\31b0f471577d3c228d331fde355e14ccb071c90a\\kotlinx-coroutines-jdk8-1.7.1.jar"
+                        },
+                        {
+                            "name": "kotlinx-coroutines-jdk8",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-coroutines-jdk8\\1.7.1\\1e4dd0fdaa3de1c912825398a9550b584fa17ba9\\kotlinx-coroutines-jdk8-1.7.1-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-rate-limit",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-rate-limit",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-rate-limit\\2.3.11\\9b077b7a17bea5294cfae705c8e629f1f4554bae\\ktor-server-rate-limit-metadata-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-rate-limit",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-rate-limit\\2.3.11\\38d93934b47b9bd360bf1d9219f617f73f5c18a6\\ktor-server-rate-limit-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlinx",
+                    "name": "kotlinx-serialization-json",
+                    "version": "1.5.1",
+                    "artifacts": [
+                        {
+                            "name": "kotlinx-serialization-json",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-serialization-json\\1.5.1\\4f0e4e33613d1d01b2f9fb8c30cb858a4a5b0e9e\\kotlinx-serialization-json-1.5.1-sources.jar"
+                        },
+                        {
+                            "name": "kotlinx-serialization-json",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-serialization-json\\1.5.1\\54dd10563cca5a4b589efbf1ae175b37a49f60d0\\kotlinx-serialization-json-metadata-1.5.1-all.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-test-junit",
+                    "version": "2.0.0",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-test-junit",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-test-junit\\2.0.0\\48ca1b92544803c16b9042ae5b5976f6469e0a8c\\kotlin-test-junit-2.0.0-sources.jar"
+                        },
+                        {
+                            "name": "kotlin-test-junit",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-test-junit\\2.0.0\\48ca1b92544803c16b9042ae5b5976f6469e0a8c\\kotlin-test-junit-2.0.0-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-events-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-events-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-events-jvm\\2.3.11\\476edb91f7190a9887c10fc79609b01d0d850d67\\ktor-events-jvm-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-events-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-events-jvm\\2.3.11\\e6a6d901927636a1fad5617397f5d40d2fc1d54b\\ktor-events-jvm-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-stdlib-jdk7",
+                    "version": "1.8.22",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-stdlib-jdk7",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib-jdk7\\1.8.22\\4dabb8248310d833bb6a8b516024a91fd3d275c\\kotlin-stdlib-jdk7-1.8.22.jar"
+                        },
+                        {
+                            "name": "kotlin-stdlib-jdk7",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-stdlib-jdk7\\1.8.22\\3641d7cb7650db9fe93a5361b1b88cbcefdb01e0\\kotlin-stdlib-jdk7-1.8.22-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-status-pages",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-status-pages",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-status-pages\\2.3.11\\e57fcd7851a9d772cb0bb869b8eb8e403551cf0a\\ktor-server-status-pages-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-server-status-pages",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-status-pages\\2.3.11\\1d651cb398362c442d48935ae2f8542861775fac\\ktor-server-status-pages-metadata-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.apache.httpcomponents",
+                    "name": "httpcore-nio",
+                    "version": "4.4.15",
+                    "artifacts": [
+                        {
+                            "name": "httpcore-nio",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.httpcomponents\\httpcore-nio\\4.4.15\\85d2b6825d42db909a1474f0ffbd6328429b7a32\\httpcore-nio-4.4.15.jar"
+                        },
+                        {
+                            "name": "httpcore-nio",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.httpcomponents\\httpcore-nio\\4.4.15\\ce39d085e8fdb54226c844211e84453c116577a4\\httpcore-nio-4.4.15-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-http-cio-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-http-cio-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-http-cio-jvm\\2.3.11\\69974441c4cf84d8ba1ff4addd20794ad629fac2\\ktor-http-cio-jvm-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-http-cio-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-http-cio-jvm\\2.3.11\\ac8777580e587b888dc6fe1b51990e00cad9186\\ktor-http-cio-jvm-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlinx",
+                    "name": "kotlinx-coroutines-core-jvm",
+                    "version": "1.5.0",
+                    "artifacts": [
+                        {
+                            "name": "kotlinx-coroutines-core-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-coroutines-core-jvm\\1.5.0\\c188f12813668c2fb0f761fbc71ea53cfa83549e\\kotlinx-coroutines-core-jvm-1.5.0-sources.jar"
+                        },
+                        {
+                            "name": "kotlinx-coroutines-core-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-coroutines-core-jvm\\1.5.0\\d8cebccdcddd029022aa8646a5a953ff88b13ac8\\kotlinx-coroutines-core-jvm-1.5.0.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.netty",
+                    "name": "netty-transport-native-epoll",
+                    "version": "4.1.106.Final",
+                    "artifacts": [
+                        {
+                            "name": "netty-transport-native-epoll",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport-native-epoll\\4.1.106.Final\\e20f58047ac1225ebe3159741664224c93430c8e\\netty-transport-native-epoll-4.1.106.Final-sources.jar"
+                        },
+                        {
+                            "name": "netty-transport-native-epoll",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport-native-epoll\\4.1.106.Final\\876aeb4cc952b2f19695e4473df2762353ed9fad\\netty-transport-native-epoll-4.1.106.Final.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-cors-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-cors-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-cors-jvm\\2.3.11\\7a0fc8744898b34e6e359d384218a6b8b34a216d\\ktor-server-cors-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-cors-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-cors-jvm\\2.3.11\\83c8f67622f1e3abcd9aa00fe9e61eb287df5af9\\ktor-server-cors-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-caching-headers-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-caching-headers-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-caching-headers-jvm\\2.3.11\\c6ec18118bb2e6fa294225de2297ee1486442c96\\ktor-server-caching-headers-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-caching-headers-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-caching-headers-jvm\\2.3.11\\9f9a2b24f7d0d5a6106a50fa1e41438ff1b0fa60\\ktor-server-caching-headers-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.eclipse.jetty.alpn",
+                    "name": "alpn-api",
+                    "version": "1.1.3.v20160715",
+                    "artifacts": [
+                        {
+                            "name": "alpn-api",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.eclipse.jetty.alpn\\alpn-api\\1.1.3.v20160715\\a1bf3a937f91b4c953acd13e8c9552347adc2198\\alpn-api-1.1.3.v20160715.jar"
+                        },
+                        {
+                            "name": "alpn-api",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.eclipse.jetty.alpn\\alpn-api\\1.1.3.v20160715\\c4895d0fb6425ff46cbb60d43f4b018e236779\\alpn-api-1.1.3.v20160715-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "net.java.dev.jna",
+                    "name": "jna",
+                    "version": "5.9.0",
+                    "artifacts": [
+                        {
+                            "name": "jna",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\net.java.dev.jna\\jna\\5.9.0\\8f503e6d9b500ceff299052d6be75b38c7257758\\jna-5.9.0.jar"
+                        },
+                        {
+                            "name": "jna",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\net.java.dev.jna\\jna\\5.9.0\\8f388c1c94e58c83ffb61486fa19b709fd146595\\jna-5.9.0-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-io",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-io",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-io\\2.3.11\\e107caff6aa7dfb261c2b6ce496508094c810eec\\ktor-io-metadata-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-io",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-io\\2.3.11\\cd729e1fc8ae3baf58454e1ef424842377ed40f3\\ktor-io-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-network-tls-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-network-tls-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-network-tls-jvm\\2.3.11\\412ee6e52f00c29b82a119507e7b286031fb2488\\ktor-network-tls-jvm-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-network-tls-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-network-tls-jvm\\2.3.11\\8e7454bec6c9a3ce35de863fdef042f4558d8c46\\ktor-network-tls-jvm-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-scripting-common",
+                    "version": "2.0.0",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-scripting-common",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-scripting-common\\2.0.0\\59cb78c2e41462dda20160ac3ebd2551f9d46202\\kotlin-scripting-common-2.0.0-sources.jar"
+                        },
+                        {
+                            "name": "kotlin-scripting-common",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-scripting-common\\2.0.0\\f90871227cdcd06fd4fecb086fa03e7fa375bae3\\kotlin-scripting-common-2.0.0.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-scripting-compiler-impl-embeddable",
+                    "version": "2.0.0",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-scripting-compiler-impl-embeddable",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-scripting-compiler-impl-embeddable\\2.0.0\\6a487c4eb50cced3b4e06b8c8083124a57d8184c\\kotlin-scripting-compiler-impl-embeddable-2.0.0.jar"
+                        },
+                        {
+                            "name": "kotlin-scripting-compiler-impl-embeddable",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-scripting-compiler-impl-embeddable\\2.0.0\\c107a68daf1b624d44c19db4d6d519edb14c2b2e\\kotlin-scripting-compiler-impl-embeddable-2.0.0-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-sessions",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-sessions",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-sessions\\2.3.11\\ff01112c13c1028282831400cef9b76735a378b3\\ktor-server-sessions-metadata-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-sessions",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-sessions\\2.3.11\\7aca4b8d98679bed839f65df3402983dd336a08c\\ktor-server-sessions-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-daemon-embeddable",
+                    "version": "2.0.0",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-daemon-embeddable",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-daemon-embeddable\\2.0.0\\6aff3c9c53035358d61a64de006b0eb730e1e8b3\\kotlin-daemon-embeddable-2.0.0-sources.jar"
+                        },
+                        {
+                            "name": "kotlin-daemon-embeddable",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-daemon-embeddable\\2.0.0\\b39c612768614c4428c96ee9c65477181fffe9d\\kotlin-daemon-embeddable-2.0.0.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.fusesource.jansi",
+                    "name": "jansi",
+                    "version": "2.4.1",
+                    "artifacts": [
+                        {
+                            "name": "jansi",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.fusesource.jansi\\jansi\\2.4.1\\d5774f204d990c9f5da2809b88f928515577beb4\\jansi-2.4.1.jar"
+                        },
+                        {
+                            "name": "jansi",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.fusesource.jansi\\jansi\\2.4.1\\201dbdbf78b09144d5ea566a104a37dac8c3d437\\jansi-2.4.1-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "net.bytebuddy",
+                    "name": "byte-buddy-agent",
+                    "version": "1.10.9",
+                    "artifacts": [
+                        {
+                            "name": "byte-buddy-agent",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\net.bytebuddy\\byte-buddy-agent\\1.10.9\\cbbeffa557e6b1b4cbb181b0782436921c523699\\byte-buddy-agent-1.10.9.jar"
+                        },
+                        {
+                            "name": "byte-buddy-agent",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\net.bytebuddy\\byte-buddy-agent\\1.10.9\\3edc1d819ddb7ec6d1088de4b26300cf50fe3015\\byte-buddy-agent-1.10.9-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-data-conversion",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-data-conversion",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-data-conversion\\2.3.11\\35c7225c9a8a00ec150630d95f175bfc90fab55e\\ktor-server-data-conversion-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-server-data-conversion",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-data-conversion\\2.3.11\\ffa76acd719423a93426839ba697afd3be8a8e23\\ktor-server-data-conversion-metadata-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-build-common",
+                    "version": "2.0.0",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-build-common",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-build-common\\2.0.0\\4c9b34ce593126640755591b7cb42b1aedeecb8d\\kotlin-build-common-2.0.0-sources.jar"
+                        },
+                        {
+                            "name": "kotlin-build-common",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-build-common\\2.0.0\\e1c238fa509308a27679ef1b98cd2163fd276490\\kotlin-build-common-2.0.0.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-client-cio-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-client-cio-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-client-cio-jvm\\2.3.11\\547647fefa9424356354280d97d61191bba1376f\\ktor-client-cio-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-client-cio-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-client-cio-jvm\\2.3.11\\87f60c4acd7762065c3891d46627f192a0320267\\ktor-client-cio-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-compiler-embeddable",
+                    "version": "2.0.0",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-compiler-embeddable",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-compiler-embeddable\\2.0.0\\1de310de3446414381282ffc46c3ed3919a4d1da\\kotlin-compiler-embeddable-2.0.0.jar"
+                        },
+                        {
+                            "name": "kotlin-compiler-embeddable",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-compiler-embeddable\\2.0.0\\94cedf5302f43472cba5d2ffb195685fb8718ef2\\kotlin-compiler-embeddable-2.0.0-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-http-cio",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-http-cio",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-http-cio\\2.3.11\\2b508e5d82a46255ed84707df2ab0dcd49fdbe65\\ktor-http-cio-metadata-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-http-cio",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-http-cio\\2.3.11\\c5b410c3096af491999584b2b07f5cf41518d975\\ktor-http-cio-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.netty",
+                    "name": "netty-buffer",
+                    "version": "4.1.106.Final",
+                    "artifacts": [
+                        {
+                            "name": "netty-buffer",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-buffer\\4.1.106.Final\\c5495ba59a627641b3a7c23f6bcb801874c7f7b0\\netty-buffer-4.1.106.Final.jar"
+                        },
+                        {
+                            "name": "netty-buffer",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-buffer\\4.1.106.Final\\1c7cf1a36e68f4563f3f291057dda94726ced2d5\\netty-buffer-4.1.106.Final-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.apache.httpcomponents",
+                    "name": "httpasyncclient",
+                    "version": "4.1.5",
+                    "artifacts": [
+                        {
+                            "name": "httpasyncclient",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.httpcomponents\\httpasyncclient\\4.1.5\\cd18227f1eb8e9a263286c1d7362ceb24f6f9b32\\httpasyncclient-4.1.5.jar"
+                        },
+                        {
+                            "name": "httpasyncclient",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.httpcomponents\\httpasyncclient\\4.1.5\\1c49db8243e070aa56312f80efb71e5805bab17b\\httpasyncclient-4.1.5-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-test-junit",
+                    "version": "2.0.0",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-test-junit",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-test-junit\\2.0.0\\48ca1b92544803c16b9042ae5b5976f6469e0a8c\\kotlin-test-junit-2.0.0-sources.jar"
+                        },
+                        {
+                            "name": "kotlin-test-junit",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-test-junit\\2.0.0\\1e33f28693bf77e783e7097027d42cab9f87d19e\\kotlin-test-junit-2.0.0.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-client-cio",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-client-cio",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-client-cio\\2.3.11\\9072b1405df86c8a5985b07190aa95a29faa6abe\\ktor-client-cio-metadata-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-client-cio",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-client-cio\\2.3.11\\82ac99befa6e0e714ff9e0b6969e1145ffa5774\\ktor-client-cio-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "net.java.dev.jna",
+                    "name": "jna-platform",
+                    "version": "5.9.0",
+                    "artifacts": [
+                        {
+                            "name": "jna-platform",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\net.java.dev.jna\\jna-platform\\5.9.0\\c535a5bda553d7d7690356c825010da74b2671b5\\jna-platform-5.9.0.jar"
+                        },
+                        {
+                            "name": "jna-platform",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\net.java.dev.jna\\jna-platform\\5.9.0\\3fb561ffee87720f6178e98410e26c41740303cb\\jna-platform-5.9.0-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.netty",
+                    "name": "netty-transport",
+                    "version": "4.1.106.Final",
+                    "artifacts": [
+                        {
+                            "name": "netty-transport",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport\\4.1.106.Final\\8fcca44ae16b98e15965093e7696832019fd6f27\\netty-transport-4.1.106.Final.jar"
+                        },
+                        {
+                            "name": "netty-transport",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport\\4.1.106.Final\\adaa1c193f32528c9e98620d4b0149fb4bdba7b3\\netty-transport-4.1.106.Final-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-utils-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-utils-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-utils-jvm\\2.3.11\\db227e84b9b155891262f7376ad22b6fb9e4ae6\\ktor-utils-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-utils-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-utils-jvm\\2.3.11\\987b8d306734fa986cc8d014c546d79db8746370\\ktor-utils-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-http-redirect-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-http-redirect-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-http-redirect-jvm\\2.3.11\\978a9c7008013bb5366b62241046dc88eb6cd9ae\\ktor-server-http-redirect-jvm-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-server-http-redirect-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-http-redirect-jvm\\2.3.11\\32ac1bb031091f8719d7bb20beb3a437e8a5924c\\ktor-server-http-redirect-jvm-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-scripting-compiler-embeddable",
+                    "version": "2.0.0",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-scripting-compiler-embeddable",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-scripting-compiler-embeddable\\2.0.0\\e79910488c0a415e9d9e269b19b399ae0a31b6a7\\kotlin-scripting-compiler-embeddable-2.0.0.jar"
+                        },
+                        {
+                            "name": "kotlin-scripting-compiler-embeddable",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-scripting-compiler-embeddable\\2.0.0\\42ed1e5410cce8876139b6705e25e4afae8622fb\\kotlin-scripting-compiler-embeddable-2.0.0-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.netty",
+                    "name": "netty-codec",
+                    "version": "4.1.106.Final",
+                    "artifacts": [
+                        {
+                            "name": "netty-codec",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-codec\\4.1.106.Final\\cc1f26bad15e114a1a528e22a5fbb064d4f05f0b\\netty-codec-4.1.106.Final-sources.jar"
+                        },
+                        {
+                            "name": "netty-codec",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-codec\\4.1.106.Final\\25171b63aa1e7a5fd8a7e4e660d6d3110241ea7\\netty-codec-4.1.106.Final.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-netty-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-netty-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-netty-jvm\\2.3.11\\23862e5f98d2768d7c3c5d0f15082b9eeb451c09\\ktor-server-netty-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-netty-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-netty-jvm\\2.3.11\\c04513e79633a2a6c192b175f72e7098b243afc2\\ktor-server-netty-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-status-pages-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-status-pages-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-status-pages-jvm\\2.3.11\\458666a478cb772d73bd273b22a65433fe136d0\\ktor-server-status-pages-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-status-pages-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-status-pages-jvm\\2.3.11\\a04d7df18332eb45b57d96047d940855c5e05cd5\\ktor-server-status-pages-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-test",
+                    "version": "2.0.0",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-test",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-test\\2.0.0\\b2793875afcd0cf0b070db5e1d06ae9fc98bfdd7\\kotlin-test-2.0.0-sources.jar"
+                        },
+                        {
+                            "name": "kotlin-test",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-test\\2.0.0\\937ef814324f1ed51a25964cea2886598c9c2004\\kotlin-test-2.0.0.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-default-headers-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-default-headers-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-default-headers-jvm\\2.3.11\\c81ef9f14da936d1cb025f624aecef083f284aaf\\ktor-server-default-headers-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-default-headers-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-default-headers-jvm\\2.3.11\\415dc4581db18183b24d53ffd0caae02ae4a07f4\\ktor-server-default-headers-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlin",
+                    "name": "kotlin-script-runtime",
+                    "version": "2.0.0",
+                    "artifacts": [
+                        {
+                            "name": "kotlin-script-runtime",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-script-runtime\\2.0.0\\afce47cd1e5334a5b1a5945068f46cd2999dfb93\\kotlin-script-runtime-2.0.0-sources.jar"
+                        },
+                        {
+                            "name": "kotlin-script-runtime",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlin\\kotlin-script-runtime\\2.0.0\\fdc27dd047d592fa41d2dfa21e7621287a361612\\kotlin-script-runtime-2.0.0.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlinx",
+                    "name": "kotlinx-coroutines-debug",
+                    "version": "1.7.1",
+                    "artifacts": [
+                        {
+                            "name": "kotlinx-coroutines-debug",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-coroutines-debug\\1.7.1\\5299f4f5c0158ec6b7a2f1c11e2d5feb33c77e9f\\kotlinx-coroutines-debug-1.7.1.jar"
+                        },
+                        {
+                            "name": "kotlinx-coroutines-debug",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-coroutines-debug\\1.7.1\\c0b1fc6393d4f7b6b2dee5276803e91d7b7c1f16\\kotlinx-coroutines-debug-1.7.1-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-network",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-network",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-network\\2.3.11\\c8b1451ce034d35c2db524537f1a33408e0e9c84\\ktor-network-metadata-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-network",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-network\\2.3.11\\9e54943d9c3d6fa2cf1085830982656c9b449ae8\\ktor-network-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-utils",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-utils",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-utils\\2.3.11\\8a1ef410d39c5abc38fa3b9d730c59c28db1fb10\\ktor-utils-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-utils",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-utils\\2.3.11\\5c8242540ff31b1449a0e48ba358d2cecb57508c\\ktor-utils-metadata-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains.kotlinx",
+                    "name": "kotlinx-coroutines-slf4j",
+                    "version": "1.7.1",
+                    "artifacts": [
+                        {
+                            "name": "kotlinx-coroutines-slf4j",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-coroutines-slf4j\\1.7.1\\ca71c8ad706b89549de62db9c949cc3eea9a083b\\kotlinx-coroutines-slf4j-1.7.1-sources.jar"
+                        },
+                        {
+                            "name": "kotlinx-coroutines-slf4j",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains.kotlinx\\kotlinx-coroutines-slf4j\\1.7.1\\19000bdfff969d1c7019d3a4ef66fb27b687e7e9\\kotlinx-coroutines-slf4j-1.7.1.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.netty",
+                    "name": "netty-codec-http2",
+                    "version": "4.1.106.Final",
+                    "artifacts": [
+                        {
+                            "name": "netty-codec-http2",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-codec-http2\\4.1.106.Final\\496088cd978ed461d0aa0d97346f1b8a3c5e4234\\netty-codec-http2-4.1.106.Final-sources.jar"
+                        },
+                        {
+                            "name": "netty-codec-http2",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-codec-http2\\4.1.106.Final\\41515e8c51eeaaddceabdb4f86fbc5dbfc25b70e\\netty-codec-http2-4.1.106.Final.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-io-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-io-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-io-jvm\\2.3.11\\a129eccdd57a710f402661c89498abdd52107e6a\\ktor-io-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-io-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-io-jvm\\2.3.11\\553fbbd4f206c8f9d19f451e221cd7ee08c9b093\\ktor-io-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-test-dispatcher",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-test-dispatcher",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-test-dispatcher\\2.3.11\\1deab1f07e00b86fe66b9cc6b0326dafdef4b118\\ktor-test-dispatcher-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-test-dispatcher",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-test-dispatcher\\2.3.11\\a8cf261cabffb43479598cede1a0ba79facaf19c\\ktor-test-dispatcher-metadata-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "ch.qos.logback",
+                    "name": "logback-classic",
+                    "version": "1.4.14",
+                    "artifacts": [
+                        {
+                            "name": "logback-classic",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\ch.qos.logback\\logback-classic\\1.4.14\\d98bc162275134cdf1518774da4a2a17ef6fb94d\\logback-classic-1.4.14.jar"
+                        },
+                        {
+                            "name": "logback-classic",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\ch.qos.logback\\logback-classic\\1.4.14\\1b0b0b96069e3ec3b4d8e5cbffc0a56e633063de\\logback-classic-1.4.14-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-content-negotiation-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-content-negotiation-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-content-negotiation-jvm\\2.3.11\\b33609fc19323c17ea7ea108dfdda1ebf9791cab\\ktor-server-content-negotiation-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-server-content-negotiation-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-content-negotiation-jvm\\2.3.11\\e8c3bf6a42c2f49c531d66be4054db18614764d4\\ktor-server-content-negotiation-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "junit",
+                    "name": "junit",
+                    "version": "4.13.2",
+                    "artifacts": [
+                        {
+                            "name": "junit",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\junit\\junit\\4.13.2\\33987872a811fe4d4001ed494b07854822257f42\\junit-4.13.2-sources.jar"
+                        },
+                        {
+                            "name": "junit",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\junit\\junit\\4.13.2\\8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12\\junit-4.13.2.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-http",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-http",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-http\\2.3.11\\793fb25d5aaed13a2f2154391718ba77915d1b03\\ktor-http-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-http",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-http\\2.3.11\\4add7e07615e805cf62a86e287019bfb2553b8cf\\ktor-http-metadata-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "commons-logging",
+                    "name": "commons-logging",
+                    "version": "1.2",
+                    "artifacts": [
+                        {
+                            "name": "commons-logging",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\commons-logging\\commons-logging\\1.2\\4bfc12adfe4842bf07b657f0369c4cb522955686\\commons-logging-1.2.jar"
+                        },
+                        {
+                            "name": "commons-logging",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\commons-logging\\commons-logging\\1.2\\ecf26c7507d67782a3bbd148d170b31dfad001aa\\commons-logging-1.2-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-network-tls-certificates-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-network-tls-certificates-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-network-tls-certificates-jvm\\2.3.11\\cdf58ffd4471c27e37581d676e4fe00fb411d7df\\ktor-network-tls-certificates-jvm-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-network-tls-certificates-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-network-tls-certificates-jvm\\2.3.11\\139b3dcb11a9de16d45a2e94df1358aca538e941\\ktor-network-tls-certificates-jvm-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.slf4j",
+                    "name": "slf4j-api",
+                    "version": "2.0.7",
+                    "artifacts": [
+                        {
+                            "name": "slf4j-api",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.slf4j\\slf4j-api\\2.0.7\\f887f95694cd20d51a062446b6e3d09dd02d98ff\\slf4j-api-2.0.7-sources.jar"
+                        },
+                        {
+                            "name": "slf4j-api",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.slf4j\\slf4j-api\\2.0.7\\41eb7184ea9d556f23e18b5cb99cad1f8581fc00\\slf4j-api-2.0.7.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.apache.httpcomponents",
+                    "name": "httpclient",
+                    "version": "4.5.13",
+                    "artifacts": [
+                        {
+                            "name": "httpclient",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.httpcomponents\\httpclient\\4.5.13\\e5f6cae5ca7ecaac1ec2827a9e2d65ae2869cada\\httpclient-4.5.13.jar"
+                        },
+                        {
+                            "name": "httpclient",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.apache.httpcomponents\\httpclient\\4.5.13\\9654e91a61d7662c36be6710ef8e720c0e3f9807\\httpclient-4.5.13-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-server-hsts-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-server-hsts-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-hsts-jvm\\2.3.11\\6c8c5eb521f9239e39bd4e1947ae5e5105fed5fc\\ktor-server-hsts-jvm-2.3.11-sources.jar"
+                        },
+                        {
+                            "name": "ktor-server-hsts-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-server-hsts-jvm\\2.3.11\\f5bb997aa63b86c6747574accfbcbe4ba71be035\\ktor-server-hsts-jvm-2.3.11.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "org.jetbrains",
+                    "name": "annotations",
+                    "version": "23.0.0",
+                    "artifacts": [
+                        {
+                            "name": "annotations",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains\\annotations\\23.0.0\\8cc20c07506ec18e0834947b84a864bfc094484e\\annotations-23.0.0.jar"
+                        },
+                        {
+                            "name": "annotations",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\org.jetbrains\\annotations\\23.0.0\\ca5088d615accaabd2aa956b10b236a4e75cfccb\\annotations-23.0.0-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.ktor",
+                    "name": "ktor-serialization-jvm",
+                    "version": "2.3.11",
+                    "artifacts": [
+                        {
+                            "name": "ktor-serialization-jvm",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-serialization-jvm\\2.3.11\\5fd3c07683c145e49ff26d22af898178f20d813d\\ktor-serialization-jvm-2.3.11.jar"
+                        },
+                        {
+                            "name": "ktor-serialization-jvm",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.ktor\\ktor-serialization-jvm\\2.3.11\\85a50d9fd68216cc09f00bc3f88e87785c21613c\\ktor-serialization-jvm-2.3.11-sources.jar"
+                        }
+                    ]
+                },
+                {
+                    "organization": "io.netty",
+                    "name": "netty-transport-classes-kqueue",
+                    "version": "4.1.106.Final",
+                    "artifacts": [
+                        {
+                            "name": "netty-transport-classes-kqueue",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport-classes-kqueue\\4.1.106.Final\\c09ce8927dbf58e7b0fc6291a9df1675dc98a29a\\netty-transport-classes-kqueue-4.1.106.Final.jar"
+                        },
+                        {
+                            "name": "netty-transport-classes-kqueue",
+                            "classifier": "sources",
+                            "path": "C:\\Users\\uros\\.gradle\\caches\\modules-2\\files-2.1\\io.netty\\netty-transport-classes-kqueue\\4.1.106.Final\\65837178323d72683f9da273060ff2a0b33f1d6\\netty-transport-classes-kqueue-4.1.106.Final-sources.jar"
+                        }
+                    ]
+                }
+            ]
+        },
+        "tags": [
+            "library"
+        ]
+    }
+}
