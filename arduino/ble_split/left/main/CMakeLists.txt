@@ -3,7 +3,6 @@ idf_component_register(
 	"lib/ble_hidd_demo_main.c"
 	"main.cpp"
 	"launcher.cpp"
-	"lib/launcher.cpp"
 	"lib/esp_hidd_prf_api.c"
 	"lib/hid_dev.c"
 	"lib/hid_device_le_prf.c"

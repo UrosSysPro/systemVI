@@ -1,6 +1,8 @@
 #include"Arduino.hpp"
 #include"driver/gpio.h"
-
+#include"freertos/FreeRTOS.h"
+#include"freertos/task.h"
+#include"freertos/timers.h"
 gpio_num_t gpio_pins[]={
 	GPIO_NUM_0,
 	GPIO_NUM_1,
@@ -30,18 +32,33 @@ void pinMode(int pin, pin_mode_t mode){
 	if(mode==INPUT){
 		gpio_set_direction(gpio_pins[pin],GPIO_MODE_INPUT);
 	}
-	if(mode==INPUT_PULLDOWN){
 
+	if(mode==INPUT_PULLDOWN){
+		gpio_set_direction(gpio_pins[pin],GPIO_MODE_INPUT);
+		gpio_pulldown_en(gpio_pins[pin]);
+	}
+
+	if(mode==INPUT_PULLUP){
+		gpio_set_direction(gpio_pins[pin],GPIO_MODE_INPUT);
+		gpio_pullup_en(gpio_pins[pin]);
+	}
+
+	if(mode==OUTPUT){
+		gpio_set_direction(gpio_pins[pin],GPIO_MODE_OUTPUT);
 	}
 }
 void digitalWrite(int pin, int value){
-
+	gpio_set_level(gpio_pins[pin],value);	
 }
 
 int digitalRead(int pin){
-	return 0;
+	return gpio_get_level(gpio_pins[pin]);
 }
 
 int analogRead(int pin){
-	return 0;
+	return digitalRead(pin);
+}
+
+void delay(int millis){
+	vTaskDelay(millis/portTICK_PERIOD_MS);
 }
