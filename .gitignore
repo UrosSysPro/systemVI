@@ -12,3 +12,5 @@ out/
 gradle/
 .kotlin/
 **/.metals
+.bloop
+**/.bloop
