@@ -29,51 +29,47 @@
 
 #define ADV_CONFIG_FLAG             (1 << 0)
 #define SCAN_RSP_CONFIG_FLAG        (1 << 1)
+
 void initFlash(){
 	esp_err_t ret;
-    ret = nvs_flash_init();
-    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-        ESP_ERROR_CHECK(nvs_flash_erase());
-        ret = nvs_flash_init();
-    }
+		
+	ret=nvs_flash_init();
+	if(ret==ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND){
+		nvs_flash_erase();
+		ret=nvs_flash_init();
+	}
 }
-
-void enableBle(){
+void enableBleController(){
 	esp_err_t ret;
-	ESP_ERROR_CHECK(esp_bt_controller_mem_release(ESP_BT_MODE_CLASSIC_BT));
-
-    esp_bt_controller_config_t bt_cfg = BT_CONTROLLER_INIT_CONFIG_DEFAULT();
-    ret = esp_bt_controller_init(&bt_cfg);
-    if (ret) {
-        ESP_LOGE(GATTS_TABLE_TAG, "%s enable controller failed: %s", __func__, esp_err_to_name(ret));
-        return;
-    }
-
-    ret = esp_bt_controller_enable(ESP_BT_MODE_BLE);
-    if (ret) {
-        ESP_LOGE(GATTS_TABLE_TAG, "%s enable controller failed: %s", __func__, esp_err_to_name(ret));
-        return;
-    }
+	esp_bt_controller_mem_release(ESP_BT_MODE_CLASSIC_BT);
+	esp_bt_controller_config_t bt_config=BT_CONTROLLER_INIT_CONFIG_DEFAULT();
+	ret=esp_bt_controller_init(&bt_config);
+	if(ret){
+		printf("initialize controller failed\n");
+		exit(1);
+	}	
+	ret=esp_bt_controller_enable(ESP_BT_MODE_BLE);
+	if(ret){
+		printf("enable ble controller failed\n");
+		exit(1);
+	}
 }
-
 void enableBluedroid(){
 	esp_err_t ret;
-	ret = esp_bluedroid_init();
-    if (ret) {
-        ESP_LOGE(GATTS_TABLE_TAG, "%s init bluetooth failed: %s", __func__, esp_err_to_name(ret));
-        return;
-    }
-
-    ret = esp_bluedroid_enable();
-    if (ret) {
-        ESP_LOGE(GATTS_TABLE_TAG, "%s enable bluetooth failed: %s", __func__, esp_err_to_name(ret));
-        return;
-    }
+	ret=esp_bluedroid_init();
+	if(ret){
+		printf("init bluedroid failed\n");
+		exit(1);
+	}
+	ret=esp_bluedroid_enable();
+	if(ret){
+		printf("enable bluedroid failedi\n");
+		exit(1);
+	}	
 }
-
 void Bluetooth::init(){
 	initFlash();	
-	enableBle();
+	enableBleController();
 	enableBluedroid();
 }
 
