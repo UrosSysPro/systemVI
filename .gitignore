@@ -1,7 +1,7 @@
 # Ignore Gradle project1.glsl-specific cache directory
-.gradle
+.gradle/
 # Ignore Gradle build output directory
-build
+build/
 
 hs_err_pid[0-9]*\.log
 .idea/misc.xml
@@ -12,7 +12,7 @@ out/
 gradle/
 .kotlin/
 **/.metals
-.bloop
-**/.bloop
-.scala-build
-**/.scala-build
+.bloop/
+**/.bloop/
+.scala-build/
+**/.scala-build/
