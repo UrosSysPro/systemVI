@@ -27,5 +27,6 @@ class Bluetooth{
 	public:
 	static BluetoothProfile createProfile(BluetoothProfileConfig config);
 	static void init();
+	static void enableSecurity();
 };
 #endif

@@ -1,5 +1,6 @@
 #include"lib/systemvi/Arduino.hpp"
 #include"lib/systemvi/Keyboard.hpp"
+#include"lib/systemvi/Bluetooth.hpp"
 #include<stdio.h>
 #include"lib/hid_dev.h"
 //#define DEBUG
@@ -50,7 +51,9 @@ void setup() {
     pinMode(pin, OUTPUT);
     digitalWrite(pin, 1);
   }
+  Bluetooth::init();
   Keyboard::init();
+  Bluetooth::enableSecurity();
 }
 
 void loop() {
