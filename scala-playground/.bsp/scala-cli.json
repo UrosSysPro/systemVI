@@ -1,17 +1,17 @@
 {
   "name": "scala-cli",
   "argv": [
-    "/Users/uroskaraleic/.sdkman/candidates/scalacli/current/bin/scala-cli",
+    "C:\\Users\\uros\\AppData\\Local\\Coursier\\data\\bin\\.scala-cli.aux.exe",
     "bsp",
     "--json-options",
-    "/Users/uroskaraleic/projects/systemVI/scala-playground/.scala-build/ide-options-v2.json",
+    "C:\\Users\\uros\\projects\\systemVI\\scala-playground\\.scala-build\\ide-options-v2.json",
     "--json-launcher-options",
-    "/Users/uroskaraleic/projects/systemVI/scala-playground/.scala-build/ide-launcher-options.json",
+    "C:\\Users\\uros\\projects\\systemVI\\scala-playground\\.scala-build\\ide-launcher-options.json",
     "--envs-file",
-    "/Users/uroskaraleic/projects/systemVI/scala-playground/.scala-build/ide-envs.json",
-    "/Users/uroskaraleic/projects/systemVI/scala-playground"
+    "C:\\Users\\uros\\projects\\systemVI\\scala-playground\\.scala-build\\ide-envs.json",
+    "C:\\Users\\uros\\projects\\systemVI\\scala-playground"
   ],
-  "version": "1.5.1",
+  "version": "1.7.1",
   "bspVersion": "2.1.1",
   "languages": [
     "scala",

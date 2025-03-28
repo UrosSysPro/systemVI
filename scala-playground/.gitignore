@@ -2,7 +2,7 @@
 .scala-build
 lib/*
 .bsp/*
-.bsp
+.bsp/
 .metals/*
 .metals
 engine.jar

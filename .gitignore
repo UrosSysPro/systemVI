@@ -16,3 +16,5 @@ gradle/
 **/.bloop/
 .scala-build/
 **/.scala-build/
+.bsp/
+**/.bsp/
