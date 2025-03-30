@@ -1,5 +1,7 @@
 #include"lib/systemvi/Arduino.hpp"
 #include"lib/systemvi/Keyboard.hpp"
+#include"lib/systemvi/Bluetooth.hpp"
+#include"lib/hid_dev.h"
 #include<stdio.h>
 #define COLUMNS_NUMBER 4
 #define ROWS_NUMBER 5
@@ -12,15 +14,17 @@ int columns[]={1,0,2,3};
 
 class Key{
   public:
-  char value;
+  uint8_t value;
   bool pressed;
   bool justChanged;
   virtual void onPress(){
   //  Serial.println("defaultkeypress");
   	printf("defaultkeypress");
+	Keyboard::press(this->value);
   }
   virtual void onRelease(){
   	printf("defaultkeyrelease");
+	Keyboard::release(this->value);
 
 	  //  Serial.println("defaultkeyrelease");
   }
@@ -70,14 +74,6 @@ class ZOOMKey:public Key{
   }
 };
 
-//Key keys[COLUMNS_NUMBER][ROWS_NUMBER];
-/*={
-  {{' ',false,false},{' ',false,false},{' ',false,false},{' ',false,false},{' ',false,false}},
-  {{' ',false,false},{' ',false,false},{' ',false,false},{' ',false,false},{' ',false,false}},
-  {{' ',false,false},{' ',false,false},{' ',false,false},{' ',false,false},{' ',false,false}},
-  {{' ',false,false},{' ',false,false},{' ',false,false},{' ',false,false},{' ',false,false}},
-};*/
-
 Key ***keys;
 
 void setup() {
@@ -104,15 +100,16 @@ void setup() {
     pinMode(pin, OUTPUT);
     digitalWrite(pin, 1);
   }
-
-//  Serial.begin(9600);
+  Bluetooth::init();
+  Keyboard::init();
+	Bluetooth::enableSecurity();
 }
 
 void loop() {
   for(int j=0;j<ROWS_NUMBER;j++){
     int rowPin=rows[j];
     digitalWrite(rowPin, 0);
-    delayMicroseconds(1000);
+    delay(1000);
     for(int i=0;i<COLUMNS_NUMBER;i++){
       int columnPin=columns[i];
       bool newState=digitalRead(columnPin) == 0;

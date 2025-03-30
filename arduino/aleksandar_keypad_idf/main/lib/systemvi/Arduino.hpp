@@ -13,5 +13,5 @@ void pinMode(int pin, pin_mode_t mode);
 int digitalRead(int pin);
 void digitalWrite(int pin, int value);
 int analogRead(int pin);
-
+void delay(int millis);
 #endif
