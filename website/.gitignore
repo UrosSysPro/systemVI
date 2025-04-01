@@ -19,6 +19,9 @@ project/target/*
 project/target/**
 project/target/
 project/target
+project/project/
+project/project/*
+project/project/**
 !.vscode/extensions.json
 .idea
 .DS_Store
