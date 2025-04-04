@@ -4,10 +4,6 @@ import scala.scalajs.js
 import scala.scalajs.js.annotation.*
 import com.raquo.laminar.api.L.{*, given}
 import org.scalajs.dom
-// import javascriptLogo from "/javascript.svg"
-@js.native @JSImport("/javascript.svg", JSImport.Default)
-val javascriptLogo: String = js.native
-
 
 @main
 def LiveChart(): Unit = {
@@ -18,28 +14,5 @@ def LiveChart(): Unit = {
 }
 
 object Main {
-  def appElement(): Element = {
-    div(
-      navbar(),
-      a(href := "https://vitejs.dev", target := "_blank",
-        img(src := "/vite.svg", className := "logo", alt := "Vite logo"),
-      ),
-      a(href := "https://developer.mozilla.org/en-US/docs/Web/JavaScript", target := "_blank",
-        img(src := javascriptLogo, className := "logo vanilla", alt := "JavaScript logo"),
-      ),
-      h1("Hello Laminar!"),
-      div(className := "card",
-        button(
-          className := "",
-          tpe := "button",
-          "click"
-        ),
-      ),
-      p(className := "read-the-docs",
-        "Click on the Vite logo to learn more",
-      ),
-    )
-  }
+  def appElement(): Element = Page()
 }
-
-def navbar() = div(className:="h-10 w-10 bg-blue-500")
