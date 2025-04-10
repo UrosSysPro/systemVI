@@ -21,5 +21,6 @@ def Page():Element = div(
     SectionItem("item 1","item1.png"),
     SectionItem("item 1","item1.png")
   )),
+  AboutSection(),
   Footer(),
 )
