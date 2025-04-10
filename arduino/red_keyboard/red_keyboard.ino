@@ -1,11 +1,11 @@
 #include"Arduino.h"
 #include "Keyboard.h"
-#define DEBUG 
+//#define DEBUG 
 
 #define COLUMNS_NUMBER 12
 #define ROWS_NUMBER 4
  
-int columns[]={0,1,2,3,4,5,6,7,8,9,10,11};
+int columns[]={0,1,2,3,4,5,6,8,7,9,10,11};
 int rows[]={12,13,14,15};
 
 struct Key{
@@ -49,60 +49,49 @@ void setup() {
 
 //red 0///////////////////////////////////////////////////////////////
   keys[0][1].value='`';
-  keys[1][1].fn='q';
+  keys[1][1].value='q';
   keys[2][1].value='w';
-  keys[3][1].fn='e';
+  keys[3][1].value='e';
   keys[4][1].value='r';
-  keys[5][1].fn='t';
+  keys[5][1].value='t';
   keys[6][1].value='y';
-  keys[7][1].fn='u';
+  keys[7][1].value='u';
   keys[8][1].value='i';
-  keys[9][1].fn='o';
+  keys[9][1].value='o';
   keys[10][1].value='p';
-  keys[11][1].fn=KEY_BACKSPACE;
+  keys[11][1].value=KEY_BACKSPACE;
 //red 1/////////////////////////////////////////////////////////////
   keys[0][0].value=KEY_TAB;
-  keys[1][1].fn='a';
-  keys[2][1].value='s';
-  keys[3][1].fn='d';
-  keys[4][1].value='f';
-  keys[5][1].fn='g';
-  keys[6][1].value='h';
-  keys[7][1].fn='j';
-  keys[8][1].value='k';
-  keys[9][1].fn='l';
-  keys[10][1].value='p';
-  keys[11][1].fn=KEY_BACKSPACE;
+  keys[1][0].value='a';
+  keys[2][0].value='s';
+  keys[3][0].value='d';
+  keys[4][0].value='f';
+  keys[5][0].value='g';
+  keys[6][0].value='h';
+  keys[7][0].value='j';
+  keys[8][0].value='k';
+  keys[9][0].value='l';
+  keys[11][0].value=KEY_RETURN;
 //red 2/////////////////////////////////////////////////////////////
-  // keys[13][2].value=KEY_CAPS_LOCK;
-  // keys[12][2].value='a';
-  // keys[12][2].fn=KEY_LEFT_ARROW;
-  // keys[11][2].value='s';
-  // keys[11][2].fn=KEY_DOWN_ARROW;
-  // keys[10][2].value='d';
-  // keys[10][2].fn=KEY_RIGHT_ARROW;
-  // keys[9][2].value='f';
-  // keys[8][2].value='g';
-  // keys[7][2].value='h';
-  // keys[6][2].value='j';
-  // keys[5][2].value='k';
-  // keys[4][2].value='l';
-  // keys[3][2].value=';';
-  // keys[2][2].value='\'';
-  // keys[0][2].value=KEY_RETURN;
+  keys[0][2].value=KEY_LEFT_SHIFT;
+  keys[2][2].value='z';
+  keys[3][2].value='x';
+  keys[4][2].value='c';
+  keys[5][2].value='v';
+  keys[6][2].value='b';
+  keys[7][2].value='n';
+  keys[8][2].value='m';
+  keys[9][2].value=',';
+  keys[10][2].value=KEY_RIGHT_SHIFT;
+  keys[11][2].value='a';
 //red 3/////////////////////////////////////////////////////////////
-  // keys[13][3].value=KEY_LEFT_SHIFT;
-  // keys[12][3].value='z';
-  // keys[11][3].value='x';
-  // keys[10][3].value='c';
-  // keys[9][3].value='v';
-  // keys[8][3].value='b';
-  // keys[7][3].value='n';
-  // keys[6][3].value='m';
-  // keys[5][3].value=',';
-  // keys[4][3].value='.';
-  // keys[3][3].value='/';
-  // keys[1][3].value=KEY_RIGHT_SHIFT;
+  keys[0][3].value=KEY_LEFT_CTRL;
+  keys[2][3].value='a';
+  keys[3][3].value='a';
+  keys[6][3].value=' ';
+  keys[10][3].value=KEY_RIGHT_ALT;
+  keys[11][3].value=KEY_RIGHT_GUI;
+
 
   #ifdef DEBUG
     Serial.begin(9600);
@@ -137,6 +126,7 @@ void loop() {
         keys[i][j].justChanged=false;
         if(keys[i][j].pressed){
           #ifdef DEBUG
+            Serial.printf("pressed  %3d %3d\n",columns[i],rows[j]);
             Serial.printf("pressed  %3d %3d\n",i,j);
           #else
           if(fn&&keys[i][j].fn){
@@ -147,6 +137,7 @@ void loop() {
           #endif
         }else{
           #ifdef DEBUG
+            Serial.printf("released %3d %3d\n",columns[i],rows[j]);
             Serial.printf("released %3d %3d\n",i,j);
           #else
           if(fn&&keys[i][j].fn){
