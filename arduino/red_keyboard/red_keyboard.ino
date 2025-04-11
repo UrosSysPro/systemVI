@@ -86,8 +86,8 @@ void setup() {
   keys[11][2].value='a';
 //red 3/////////////////////////////////////////////////////////////
   keys[0][3].value=KEY_LEFT_CTRL;
+  keys[1][3].value='a';
   keys[2][3].value='a';
-  keys[3][3].value='a';
   keys[6][3].value=' ';
   keys[10][3].value=KEY_RIGHT_ALT;
   keys[11][3].value=KEY_RIGHT_GUI;
@@ -115,10 +115,10 @@ void loop() {
   }
 
   bool fn=false;
-  if(keys[3][4].pressed){
-    keys[3][4].justChanged=false;
-    fn=true;
-  }
+  // if(keys[3][4].pressed){
+  //   keys[3][4].justChanged=false;
+  //   fn=true;
+  // }
 
   for(int i=0;i<COLUMNS_NUMBER;i++){
     for(int j=0;j<ROWS_NUMBER;j++){
