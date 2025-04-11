@@ -3,12 +3,12 @@
 #include"lib/systemvi/Bluetooth.hpp"
 #include<stdio.h>
 #include"lib/hid_dev.h"
-#define DEBUG
+//#define DEBUG
 #define COLUMNS_NUMBER 7
 #define ROWS_NUMBER 3
 
-int rows[]={7,9,10};
-int columns[]={0,1,2,3,4,5,6};
+int rows[]={3,2,0};
+int columns[]={4,20,10,9,8,7,1};
 
 struct Key{
 	uint8_t l0,l1,l2;
@@ -52,19 +52,19 @@ void setup() {
 	keys[6][2].l0=HID_KEY_A;
 
 	for(int i=0;i<COLUMNS_NUMBER;i++){
-		printf("pin %d input pullup",columns[i]);
+		printf("pin %d input pullup\n",columns[i]);
 		int pin=columns[i];
 		pinMode(pin, INPUT_PULLUP);
 	}
 	for(int i=0;i<ROWS_NUMBER;i++){
-		printf("pin %d output",rows[i]);
+		printf("pin %d output\n",rows[i]);
 		int pin = rows[i];
 		pinMode(pin, OUTPUT);
 		digitalWrite(pin, 1);
 	}
-	//Bluetooth::init();
-	//Keyboard::init();
-	//Bluetooth::enableSecurity();
+	Bluetooth::init();
+	Keyboard::init();
+	Bluetooth::enableSecurity();
 }
 
 void loop() {

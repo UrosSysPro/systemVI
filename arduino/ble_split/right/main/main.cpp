@@ -3,11 +3,11 @@
 #include"lib/systemvi/Bluetooth.hpp"
 #include<stdio.h>
 #include"lib/hid_dev.h"
-//#define DEBUG
+#define DEBUG
 #define COLUMNS_NUMBER 7
 #define ROWS_NUMBER 3
 
-int rows[]={9,10,11};
+int rows[]={8,9,10};
 int columns[]={0,1,2,3,4,5,6};
 
 struct Key{
@@ -51,9 +51,9 @@ void setup() {
     pinMode(pin, OUTPUT);
     digitalWrite(pin, 1);
   }
-  Bluetooth::init();
-  Keyboard::init();
-  Bluetooth::enableSecurity();
+  //Bluetooth::init();
+  //Keyboard::init();
+ // Bluetooth::enableSecurity();
 }
 
 void loop() {
