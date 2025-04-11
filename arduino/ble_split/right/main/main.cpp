@@ -3,12 +3,12 @@
 #include"lib/systemvi/Bluetooth.hpp"
 #include<stdio.h>
 #include"lib/hid_dev.h"
-#define DEBUG
+//#define DEBUG
 #define COLUMNS_NUMBER 7
 #define ROWS_NUMBER 3
 
 int rows[]={8,9,10};
-int columns[]={0,1,2,3,4,5,6};
+int columns[]={0,1,3,4,2,5,6};
 
 struct Key{
   uint8_t l0,l1,l2;
@@ -27,21 +27,30 @@ void setup() {
 		keys[i][j].l2='\0';
     }
   }
-  keys[0][0].l0=HID_KEY_ESCAPE;
-  keys[1][0].l0=HID_KEY_Q;
-  keys[2][0].l0=HID_KEY_W;
-  keys[3][0].l0=HID_KEY_E;
-  keys[4][0].l0=HID_KEY_R;
-  keys[5][0].l0=HID_KEY_T;
-  keys[6][0].l0=HID_KEY_SPACEBAR;
+  keys[0][0].l0=HID_KEY_A;
+  keys[1][0].l0=HID_KEY_P;
+  keys[2][0].l0=HID_KEY_O;
+  keys[3][0].l0=HID_KEY_I;
+  keys[4][0].l0=HID_KEY_U;
+  keys[5][0].l0=HID_KEY_Y;
+  keys[6][0].l0=HID_KEY_DELETE;
 
-  keys[0][1].l0=HID_KEY_TAB;
-  keys[1][1].l0=HID_KEY_A;
-  keys[2][1].l0=HID_KEY_S;
-  keys[3][1].l0=HID_KEY_D;
-  keys[4][1].l0=HID_KEY_F;
-  keys[5][1].l0=HID_KEY_G;
-  keys[6][1].l0=HID_KEY_LEFT_SHIFT;
+  keys[0][1].l0=HID_KEY_RETURN;
+  keys[1][1].l0=HID_KEY_SEMI_COLON;
+  keys[2][1].l0=HID_KEY_L;
+  keys[3][1].l0=HID_KEY_K;
+  keys[4][1].l0=HID_KEY_J;
+  keys[5][1].l0=HID_KEY_H;
+  keys[6][1].l0=HID_KEY_A;
+  
+  keys[0][2].l0=HID_KEY_A;
+  keys[1][2].l0=HID_KEY_BACK_SLASH;
+  keys[2][2].l0=HID_KEY_DOT;
+  keys[3][2].l0=HID_KEY_COMMA;
+  keys[4][2].l0=HID_KEY_M;
+  keys[5][2].l0=HID_KEY_N;
+  keys[6][2].l0=HID_KEY_A;
+
   for(int i=0;i<COLUMNS_NUMBER;i++){
     int pin=columns[i];
     pinMode(pin, INPUT_PULLUP);
@@ -51,9 +60,9 @@ void setup() {
     pinMode(pin, OUTPUT);
     digitalWrite(pin, 1);
   }
-  //Bluetooth::init();
-  //Keyboard::init();
- // Bluetooth::enableSecurity();
+  Bluetooth::init();
+  Keyboard::init();
+  Bluetooth::enableSecurity();
 }
 
 void loop() {
