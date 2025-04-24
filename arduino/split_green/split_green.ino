@@ -126,13 +126,14 @@ void loop() {
           #ifdef __DEBUG__
             Serial.printf("press   col: %2d row: %2d pins: %2d %2d\n",i,j,columns[i],rows[j]);
           #else
+            keys[i][j].currentlyDown=keys[i][j].value[layer];
             Keyboard.press(keys[i][j].value[layer]);
           #endif
         }else{
           #ifdef __DEBUG__
             Serial.printf("release col: %2d row: %2d pins: %2d %2d\n",i,j,columns[i],rows[j]);
           #else
-            Keyboard.release(keys[i][j].value[layer]);
+            Keyboard.release(keys[i][j].currentlyDown);
           #endif
         }
       }
@@ -147,13 +148,14 @@ void loop() {
           #ifdef __DEBUG__
             Serial.printf("press   col: %2d row: %2d pins: %2d %2d\n",i,j,columns[i],rows[j]);
           #else
+            keysRight[i][j].currentlyDown=keysRight[i][j].value[layer];
             Keyboard.press(keysRight[i][j].value[layer]);
           #endif
         }else{
           #ifdef __DEBUG__
             Serial.printf("release col: %2d row: %2d pins: %2d %2d\n",i,j,columns[i],rows[j]);
           #else
-            Keyboard.release(keysRight[i][j].value[layer]);
+            Keyboard.release(keysRight[i][j].currentlyDown);
           #endif
         }
       }
