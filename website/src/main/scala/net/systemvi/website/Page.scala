@@ -9,17 +9,17 @@ def Page():Element = div(
   Section("Section 1",List(
     SectionItem("item 1","item1.png"),
     SectionItem("item 1","item1.png"),
-    SectionItem("item 1","item1.png")
+    SectionItem("item 1","item1.png"),
   )),
   Section("Section 1",List(
     SectionItem("item 1","item1.png"),
     SectionItem("item 1","item1.png"),
-    SectionItem("item 1","item1.png")
+    SectionItem("item 1","item1.png"),
   )),
   Section("Section 1",List(
     SectionItem("item 1","item1.png"),
     SectionItem("item 1","item1.png"),
-    SectionItem("item 1","item1.png")
+    SectionItem("item 1","item1.png"),
   )),
   AboutSection(),
   Footer(),

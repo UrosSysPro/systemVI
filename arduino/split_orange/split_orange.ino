@@ -1,5 +1,7 @@
 #include"Arduino.h"
 #include "Wire.h"
+// #define __DEBUG__
+
 #define COLUMNS_NUMBER 7
 #define ROWS_NUMBER 3
 
@@ -25,20 +27,9 @@ Key keys[COLUMNS_NUMBER][ROWS_NUMBER]={
 };
 
 void setup() {
-  pinMode(25, OUTPUT);
-  for(int i=0;i<COLUMNS_NUMBER;i++){
-    int pin=columns[i];
-    pinMode(pin, OUTPUT);
-    digitalWrite(pin, 1);
-  }
-  for(int i=0;i<ROWS_NUMBER;i++){
-    int pin = rows[i];
-    pinMode(pin, INPUT_PULLUP);
-  }
   for(int i=0;i<COLUMNS_NUMBER;i++){
     int pin=columns[i];
     pinMode(pin, INPUT_PULLUP);
-
   }
   for(int i=0;i<ROWS_NUMBER;i++){
     int pin = rows[i];
@@ -46,9 +37,11 @@ void setup() {
     digitalWrite(pin, 1);
   }
 
-  Serial.begin(9600);
-  Wire.begin(thisAddress);
-  Wire.onRequest(onRequest);
+  #ifdef __DEBUG__
+    Serial.begin(9600);
+  #else
+    Wire.begin();
+  #endif
 }
 
 void loop() {
@@ -58,36 +51,21 @@ void loop() {
     delayMicroseconds(1000);
     for(int i=0;i<COLUMNS_NUMBER;i++){
       int columnPin=columns[i];
-      // bool newState=digitalRead(columnPin) == 0;
-      // if(newState!=keys[i][j].pressed)keys[i][j].justChanged=true;
       keys[i][j].pressed=digitalRead(columnPin) == 0;
     }
     digitalWrite(rowPin, 1);
   }
 
-  // for(int i=0;i<COLUMNS_NUMBER;i++){
-  //   for(int j=0;j<ROWS_NUMBER;j++){
-  //     if(keys[i][j].justChanged){
-  //       keys[i][j].justChanged=false;
-  //       // if(keys[i][j].pressed){
-  //       //   Serial.print("key pressed  ");
-  //       //   Serial.print(columns[i]);
-  //       //   Serial.print(" ");
-  //       //   Serial.print(rows[j]);
-  //       //   Serial.println("");
-  //       // }else{
-  //       //   Serial.print("key released ");
-  //       //   Serial.print(columns[i]);
-  //       //   Serial.print(" ");
-  //       //   Serial.print(rows[j]);
-  //       //   Serial.println("");
-  //       // }
-  //     }
-  //   }
-  // }
-}
+  #ifdef __DEBUG__
+    for(int i=0;i<COLUMNS_NUMBER;i++){
+      for(int j=0;j<ROWS_NUMBER;j++){
+          if(keys[i][j].pressed){
+            Serial.printf("press   col: %2d row: %2d pins: %2d %2d\n",i,j,columns[i],rows[j]);
+        }
+      }
+    }
+  #endif
 
-void onRequest(){
   unsigned int state=0;
   for(int i=0;i<COLUMNS_NUMBER;i++){
     for(int j=0;j<ROWS_NUMBER;j++){
@@ -95,8 +73,21 @@ void onRequest(){
       state = state | (int)keys[i][j].pressed;
     }
   }
+  Wire.beginTransmission(otherAddress);
   Wire.write((byte*)&state,4);
+  Wire.endTransmission();
 }
+
+// void onRequest(){
+//   unsigned int state=0;
+//   for(int i=0;i<COLUMNS_NUMBER;i++){
+//     for(int j=0;j<ROWS_NUMBER;j++){
+//       state = state << 1;
+//       state = state | (int)keys[i][j].pressed;
+//     }
+//   }
+//   Wire.write((byte*)&state,4);
+// }
 
 
 

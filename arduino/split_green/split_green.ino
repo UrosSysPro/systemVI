@@ -1,17 +1,21 @@
 #include"Arduino.h"
 #include "Keyboard.h"
 #include "Wire.h"
+// #define __DEBUG__
 
 #define COLUMNS_NUMBER 7
 #define ROWS_NUMBER 3
  
-int columns[]={18,19,20,21,22,26,27};
-int rows[]={1,0,2};
+// int columns[]={3,2,0,4,5,11,14};
+int columns[]={14,11,5,4,0,2,3};
+int rows[]={27,13,21};
 
 struct Key{
   char value[3];
   bool pressed;
   bool justChanged;
+  char currentlyDown=0;
+  unsigned long lastKeyPress=0;
 };
 
 const byte thisAddress = 8; 
@@ -37,30 +41,7 @@ Key keysRight[COLUMNS_NUMBER][ROWS_NUMBER]={
   {{{'\\','=',' '} ,false,false},{{KEY_RETURN,' '            ,' ' },false,false},{{'z',' ',' '},false,false}}
 };
 
-void checkForConnectedI2CDevices(){
-  byte count = 0;
-  for (byte i = 1; i < 120; i++) {
-    if(i==thisAddress)continue;
-    Wire.beginTransmission (i);
-    if (Wire.endTransmission () == 0){
-      Serial.print ("Found address: ");
-      Serial.print (i, DEC);
-      Serial.print (" (0x");
-      Serial.print (i, HEX);
-      Serial.println (")");
-      count++;
-      delay (10);
-    }
-  }
-  Serial.println ("Done.");
-  Serial.print ("Found ");
-  Serial.print (count, DEC);
-  Serial.println (" device(s).");
-}
-
-
-void requestMessage(){
-  Wire.requestFrom(otherAddress, 4,true); 
+void onMessage( int size){
   unsigned int state=0;
   Wire.readBytes((byte*)&state,4);
   for(int i=COLUMNS_NUMBER-1;i>=0;i--){
@@ -78,45 +59,51 @@ void requestMessage(){
 void setup() {
   for(int i=0;i<COLUMNS_NUMBER;i++){
     int pin=columns[i];
-    pinMode(pin, OUTPUT);
-    digitalWrite(pin, 1);
-  }
-  for(int i=0;i<ROWS_NUMBER;i++){
-    int pin = rows[i];
     pinMode(pin, INPUT_PULLUP);
-  }
-  for(int i=0;i<COLUMNS_NUMBER;i++){
-    int pin=columns[i];
-    pinMode(pin, INPUT_PULLUP);
-
   }
   for(int i=0;i<ROWS_NUMBER;i++){
     int pin = rows[i];
     pinMode(pin, OUTPUT);
     digitalWrite(pin, 1);
   }
-
-  Serial.begin(9600);
-
-  Wire.begin();
-  Keyboard.begin();
+  #ifdef __DEBUG__
+    Serial.begin(9600);
+    Wire.setSDA(8);
+    Wire.setSCL(9);
+    Wire.begin(thisAddress);
+    Wire.onReceive(onMessage);
+  #else
+    Wire.setSDA(8);
+    Wire.setSCL(9);
+    Wire.begin(thisAddress);
+    Wire.onReceive(onMessage);
+    Keyboard.begin();
+  #endif
 }
 
 void loop() {
   for(int j=0;j<ROWS_NUMBER;j++){
     int rowPin=rows[j];
     digitalWrite(rowPin, 0);
-    delayMicroseconds(1000);
+    delayMicroseconds(2000);
     for(int i=0;i<COLUMNS_NUMBER;i++){
       int columnPin=columns[i];
       bool newState=digitalRead(columnPin) == 0;
+      // unsigned long currentTime=millis();
+      // if(newState==true){
+      //   if(currentTime-keys[i][j].lastKeyPress<10){
+      //     //click detected in span of 10ms
+      //     newState=false;
+      //   }else{
+      //     //click detedted well after 10ms
+      //     keys[i][j].lastKeyPress=currentTime;
+      //   }
+      // }
       if(newState!=keys[i][j].pressed)keys[i][j].justChanged=true;
       keys[i][j].pressed=digitalRead(columnPin) == 0;
     }
     digitalWrite(rowPin, 1);
   }
-  
-  requestMessage();
 
   Key* key;
   int layer = 0;
@@ -136,9 +123,17 @@ void loop() {
       if(keys[i][j].justChanged){
         keys[i][j].justChanged=false;
         if(keys[i][j].pressed){
-          Keyboard.press(keys[i][j].value[layer]);
+          #ifdef __DEBUG__
+            Serial.printf("press   col: %2d row: %2d pins: %2d %2d\n",i,j,columns[i],rows[j]);
+          #else
+            Keyboard.press(keys[i][j].value[layer]);
+          #endif
         }else{
-          Keyboard.release(keys[i][j].value[layer]);
+          #ifdef __DEBUG__
+            Serial.printf("release col: %2d row: %2d pins: %2d %2d\n",i,j,columns[i],rows[j]);
+          #else
+            Keyboard.release(keys[i][j].value[layer]);
+          #endif
         }
       }
     }
@@ -149,9 +144,17 @@ void loop() {
       if(keysRight[i][j].justChanged){
         keysRight[i][j].justChanged=false;
         if(keysRight[i][j].pressed){
-          Keyboard.press(keysRight[i][j].value[layer]);
+          #ifdef __DEBUG__
+            Serial.printf("press   col: %2d row: %2d pins: %2d %2d\n",i,j,columns[i],rows[j]);
+          #else
+            Keyboard.press(keysRight[i][j].value[layer]);
+          #endif
         }else{
-          Keyboard.release(keysRight[i][j].value[layer]);
+          #ifdef __DEBUG__
+            Serial.printf("release col: %2d row: %2d pins: %2d %2d\n",i,j,columns[i],rows[j]);
+          #else
+            Keyboard.release(keysRight[i][j].value[layer]);
+          #endif
         }
       }
     }
