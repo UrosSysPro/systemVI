@@ -85,7 +85,7 @@ void loop() {
   for(int j=0;j<ROWS_NUMBER;j++){
     int rowPin=rows[j];
     digitalWrite(rowPin, 0);
-    delayMicroseconds(2000);
+    delayMicroseconds(500);
     for(int i=0;i<COLUMNS_NUMBER;i++){
       int columnPin=columns[i];
       bool newState=digitalRead(columnPin) == 0;
@@ -161,6 +161,7 @@ void loop() {
       }
     }
   }
+  delay(10);
 }
 
 
