@@ -14,9 +14,13 @@ def SectionItemCard(item:SectionItem):Element=div(
   //div(
   //  className:="w-full aspect-square bg-red-500 rounded-[16px]"
   //),
-  img(
-    src:=item.image,
-    alt:=item.image
+  div(
+    borderRadius:="30px",
+    overflow:="none",
+    img(
+      src:=item.image,
+      alt:=item.image
+    )
   ),
   div(
     className:="font-bold pl-3 text-xl",

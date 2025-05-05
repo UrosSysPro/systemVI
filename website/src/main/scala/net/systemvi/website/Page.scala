@@ -6,10 +6,11 @@ def Page():Element = div(
   className:="flex flex-col justify-start items-center w-full",
   Navbar(),
   ImageSlider(),
-  Section("Section 1",List(
-    SectionItem("corne-wireless.jpg","images/corne-wireless.jpg"),
-    SectionItem("item 1","item1.png"),
-    SectionItem("item 1","item1.png"),
+  Section("Builds",List(
+    SectionItem("Corne Wireless","images/corne-wireless.jpg"),
+    SectionItem("Corne Prototype","images/corne-prototype.jpg"),
+    SectionItem("PH Design 60%","images/keyboard-60.jpg"),
+    SectionItem("Bana 40%","images/red-keyboard.jpg"),
   )),
   Section("Section 1",List(
     SectionItem("item 1","item1.png"),
