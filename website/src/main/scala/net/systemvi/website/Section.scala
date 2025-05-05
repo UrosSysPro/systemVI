@@ -11,8 +11,12 @@ def SectionTitle(text:String):Element=span(
 
 def SectionItemCard(item:SectionItem):Element=div(
   className:="flex flex-col gap-3",
-  div(
-    className:="w-full aspect-square bg-red-500 rounded-[16px]"
+  //div(
+  //  className:="w-full aspect-square bg-red-500 rounded-[16px]"
+  //),
+  img(
+    src:=item.image,
+    alt:=item.image
   ),
   div(
     className:="font-bold pl-3 text-xl",
