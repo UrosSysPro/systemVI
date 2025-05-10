@@ -5,7 +5,11 @@ import com.raquo.laminar.api.L.{*, given}
 def Page():Element = div(
   className:="flex flex-col justify-start items-center w-full",
   Navbar(),
-  ImageSlider(),
+  ImageSlider(
+    images = List(
+      "images/keyboards-all.jpg" 
+    )
+  ),
   Section("Builds",List(
     SectionItem("Corne Wireless","images/corne-wireless.jpg"),
     SectionItem("Corne Prototype","images/corne-prototype.jpg"),

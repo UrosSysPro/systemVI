@@ -10,7 +10,7 @@ int rows[]={14,15,16,17,18};
 
 struct Key{
   bool pressed,justChanged;
-  char value,fn;
+  char value,fn,currentlyDown;
 };
 
 const byte thisAddress = 8; 
@@ -171,8 +171,10 @@ void loop() {
             Serial.printf("pressed  %3d %3d\n",i,j);
           #else
           if(fn&&keys[i][j].fn){
+            keys[i][j].currentlyDown=keys[i][j].fn;
             Keyboard.press(keys[i][j].fn);
           }else{
+            keys[i][j].currentlyDown=keys[i][j].value;
             Keyboard.press(keys[i][j].value);
           }
           #endif
@@ -180,11 +182,12 @@ void loop() {
           #ifdef DEBUG
             Serial.printf("released %3d %3d\n",i,j);
           #else
-          if(fn&&keys[i][j].fn){
-            Keyboard.release(keys[i][j].fn);
-          }else{
-            Keyboard.release(keys[i][j].value);
-          }
+          // if(fn&&keys[i][j].fn){
+          //   Keyboard.release(keys[i][j].fn);
+          // }else{
+          //   Keyboard.release(keys[i][j].value);
+          // }
+            Keyboard.release(keys[i][j].currentlyDown);
           #endif
         } 
       }
