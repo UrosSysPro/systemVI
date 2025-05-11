@@ -1,9 +1,10 @@
 #include "Arduino.h"
 #include "Keyboard.h"
-#define DEBUG
+//#define DEBUG
 
 #define COLUMNS_NUMBER 12
 #define ROWS_NUMBER 4
+#define LAYERS 3
 
 int columns[] = { 0, 1, 2, 3, 4, 5, 6, 8, 7, 9, 10, 11 };
 int rows[] = { 12, 13, 14, 15 };
@@ -40,8 +41,9 @@ void setup() {
       if (keys[i][j].justChanged) {
         keys[i][j].justChanged = false;
         keys[i][j].pressed = false;
-        keys[i][j].value[0] = '\0';
-        // keys[i][j].fn = '\0';fdgfdhhgfhgfdgdf
+        for(int k=0;k<LAYERS;k++){
+          keys[i][j].value[k]='\0';
+        }
       }
     }
   }
@@ -85,11 +87,52 @@ void setup() {
   keys[11][2].value[0] = 'a';
   //red 3/////////////////////////////////////////////////////////////
   keys[0][3].value[0] = KEY_LEFT_CTRL;
-  keys[1][3].value[0] = 'a';
+  keys[1][3].value[0] = KEY_LEFT_GUI;
   keys[2][3].value[0] = 'a';
   keys[6][3].value[0] = ' ';
-  keys[10][3].value[0] = KEY_RIGHT_ALT;
-  keys[11][3].value[0] = KEY_RIGHT_GUI;
+  keys[10][3].value[0] = 'a';
+  keys[11][3].value[0] = KEY_RIGHT_ALT;
+
+  //red 0 layer 1/////////////////////////////////////////////////////
+  keys[0][1].value[1] = KEY_ESC;
+  keys[1][1].value[1] = '1';
+  keys[2][1].value[1] = '2';
+  keys[3][1].value[1] = '3';
+  keys[4][1].value[1] = '4';
+  keys[5][1].value[1] = '5';
+  keys[6][1].value[1] = '6';
+  keys[7][1].value[1] = '7';
+  keys[8][1].value[1] = '8';
+  keys[9][1].value[1] = '9';
+  keys[10][1].value[1] = '0';
+  keys[11][1].value[1] = KEY_DELETE;
+
+  //red 1 layer 1//////////////////////////////////////////////////////
+  // keys[0][0].value[1] = KEY_TAB;
+  // keys[1][0].value[1] = 'a';
+  // keys[2][0].value[1] = 's';
+  // keys[3][0].value[1] = 'd';
+  // keys[4][0].value[1] = 'f';
+  // keys[5][0].value[1] = 'g';
+  keys[6][0].value[1] = KEY_LEFT_ARROW;
+  keys[7][0].value[1] = KEY_DOWN_ARROW;
+  keys[8][0].value[1] = KEY_UP_ARROW;
+  keys[9][0].value[1] = KEY_RIGHT_ARROW;
+  // keys[11][0].value[1] = KEY_RETURN;
+
+  //red 0 layer 2/////////////////////////////////////////////////////
+  keys[0][1].value[2] = KEY_F1;
+  keys[1][1].value[2] = KEY_F2;
+  keys[2][1].value[2] = KEY_F3;
+  keys[3][1].value[2] = KEY_F4;
+  keys[4][1].value[2] = KEY_F5;
+  keys[5][1].value[2] = KEY_F6;
+  keys[6][1].value[2] = KEY_F7;
+  keys[7][1].value[2] = KEY_F8;
+  keys[8][1].value[2] = KEY_F9;
+  keys[9][1].value[2] = KEY_F10;
+  keys[10][1].value[2] = KEY_F11;
+  keys[11][1].value[2] = KEY_F12;
 
 
 #ifdef DEBUG
@@ -113,7 +156,15 @@ void loop() {
     digitalWrite(rowPin, 1);
   }
 
-  bool fn = false;
+  int layer=0;
+  if(keys[2][3].pressed){
+    layer=1;
+    keys[2][3].justChanged=false;
+  }
+  if(keys[10][3].pressed){
+    layer=2;
+    keys[10][3].justChanged=false;
+  }
   // if(keys[3][4].pressed){
   //   keys[3][4].justChanged=false;
   //   fn=true;
