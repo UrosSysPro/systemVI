@@ -10,7 +10,7 @@ int rows[] = { 12, 13, 14, 15 };
 
 struct Key {
   bool pressed, justChanged;
-  char value, fn;
+  char value[3],currentlyDown;
 };
 
 Key keys[COLUMNS_NUMBER][ROWS_NUMBER];
@@ -40,56 +40,56 @@ void setup() {
       if (keys[i][j].justChanged) {
         keys[i][j].justChanged = false;
         keys[i][j].pressed = false;
-        keys[i][j].value = '\0';
-        keys[i][j].fn = '\0';
+        keys[i][j].value[0] = '\0';
+        // keys[i][j].fn = '\0';fdgfdhhgfhgfdgdf
       }
     }
   }
 
   //red 0///////////////////////////////////////////////////////////////
-  keys[0][1].value = '`';
-  keys[1][1].value = 'q';
-  keys[2][1].value = 'w';
-  keys[3][1].value = 'e';
-  keys[4][1].value = 'r';
-  keys[5][1].value = 't';
-  keys[6][1].value = 'y';
-  keys[7][1].value = 'u';
-  keys[8][1].value = 'i';
-  keys[9][1].value = 'o';
-  keys[10][1].value = 'p';
-  keys[11][1].value = KEY_BACKSPACE;
+  keys[0][1].value[0] = '`';
+  keys[1][1].value[0] = 'q';
+  keys[2][1].value[0] = 'w';
+  keys[3][1].value[0] = 'e';
+  keys[4][1].value[0] = 'r';
+  keys[5][1].value[0] = 't';
+  keys[6][1].value[0] = 'y';
+  keys[7][1].value[0] = 'u';
+  keys[8][1].value[0] = 'i';
+  keys[9][1].value[0] = 'o';
+  keys[10][1].value[0] = 'p';
+  keys[11][1].value[0] = KEY_BACKSPACE;
   //red 1/////////////////////////////////////////////////////////////
-  keys[0][0].value = KEY_TAB;
-  keys[1][0].value = 'a';
-  keys[2][0].value = 's';
-  keys[3][0].value = 'd';
-  keys[4][0].value = 'f';
-  keys[5][0].value = 'g';
-  keys[6][0].value = 'h';
-  keys[7][0].value = 'j';
-  keys[8][0].value = 'k';
-  keys[9][0].value = 'l';
-  keys[11][0].value = KEY_RETURN;
+  keys[0][0].value[0] = KEY_TAB;
+  keys[1][0].value[0] = 'a';
+  keys[2][0].value[0] = 's';
+  keys[3][0].value[0] = 'd';
+  keys[4][0].value[0] = 'f';
+  keys[5][0].value[0] = 'g';
+  keys[6][0].value[0] = 'h';
+  keys[7][0].value[0] = 'j';
+  keys[8][0].value[0] = 'k';
+  keys[9][0].value[0] = 'l';
+  keys[11][0].value[0] = KEY_RETURN;
   //red 2/////////////////////////////////////////////////////////////
-  keys[0][2].value = KEY_LEFT_SHIFT;
-  keys[2][2].value = 'z';
-  keys[3][2].value = 'x';
-  keys[4][2].value = 'c';
-  keys[5][2].value = 'v';
-  keys[6][2].value = 'b';
-  keys[7][2].value = 'n';
-  keys[8][2].value = 'm';
-  keys[9][2].value = ',';
-  keys[10][2].value = KEY_RIGHT_SHIFT;
-  keys[11][2].value = 'a';
+  keys[0][2].value[0] = KEY_LEFT_SHIFT;
+  keys[2][2].value[0] = 'z';
+  keys[3][2].value[0] = 'x';
+  keys[4][2].value[0] = 'c';
+  keys[5][2].value[0] = 'v';
+  keys[6][2].value[0] = 'b';
+  keys[7][2].value[0] = 'n';
+  keys[8][2].value[0] = 'm';
+  keys[9][2].value[0] = ',';
+  keys[10][2].value[0] = KEY_RIGHT_SHIFT;
+  keys[11][2].value[0] = 'a';
   //red 3/////////////////////////////////////////////////////////////
-  keys[0][3].value = KEY_LEFT_CTRL;
-  keys[1][3].value = 'a';
-  keys[2][3].value = 'a';
-  keys[6][3].value = ' ';
-  keys[10][3].value = KEY_RIGHT_ALT;
-  keys[11][3].value = KEY_RIGHT_GUI;
+  keys[0][3].value[0] = KEY_LEFT_CTRL;
+  keys[1][3].value[0] = 'a';
+  keys[2][3].value[0] = 'a';
+  keys[6][3].value[0] = ' ';
+  keys[10][3].value[0] = KEY_RIGHT_ALT;
+  keys[11][3].value[0] = KEY_RIGHT_GUI;
 
 
 #ifdef DEBUG
@@ -125,25 +125,16 @@ void loop() {
         keys[i][j].justChanged = false;
         if (keys[i][j].pressed) {
 #ifdef DEBUG
-          Serial.printf("pressed  %3d %3d\n", columns[i], rows[j]);
-          Serial.printf("pressed  %3d %3d\n", i, j);
+          Serial.printf("pressed  %3d %3d   col: %3d row: %3d\n", i, j,columns[i], rows[j]);
 #else
-          if (fn && keys[i][j].fn) {
-            Keyboard.press(keys[i][j].fn);
-          } else {
-            Keyboard.press(keys[i][j].value);
-          }
+          Keyboard.press(keys[i][j].value[0]);
+          keys[i][j].currentlyDown=keys[i][j].value[0];
 #endif
         } else {
 #ifdef DEBUG
-          Serial.printf("released %3d %3d\n", columns[i], rows[j]);
-          Serial.printf("released %3d %3d\n", i, j);
+          Serial.printf("released %3d %3d   col: %3d row: %3d\n", i, j,columns[i], rows[j]);
 #else
-          if (fn && keys[i][j].fn) {
-            Keyboard.release(keys[i][j].fn);
-          } else {
-            Keyboard.release(keys[i][j].value);
-          }
+          Keyboard.release(keys[i][j].currentlyDown);
 #endif
         }
       }
