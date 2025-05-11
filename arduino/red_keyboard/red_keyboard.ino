@@ -83,8 +83,8 @@ void setup() {
   keys[7][2].value[0] = 'n';
   keys[8][2].value[0] = 'm';
   keys[9][2].value[0] = ',';
-  keys[10][2].value[0] = KEY_RIGHT_SHIFT;
-  keys[11][2].value[0] = 'a';
+  keys[10][2].value[0] = '.';
+  keys[11][2].value[0] = KEY_RIGHT_SHIFT;
   //red 3/////////////////////////////////////////////////////////////
   keys[0][3].value[0] = KEY_LEFT_CTRL;
   keys[1][3].value[0] = KEY_LEFT_GUI;
@@ -178,9 +178,14 @@ void loop() {
 #ifdef DEBUG
           Serial.printf("pressed  %3d %3d   col: %3d row: %3d\n", i, j,columns[i], rows[j]);
 #else
-          Keyboard.press(keys[i][j].value[0]);
-          keys[i][j].currentlyDown=keys[i][j].value[0];
-#endif
+          for(int k=layer;k>=0;k--){
+            if(keys[i][j].value[k]!='\0'){
+              Keyboard.press(keys[i][j].value[k]);
+              keys[i][j].currentlyDown=keys[i][j].value[k];
+              break;
+            }
+          }
+          #endif
         } else {
 #ifdef DEBUG
           Serial.printf("released %3d %3d   col: %3d row: %3d\n", i, j,columns[i], rows[j]);
