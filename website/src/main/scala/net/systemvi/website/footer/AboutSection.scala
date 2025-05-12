@@ -1,4 +1,4 @@
-package net.systemvi.website
+package net.systemvi.website.footer
 
 import com.raquo.laminar.api.L.{*, given}
 

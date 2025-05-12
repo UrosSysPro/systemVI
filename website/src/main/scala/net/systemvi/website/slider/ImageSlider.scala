@@ -1,6 +1,6 @@
-package net.systemvi.website
+package net.systemvi.website.slider
 
-import com.raquo.laminar.api.L.{*,given}
+import com.raquo.laminar.api.L.{*, given}
 
 def ImageSlider(images:List[String]=List()):Element = div(
   className:="w-full h-[500px] px-4 py-4",

@@ -1,6 +1,10 @@
 package net.systemvi.website
 
 import com.raquo.laminar.api.L.{*, given}
+import net.systemvi.website.footer.Footer
+import net.systemvi.website.navbar.Navbar
+import net.systemvi.website.section.{Section, SectionItem}
+import net.systemvi.website.slider.ImageSlider
 
 def Page():Element = div(
   className:="flex flex-col justify-start items-center w-full",
@@ -26,6 +30,6 @@ def Page():Element = div(
     SectionItem("item 1","item1.png"),
     SectionItem("item 1","item1.png"),
   )),
-  AboutSection(),
+//  AboutSection(),
   Footer(),
 )
