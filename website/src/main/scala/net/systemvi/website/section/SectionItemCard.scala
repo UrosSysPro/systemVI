@@ -1,7 +1,7 @@
 package net.systemvi.website.section
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.style.Theme
+import net.systemvi.website.style.Theme
 
 def SectionItemCard(item:SectionItem):Element=div(
   className:="flex flex-col gap-3",

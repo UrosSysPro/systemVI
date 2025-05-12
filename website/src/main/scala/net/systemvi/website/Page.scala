@@ -1,35 +1,49 @@
 package net.systemvi.website
-
+import org.scalajs.dom
 import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.website.footer.Footer
 import net.systemvi.website.navbar.Navbar
 import net.systemvi.website.section.{Section, SectionItem}
 import net.systemvi.website.slider.ImageSlider
 
-def Page():Element = div(
-  className:="flex flex-col justify-start items-center w-full",
-  Navbar(),
-  ImageSlider(
-    images = List(
-      "images/keyboards-all.jpg" 
+def Page():Element = {
+
+  val expanded=Var(false)
+  dom.console.log("register scroll event")
+  dom.window.addEventListener("scroll",(event)=>{
+    val pageScroll=dom.window.scrollY.toInt
+    expanded.writer.onNext(pageScroll>100)
+  })
+  div(
+    cls:="flex flex-col items-center pt-24",
+    div(
+      className:="flex flex-col justify-start w-full max-w-[1450px]",
+      Navbar(expanded),
+      ImageSlider(
+        images = List(
+          "images/keyboards-all.jpg",
+          "images/keyboards-all-rotated.jpg",
+        )
+      ),
+      Section("Builds",List(
+        SectionItem("Corne Wireless","images/corne-wireless.jpg"),
+        SectionItem("Corne Prototype","images/corne-prototype.jpg"),
+        SectionItem("PH Design 60%","images/keyboard-60.jpg"),
+        SectionItem("Bana 40%","images/red-keyboard.jpg"),
+      )),
+      Section("In Progress",List(
+        SectionItem("TKL Rabbit","images/tkl-rabbit.jpg"),
+        SectionItem("7x5 Dactyl","images/dactyl2.jpg"),
+//        SectionItem("Modded YENKEE","item2.png"),
+      )),
+      Section("Tools",List(
+        SectionItem("Soldering Iron","item1.png"),
+        SectionItem("Pliers","item1.png"),
+        SectionItem("Key Switch","item1.png"),
+        SectionItem("Key Caps","item1.png"),
+      )),
+      //  AboutSection(),
+      Footer(),
     )
-  ),
-  Section("Builds",List(
-    SectionItem("Corne Wireless","images/corne-wireless.jpg"),
-    SectionItem("Corne Prototype","images/corne-prototype.jpg"),
-    SectionItem("PH Design 60%","images/keyboard-60.jpg"),
-    SectionItem("Bana 40%","images/red-keyboard.jpg"),
-  )),
-  Section("Section 1",List(
-    SectionItem("item 1","item1.png"),
-    SectionItem("item 1","item1.png"),
-    SectionItem("item 1","item1.png"),
-  )),
-  Section("Section 1",List(
-    SectionItem("item 1","item1.png"),
-    SectionItem("item 1","item1.png"),
-    SectionItem("item 1","item1.png"),
-  )),
-//  AboutSection(),
-  Footer(),
-)
+  )
+}

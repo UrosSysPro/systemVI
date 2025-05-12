@@ -1,6 +1,7 @@
-package net.systemvi.style
+package net.systemvi.website.style
 
 import com.raquo.laminar.api.L.{*, given}
+import com.raquo.laminar.receivers.ChildOptionReceiver.<--
 
 object Theme {
   object common {
