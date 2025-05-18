@@ -74,6 +74,10 @@ class DemoApp(config: DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Gam
 
     controller = CameraController3.builder()
       .window(window)
+      .camera(Camera3.builder3d()
+        .position(0,200,0)
+        .build()
+      )
       .aspect(width / height)
       .far(far)
       .near(near)
@@ -88,7 +92,7 @@ class DemoApp(config: DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Gam
         .aspect(shadowMapWidth.toFloat / shadowMapHeight.toFloat)
         .fov(Math.PI.toFloat / 3f)
         .near(0.1f)
-        .far(100.0f)
+        .far(2000.0f)
         .build())
       .window(window)
       .aspect(width / height)
@@ -108,7 +112,7 @@ class DemoApp(config: DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Gam
       height = shadowMapHeight,
       light = Light(
         color = Vector3f(1000),
-        attenuation = Vector3f(0.5f, 0.5, 1.0f),
+        attenuation = Vector3f(0.1f, 0.1, 1.0f),
         position = shadowController.camera.position,
         rotation = shadowController.camera.rotation,
         projection = shadowController.camera.projectionType match
@@ -288,8 +292,8 @@ class DemoApp(config: DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Gam
       size = Vector2f(width, height),
       view = viewerCamera.view,
       projection = viewerCamera.projection,
-      rect = Vector4f(0, 0, width / 2, height / 2)
-      //                rect = Vector4f(0,0,width,height)
+//      rect = Vector4f(0, 0, width / 2, height / 2)
+                      rect = Vector4f(0,0,width,height)
     )
   }
 

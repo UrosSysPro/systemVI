@@ -1,6 +1,6 @@
 package com.systemvi.sdf
 
-import com.systemvi.sdf.cpu.App
+import com.systemvi.sdf.gpu.App
 
 object Main{
   def main(args: Array[String]): Unit = {

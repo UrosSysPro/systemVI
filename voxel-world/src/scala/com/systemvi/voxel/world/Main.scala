@@ -6,11 +6,11 @@ import org.joml.{Vector3f, Vector3i}
 object Main {
   def main(args: Array[String]): Unit = {
     val config=DemoAppConfig(
-      generator = PerlinWorldGenerator(5f,20f,0.5f),
-      numberOfChunks = Vector3i(2,2,2),
+      generator = PerlinWorldGenerator(0f,200f,0.3f),
+      numberOfChunks = Vector3i(20,10,20),
       initialLightParams = InitialLightParams(
-        position = Vector3f(-10, 60, -10),
-        rotation = Vector3f(-Math.PI.toFloat / 4f, -Math.PI.toFloat * 3f / 4f, 0)
+        position = Vector3f(-50, 200, -50),
+        rotation = Vector3f(-Math.PI.toFloat / 4f, -Math.PI.toFloat * 3f / 4f, 0),
       )
     )
 
