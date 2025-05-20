@@ -63,6 +63,9 @@ gradle :voxel-world:run
 ![reaction-diffusion](docs/screenshots/reaction-diffusion.png)
 ## Phong Shading With Normal Mapping
 ![normal-mapping](docs/screenshots/normal-mapping.png)
-## Phong Shading With Normal Mapping
-![normal-mapping](docs/screenshots/normal-mapping.png)
-
+## Voxels
+Voxel based sandbox game, deferred rendering, gamma correction, tone mapping, color correction, shadow mapping, normal mapping
+![voxels1](docs/screenshots/voxels1.png)
+![voxels2](docs/screenshots/voxels2.png)
+![voxels3](docs/screenshots/voxels3.png)
+![voxels4](docs/screenshots/voxels4.png)
