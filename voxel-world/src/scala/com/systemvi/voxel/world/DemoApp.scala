@@ -17,7 +17,7 @@ import com.systemvi.voxel.world.world2.{Chunk, World, WorldCache}
 import org.joml.{Vector2f, Vector3f, Vector3i, Vector4f}
 import org.lwjgl.glfw.GLFW
 
-case class InitialLightParams(position: Vector3f, rotation: Vector3f)
+case class InitialLightParams(position: Vector3f, rotation: Vector3f,near:Float=0.1,far:Float=100,attenuation:Vector3f=Vector3f(0.1f, 0.1, 1.0f))
 
 case class DemoAppConfig(
                           generator: WorldGenerator = PerlinWorldGenerator(),
@@ -25,7 +25,8 @@ case class DemoAppConfig(
                           initialLightParams: InitialLightParams = InitialLightParams(
                             position = Vector3f(-10, 60, -10),
                             rotation = Vector3f(-Math.PI.toFloat / 4f, -Math.PI.toFloat * 3f / 4f, 0)
-                          )
+                          ),
+                          initialPlayerPosition:Vector3f=Vector3f(0,20,0),
                         )
 
 class DemoApp(config: DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Game") {
@@ -64,18 +65,18 @@ class DemoApp(config: DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Gam
 
   val near = 0.1f
   val far = 1000f
+  val shadowMapWidth = 4000
+  val shadowMapHeight = 4000
 
-  override def setup(window: Window): Unit = {
-    val width = window.getWidth.toFloat
-    val height = window.getHeight.toFloat
-
-    val shadowMapWidth = 4000
-    val shadowMapHeight = 4000
-
+  private def cameraSetup():Unit={
+    val window=getWindow
+    val width=window.getWidth.toFloat
+    val height=window.getHeight.toFloat
+    val p=config.initialPlayerPosition
     controller = CameraController3.builder()
-      .window(window)
+      .window(getWindow)
       .camera(Camera3.builder3d()
-        .position(0,200,0)
+        .position(p.x,p.y,p.z)
         .build()
       )
       .aspect(width / height)
@@ -83,8 +84,14 @@ class DemoApp(config: DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Gam
       .near(near)
       .speed(5)
       .build()
+  }
+
+  private def shadowMapCameraSetup():Unit={
     val p = config.initialLightParams.position
     val r = config.initialLightParams.rotation
+    val window=getWindow
+    val width=window.getWidth.toFloat
+    val height=window.getHeight.toFloat
     shadowController = CameraController3.builder()
       .camera(Camera3.builder3d()
         .position(p.x, p.y, p.z)
@@ -96,23 +103,16 @@ class DemoApp(config: DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Gam
         .build())
       .window(window)
       .aspect(width / height)
-      .far(far)
-      .near(near)
+      .far(config.initialLightParams.far)
+      .near(config.initialLightParams.near)
       .speed(5)
       .build()
-    setInputProcessor(InputMultiplexer(
-      controller, this
-    ))
-
-    gbuffer = GBuffer(width.toInt, height.toInt)
-    blockRenderer = BlockFaceRenderer()
-
     shadowMapRenderer = ShadowMapRenderer(
       width = shadowMapWidth,
       height = shadowMapHeight,
       light = Light(
         color = Vector3f(1000),
-        attenuation = Vector3f(0.1f, 0.1, 1.0f),
+        attenuation = config.initialLightParams.attenuation,
         position = shadowController.camera.position,
         rotation = shadowController.camera.rotation,
         projection = shadowController.camera.projectionType match
@@ -120,8 +120,13 @@ class DemoApp(config: DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Gam
           case _ => Projection(shadowMapWidth.toFloat / shadowMapHeight.toFloat, Math.PI.toFloat / 3f, 0.1f, 100f)
       )
     )
-    skyboxRenderer = SkyBoxRenderer()
-    blockRenderer.setRenderTargets(gbuffer.frameBuffer.getAttachments)
+  }
+
+  private def texturesSetup():Unit={
+    val window=getWindow
+    val width=window.getWidth.toFloat
+    val height=window.getHeight.toFloat
+    gbuffer = GBuffer(width.toInt, height.toInt)
     hdrTexture = Texture.builder()
       .width(width.toInt)
       .height(height.toInt)
@@ -152,6 +157,25 @@ class DemoApp(config: DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Gam
       .filterMin(FilterMin.NEAREST_MIPMAP_LINEAR)
       .file("assets/examples/minecraft/textures/normal.png")
       .build()
+  }
+
+  override def setup(window: Window): Unit = {
+    val width = window.getWidth.toFloat
+    val height = window.getHeight.toFloat
+
+    cameraSetup()
+    shadowMapCameraSetup()
+
+    setInputProcessor(InputMultiplexer(
+      controller, this
+    ))
+
+    blockRenderer = BlockFaceRenderer()
+    skyboxRenderer = SkyBoxRenderer()
+
+    texturesSetup()
+
+    blockRenderer.setRenderTargets(gbuffer.frameBuffer.getAttachments)
 
     for {
       col0 <- worldCache.chunkCache
@@ -228,53 +252,53 @@ class DemoApp(config: DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Gam
 
     Utils.clear(Colors.green500, Buffer.COLOR_BUFFER)
 
-    gbuffer.begin()
-    Utils.clear(Colors.black, Buffer.COLOR_BUFFER, Buffer.DEPTH_BUFFER)
-    Utils.enableDepthTest()
-    Utils.enableFaceCulling()
-    blockRenderer.time = Utils.getTime.toFloat
-    blockRenderer.view(controller.camera.view)
-    blockRenderer.projection(controller.camera.projection)
-    blockRenderer.drawUploaded()
-    Utils.disableFaceCulling()
-    Utils.disableDepthTest()
-    gbuffer.end()
+    {
+      gbuffer.begin()
+      Utils.clear(Colors.black, Buffer.COLOR_BUFFER, Buffer.DEPTH_BUFFER)
+      Utils.enableDepthTest()
+      Utils.enableFaceCulling()
+      blockRenderer.time = Utils.getTime.toFloat
+      blockRenderer.view(controller.camera.view)
+      blockRenderer.projection(controller.camera.projection)
+      blockRenderer.drawUploaded()
+      Utils.disableFaceCulling()
+      Utils.disableDepthTest()
+      gbuffer.end()
+    }
 
-
-    shadowMapRenderer.light.position.set(shadowController.camera.position)
-    shadowMapRenderer.light.rotation.set(shadowController.camera.rotation)
-    Utils.viewport(0, 0, shadowMapRenderer.width, shadowMapRenderer.height)
-    shadowMapRenderer.drawUploaded()
-    Utils.viewport(0, 0, getWindow.getWidth, getWindow.getHeight)
+    {
+      shadowMapRenderer.light.position.set(shadowController.camera.position)
+      shadowMapRenderer.light.rotation.set(shadowController.camera.rotation)
+      Utils.viewport(0, 0, shadowMapRenderer.width, shadowMapRenderer.height)
+      shadowMapRenderer.drawUploaded()
+      Utils.viewport(0, 0, getWindow.getWidth, getWindow.getHeight)
+    }
 
     //    positionBufferViewer.draw(
     //      gbuffer.position,
     //      viewerCamera.view,
     //      viewerCamera.projection,
-    //      Vector4f(0, 0, width / 2, height / 2)
+    // l     Vector4f(0, 0, width / 2, height / 2)
     //    )
-    uvBufferViewer.draw(
-      gbuffer.uv,
-      diffuseMap,
-      viewerCamera.view,
-      viewerCamera.projection,
-      Vector4f(width / 2, 0, width / 2, height / 2)
-    )
-    depthBufferViewer.draw(
-      depthBuffer = shadowMapRenderer.shadowMap,
-      near = shadowMapRenderer.light.projection.near,
-      far = shadowMapRenderer.light.projection.far,
-      viewerCamera.view,
-      viewerCamera.projection,
-      Vector4f(0, height / 2, height / 2, height / 2)
-    )
-    aoViewer.draw(
-      texture = gbuffer.occlusion,
-      view = viewerCamera.view,
-      projection = viewerCamera.projection,
-      rect = Vector4f(width / 2, height / 2, width / 2, height / 2)
-    )
-
+    //    uvBufferViewer.draw(
+    //    gbuffer.uv,
+    //    diffuseMap,
+    //    viewerCamera.view,
+    //    viewerCamera.projection,
+    //    Vector4f(width / 2, 0, width / 2, height / 2)
+    //    )
+    //    depthBufferViewer.draw(
+    //    depthBuffer = shadowMapRenderer.shadowMap,
+    //    near = shadowMapRenderer.light.projection.near,
+    //    far = shadowMapRenderer.light.projection.far,
+    //    viewerCamera.view, viewerCamera.projection,
+    //    Vector4f(0, height / 2, height / 2, height / 2) )
+    //    aoViewer.draw(
+    //    texture = gbuffer.occlusion,
+    //    view = viewerCamera.view,
+    //    projection = viewerCamera.projection,
+    //    rect = Vector4f(width / 2, height / 2, width / 2, height / 2)
+    //    )
     skyboxFrameBuffer.begin()
     skyboxRenderer.view(controller.camera.view)
     skyboxRenderer.projection(controller.camera.projection)
@@ -283,20 +307,27 @@ class DemoApp(config: DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Gam
     skyboxFrameBuffer.end()
 
     frameBuffer.begin()
-    //    phongDeferredRenderer.draw(Vector4f(0,0,width,height))
+    //phongDeferredRenderer.draw(Vector4f(0,0,width,height))
     pbrDeferredRenderer.draw(Vector4f(0, 0, width, height))
     frameBuffer.end()
 
+    renderView1()
+  }
+  private def renderShadowMap() = {
+
+  }
+  private def renderView1():Unit={
+    val window=getWindow
+    val width=window.getWidth.toFloat
+    val height=window.getHeight.toFloat
     toneMapper.draw(
       texture = hdrTexture,
       size = Vector2f(width, height),
       view = viewerCamera.view,
       projection = viewerCamera.projection,
-//      rect = Vector4f(0, 0, width / 2, height / 2)
-                      rect = Vector4f(0,0,width,height)
+      rect = Vector4f(0, 0, width, height)
     )
   }
-
   override def keyDown(key: Int, scancode: Int, mods: Int): Boolean = {
     key match
       case GLFW.GLFW_KEY_1 =>
