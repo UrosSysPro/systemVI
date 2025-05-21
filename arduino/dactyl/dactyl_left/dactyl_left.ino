@@ -83,18 +83,26 @@ void setup() {
   //row 0
   keys[6][0].value[0]=KEY_ESC;
   keys[5][0].value[0]='1';
+  keys[5][0].value[1]=KEY_F1;
   keys[4][0].value[0]='2';
+  keys[4][0].value[1]=KEY_F2;
   keys[3][0].value[0]='3';
+  keys[3][0].value[1]=KEY_F3;
   keys[2][0].value[0]='4';
-  keys[1][0].value[0]='5';
+  keys[2][0].value[1]=KEY_F4;
+  keys[1][0].value[0]='5';  
+  keys[1][0].value[1]=KEY_F5;
   keys[0][0].value[0]='6';
+  keys[0][0].value[1]=KEY_F6;
   //row 1
+  keys[6][1].value[0]='`';
   keys[5][1].value[0]='q';
   keys[4][1].value[0]='w';
   keys[3][1].value[0]='e';
   keys[2][1].value[0]='r';
   keys[1][1].value[0]='t';
   //row 2
+  keys[6][2].value[0]=KEY_TAB;
   keys[5][2].value[0]='a';
   keys[4][2].value[0]='s';
   keys[3][2].value[0]='d';
@@ -110,17 +118,23 @@ void setup() {
   //thumb
   keys[0][4].value[0]=' ';
   keys[3][5].value[0]=KEY_LEFT_CTRL;
-  keys[3][5].value[0]=KEY_LEFT_GUI;
+  keys[6][5].value[0]=KEY_LEFT_GUI;
   keys[0][3].value[0]=KEY_LEFT_SHIFT;
 
   //right side
   //row 0
   keysRight[0][0].value[0]='7';
+  keysRight[0][0].value[1]=KEY_F7;
   keysRight[1][0].value[0]='8';
+  keysRight[1][0].value[1]=KEY_F8;
   keysRight[2][0].value[0]='9';
+  keysRight[2][0].value[1]=KEY_F9;
   keysRight[3][0].value[0]='0';
+  keysRight[3][0].value[1]=KEY_F10;
   keysRight[4][0].value[0]='-';
+  keysRight[4][0].value[1]=KEY_F11;
   keysRight[5][0].value[0]='=';
+  keysRight[5][0].value[1]=KEY_F12;
   keysRight[6][0].value[0]=KEY_BACKSPACE;
   //row 1 
   keysRight[1][1].value[0]='y';
@@ -128,12 +142,18 @@ void setup() {
   keysRight[3][1].value[0]='i';
   keysRight[4][1].value[0]='o';
   keysRight[5][1].value[0]='p';
+  keysRight[6][1].value[0]='\\';
   //row 2 
   keysRight[1][2].value[0]='h';
+  keysRight[1][2].value[1]=KEY_LEFT_ARROW;
   keysRight[2][2].value[0]='j';
+  keysRight[2][2].value[1]=KEY_DOWN_ARROW;
   keysRight[3][2].value[0]='k';
+  keysRight[3][2].value[1]=KEY_UP_ARROW;
   keysRight[4][2].value[0]='l';
+  keysRight[4][2].value[1]=KEY_RIGHT_ARROW;
   keysRight[5][2].value[0]=';';
+  keysRight[6][2].value[0]='\n';
   //row 3 
   keysRight[1][3].value[0]='n';
   keysRight[2][3].value[0]='m';
@@ -141,8 +161,8 @@ void setup() {
   keysRight[4][3].value[0]='.';
   keysRight[5][3].value[0]='/';
 
-  keys[2][4].value[0]=KEY_BACKSPACE;
-
+  keysRight[2][4].value[0]=KEY_BACKSPACE;
+  keysRight[1][5].value[0]=KEY_RIGHT_SHIFT;
 
   #ifdef __DEBUG__
     Serial.begin(9600);
@@ -173,13 +193,13 @@ void loop() {
     digitalWrite(rowPin, 1);
   }
 
-  // Key* key;
+  Key* key;
   int layer = 0;
-  // key=&keysRight[0][1];
-  // if(key->pressed){
-  //   key->justChanged=false;
-  //   layer = 1;
-  // }
+  key=&keysRight[3][5];
+  if(key->pressed){
+    key->justChanged=false;
+    layer = 1;
+  }
   // key=&keysRight[0][2];
   // if(key->pressed){
   //   key->justChanged=false;
