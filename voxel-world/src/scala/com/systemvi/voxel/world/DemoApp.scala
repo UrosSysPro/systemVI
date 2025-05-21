@@ -13,7 +13,7 @@ import com.systemvi.voxel.world.buffer.GBuffer
 import com.systemvi.voxel.world.debug.*
 import com.systemvi.voxel.world.generators.{PerlinWorldGenerator, WorldGenerator}
 import com.systemvi.voxel.world.renderer.*
-import com.systemvi.voxel.world.world2.{Chunk, World, WorldCache}
+import com.systemvi.voxel.world.world2.{Block, Chunk, World, WorldCache}
 import org.joml.{Vector2f, Vector3f, Vector3i, Vector4f}
 import org.lwjgl.glfw.GLFW
 
@@ -36,6 +36,7 @@ class DemoApp(config: DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Gam
 
   val world: World = World(numberOfChunks)
   world.generate(generator)
+//  generateFractal()
   val worldCache: WorldCache = WorldCache(world)
   var blockRenderer: BlockFaceRenderer = null
   var skyboxRenderer: SkyBoxRenderer = null
@@ -67,6 +68,9 @@ class DemoApp(config: DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Gam
   val far = 1000f
   val shadowMapWidth = 4000
   val shadowMapHeight = 4000
+
+  val currentRenderView=0
+  val renderViews=List[()=>Unit](renderView1,renderView2)
 
   private def cameraSetup():Unit={
     val window=getWindow
@@ -240,7 +244,6 @@ class DemoApp(config: DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Gam
       shadowMapRenderer = shadowMapRenderer,
       bias = 0.000002f,
     )
-
     emptyVertexArray = VertexArray()
   }
 
@@ -252,70 +255,50 @@ class DemoApp(config: DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Gam
 
     Utils.clear(Colors.green500, Buffer.COLOR_BUFFER)
 
-    {
-      gbuffer.begin()
-      Utils.clear(Colors.black, Buffer.COLOR_BUFFER, Buffer.DEPTH_BUFFER)
-      Utils.enableDepthTest()
-      Utils.enableFaceCulling()
-      blockRenderer.time = Utils.getTime.toFloat
-      blockRenderer.view(controller.camera.view)
-      blockRenderer.projection(controller.camera.projection)
-      blockRenderer.drawUploaded()
-      Utils.disableFaceCulling()
-      Utils.disableDepthTest()
-      gbuffer.end()
-    }
+    renderGBuffer()
 
-    {
-      shadowMapRenderer.light.position.set(shadowController.camera.position)
-      shadowMapRenderer.light.rotation.set(shadowController.camera.rotation)
-      Utils.viewport(0, 0, shadowMapRenderer.width, shadowMapRenderer.height)
-      shadowMapRenderer.drawUploaded()
-      Utils.viewport(0, 0, getWindow.getWidth, getWindow.getHeight)
-    }
+    renderShadowMap()
 
-    //    positionBufferViewer.draw(
-    //      gbuffer.position,
-    //      viewerCamera.view,
-    //      viewerCamera.projection,
-    // l     Vector4f(0, 0, width / 2, height / 2)
-    //    )
-    //    uvBufferViewer.draw(
-    //    gbuffer.uv,
-    //    diffuseMap,
-    //    viewerCamera.view,
-    //    viewerCamera.projection,
-    //    Vector4f(width / 2, 0, width / 2, height / 2)
-    //    )
-    //    depthBufferViewer.draw(
-    //    depthBuffer = shadowMapRenderer.shadowMap,
-    //    near = shadowMapRenderer.light.projection.near,
-    //    far = shadowMapRenderer.light.projection.far,
-    //    viewerCamera.view, viewerCamera.projection,
-    //    Vector4f(0, height / 2, height / 2, height / 2) )
-    //    aoViewer.draw(
-    //    texture = gbuffer.occlusion,
-    //    view = viewerCamera.view,
-    //    projection = viewerCamera.projection,
-    //    rect = Vector4f(width / 2, height / 2, width / 2, height / 2)
-    //    )
+    renderSkyBox()
+    frameBuffer.begin()
+    //phongDeferredRenderer.draw(Vector4f(0,0,width,height))
+    pbrDeferredRenderer.draw(Vector4f(0, 0, width, height))
+    frameBuffer.end()
+
+    renderViews(currentRenderView)()
+  }
+
+  private def renderGBuffer():Unit={
+    gbuffer.begin()
+    Utils.clear(Colors.black, Buffer.COLOR_BUFFER, Buffer.DEPTH_BUFFER)
+    Utils.enableDepthTest()
+    Utils.enableFaceCulling()
+    blockRenderer.time = Utils.getTime.toFloat
+    blockRenderer.view(controller.camera.view)
+    blockRenderer.projection(controller.camera.projection)
+    blockRenderer.drawUploaded()
+    Utils.disableFaceCulling()
+    Utils.disableDepthTest()
+    gbuffer.end()
+  }
+
+  private def renderShadowMap():Unit= {
+    shadowMapRenderer.light.position.set(shadowController.camera.position)
+    shadowMapRenderer.light.rotation.set(shadowController.camera.rotation)
+    Utils.viewport(0, 0, shadowMapRenderer.width, shadowMapRenderer.height)
+    shadowMapRenderer.drawUploaded()
+    Utils.viewport(0, 0, getWindow.getWidth, getWindow.getHeight)
+  }
+
+  private def renderSkyBox():Unit={
     skyboxFrameBuffer.begin()
     skyboxRenderer.view(controller.camera.view)
     skyboxRenderer.projection(controller.camera.projection)
     skyboxRenderer.position(controller.camera.position)
     skyboxRenderer.draw()
     skyboxFrameBuffer.end()
-
-    frameBuffer.begin()
-    //phongDeferredRenderer.draw(Vector4f(0,0,width,height))
-    pbrDeferredRenderer.draw(Vector4f(0, 0, width, height))
-    frameBuffer.end()
-
-    renderView1()
   }
-  private def renderShadowMap() = {
 
-  }
   private def renderView1():Unit={
     val window=getWindow
     val width=window.getWidth.toFloat
@@ -328,6 +311,59 @@ class DemoApp(config: DemoAppConfig) extends Game(3, 3, 60, 1400, 900, "Demo Gam
       rect = Vector4f(0, 0, width, height)
     )
   }
+
+  private def renderView2():Unit={
+    val window=getWindow
+    val width=window.getWidth.toFloat
+    val height=window.getHeight.toFloat
+    positionBufferViewer.draw(
+      gbuffer.position,
+      viewerCamera.view,
+      viewerCamera.projection,
+      Vector4f(0, 0, width / 2, height / 2)
+    )
+    uvBufferViewer.draw(
+      gbuffer.uv,
+      diffuseMap,
+      viewerCamera.view,
+      viewerCamera.projection,
+      Vector4f(width / 2, 0, width / 2, height / 2)
+    )
+    depthBufferViewer.draw(
+      depthBuffer = shadowMapRenderer.shadowMap,
+      near = shadowMapRenderer.light.projection.near,
+      far = shadowMapRenderer.light.projection.far,
+      viewerCamera.view, viewerCamera.projection,
+      Vector4f(0, height / 2, height / 2, height / 2) )
+    aoViewer.draw(
+      texture = gbuffer.occlusion,
+      view = viewerCamera.view,
+      projection = viewerCamera.projection,
+      rect = Vector4f(width / 2, height / 2, width / 2, height / 2)
+    )
+  }
+
+  def generateFractal(): Unit = {
+    val maxSteps = 4
+    for (i <- 0 until 81) {
+      for (j <- 0 until 81) {
+        for (k <- 0 until 81) {
+          var isEmpty = false
+          var size = 3
+          for (l <- 1 to maxSteps) {
+            val x = (i % size) / (size / 3)
+            val y = (j % size) / (size / 3)
+            val z = (k % size) / (size / 3)
+            if ((x == 1 && y == 1) || (x == 1 && z == 1) || (z == 1 && y == 1)) isEmpty = true
+            size *= 3
+          }
+          if (isEmpty) world.getBlockState(i, j, k).block = Block.AIR
+          else world.getBlockState(i, j, k).block = Block.STONE
+        }
+      }
+    }
+  }
+
   override def keyDown(key: Int, scancode: Int, mods: Int): Boolean = {
     key match
       case GLFW.GLFW_KEY_1 =>

@@ -1,4 +1,4 @@
-package com.systemvi.voxel.world.world;
+package com.systemvi.voxel.world.world2;
 
 public class BlockState {
     public Block block;

@@ -1,7 +1,6 @@
 package com.systemvi.voxel.world.world2
 
 import com.systemvi.voxel.world.generators.WorldGenerator
-import com.systemvi.voxel.world.world.BlockState
 import org.joml.Vector3i
 
 class Chunk {

@@ -1,6 +1,5 @@
 package com.systemvi.voxel.world.world2
 
-import com.systemvi.voxel.world.world.BlockState
 import org.joml.{Vector3i, Vector4f}
 
 enum BlockSide(val index:Int):

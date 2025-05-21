@@ -1,6 +1,5 @@
 package com.systemvi.voxel.world.world2
 
-import com.systemvi.voxel.world.world.{Block, BlockState}
 import com.systemvi.voxel.world.world2
 import org.joml.{Vector3i, Vector4f}
 

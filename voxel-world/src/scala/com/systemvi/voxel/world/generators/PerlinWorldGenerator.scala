@@ -1,7 +1,7 @@
 package com.systemvi.voxel.world.generators
 
 import com.systemvi.engine.noise.{FractalNoise2d, Perlin2d}
-import com.systemvi.voxel.world.world.Block
+import com.systemvi.voxel.world.world2.Block
 import org.joml.{Vector2f, Vector3i}
 
 class PerlinWorldGenerator(val base:Float=10,val variation:Float=20f,val scale:Float=0.5f) extends WorldGenerator {
