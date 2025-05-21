@@ -2,6 +2,7 @@ package net.systemvi.website.navbar
 
 import com.raquo.laminar.api.L.{*, given}
 import com.raquo.laminar.api.textToTextNode
+import com.raquo.laminar.receivers.FocusReceiver.<--
 import net.systemvi.website.style.Theme
 import org.scalajs.dom
 
@@ -30,12 +31,20 @@ def Navbar():Element = {
       className:="w-full h-full flex justify-between items-center px-6 text-[#626569] text-xl ",
       transition:="300ms",
       NavbarItem("Logo"),
-      div(
+
+      child <-- showMenu.inverse.map{if _ then div(
         className:="flex gap-4",
         NavbarItem("Keyboards"),
         NavbarItem("Games"),
         NavbarItem("Engine")
-      )
+      ) else emptyNode},
+
+      child <-- showMenu.map{if _ then div(
+        className:="flex gap-4",
+        NavbarItem("Keyboards"),
+        NavbarItem("Games"),
+        NavbarItem("Engine")
+      ) else emptyNode},
     )
   )
 }
