@@ -15,7 +15,6 @@ struct Key{
   bool pressed;
   bool justChanged;
   char currentlyDown=0;
-  unsigned long lastKeyPress=0;
 };
 
 const byte thisAddress = 8; 
@@ -26,8 +25,8 @@ Key keys[COLUMNS_NUMBER][ROWS_NUMBER];
 Key keysRight[COLUMNS_NUMBER][ROWS_NUMBER];
 
 void onMessage( int size){
-  unsigned int state=0;
-  Wire.readBytes((byte*)&state,4);
+  uint64_t state=0;
+  Wire.readBytes((byte*)&state,8);
   for(int i=COLUMNS_NUMBER-1;i>=0;i--){
     for(int j=ROWS_NUMBER-1;j>=0;j--){
       bool oldValue=keysRight[i][j].pressed;
@@ -50,11 +49,24 @@ void setup() {
     pinMode(pin, OUTPUT);
     digitalWrite(pin, 1);
   }
+
+  for(int i=0;i<COLUMNS_NUMBER;i++){
+    for(int j=0;j<ROWS_NUMBER;j++){
+      keys[i][j].pressed=false;
+      keys[i][j].justChanged=false;
+      keysRight[i][j].pressed=false;
+      keysRight[i][j].justChanged=false;
+    }
+  }
   #ifdef __DEBUG__
     Serial.begin(9600);
+    Wire.setSDA(4);
+    Wire.setSCL(5);
+    Wire.begin(thisAddress);
+    Wire.onReceive(onMessage);
   #else
-    Wire.setSDA(8);
-    Wire.setSCL(9);
+    Wire.setSDA(4);
+    Wire.setSCL(5);
     Wire.begin(thisAddress);
     Wire.onReceive(onMessage);
     Keyboard.begin();
@@ -70,7 +82,7 @@ void loop() {
       int columnPin=columns[i];
       bool newState=digitalRead(columnPin) == 0;
       if(newState!=keys[i][j].pressed)keys[i][j].justChanged=true;
-      keys[i][j].pressed=digitalRead(columnPin) == 0;
+      keys[i][j].pressed=newState;
     }
     digitalWrite(rowPin, 1);
   }
@@ -131,7 +143,6 @@ void loop() {
       }
     }
   }
-  // delay(10);
 }
 
 
