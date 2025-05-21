@@ -1,8 +1,8 @@
-package com.systemvi.voxel.world.world;
+package com.systemvi.voxel.world.world_old;
 
 import com.systemvi.engine.noise.OldPerlin2d;
-import com.systemvi.voxel.world.world2.Block;
-import com.systemvi.voxel.world.world2.BlockState;
+import com.systemvi.voxel.world.world.Block;
+import com.systemvi.voxel.world.world.BlockState;
 import org.joml.Vector3i;
 
 public class Chunk {

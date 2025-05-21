@@ -7,7 +7,7 @@ import com.systemvi.engine.texture.Texture.Repeat
 import com.systemvi.engine.texture.{Format, FrameBuffer, Texture}
 import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.engine.utils.Utils
-import com.systemvi.voxel.world.world2.BlockFace
+import com.systemvi.voxel.world.world.BlockFace
 import org.joml.{Matrix4f, Vector3f}
 
 case class Projection(aspect: Float, fov: Float, near: Float, far: Float)

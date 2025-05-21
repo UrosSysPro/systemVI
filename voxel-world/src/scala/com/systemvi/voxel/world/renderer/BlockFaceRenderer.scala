@@ -4,7 +4,7 @@ import com.systemvi.engine.buffer.{ArrayBuffer, ElementsBuffer, VertexArray}
 import com.systemvi.engine.model.VertexAttribute
 import com.systemvi.engine.shader.{ElementsDataType, Primitive, Shader}
 import com.systemvi.engine.texture.FrameBuffer.Attachment
-import com.systemvi.voxel.world.world2.{BlockFace, BlockSide}
+import com.systemvi.voxel.world.world.{BlockFace, BlockSide}
 import org.joml.{Matrix4f, Vector4f}
 
 class BlockFaceRenderer {

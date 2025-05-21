@@ -1,6 +1,6 @@
-package com.systemvi.voxel.world.world2
+package com.systemvi.voxel.world.world
 
-import com.systemvi.voxel.world.world2
+import com.systemvi.voxel.world.world
 import org.joml.{Vector3i, Vector4f}
 
 class ChunkCache(world: World, chunk: Chunk, chunkPosition: Vector3i) {

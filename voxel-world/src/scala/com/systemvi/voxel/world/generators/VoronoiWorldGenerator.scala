@@ -1,7 +1,7 @@
 package com.systemvi.voxel.world.generators
 
 import com.systemvi.engine.noise.{FractalNoise2d, Perlin2d}
-import com.systemvi.voxel.world.world2.Block
+import com.systemvi.voxel.world.world.Block
 import org.joml.{Vector2f, Vector3i}
 
 class VoronoiWorldGenerator extends WorldGenerator {

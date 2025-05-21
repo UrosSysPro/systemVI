@@ -1,6 +1,6 @@
 package com.systemvi.voxel.world.generators
 
-import com.systemvi.voxel.world.world2.Block
+import com.systemvi.voxel.world.world.Block
 import org.joml.Vector3i
 
 trait WorldGenerator {

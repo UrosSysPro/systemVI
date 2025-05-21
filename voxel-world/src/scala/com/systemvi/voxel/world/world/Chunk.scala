@@ -1,4 +1,4 @@
-package com.systemvi.voxel.world.world2
+package com.systemvi.voxel.world.world
 
 import com.systemvi.voxel.world.generators.WorldGenerator
 import org.joml.Vector3i

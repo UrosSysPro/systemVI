@@ -13,7 +13,7 @@ import com.systemvi.voxel.world.buffer.GBuffer
 import com.systemvi.voxel.world.debug.*
 import com.systemvi.voxel.world.generators.{PerlinWorldGenerator, WorldGenerator}
 import com.systemvi.voxel.world.renderer.*
-import com.systemvi.voxel.world.world2.{Block, Chunk, World, WorldCache}
+import com.systemvi.voxel.world.world.{Block, Chunk, World, WorldCache}
 import org.joml.{Vector2f, Vector3f, Vector3i, Vector4f}
 import org.lwjgl.glfw.GLFW
 
