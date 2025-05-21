@@ -1,7 +1,7 @@
 #include"Arduino.h"
 #include "Keyboard.h"
 #include "Wire.h"
-#define __DEBUG__
+// #define __DEBUG__
 
 #define COLUMNS_NUMBER 7
 #define ROWS_NUMBER 6
@@ -9,6 +9,17 @@
 // int columns[]={3,2,0,4,5,11,14};
 int columns[]={0,1,2,3,6,7,8};
 int rows[]={9,10,11,12,15,14};
+
+class LayerKey{
+  public:
+  int x,y;
+  LayerKey(int x,int y){
+    this->x=x;
+    this->y=y;
+  }
+};
+
+LayerKey layerKeys[]={LayerKey(3,5),LayerKey(4,5)};
 
 struct Key{
   char value[3];
@@ -54,10 +65,85 @@ void setup() {
     for(int j=0;j<ROWS_NUMBER;j++){
       keys[i][j].pressed=false;
       keys[i][j].justChanged=false;
+      keys[i][j].currentlyDown='\0';
+      keys[i][j].value[0]='\0';
+      keys[i][j].value[1]='\0';
+      keys[i][j].value[2]='\0';
+
       keysRight[i][j].pressed=false;
       keysRight[i][j].justChanged=false;
+      keysRight[i][j].currentlyDown='\0';
+      keysRight[i][j].value[0]='\0';
+      keysRight[i][j].value[1]='\0';
+      keysRight[i][j].value[2]='\0';
     }
   }
+
+  //left side
+  //row 0
+  keys[6][0].value[0]=KEY_ESC;
+  keys[5][0].value[0]='1';
+  keys[4][0].value[0]='2';
+  keys[3][0].value[0]='3';
+  keys[2][0].value[0]='4';
+  keys[1][0].value[0]='5';
+  keys[0][0].value[0]='6';
+  //row 1
+  keys[5][1].value[0]='q';
+  keys[4][1].value[0]='w';
+  keys[3][1].value[0]='e';
+  keys[2][1].value[0]='r';
+  keys[1][1].value[0]='t';
+  //row 2
+  keys[5][2].value[0]='a';
+  keys[4][2].value[0]='s';
+  keys[3][2].value[0]='d';
+  keys[2][2].value[0]='f';
+  keys[1][2].value[0]='g';
+  //row 3
+  keys[5][3].value[0]='z';
+  keys[4][3].value[0]='x';
+  keys[3][3].value[0]='c';
+  keys[2][3].value[0]='v';
+  keys[1][3].value[0]='b';
+
+  //thumb
+  keys[0][4].value[0]=' ';
+  keys[3][5].value[0]=KEY_LEFT_CTRL;
+  keys[3][5].value[0]=KEY_LEFT_GUI;
+  keys[0][3].value[0]=KEY_LEFT_SHIFT;
+
+  //right side
+  //row 0
+  keysRight[0][0].value[0]='7';
+  keysRight[1][0].value[0]='8';
+  keysRight[2][0].value[0]='9';
+  keysRight[3][0].value[0]='0';
+  keysRight[4][0].value[0]='-';
+  keysRight[5][0].value[0]='=';
+  keysRight[6][0].value[0]=KEY_BACKSPACE;
+  //row 1 
+  keysRight[1][1].value[0]='y';
+  keysRight[2][1].value[0]='u';
+  keysRight[3][1].value[0]='i';
+  keysRight[4][1].value[0]='o';
+  keysRight[5][1].value[0]='p';
+  //row 2 
+  keysRight[1][2].value[0]='h';
+  keysRight[2][2].value[0]='j';
+  keysRight[3][2].value[0]='k';
+  keysRight[4][2].value[0]='l';
+  keysRight[5][2].value[0]=';';
+  //row 3 
+  keysRight[1][3].value[0]='n';
+  keysRight[2][3].value[0]='m';
+  keysRight[3][3].value[0]=',';
+  keysRight[4][3].value[0]='.';
+  keysRight[5][3].value[0]='/';
+
+  keys[2][4].value[0]=KEY_BACKSPACE;
+
+
   #ifdef __DEBUG__
     Serial.begin(9600);
     Wire.setSDA(4);
@@ -88,7 +174,7 @@ void loop() {
   }
 
   // Key* key;
-  // int layer = 0;
+  int layer = 0;
   // key=&keysRight[0][1];
   // if(key->pressed){
   //   key->justChanged=false;
@@ -108,14 +194,20 @@ void loop() {
           #ifdef __DEBUG__
             Serial.printf("press   col: %2d row: %2d pins: %2d %2d\n",i,j,columns[i],rows[j]);
           #else
-            keys[i][j].currentlyDown=keys[i][j].value[layer];
-            Keyboard.press(keys[i][j].value[layer]);
+            for(int k=layer;k>=0;k--){
+              char c=keys[i][j].value[k];
+              if(c){
+                keys[i][j].currentlyDown=c;
+                Keyboard.press(c);
+                break;
+              }
+            }
           #endif
         }else{
           #ifdef __DEBUG__
             Serial.printf("release col: %2d row: %2d pins: %2d %2d\n",i,j,columns[i],rows[j]);
           #else
-            Keyboard.release(keys[i][j].currentlyDown);
+            if(keys[i][j].currentlyDown)Keyboard.release(keys[i][j].currentlyDown);
           #endif
         }
       }
@@ -130,14 +222,20 @@ void loop() {
           #ifdef __DEBUG__
             Serial.printf("press   col: %2d row: %2d pins: %2d %2d\n",i,j,columns[i],rows[j]);
           #else
-            keysRight[i][j].currentlyDown=keysRight[i][j].value[layer];
-            Keyboard.press(keysRight[i][j].value[layer]);
+            for(int k=layer;k>=0;k--){
+              char c=keysRight[i][j].value[k];
+              if(c){
+                keysRight[i][j].currentlyDown=c;
+                Keyboard.press(c);
+                break;
+              }
+            }
           #endif
         }else{
           #ifdef __DEBUG__
             Serial.printf("release col: %2d row: %2d pins: %2d %2d\n",i,j,columns[i],rows[j]);
           #else
-            Keyboard.release(keysRight[i][j].currentlyDown);
+            if(keysRight[i][j].currentlyDown)Keyboard.release(keysRight[i][j].currentlyDown);
           #endif
         }
       }
