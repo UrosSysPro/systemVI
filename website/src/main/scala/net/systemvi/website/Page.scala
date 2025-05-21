@@ -7,18 +7,11 @@ import net.systemvi.website.section.{Section, SectionItem}
 import net.systemvi.website.slider.ImageSlider
 
 def Page():Element = {
-
-  val expanded=Var(false)
-  dom.console.log("register scroll event")
-  dom.window.addEventListener("scroll",(event)=>{
-    val pageScroll=dom.window.scrollY.toInt
-    expanded.writer.onNext(pageScroll>100)
-  })
   div(
     cls:="flex flex-col items-center pt-24",
     div(
       className:="flex flex-col justify-start w-full max-w-[1450px]",
-      Navbar(expanded),
+      Navbar(),
       ImageSlider(
         images = List(
           "images/keyboards-all.jpg",
