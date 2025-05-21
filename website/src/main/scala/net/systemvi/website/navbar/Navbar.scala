@@ -2,8 +2,6 @@ package net.systemvi.website.navbar
 
 import com.raquo.laminar.api.L.{*, given}
 import com.raquo.laminar.api.textToTextNode
-import com.raquo.laminar.receivers.FocusReceiver.<--
-import net.systemvi.website.style.Theme
 import org.scalajs.dom
 
 def NavbarItem(text:String):Element = span(
@@ -13,6 +11,22 @@ def NavbarItem(text:String):Element = span(
 
 extension(signal:Signal[Boolean]){
   def inverse:Signal[Boolean]=signal.map(!_)
+}
+
+def NavbarMenu():List[Element]={
+  val expanded=Var(false)
+  List(
+    button("Menu",onClick --> {_=> expanded.update(!_)} ),
+    div(
+      position:="fixed",
+      top:="0",
+      right:="0",
+      display<--expanded.signal.map{if _ then "flex" else "none"},
+      span("Keyboards"),
+      span("Games"),
+      span("Engine")
+    )
+  )
 }
 
 def Navbar():Element = {
@@ -32,19 +46,16 @@ def Navbar():Element = {
       transition:="300ms",
       NavbarItem("Logo"),
 
-      child <-- showMenu.inverse.map{if _ then div(
-        className:="flex gap-4",
-        NavbarItem("Keyboards"),
-        NavbarItem("Games"),
-        NavbarItem("Engine")
-      ) else emptyNode},
-
-      child <-- showMenu.map{if _ then div(
-        className:="flex gap-4",
-        NavbarItem("Keyboards"),
-        NavbarItem("Games"),
-        NavbarItem("Engine")
-      ) else emptyNode},
+      children <-- showMenu.map{if _ then
+        NavbarMenu()
+      else
+        List(div(
+          className:="flex gap-4",
+          NavbarItem("Keyboards"),
+          NavbarItem("Games"),
+          NavbarItem("Engine")
+        ))
+      },
     )
   )
 }
