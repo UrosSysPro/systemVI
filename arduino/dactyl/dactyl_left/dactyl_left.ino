@@ -108,18 +108,24 @@ void setup() {
   keys[3][2].value[0]='d';
   keys[2][2].value[0]='f';
   keys[1][2].value[0]='g';
+  keys[0][2].value[0]='`';
   //row 3
   keys[5][3].value[0]='z';
   keys[4][3].value[0]='x';
   keys[3][3].value[0]='c';
   keys[2][3].value[0]='v';
   keys[1][3].value[0]='b';
+  //row 4
+  keys[5][4].value[0]='\'';
+  keys[4][4].value[0]='-';
+  keys[3][4].value[0]='=';
 
   //thumb
   keys[0][4].value[0]=' ';
   keys[3][5].value[0]=KEY_LEFT_CTRL;
   keys[6][5].value[0]=KEY_LEFT_GUI;
   keys[0][3].value[0]=KEY_LEFT_SHIFT;
+  keys[1][5].value[0]=KEY_LEFT_SHIFT;
 
   //right side
   //row 0
@@ -144,6 +150,7 @@ void setup() {
   keysRight[5][1].value[0]='p';
   keysRight[6][1].value[0]='\\';
   //row 2 
+  keysRight[0][2].value[0]=KEY_DELETE;
   keysRight[1][2].value[0]='h';
   keysRight[1][2].value[1]=KEY_LEFT_ARROW;
   keysRight[2][2].value[0]='j';
@@ -160,7 +167,12 @@ void setup() {
   keysRight[3][3].value[0]=',';
   keysRight[4][3].value[0]='.';
   keysRight[5][3].value[0]='/';
+  //row 4 
+  keysRight[3][4].value[0]='[';
+  keysRight[4][4].value[0]=']';
+  keysRight[5][4].value[0]='\\';
 
+  //thumb
   keysRight[2][4].value[0]=KEY_BACKSPACE;
   keysRight[1][5].value[0]=KEY_RIGHT_SHIFT;
 
