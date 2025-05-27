@@ -3,9 +3,17 @@ package net.systemvi.website.navbar
 import com.raquo.laminar.api.L.{*, given}
 import org.scalajs.dom
 
+case class NavbarEntry(text:String,url:String)
+
 def Navbar():Element = {
   val expanded = windowEvents(_.onScroll).map { _ => dom.window.scrollY.toInt > 100 }.startWith(false)
   val showMenu = windowEvents(_.onResize).map { _ => dom.window.innerWidth < 1000 }.startWith(dom.window.innerWidth < 1000)
+
+  val navItems=List(
+    NavbarEntry("Keyboards","keyboards"),
+    NavbarEntry("Games","games"),
+    NavbarEntry("Engine","engine")
+  )
 
   div(
     className:="w-full  fixed left-1/2 top-0 -translate-x-1/2 flex flex-col items-center",
@@ -18,16 +26,14 @@ def Navbar():Element = {
 
       className:="w-full h-full flex justify-between items-center px-6 text-[#626569] text-xl ",
       transition:="300ms",
-      NavbarItem("Logo"),
+      NavbarItem(NavbarEntry("Logo","/")),
 
       children <-- showMenu.map{if _ then
-        NavbarMenu()
+        NavbarMenu(navItems)
       else
         List(div(
           className:="flex gap-4",
-          NavbarItem("Keyboards"),
-          NavbarItem("Games"),
-          NavbarItem("Engine")
+          navItems.map{item=>NavbarItem(item)}
         ))
       },
     )
