@@ -3,6 +3,7 @@ package net.systemvi.website
 import scala.scalajs.js
 import scala.scalajs.js.annotation.*
 import com.raquo.laminar.api.L.{*, given}
+import net.systemvi.website.pages.HomePageView
 import org.scalajs.dom
 
 @main
@@ -14,5 +15,5 @@ def LiveChart(): Unit = {
 }
 
 object Main {
-  def appElement(): Element = Page()
+  def appElement(): Element = HomePageView()
 }

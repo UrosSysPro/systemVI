@@ -1,12 +1,13 @@
-package net.systemvi.website
-import org.scalajs.dom
+package net.systemvi.website.pages
+
 import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.website.footer.Footer
 import net.systemvi.website.navbar.Navbar
 import net.systemvi.website.section.{Section, SectionItem}
 import net.systemvi.website.slider.ImageSlider
+import org.scalajs.dom
 
-def Page():Element = {
+def HomePageView():Element = {
   div(
     cls:="flex flex-col items-center pt-24",
     div(

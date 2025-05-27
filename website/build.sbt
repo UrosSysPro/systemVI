@@ -25,6 +25,7 @@ lazy val website = project.in(file("."))
      * It provides static types for the browser DOM APIs.
      */
     libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "2.8.0",
-    libraryDependencies += "com.raquo" %%% "laminar" % "17.0.0"  // Requires Scala.js 1.13.2+
+    libraryDependencies += "com.raquo" %%% "laminar" % "17.0.0",  // Requires Scala.js 1.13.2+
+    libraryDependencies +="com.raquo" %%% "waypoint" % "10.0.0-M1",   // Depends on Laminar 17.2.0 & URL DSL 0.6.2
   )
 
