@@ -17,7 +17,6 @@ def renderPage(page: Page): Element = {
 }
 
 val app: Div = div(
-  h1("Routing App"),
   child <-- router.currentPageSignal.map(renderPage)
 )
 
