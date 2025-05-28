@@ -6,14 +6,25 @@ import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.website.pages.HomePageView
 import org.scalajs.dom
 
-@main
-def LiveChart(): Unit = {
-  renderOnDomContentLoaded(
-    dom.document.getElementById("app"),
-    Main.appElement()
-  )
+
+def renderPage(page: Page): Element = {
+  page match {
+    case HomePage => HomePageView()
+    case KeyboardsPage => div("keyboards page")
+    case GamesPage => div("games page")
+    case EnginePage => div("engine page")
+  }
 }
 
-object Main {
-  def appElement(): Element = HomePageView()
+val app: Div = div(
+  h1("Routing App"),
+  child <-- router.currentPageSignal.map(renderPage)
+)
+
+@main
+def main(): Unit = {
+  renderOnDomContentLoaded(
+    dom.document.getElementById("app"),
+    app
+  )
 }
