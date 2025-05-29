@@ -2,6 +2,7 @@ package net.systemvi.website.navbar
 
 import com.raquo.laminar.api.L.{*, given}
 import com.raquo.laminar.nodes.ReactiveElement
+import net.systemvi.website.router
 
 extension(signal:Signal[Boolean]){
   def inverse:Signal[Boolean]=signal.map(!_)
@@ -39,7 +40,7 @@ def NavbarMenu(entries:List[NavbarEntry]):List[Element]={
         paddingRight.rem:=1,
         entries.map:
           item=>a(
-            href:=item.url,
+            router.navigateTo(item.page),
             paddingTop.rem:=1,
             paddingBottom.rem:=1,
             paddingLeft.rem:=1,

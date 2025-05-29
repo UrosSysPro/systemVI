@@ -1,4 +1,4 @@
-package net.systemvi.website.pages
+package net.systemvi.website.views
 
 import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.website.footer.Footer

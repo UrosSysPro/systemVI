@@ -1,9 +1,10 @@
 package net.systemvi.website.navbar
 
 import com.raquo.laminar.api.L.{*, given}
+import net.systemvi.website.router
 
 def NavbarItem(entry:NavbarEntry):Element = a(
-  href:=entry.url,
+  router.navigateTo(entry.page),
   entry.text,
   className := "hover:text-black transition cursor-pointer"
 )
