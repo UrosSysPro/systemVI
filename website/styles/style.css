@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 @font-face {
     font-family: 'Inter';
-    src: url('fonts/inter.ttf');
+    src: url('../public/fonts/inter.ttf');
 }
 *{
     font-family: 'Inter', serif;

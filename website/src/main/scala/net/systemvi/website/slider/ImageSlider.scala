@@ -29,7 +29,8 @@ private def ArrowButton(side:Side,onClick:EventListener[MouseEvent,MouseEvent]):
     cursor.pointer,
   )
 }
-private def Indicator(count:Int,selected:Signal[Int]):Element={
+
+private def Indicator(count:Int,selected:Var[Int]):Element={
   div(
     position.absolute,
     bottom.rem:=3,
@@ -39,11 +40,13 @@ private def Indicator(count:Int,selected:Signal[Int]):Element={
     gap.rem:=2,
     for(i<-0 until count)yield{
       div(
+        cursor.pointer,
         width.rem:=1,
         height.rem:=1,
         borderRadius.rem:=1,
         transition:="300ms",
-        backgroundColor<--selected.map{selected => if selected != i then "rgb(220,220,220)" else "rgb(51,51,51)"}
+        onClick.map(_=>i)-->selected,
+        backgroundColor<--selected.signal.map{selected => if selected != i then "rgb(220,220,220)" else "rgb(51,51,51)"}
       )
     }
   )
@@ -59,8 +62,6 @@ def ImageSlider(images:List[String]=List()):Element = {
       Theme.common.roundedXL,
       width.percent:=100,
       height.px:=500,
-//      overflowX.auto,
-//      hiddenScrollbar,
       overflow.hidden,
       div(
         transition:="300ms",
@@ -91,7 +92,7 @@ def ImageSlider(images:List[String]=List()):Element = {
       ArrowButton(Side.Right,onClick-->{_=>
         currentlySelected.update(s=>Math.min(s+1,images.length-1))
       }),
-      Indicator(images.length,currentlySelected.signal)
+      Indicator(images.length,currentlySelected)
     )
   )
 }
