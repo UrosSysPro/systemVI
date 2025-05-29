@@ -24,11 +24,12 @@ lazy val website = project.in(file("."))
 
     libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "2.8.0", //for dom types
     libraryDependencies += "com.raquo" %%% "laminar" % "17.0.0",  // Requires Scala.js 1.13.2+
-    libraryDependencies +="com.raquo" %%% "waypoint" % "10.0.0-M1",   // Depends on Laminar 17.2.0 & URL DSL 0.6.2
+    libraryDependencies += "org.typelevel" %%% "cats-core" % "2.13.0",
+    libraryDependencies += "com.raquo" %%% "waypoint" % "10.0.0-M1",   // Depends on Laminar 17.2.0 & URL DSL 0.6.2
     libraryDependencies ++= Seq(
-      "io.circe" %% "circe-core",
-      "io.circe" %% "circe-generic",
-      "io.circe" %% "circe-parser"
+      "io.circe" %%% "circe-core",
+      "io.circe" %%% "circe-generic",
+      "io.circe" %%% "circe-parser"
     ).map(_ % circeVersion), //json parser
   )
 

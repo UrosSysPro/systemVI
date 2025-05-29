@@ -1,11 +1,13 @@
 package net.systemvi.website
 
 import com.raquo.waypoint._
-//import org.scalajs.dom
-//import io.circe.{*,given}
-//import io.circe.generic.auto.{*,given}
-//import io.circe.parser.{*,given}
-//import io.circe.syntax.{*,given}
+import cats.*
+import cats.implicits.*
+import org.scalajs.dom
+import io.circe.*
+import io.circe.generic.auto.*
+import io.circe.parser.*
+import io.circe.syntax.*
 
 sealed abstract class Page(val title: String)
 case object HomePage extends Page("Home")
@@ -14,7 +16,6 @@ case object GamesPage extends Page("Games")
 case object EnginePage extends Page("Engine")
 
 case class KeyboardPage(keyboardId:Int)extends Page("Keyboard")
-
 
 val homeRoute = Route.static(HomePage, root / endOfSegments)
 val keyboardsRoute = Route.static(KeyboardsPage, root / "keyboards" / endOfSegments)
@@ -29,13 +30,18 @@ val keyboardRoute=Route(
 
 object router extends Router[Page](
   routes = List(homeRoute,keyboardsRoute,gamesRoute,engineRoute,keyboardRoute),
-  getPageTitle = page => page.title, // (document title, displayed in the browser history, and in the tab next to favicon)
-  //serializePage = (page:Page)=>page.toJson, // serialize page data for storage in History API log
-  serializePage = (page:Page)=>page.title, // serialize page data for storage in History API log
-  deserializePage = pageData=>pageData.toLowerCase match {
+  getPageTitle = page => page.title,
+  serializePage = (page:Page)=>page.asJson.noSpaces,
+  deserializePage = pageData=> (for{
+    json<-parse(pageData)
+    cursor=json.hcursor
+    title<-cursor.get[String]("title")
+  }yield title match{
     case "home" => HomePage
     case "keyboards" => KeyboardsPage
     case "games" => GamesPage
     case "engine" => EnginePage
-  }// deserialize the above
+    case "keyboard"=> json.as[KeyboardPage].getOrElse(HomePage)
+  }).getOrElse(HomePage)
+
 )

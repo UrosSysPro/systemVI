@@ -8,11 +8,13 @@ import org.scalajs.dom
 
 
 def renderPage(page: Page): Element = {
+
   page match {
     case HomePage => HomePageView()
     case KeyboardsPage => KeyboardsPageView()
     case GamesPage => GamesPageView()
     case EnginePage => EnginePageView()
+    case page:KeyboardPage=> KeyboardPageView(page)
   }
 }
 
