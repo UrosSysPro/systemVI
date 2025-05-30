@@ -1,6 +1,6 @@
 package net.systemvi.website.api
 
-import net.systemvi.website.model.{Keyboard, KeyboardSpec}
+import net.systemvi.website.model.*
 
 private val keyboards=List[Keyboard](
   Keyboard(
@@ -144,4 +144,23 @@ private val defaultKeyboard=Keyboard(
 object KeyboardApi {
   def all():List[Keyboard]=keyboards
   def get(id:Int):Keyboard=keyboards.find(_.id==id).getOrElse(defaultKeyboard)
+}
+
+private val games=List[Game](
+  Game(1,"Atari Break Out","break_out",List("/images/games/breakout.png")),
+  Game(2,"Snake","snake",List("/images/games/snake.png")),
+  Game(3,"Voxels","voxels",List(
+    "/images/games/voxels1.png",
+    "/images/games/voxels2.png",
+    "/images/games/voxels3.png",
+    "/images/games/voxels4.png",
+  )),
+  Game(4,"Flappy Bird","flappy_bird",List("/images/games/flappy-bird.png")),
+)
+
+private val defaultGame=Game(-1,"Default Game","default_code_name",List("aaa"))
+
+object GameApi {
+  def all():List[Game]=games
+  def get(id:Int):Game=defaultGame
 }
