@@ -1,14 +1,12 @@
-package net.systemvi.website.product_info
+package net.systemvi.website.keyboard_info
 
 import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.website.style.Theme
 import org.scalajs.dom
 import net.systemvi.website.CSSProps.*
+import net.systemvi.website.model.*
 
-case class Spec(name:String,value:String)
-case class Product(name:String,codeName:String,specs:List[Spec],images:List[String])
-
-def ProductInfo(product:Product):Element = div(
+def KeyboardInfo(product:Keyboard):Element = div(
   height.rem:=40,
   display.flex,
   gap.rem:=2,
