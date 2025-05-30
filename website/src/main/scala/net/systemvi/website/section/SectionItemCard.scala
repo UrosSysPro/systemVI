@@ -7,7 +7,7 @@ import net.systemvi.website.{KeyboardsPage, router}
 def SectionItemCard(item:SectionItem):Element={
   val hover=Var(false)
   a(
-    router.navigateTo(KeyboardsPage),
+    router.navigateTo(item.page),
     className:="flex flex-col gap-3",
     onMouseEnter-->{_=>hover.set(true)},
     onMouseLeave-->{_=>hover.set(false)},

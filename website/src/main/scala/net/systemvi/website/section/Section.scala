@@ -1,8 +1,9 @@
 package net.systemvi.website.section
 
 import com.raquo.laminar.api.L.{*, given}
+import net.systemvi.website.Page
 
-case class SectionItem(name:String,image:String)
+case class SectionItem(name:String,image:String,page:Page)
 
 def Section(title:String, items:List[SectionItem]):Element=div(
   className:="w-full flex flex-col items-start justify-start px-4 py-3",
