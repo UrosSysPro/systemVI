@@ -37,13 +37,13 @@ private def Indicator(count:Int,selected:Var[Int]):Element={
     left.percent:=50,
     transform:="translateX(-50%)",
     display.flex,
-    gap.rem:=2,
+    gap:="0.75rem",
     for(i<-0 until count)yield{
       div(
         cursor.pointer,
-        width.rem:=1,
-        height.rem:=1,
-        borderRadius.rem:=1,
+        width:="0.5rem",
+        height:="0.5rem",
+        borderRadius.percent:=50,
         transition:="300ms",
         onClick.map(_=>i)-->selected,
         backgroundColor<--selected.signal.map{selected => if selected != i then "rgb(220,220,220)" else "rgb(51,51,51)"}

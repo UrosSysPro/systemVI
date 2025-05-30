@@ -11,7 +11,14 @@ extension(signal:Signal[Boolean]){
 def NavbarMenu(entries:List[NavbarEntry]):List[Element]={
   val menuOpened=Var(false)
   List(
-    button("Menu",onClick --> {_=> menuOpened.update(!_)} ),
+    button(
+      "Menu",
+      onClick --> {_=> menuOpened.update(!_)},
+      cursor.pointer,
+      transition:="300ms",
+      cls:="hover:text-black",
+    ),
+
     div(
       position.fixed, top.px:=0, height.vh:=100, left.px:=0, right.px:=0,
       backgroundColor.rgba(51,51,51,0.2),
