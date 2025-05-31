@@ -3,6 +3,7 @@ package net.systemvi.website.section
 import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.website.style.Theme
 import net.systemvi.website.{KeyboardsPage, router}
+import net.systemvi.website.CSSProps.*
 
 def SectionItemCard(item:SectionItem):Element={
   val hover=Var(false)
@@ -16,9 +17,13 @@ def SectionItemCard(item:SectionItem):Element={
       Theme.common.roundedXL,
       Theme.common.overflowHidden,
       position.relative,
+      aspect:="4/3",
       img(
         src:=item.image,
-        alt:=item.image
+        alt:=item.image,
+        objectFit:="cover",
+        width.percent:=100,
+        height.percent:=100,
       ),
       div(
         transition:="300ms",
