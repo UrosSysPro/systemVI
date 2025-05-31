@@ -9,5 +9,6 @@ object CSSProps {
   val hiddenScrollbar: CompositeKeySetter[HtmlAttr[String], Base] =cls:="hiddenScrollbar"
   val backdropFilter: StyleProp[String] =styleProp[String]("backdrop-filter")
   val aspect: StyleProp[String] =styleProp[String]("aspect-ratio")
-
+  val gridTemplateAreas:StyleProp[String]=styleProp[String]("grid-template-areas")
+  val gridArea:StyleProp[String]=styleProp[String]("grid-area")
 }

@@ -9,7 +9,7 @@ def SectionTitle(text:String,viewAllPage:Page=null):Element=div(
   justifyContent.spaceBetween,
   width.percent:=100,
   span(
-    className:="text-2xl font-bold pl-3",
+    className:="text-2xl font-bold",
     text
   ),
   if viewAllPage!=null then a(
