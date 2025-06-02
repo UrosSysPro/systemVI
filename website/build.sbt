@@ -33,3 +33,11 @@ lazy val website = project.in(file("client"))
     ).map(_ % circeVersion), //json parser
   )
 
+lazy val server=project.in(file("server"))
+  .settings(
+    scalaVersion:="3.3.3",
+  ).settings(
+//    Compile / mainClass := Some("net.systemvi.server.Main"),
+//     / mainClass := Some("net.systemvi.server.Main"),
+//    Compile / jar := "app.jar",
+  )

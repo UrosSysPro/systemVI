@@ -32,3 +32,4 @@ project/project/**
 *.sw?
 client/target/
 client/node_modules/
+server/target/
