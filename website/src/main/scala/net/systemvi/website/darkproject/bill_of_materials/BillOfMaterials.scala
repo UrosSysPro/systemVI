@@ -1,4 +1,4 @@
-package net.systemvi.website.bill_of_materials
+package net.systemvi.website.darkproject.bill_of_materials
 
 import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.website.CSSProps.*

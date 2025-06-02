@@ -3,11 +3,11 @@ package net.systemvi.website.views
 import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.website.HomePage
 import net.systemvi.website.api.EngineApi
-import net.systemvi.website.footer.Footer
-import net.systemvi.website.navbar.Navbar
-import net.systemvi.website.section.{Section, SectionItem}
-import net.systemvi.website.slider.ImageSlider
-import net.systemvi.website.big_title.BigTitle
+import net.systemvi.website.darkproject.big_title.BigTitle
+import net.systemvi.website.darkproject.footer.Footer
+import net.systemvi.website.darkproject.navbar.Navbar
+import net.systemvi.website.darkproject.section.{Section, SectionItem}
+import net.systemvi.website.darkproject.slider.ImageSlider
 import net.systemvi.website.model.*
 import org.scalajs.dom
 

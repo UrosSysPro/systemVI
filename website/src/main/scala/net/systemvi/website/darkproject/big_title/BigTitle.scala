@@ -1,4 +1,4 @@
-package net.systemvi.website.big_title
+package net.systemvi.website.darkproject.big_title
 
 import com.raquo.laminar.api.L.{*, given}
 import org.scalajs.dom

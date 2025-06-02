@@ -1,4 +1,4 @@
-package net.systemvi.website.section
+package net.systemvi.website.darkproject.section
 
 import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.website.Page

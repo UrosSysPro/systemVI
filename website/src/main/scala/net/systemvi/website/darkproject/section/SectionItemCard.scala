@@ -1,9 +1,9 @@
-package net.systemvi.website.section
+package net.systemvi.website.darkproject.section
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.website.style.Theme
 import net.systemvi.website.{KeyboardsPage, router}
 import net.systemvi.website.CSSProps.*
+import net.systemvi.website.darkproject.Theme
 
 def SectionItemCard(item:SectionItem):Element={
   val hover=Var(false)
@@ -37,7 +37,7 @@ def SectionItemCard(item:SectionItem):Element={
       )
     ),
     div(
-      className:="font-bold pl-3 text-xl",
+      className:="pl-3 text-xl",
       item.name
     ),
   )

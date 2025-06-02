@@ -1,9 +1,9 @@
-package net.systemvi.website.slider
+package net.systemvi.website.darkproject.slider
 
 import com.raquo.laminar.api.L.{*, given}
 import com.raquo.laminar.modifiers.EventListener
-import net.systemvi.website.style.Theme
 import net.systemvi.website.CSSProps.*
+import net.systemvi.website.darkproject.Theme
 import org.scalajs.dom.MouseEvent
 
 private enum Side {
@@ -27,6 +27,16 @@ private def ArrowButton(side:Side,onClick:EventListener[MouseEvent,MouseEvent]):
     backgroundColor.rgba(220,220,220,0.5),
     borderRadius.rem:=1,
     cursor.pointer,
+    fontSize.rem:=2,
+    color.gray,
+   span(
+      transform:="translateY(-0.125rem)",
+      display.block,
+      side match {
+        case Side.Right=> "->"
+        case Side.Left => "<-"
+      }
+    )
   )
 }
 

@@ -1,11 +1,11 @@
-package net.systemvi.website.keyboard_info
+package net.systemvi.website.darkproject.keyboard_info
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.website.style.Theme
 import org.scalajs.dom
 import net.systemvi.website.CSSProps.*
+import net.systemvi.website.darkproject.Theme
+import net.systemvi.website.darkproject.expandable_specs.UnderlinedRow
 import net.systemvi.website.model.*
-import net.systemvi.website.expandable_specs.UnderlinedRow
 
 private def KeyboardInfoLeft(keyboard:Keyboard):HtmlElement={
   div(

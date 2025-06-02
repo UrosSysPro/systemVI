@@ -1,4 +1,4 @@
-package net.systemvi.website.bento_box
+package net.systemvi.website.darkproject.bento_box
 
 import com.raquo.laminar.api.L.{*, given}
 import com.raquo.laminar.nodes.{ReactiveElement, ReactiveHtmlElement}

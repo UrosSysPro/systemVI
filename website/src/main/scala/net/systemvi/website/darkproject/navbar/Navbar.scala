@@ -1,4 +1,4 @@
-package net.systemvi.website.navbar
+package net.systemvi.website.darkproject.navbar
 
 import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.website.{EnginePage, GamesPage, HomePage, KeyboardsPage, Page}
