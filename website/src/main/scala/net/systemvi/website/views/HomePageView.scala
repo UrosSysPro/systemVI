@@ -5,7 +5,7 @@ import net.systemvi.website.api.{EngineApi, GameApi, KeyboardApi}
 import net.systemvi.website.{EnginePage, GamesPage, HomePage, KeyboardPage, KeyboardsPage}
 import net.systemvi.website.footer.Footer
 import net.systemvi.website.navbar.Navbar
-import net.systemvi.website.section.{Section, SectionItem}
+import net.systemvi.website.section.*
 import net.systemvi.website.slider.ImageSlider
 import org.scalajs.dom
 
@@ -39,7 +39,7 @@ def HomePageView():Element = {
         engine.demos.take(4).map(e=>SectionItem(e.name,e.images.head,HomePage)),
         EnginePage
       ),
-      //  AboutSection(),
+      AboutSection(),
       Footer(),
     )
   )

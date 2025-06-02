@@ -4,12 +4,13 @@ import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.website.Page
 import net.systemvi.website.router
 
-def SectionTitle(text:String,viewAllPage:Page=null):Element=div(
+def SectionTitle(text:String,viewAllPage:Page=null):HtmlElement=div(
   display.flex,
   justifyContent.spaceBetween,
   width.percent:=100,
   span(
-    className:="text-2xl font-bold",
+    fontWeight.bold,
+    fontSize:="2rem",
     text
   ),
   if viewAllPage!=null then a(
