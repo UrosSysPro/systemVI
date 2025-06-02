@@ -2,7 +2,7 @@ import org.scalajs.linker.interface.ModuleSplitStyle
 
 val circeVersion = "0.14.13"
 
-lazy val website = project.in(file("."))
+lazy val website = project.in(file("client"))
   .enablePlugins(ScalaJSPlugin) // Enable the Scala.js plugin in this project
   .settings(
     scalaVersion := "3.3.3",

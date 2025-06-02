@@ -1,9 +1,9 @@
 package net.systemvi.website.darkproject.section
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.website.{KeyboardsPage, router}
 import net.systemvi.website.CSSProps.*
 import net.systemvi.website.darkproject.Theme
+import net.systemvi.website.{KeyboardsPage, router}
 
 def SectionItemCard(item:SectionItem):Element={
   val hover=Var(false)

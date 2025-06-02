@@ -4,9 +4,6 @@ import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.website.KeyboardPage
 import net.systemvi.website.api.KeyboardApi
 import net.systemvi.website.darkproject.bento_box.*
-import org.scalajs.dom
-import net.systemvi.website.model.*
-import net.systemvi.website.darkproject.bento_box.{BentoBox, BentoBoxItem, BentoBoxRect, BentoBoxSize}
 import net.systemvi.website.darkproject.big_title.BigTitle
 import net.systemvi.website.darkproject.bill_of_materials.BillOfMaterials
 import net.systemvi.website.darkproject.expandable_specs.ExpandableSpecs
@@ -15,6 +12,8 @@ import net.systemvi.website.darkproject.keyboard_info.KeyboardInfo
 import net.systemvi.website.darkproject.navbar.Navbar
 import net.systemvi.website.darkproject.section.{Section, SectionItem}
 import net.systemvi.website.darkproject.slider.ImageSlider
+import net.systemvi.website.model.*
+import org.scalajs.dom
 
 sealed trait ScreenSize(val width:Int)
 object Small extends ScreenSize(500)

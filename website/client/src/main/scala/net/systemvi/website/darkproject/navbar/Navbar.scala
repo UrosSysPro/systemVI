@@ -1,7 +1,7 @@
 package net.systemvi.website.darkproject.navbar
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.website.{EnginePage, GamesPage, HomePage, KeyboardsPage, Page}
+import net.systemvi.website.*
 import org.scalajs.dom
 
 case class NavbarEntry(text:String,page:Page)

@@ -4,7 +4,10 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [
-      scalaJSPlugin(),
+      scalaJSPlugin({
+          cwd:"..",
+          projectID:"website"
+      }),
       tailwindcss(),
   ],
 });

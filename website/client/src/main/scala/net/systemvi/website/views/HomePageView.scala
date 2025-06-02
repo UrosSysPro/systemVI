@@ -6,7 +6,7 @@ import net.systemvi.website.darkproject.footer.Footer
 import net.systemvi.website.darkproject.navbar.Navbar
 import net.systemvi.website.darkproject.section.{AboutSection, Section, SectionItem}
 import net.systemvi.website.darkproject.slider.ImageSlider
-import net.systemvi.website.{EnginePage, GamesPage, HomePage, KeyboardPage, KeyboardsPage}
+import net.systemvi.website.*
 import org.scalajs.dom
 
 def HomePageView():Element = {

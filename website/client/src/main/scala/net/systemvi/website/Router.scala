@@ -1,13 +1,13 @@
 package net.systemvi.website
 
-import com.raquo.waypoint._
 import cats.*
 import cats.implicits.*
-import org.scalajs.dom
+import com.raquo.waypoint.*
 import io.circe.*
 import io.circe.generic.auto.*
 import io.circe.parser.*
 import io.circe.syntax.*
+import org.scalajs.dom
 
 sealed abstract class Page(val title: String)
 case object HomePage extends Page("Home")

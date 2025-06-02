@@ -30,3 +30,5 @@ project/project/**
 *.njsproj
 *.sln
 *.sw?
+client/target/
+client/node_modules/
