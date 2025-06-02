@@ -12,6 +12,8 @@ import net.systemvi.website.bento_box.{BentoBoxItem, *}
 import org.scalajs.dom
 import net.systemvi.website.model.*
 import net.systemvi.website.big_title.BigTitle
+import net.systemvi.website.expandable_specs.ExpandableSpecs
+import net.systemvi.website.bill_of_materials.BillOfMaterials
 
 def KeyboardPageView(page:KeyboardPage):HtmlElement = {
   val keyboard=KeyboardApi.get(page.keyboardId)
@@ -29,16 +31,27 @@ def KeyboardPageView(page:KeyboardPage):HtmlElement = {
           | vestibulum enim neque, eu placerat nulla molestie in
           | """.stripMargin
       ),
+      //4x3
       BentoBox(
-        BentoBoxSize(3,3),
+        BentoBoxSize(4,3),
         List(
-          BentoBoxItem("area_1",BentoBoxRect(0,0,1,1),div(width.percent:=100,height.percent:=100,backgroundColor.red)),
-          BentoBoxItem("area_2",BentoBoxRect(0,1,2,1),div(width.percent:=100,height.percent:=100,backgroundColor.green)),
-          BentoBoxItem("area_3",BentoBoxRect(0,2,3,1),div(width.percent:=100,height.percent:=100,backgroundColor.blue))
+          BentoBoxItem("area_1",BentoBoxRect(0,0,2,1),div(width.percent:=100,height.percent:=100,backgroundColor.red)),
+          BentoBoxItem("area_2",BentoBoxRect(2,0,1,2),div(width.percent:=100,height.percent:=100,backgroundColor.green)),
+          BentoBoxItem("area_3",BentoBoxRect(3,0,1,1),div(width.percent:=100,height.percent:=100,backgroundColor.blue)),
+          BentoBoxItem("area_4",BentoBoxRect(0,1,1,1),div(width.percent:=100,height.percent:=100,backgroundColor.fuchsia)),
+          BentoBoxItem("area_5",BentoBoxRect(1,1,1,1),div(width.percent:=100,height.percent:=100,backgroundColor.cyan)),
+          BentoBoxItem("area_6",BentoBoxRect(3,1,1,1),div(width.percent:=100,height.percent:=100,backgroundColor.gray)),
+          BentoBoxItem("area_7",BentoBoxRect(0,2,2,1),div(width.percent:=100,height.percent:=100,backgroundColor.rgb(246,246,246))),
+          BentoBoxItem("area_8",BentoBoxRect(2,2,2,1),div(width.percent:=100,height.percent:=100,backgroundColor.rgb(51,51,51))),
         ),
-        width.rem:=10,
-        height.rem:=10,
+        width.percent:=100,
+        height.rem:=50,
+        padding.rem:=1,
       ),
+      BigTitle("Technical Specifications"),
+      ExpandableSpecs(keyboard),
+      BigTitle("Bill Of Materials"),
+      BillOfMaterials(),
       Footer(),
     )
   )
