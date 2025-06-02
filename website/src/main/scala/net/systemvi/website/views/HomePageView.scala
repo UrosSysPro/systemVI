@@ -1,7 +1,8 @@
 package net.systemvi.website.views
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.website.{KeyboardPage, KeyboardsPage}
+import net.systemvi.website.api.{EngineApi, GameApi, KeyboardApi}
+import net.systemvi.website.{EnginePage, GamesPage, HomePage, KeyboardPage, KeyboardsPage}
 import net.systemvi.website.footer.Footer
 import net.systemvi.website.navbar.Navbar
 import net.systemvi.website.section.{Section, SectionItem}
@@ -9,6 +10,9 @@ import net.systemvi.website.slider.ImageSlider
 import org.scalajs.dom
 
 def HomePageView():Element = {
+  val keyboards=KeyboardApi.all()
+  val engine=EngineApi.get()
+  val games=GameApi.all()
   div(
     cls:="flex flex-col items-center pt-24",
     div(
@@ -21,33 +25,19 @@ def HomePageView():Element = {
         )
       ),
       Section(
-        "Builds",
-        List(
-          SectionItem("Corne Wireless","images/corne-wireless.jpg",KeyboardPage(1)),
-          SectionItem("Corne Prototype","images/corne-prototype.jpg",KeyboardPage(2)),
-          SectionItem("PH Design 60%","images/keyboard-60.jpg",KeyboardPage(3)),
-          SectionItem("Bana 40%","images/red-keyboard.jpg",KeyboardPage(4)),
-        ),
+        "Keyboards",
+        keyboards.take(4).map(k=>SectionItem(k.name,k.images.head,KeyboardPage(k.id))),
         KeyboardsPage
       ),
       Section(
-        "In Progress",
-        List(
-          SectionItem("TKL Rabbit","images/tkl-rabbit.jpg",KeyboardPage(5)),
-          SectionItem("7x5 Dactyl","images/dactyl2.jpg",KeyboardPage(6)),
-//        SectionItem("Modded YENKEE","item2.png"),
-        ),
-        KeyboardsPage
+        "Games",
+        games.take(4).map(g=>SectionItem(g.name,g.images.head,HomePage)),
+        GamesPage
       ),
       Section(
-        "Tools",
-        List(
-          SectionItem("Soldering Iron","item1.png",KeyboardPage(1)),
-          SectionItem("Pliers","item1.png",KeyboardPage(1)),
-          SectionItem("Key Switch","item1.png",KeyboardPage(1)),
-          SectionItem("Key Caps","item1.png",KeyboardPage(1)),
-        ),
-        KeyboardsPage
+        "Engine Demo",
+        engine.demos.take(4).map(e=>SectionItem(e.name,e.images.head,HomePage)),
+        EnginePage
       ),
       //  AboutSection(),
       Footer(),
