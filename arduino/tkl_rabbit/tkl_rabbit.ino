@@ -1,5 +1,7 @@
 #include"Arduino.h"
 #include "Keyboard.h"
+// #include<stdio.h>
+#include<string>
 // #define DEBUG
 
 #define COLUMNS_NUMBER 17
@@ -17,6 +19,28 @@ const byte thisAddress = 8;
 const byte otherAddress = 9;
 
 Key keys[COLUMNS_NUMBER][ROWS_NUMBER];
+
+void reportLayout(){
+  String report="";
+  for(int j=0;j<ROWS_NUMBER;j++){
+    for(int i=0;i<COLUMNS_NUMBER;i++){
+      report+=i;
+      report+=" ";
+      report+=j;
+      report+="\n"; 
+    }
+  }
+  Serial.print(report);
+}
+void setKey(){
+  int x=Serial.read()-'0';
+  int y=Serial.read()-'0';
+  char value[4];
+  for(int i=0;i<4;i++)value[i]=Serial.read();
+  Serial.printf("x: %d y: %d l0: %d l1: %d l2: %d l3: %d",x,y,value[0],value[1],value[2],value[3]);
+  keys[x][y].value=value[0];
+  keys[x][y].fn=value[1];
+}
 
 void setup() {
   for(int i=0;i<COLUMNS_NUMBER;i++){
@@ -160,6 +184,7 @@ void setup() {
     Serial.begin(9600);
   #else
     Keyboard.begin();
+    Serial.begin(9600);
   #endif
 }
 
@@ -177,11 +202,16 @@ void loop() {
     digitalWrite(rowPin, 1);
   }
 
+  if(Serial.available()>0){
+    char cmd=Serial.read();
+    if(cmd == 'r')reportLayout();
+    if(cmd=='k')setKey();
+  }
   bool fn=false;
-  // if(keys[3][4].pressed){
-  //   keys[3][4].justChanged=false;
-  //   fn=true;
-  // }
+  if(keys[6][5].pressed){
+    keys[6][5].justChanged=false;
+    fn=true;
+  }
 
   for(int i=0;i<COLUMNS_NUMBER;i++){
     for(int j=0;j<ROWS_NUMBER;j++){
@@ -191,6 +221,7 @@ void loop() {
           #ifdef DEBUG
             Serial.printf("pressed  %3d %3d\n",i,j);
           #else
+          // Serial.printf("pressed  %3d %3d\n",i,j);
           if(fn&&keys[i][j].fn){
             Keyboard.press(keys[i][j].fn);
           }else{

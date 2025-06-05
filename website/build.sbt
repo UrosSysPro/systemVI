@@ -37,7 +37,5 @@ lazy val server=project.in(file("server"))
   .settings(
     scalaVersion:="3.3.3",
   ).settings(
-//    Compile / mainClass := Some("net.systemvi.server.Main"),
-//     / mainClass := Some("net.systemvi.server.Main"),
-//    Compile / jar := "app.jar",
+
   )
