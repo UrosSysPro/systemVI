@@ -33,3 +33,5 @@ project/project/**
 client/target/
 client/node_modules/
 server/target/
+common/.jvm/target
+common/.js/target

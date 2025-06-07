@@ -8,7 +8,6 @@ import net.systemvi.website.darkproject.footer.Footer
 import net.systemvi.website.darkproject.navbar.Navbar
 import net.systemvi.website.darkproject.section.{Section, SectionItem}
 import net.systemvi.website.darkproject.slider.ImageSlider
-import net.systemvi.website.model.*
 import org.scalajs.dom
 
 def EnginePageView():Element = {

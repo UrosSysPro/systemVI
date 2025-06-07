@@ -1,4 +1,4 @@
-package net.systemvi.website.model
+package net.systemvi.common.model
 
 case class KeyboardSpec(name:String, value:String)
 case class Keyboard(id:Int,name:String, codeName:String, specs:List[KeyboardSpec], images:List[String])

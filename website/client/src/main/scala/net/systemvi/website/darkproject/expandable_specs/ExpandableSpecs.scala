@@ -1,7 +1,7 @@
 package net.systemvi.website.darkproject.expandable_specs
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.website.model.{Keyboard, KeyboardSpec}
+import net.systemvi.common.model.{Keyboard, KeyboardSpec}
 import org.scalajs.dom
 
 private def ExpandableSpecsItem(keyboardSpec: KeyboardSpec):HtmlElement={
