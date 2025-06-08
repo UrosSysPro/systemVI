@@ -1,11 +1,14 @@
 import org.scalajs.linker.interface.ModuleSplitStyle
 
 val circeVersion = "0.14.13"
+//val http4sVersion ="1.0.0-M44"
 val http4sVersion = "0.23.30"
 
 ThisBuild / organization := "net.systemvi"
 ThisBuild / version      := "0.5"
 ThisBuild / scalaVersion := "3.3.3"
+
+lazy val root = project.in(file(".")).aggregate(website,server)
 
 lazy val common = crossProject(JSPlatform,JVMPlatform)
   .crossType(CrossType.Pure)
@@ -43,12 +46,16 @@ lazy val website = project.in(file("client"))
 
 lazy val server=project.in(file("server"))
   .settings(
-    libraryDependencies += "org.typelevel" %%% "cats-core" % "2.13.0", //cats dependency
-    libraryDependencies += "org.typelevel" %%% "cats-effect" % "3.6.1", // cats effect dependency
+    Compile / run / fork := true,
+    Compile / run / connectInput := true,
+    libraryDependencies += "org.typelevel" %%% "cats-core"      % "2.13.0", //cats dependency
+    libraryDependencies += "org.typelevel" %%% "cats-effect"    % "3.6.1", // cats effect dependency
+    libraryDependencies += "org.slf4j" % "slf4j-simple" % "2.0.17",
+    libraryDependencies += "org.typelevel" %% "log4cats-slf4j" % "2.7.1",  // Direct Slf4j Support - Recommended
     libraryDependencies ++= Seq(
-      "org.http4s" %% "http4s-ember-client",
-      "org.http4s" %% "http4s-ember-server",
       "org.http4s" %% "http4s-dsl",
+      "org.http4s" %% "http4s-ember-server",
+      "org.http4s" %% "http4s-ember-client",
     ).map(_ % http4sVersion),
     libraryDependencies ++= Seq(
       "io.circe" %%% "circe-core",
