@@ -9,10 +9,15 @@ import org.http4s.implicits.*
 import org.http4s.dsl.io.*
 import org.http4s.server.Router
 import net.systemvi.server.api.apiService
+import net.systemvi.server.website.websiteService
 import org.http4s.ember.server.EmberServerBuilder
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
-val httpApp=Router("/api"->apiService).orNotFound
+val httpApp=Router(
+  "/"->websiteService,
+  "/api"->apiService
+).orNotFound
+
 val server=EmberServerBuilder
   .default[IO]
   .withHost(ipv4"0.0.0.0")
