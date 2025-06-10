@@ -35,19 +35,21 @@ class Key{
     this->height=height;
     this->physicalX=physicalX;
     this->physicalY=physicalY;
+    this->active=true;
   }
   void setLayer0Position(char layer0,int physicalX,int physicalY){
     this->value[0]=layer0;
     this->physicalX=physicalX;
     this->physicalY=physicalY;
+    this->active=true;
   }
 };
 
 class ReportedKey{
   public:
-  byte x,y,value[4],width,height,physicalX,physicalY;
+  byte x,y,value[4],width,height,physicalX,physicalY,active;
   ReportedKey(){}
-  ReportedKey(byte x,byte y,byte* value,int width,int height,int px,int py){
+  ReportedKey(byte x,byte y,byte* value,int width,int height,int px,int py,bool active){
     this->x=x;
     this->y=y;
     for(int i=0;i<4;i++){
@@ -57,6 +59,7 @@ class ReportedKey{
     this->height=height;
     this->physicalX=px;
     this->physicalY=py;
+    this->active=active;
   }
 };
 
@@ -77,7 +80,8 @@ void reportLayout(){
         keys[i][j].width,
         keys[i][j].height,
         keys[i][j].physicalX,
-        keys[i][j].physicalY
+        keys[i][j].physicalY,
+        keys[i][j].active
       );
     }
   }
@@ -88,11 +92,19 @@ void reportLayout(){
   delete reportedKeys;
 }
 void setKey(){
-  int x=Serial.read()-'0';
-  int y=Serial.read()-'0';
+  int x=Serial.read();
+  int y=Serial.read();
   char value[4];
   for(int i=0;i<4;i++)value[i]=Serial.read();
   for(int i=0;i<4;i++)keys[x][y].value[i]=value[i];
+  // Serial.printf("x: %d y: %d l0: %d l1: %d l2: %d l3: %d",x,y,value[0],value[1],value[2],value[3]);
+}
+void setKeyOnLayer(){
+  int x=Serial.read();
+  int y=Serial.read();
+  int layer=Serial.read();
+  char value=Serial.read();
+  keys[x][y].value[layer]=value;
   // Serial.printf("x: %d y: %d l0: %d l1: %d l2: %d l3: %d",x,y,value[0],value[1],value[2],value[3]);
 }
 
@@ -116,6 +128,16 @@ void setup() {
     pinMode(pin, OUTPUT);
     digitalWrite(pin, 1);
   }
+
+//keycapSizes
+//0 1u
+//1 1.25u
+//2 1.5u
+//3 1.75u
+//4 2u
+//5 2.25u
+//6 2.75u
+//7 6.25u
 
 //red 0///////////////////////////////////////////////////////////////
   keys[16][0].setLayer0Position(KEY_ESC, 0,0); 
@@ -149,13 +171,13 @@ void setup() {
   keys[6][1].setLayer0Position('0', 10,1);
   keys[5][1].setLayer0Position('-', 11,1);
   keys[4][1].setLayer0Position('=', 12,1);
-  keys[3][1].setLayer0Position(KEY_BACKSPACE, 13,1);
+  keys[3][1].setLayer0SizePosition(KEY_BACKSPACE,4,0, 13,1);
 
   keys[2][1].setLayer0Position(KEY_INSERT, 13,1);
   keys[1][1].setLayer0Position(KEY_HOME, 14,1);
   keys[0][1].setLayer0Position(KEY_PAGE_UP, 15,1);
 // //red 2/////////////////////////////////////////////////////////////
-  keys[16][2].setLayer0Position(KEY_TAB, 0,2);
+  keys[16][2].setLayer0SizePosition(KEY_TAB, 2, 0, 0, 2);
   keys[15][2].setLayer0Position('q', 1,2);
   keys[14][2].setLayer0Position('w', 2,2);
   keys[13][2].setLayer0Position('e', 3,2);
@@ -169,11 +191,11 @@ void setup() {
   keys[5][2].setLayer0Position('[', 11,2);
   keys[4][2].setLayer0Position(']', 12,2);
 
-  keys[2][2].setLayer0Position(KEY_DELETE, 13,2);
-  keys[1][2].setLayer0Position(KEY_END, 14,2);
-  keys[0][2].setLayer0Position(KEY_PAGE_DOWN, 15,2);
+  keys[2][2].setLayer0Position(KEY_DELETE, 14,2);
+  keys[1][2].setLayer0Position(KEY_END, 15,2);
+  keys[0][2].setLayer0Position(KEY_PAGE_DOWN, 16,2);
 // //red 3/////////////////////////////////////////////////////////////
-  keys[16][3].setLayer0Position(KEY_CAPS_LOCK, 0,3);
+  keys[16][3].setLayer0SizePosition(KEY_CAPS_LOCK,3,0,0,3);
   keys[15][3].setLayer0Position('a', 1,3);
   keys[14][3].setLayer0Position('s', 2,3);
   keys[13][3].setLayer0Position('d', 3,3);
@@ -185,14 +207,14 @@ void setup() {
   keys[7][3].setLayer0Position('l', 9,3);
   keys[6][3].setLayer0Position(';', 10,3);
   keys[5][3].setLayer0Position('\'', 11,3);
-  keys[4][3].setLayer0Position('\\', 12,3);
-  keys[3][3].setLayer0Position('\n', 13,3);
+  keys[4][3].setLayer0SizePosition('\\',2,0, 13,2);
+  keys[3][3].setLayer0SizePosition('\n',5,0, 12,3);
 
-  keys[2][3].setLayer0Position(KEY_DELETE, 14,3);
-  keys[1][3].setLayer0Position(KEY_END, 15,3);
-  keys[0][3].setLayer0Position(KEY_PAGE_DOWN, 16,3);
+  keys[2][3].setLayer0Position(KEY_DELETE, 13,3);
+  keys[1][3].setLayer0Position(KEY_END, 14,3);
+  keys[0][3].setLayer0Position(KEY_PAGE_DOWN, 15,3);
 // //red 4/////////////////////////////////////////////////////////////
-  keys[16][4].setLayer0Position(KEY_RIGHT_SHIFT, 0,4);
+  keys[16][4].setLayer0SizePosition(KEY_LEFT_SHIFT,1,0, 0,4);
   keys[15][4].setLayer0Position('/', 1,4); 
   keys[14][4].setLayer0Position('z', 2,4);
   keys[13][4].setLayer0Position('x', 3,4); 
@@ -204,20 +226,20 @@ void setup() {
   keys[7][4].setLayer0Position(',', 9,4); 
   keys[6][4].setLayer0Position('.', 10,4); 
   keys[5][4].setLayer0Position('/', 11,4); 
-  keys[4][4].setLayer0Position(KEY_LEFT_SHIFT, 12,4); 
+  keys[4][4].setLayer0SizePosition(KEY_RIGHT_SHIFT,6,0, 12,4); 
   keys[1][4].setLayer0Position(KEY_UP_ARROW, 13,4); 
 
 // //red 5/////////////////////////////////////////////////////////////
-  keys[16][5].setLayer0Position(KEY_LEFT_CTRL, 0,5);
-  keys[15][5].setLayer0Position(KEY_LEFT_GUI, 1,5);
-  keys[14][5].setLayer0Position(KEY_LEFT_ALT, 2,5);
+  keys[16][5].setLayer0SizePosition(KEY_LEFT_CTRL,1,0, 0,5);
+  keys[15][5].setLayer0SizePosition(KEY_LEFT_GUI,1,0, 1,5);
+  keys[14][5].setLayer0SizePosition(KEY_LEFT_ALT,1,0, 2,5);
  
-  keys[10][5].setLayer0Position(' ', 3,5);
+  keys[10][5].setLayer0SizePosition(' ',7,0, 3,5);
   
-  keys[6][5].setLayer0Position(KEY_RIGHT_CTRL, 4,5);
-  keys[5][5].setLayer0Position(KEY_RIGHT_GUI, 5,5);
-  keys[4][5].setLayer0Position(KEY_RIGHT_ALT, 6,5);
-  keys[3][5].setLayer0Position(KEY_RIGHT_CTRL, 7,5);
+  keys[6][5].setLayer0SizePosition(KEY_RIGHT_CTRL,1,0, 4,5);
+  keys[5][5].setLayer0SizePosition(KEY_RIGHT_GUI,1,0, 5,5);
+  keys[4][5].setLayer0SizePosition(KEY_RIGHT_ALT,1,0, 6,5);
+  keys[3][5].setLayer0SizePosition(KEY_RIGHT_CTRL,1,0, 7,5);
 
   keys[2][5].setLayer0Position(KEY_LEFT_ARROW, 8,5);
   keys[1][5].setLayer0Position(KEY_DOWN_ARROW, 9,5);
@@ -250,6 +272,7 @@ void loop() {
     char cmd=Serial.read();
     if(cmd == 'r')reportLayout();
     if(cmd=='k')setKey();
+    if(cmd=='l')setKeyOnLayer();
   }
 
   int layer=0;
