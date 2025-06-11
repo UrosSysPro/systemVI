@@ -9,6 +9,8 @@
 int columns[]={16,17,18,19,20,21,22,26,27,28,0,1,2,3,4,5,6};
 int rows[]={7,8,9,10,11,12};
 
+bool printKeyEventsToSerial=false;
+
 class Key{
   public:
   Key(){
@@ -63,9 +65,6 @@ class ReportedKey{
   }
 };
 
-const byte thisAddress = 8; 
-const byte otherAddress = 9;
-
 Key keys[COLUMNS_NUMBER][ROWS_NUMBER];
 
 void reportLayout(){
@@ -91,6 +90,7 @@ void reportLayout(){
   Serial.print('@');
   delete reportedKeys;
 }
+
 void setKey(){
   int x=Serial.read();
   int y=Serial.read();
@@ -99,6 +99,7 @@ void setKey(){
   for(int i=0;i<4;i++)keys[x][y].value[i]=value[i];
   // Serial.printf("x: %d y: %d l0: %d l1: %d l2: %d l3: %d",x,y,value[0],value[1],value[2],value[3]);
 }
+
 void setKeyOnLayer(){
   int x=Serial.read();
   int y=Serial.read();
@@ -108,16 +109,25 @@ void setKeyOnLayer(){
   // Serial.printf("x: %d y: %d l0: %d l1: %d l2: %d l3: %d",x,y,value[0],value[1],value[2],value[3]);
 }
 
+void printKeyPressToSerial(int x,int y){
+  byte message[4];
+  message[0]=(byte)'p';
+  message[1]=x;
+  message[2]=y;
+  message[3]='@';
+  Serial.write(message,4);
+}
+
+void printKeyReleaseToSerial(int x,int y){
+  byte message[4];
+  message[0]=(byte)'r';
+  message[1]=x;
+  message[2]=y;
+  message[3]='@';
+  Serial.write(message,4);
+}
+
 void setup() {
-  for(int i=0;i<COLUMNS_NUMBER;i++){
-    int pin=columns[i];
-    pinMode(pin, OUTPUT);
-    digitalWrite(pin, 1);
-  }
-  for(int i=0;i<ROWS_NUMBER;i++){
-    int pin = rows[i];
-    pinMode(pin, INPUT_PULLUP);
-  }
   for(int i=0;i<COLUMNS_NUMBER;i++){
     int pin=columns[i];
     pinMode(pin, INPUT_PULLUP);
@@ -273,6 +283,8 @@ void loop() {
     if(cmd == 'r')reportLayout();
     if(cmd=='k')setKey();
     if(cmd=='l')setKeyOnLayer();
+    if(cmd=='e')printKeyEventsToSerial=true;
+    if(cmd=='d')printKeyEventsToSerial=false;
   }
 
   int layer=0;
@@ -294,6 +306,7 @@ void loop() {
             for(int k=layer;k>=0;k--){
               char value=key->value[k];
               if(value){
+                if(printKeyEventsToSerial)printKeyPressToSerial(i, j);
                 key->currentlyDown=value;
                 Keyboard.press(value);
                 break;
@@ -305,14 +318,13 @@ void loop() {
             Serial.printf("released %3d %3d\n",i,j);
           #else
             char value=keys[i][j].currentlyDown;
-            if(value)Keyboard.release(value);
+            if(value){
+              if(printKeyEventsToSerial)printKeyReleaseToSerial(i, j);
+              Keyboard.release(value);
+            }
           #endif
         } 
       }
     }
   }
 }
-
-
-
-
