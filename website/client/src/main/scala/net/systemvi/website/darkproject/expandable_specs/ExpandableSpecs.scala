@@ -21,7 +21,7 @@ private def ExpandableSpecsItem(keyboardSpec: KeyboardSpec):HtmlElement={
       alignItems.center,
       span("01", width.percent := 30,fontSize:="1.5rem",color.gray,fontWeight:="500"),
       span("Name", flex := "1",fontSize.rem:=2,color.gray,fontWeight:="500"),
-      span(">",transform<--opened.signal.map(if _ then "rotateZ(90deg)" else "rotateZ(-90deg)"),transition:="300ms")
+      span("->",transform<--opened.signal.map(if _ then "rotateZ(90deg)" else "rotateZ(-90deg)"),transition:="300ms")
     ),
     child<--opened.signal.map:
       if _ then

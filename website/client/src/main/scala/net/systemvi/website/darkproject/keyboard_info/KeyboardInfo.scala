@@ -1,7 +1,7 @@
 package net.systemvi.website.darkproject.keyboard_info
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.common.model.Keyboard
+import net.systemvi.common.model.{Game, Keyboard}
 import net.systemvi.website.CSSProps.*
 import net.systemvi.website.darkproject.Theme
 import net.systemvi.website.darkproject.expandable_specs.UnderlinedRow
@@ -90,4 +90,7 @@ def KeyboardInfo(keyboard:Keyboard):Element = {
     KeyboardInfoLeft(keyboard),
     KeyboardInfoRight(keyboard),
   )
+}
+def GameInfo(game:Game):HtmlElement={
+  div()
 }

@@ -16,6 +16,7 @@ def renderPage(page: Page): Element = {
     case GamesPage => GamesPageView()
     case EnginePage => EnginePageView()
     case page:KeyboardPage=> KeyboardPageView(page)
+    case page:GamePage=> GamePageView(page)
   }
 }
 

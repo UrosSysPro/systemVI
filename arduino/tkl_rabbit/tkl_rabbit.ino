@@ -127,6 +127,11 @@ void printKeyReleaseToSerial(int x,int y){
   Serial.write(message,4);
 }
 
+void printName(){
+  char message[]="ntkl_rabbit@";
+  Serial.write((byte*)message,12);
+}
+
 void setup() {
   for(int i=0;i<COLUMNS_NUMBER;i++){
     int pin=columns[i];
@@ -285,6 +290,7 @@ void loop() {
     if(cmd=='l')setKeyOnLayer();
     if(cmd=='e')printKeyEventsToSerial=true;
     if(cmd=='d')printKeyEventsToSerial=false;
+    if(cmd=='n')printName();
   }
 
   int layer=0;

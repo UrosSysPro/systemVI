@@ -16,6 +16,7 @@ case object GamesPage extends Page("Games")
 case object EnginePage extends Page("Engine")
 
 case class KeyboardPage(keyboardId:Int)extends Page("Keyboard")
+case class GamePage(gameId: Int) extends Page("Game")
 
 val homeRoute = Route.static(HomePage, root / endOfSegments)
 val keyboardsRoute = Route.static(KeyboardsPage, root / "keyboards" / endOfSegments)
@@ -28,8 +29,21 @@ val keyboardRoute=Route(
   pattern = root / "keyboard" / segment[Int] / endOfSegments
 )
 
+val gameRoute=Route(
+  encode = (page:GamePage)=>page.gameId,
+  decode = (args:Int)=>GamePage(args),
+  pattern = root / "game" / segment[Int] / endOfSegments
+)
+
 object router extends Router[Page](
-  routes = List(homeRoute,keyboardsRoute,gamesRoute,engineRoute,keyboardRoute),
+  routes = List(
+    homeRoute,
+    keyboardsRoute,
+    gamesRoute,
+    engineRoute,
+    keyboardRoute,
+    gameRoute,
+  ),
   getPageTitle = page => page.title,
   serializePage = (page:Page)=>page.asJson.noSpaces,
   deserializePage = pageData=> (for{
@@ -42,6 +56,6 @@ object router extends Router[Page](
     case "games" => GamesPage
     case "engine" => EnginePage
     case "keyboard"=> json.as[KeyboardPage].getOrElse(HomePage)
+    case "game"=> json.as[GamePage].getOrElse(HomePage)
   }).getOrElse(HomePage)
-
 )

@@ -1,7 +1,7 @@
 package net.systemvi.website.views
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.website.HomePage
+import net.systemvi.website.{GamePage, HomePage}
 import net.systemvi.website.api.GameApi
 import net.systemvi.website.darkproject.big_title.BigTitle
 import net.systemvi.website.darkproject.footer.Footer
@@ -20,7 +20,7 @@ def GamesPageView():Element = {
       BigTitle("Games"),
       Section(
         title="",
-        items = games.map(g=>SectionItem(g.name,g.images.head,HomePage))
+        items = games.map(g=>SectionItem(g.name,g.images.head,GamePage(g.id)))
       ),
       Footer(),
     )
