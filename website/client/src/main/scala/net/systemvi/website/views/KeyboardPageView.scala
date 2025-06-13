@@ -1,9 +1,10 @@
 package net.systemvi.website.views
 
 import com.raquo.laminar.api.L.{*, given}
+import com.raquo.laminar.nodes.{ReactiveElement, ReactiveHtmlElement}
 import net.systemvi.website.KeyboardPage
 import net.systemvi.website.api.KeyboardApi
-import net.systemvi.website.darkproject.bento_box.{BentoBoxItem,BentoBoxRect,BentoBoxSize,BentoBox}
+import net.systemvi.website.darkproject.bento_box.{BentoBox, BentoBoxItem, BentoBoxRect, BentoBoxSize}
 import net.systemvi.website.darkproject.big_title.BigTitle
 import net.systemvi.website.darkproject.bill_of_materials.BillOfMaterials
 import net.systemvi.website.darkproject.expandable_specs.ExpandableSpecs
@@ -95,6 +96,7 @@ def KeyboardPageView(page:KeyboardPage):HtmlElement = {
   }
 
   div(
+    span("hello"),
     cls:="flex flex-col items-center pt-24",
     div(
       className:="flex flex-col justify-start w-full max-w-[1450px]",
@@ -110,12 +112,12 @@ def KeyboardPageView(page:KeyboardPage):HtmlElement = {
           | """.stripMargin
       ),
       //4x3
-      child <-- boxes.map{ boxData=>
+      child <-- boxes.map { boxData =>
         BentoBox(
           boxData.size,
-          boxData.items.zip(boxItems).zipWithIndex.map{ (tuple,index)=>
-            val (rect,item)=tuple
-            BentoBoxItem(s"area_${index}",rect,item)
+          boxData.items.zip(boxItems).zipWithIndex.map { (tuple, index) =>
+            val (rect, item) = tuple
+            BentoBoxItem(s"area_${index}", rect, item)
           },
           width.percent := 100,
           height.rem := 50,
@@ -123,7 +125,7 @@ def KeyboardPageView(page:KeyboardPage):HtmlElement = {
         )
       },
       BigTitle("Technical Specifications"),
-      ExpandableSpecs(keyboard),
+      ExpandableSpecs(keyboard.specs),
       BigTitle("Bill Of Materials"),
       BillOfMaterials(),
       Footer(),

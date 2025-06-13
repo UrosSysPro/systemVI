@@ -17,19 +17,14 @@ def GamePageView(page:GamePage):HtmlElement={
     cls:="flex flex-col items-center pt-24",
     div(
       className:="flex flex-col justify-start w-full max-w-[1450px]",
-      Navbar(),
-      GameInfo(game),
-      ImageSlider(game.images),
       BigTitle(
         game.name,
-        """
-          |Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          |Phasellus aliquet purus a fringilla condimentum. Praesent
-          |vestibulum enim neque, eu placerat nulla molestie in
-          | """.stripMargin
       ),
+      Navbar(),
+      GameInfo(game),
+//      ImageSlider(game.images),
       BigTitle("Technical Specifications"),
-//      ExpandableSpecs(keyboard),
+      ExpandableSpecs(game.specs),
       BigTitle("Bill Of Materials"),
       BillOfMaterials(),
       Footer(),

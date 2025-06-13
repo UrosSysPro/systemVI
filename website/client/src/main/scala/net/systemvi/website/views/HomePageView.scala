@@ -31,7 +31,7 @@ def HomePageView():Element = {
       ),
       Section(
         "Games",
-        games.take(4).map(g=>SectionItem(g.name,g.images.head,HomePage)),
+        games.take(4).map(g=>SectionItem(g.name,g.images.head,GamePage(g.id))),
         GamesPage
       ),
       Section(

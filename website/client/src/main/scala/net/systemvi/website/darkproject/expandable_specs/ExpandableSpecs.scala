@@ -1,10 +1,10 @@
 package net.systemvi.website.darkproject.expandable_specs
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.common.model.{Keyboard, KeyboardSpec}
+import net.systemvi.common.model.{Keyboard, ProductSpec}
 import org.scalajs.dom
 
-private def ExpandableSpecsItem(keyboardSpec: KeyboardSpec):HtmlElement={
+private def ExpandableSpecsItem(keyboardSpec: ProductSpec):HtmlElement={
   val opened=Var(false)
   div(
     backgroundColor.rgb(246, 246, 246),
@@ -39,12 +39,12 @@ private def ExpandableSpecsItem(keyboardSpec: KeyboardSpec):HtmlElement={
   )
 }
 
-def ExpandableSpecs(keyboard:Keyboard):HtmlElement={
+def ExpandableSpecs(specs:List[ProductSpec]):HtmlElement={
   div(
     display.flex,
     flexDirection.column,
     padding.rem:=1,
     gap:="0.5rem",
-    keyboard.specs.map(ExpandableSpecsItem)
+    specs.map(ExpandableSpecsItem)
   )
 }
