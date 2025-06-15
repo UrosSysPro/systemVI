@@ -10,7 +10,6 @@ public class Main {
     }
 
     public static void singleThread(int[][] niz){
-        niz=null;
         long start=System.currentTimeMillis();
         for(int i=0;i<niz.length;i++){
             int sum=0;
@@ -66,8 +65,8 @@ public class Main {
         service.awaitTermination(1000, TimeUnit.MILLISECONDS);
     }
     public static void main(String[] args)throws  Exception {
-        int size=10000;
-        int[][] niz=new int[10][size];
+        int size=1000000;
+        int[][] niz=new int[100][size];
         Random random=new Random();
         for (int i = 0; i < niz.length; i++) {
             for (int j = 0; j < niz[i].length; j++) {
