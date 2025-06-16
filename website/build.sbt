@@ -56,6 +56,7 @@ lazy val server=project.in(file("server"))
       "org.http4s" %% "http4s-dsl",
       "org.http4s" %% "http4s-ember-server",
       "org.http4s" %% "http4s-ember-client",
+      "org.http4s" %% "http4s-circe",
     ).map(_ % http4sVersion),
     libraryDependencies ++= Seq(
       "io.circe" %%% "circe-core",
