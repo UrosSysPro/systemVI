@@ -77,7 +77,7 @@ private def ProductInfoRight(name:String,codeName:String,specs:List[ProductSpec]
   )
 }
 
-def KeyboardInfo(keyboard:Keyboard):Element = {
+def KeyboardInfo(keyboard:Keyboard):HtmlElement = {
   val horizontal=windowEvents(_.onResize).map(_=>dom.window.innerWidth>1000).startWith(dom.window.innerWidth>1000)
   div(
     height.rem:=40,

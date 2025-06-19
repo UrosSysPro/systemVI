@@ -17,11 +17,16 @@ case object EnginePage extends Page("Engine")
 
 case class KeyboardPage(keyboardId:Int)extends Page("Keyboard")
 case class GamePage(gameId: Int) extends Page("Game")
+case object NotFoundPage extends Page("404")
+//object ErrorPage extends Page("Error")
 
 val homeRoute = Route.static(HomePage, root / endOfSegments)
 val keyboardsRoute = Route.static(KeyboardsPage, root / "keyboards" / endOfSegments)
 val gamesRoute = Route.static(GamesPage, root / "games" / endOfSegments)
 val engineRoute = Route.static(EnginePage, root / "engine" / endOfSegments)
+
+val notFoundRoute=Route.static(NotFoundPage,root)
+//val  = Route.static(NotFoundPage, root)
 
 val keyboardRoute=Route(
   encode = (page:KeyboardPage)=>page.keyboardId,
@@ -43,6 +48,7 @@ object router extends Router[Page](
     engineRoute,
     keyboardRoute,
     gameRoute,
+    notFoundRoute,
   ),
   getPageTitle = page => page.title,
   serializePage = (page:Page)=>page.asJson.noSpaces,
@@ -57,5 +63,6 @@ object router extends Router[Page](
     case "engine" => EnginePage
     case "keyboard"=> json.as[KeyboardPage].getOrElse(HomePage)
     case "game"=> json.as[GamePage].getOrElse(HomePage)
-  }).getOrElse(HomePage)
+    case "404"=>NotFoundPage
+  }).getOrElse(NotFoundPage)
 )

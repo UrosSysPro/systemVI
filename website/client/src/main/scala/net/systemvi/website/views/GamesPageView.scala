@@ -10,7 +10,7 @@ import net.systemvi.website.darkproject.section.{Section, SectionItem}
 import net.systemvi.website.darkproject.slider.ImageSlider
 import org.scalajs.dom
 
-def GamesPageView():Element = {
+def GamesPageView():HtmlElement = {
   val games=GameApi.all()
   div(
     cls:="flex flex-col items-center pt-24",

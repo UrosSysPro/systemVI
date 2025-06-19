@@ -10,7 +10,7 @@ import net.systemvi.website.darkproject.section.{Section, SectionItem}
 import net.systemvi.website.darkproject.slider.ImageSlider
 import org.scalajs.dom
 
-def EnginePageView():Element = {
+def EnginePageView():HtmlElement = {
   val engine=EngineApi.get()
   div(
     cls:="flex flex-col items-center pt-24",

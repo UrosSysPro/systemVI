@@ -1,27 +1,23 @@
 package net.systemvi.website
 
 import com.raquo.laminar.api.L.{*, given}
+import com.raquo.waypoint.SplitRender
 import net.systemvi.website.views.*
 import org.scalajs.dom
-
 import scala.scalajs.js
-import scala.scalajs.js.annotation.*
 
+val splitter= SplitRender[Page,HtmlElement](router.currentPageSignal)
+  .collect[HomePage.type]{_ => HomePageView()}
+  .collect[KeyboardsPage.type]{_ => KeyboardsPageView()}
+  .collect[GamesPage.type ]{_ => GamesPageView()}
+  .collect[EnginePage.type ]{_ => EnginePageView()}
+  .collect[KeyboardPage]{page => KeyboardPageView(page)}
+  .collect[GamePage] {page => GamePageView(page)}
+  .collect[NotFoundPage.type ]{_=>div("page not found")}
 
-def renderPage(page: Page): Element = {
-
-  page match {
-    case HomePage => HomePageView()
-    case KeyboardsPage => KeyboardsPageView()
-    case GamesPage => GamesPageView()
-    case EnginePage => EnginePageView()
-    case page:KeyboardPage=> KeyboardPageView(page)
-    case page:GamePage=> GamePageView(page)
-  }
-}
 
 val app: Div = div(
-  child <-- router.currentPageSignal.map(renderPage)
+    child <-- splitter.signal
 )
 
 @main

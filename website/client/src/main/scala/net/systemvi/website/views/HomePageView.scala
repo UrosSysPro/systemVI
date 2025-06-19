@@ -9,7 +9,7 @@ import net.systemvi.website.darkproject.slider.ImageSlider
 import net.systemvi.website.*
 import org.scalajs.dom
 
-def HomePageView():Element = {
+def HomePageView():HtmlElement = {
   val keyboards=KeyboardApi.all()
   val engine=EngineApi.get()
   val games=GameApi.all()

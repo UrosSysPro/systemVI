@@ -62,7 +62,7 @@ private def Indicator(count:Int,selected:Var[Int]):Element={
   )
 }
 
-def ImageSlider(images:List[String]=List()):Element = {
+def ImageSlider(images:List[String]=List()):HtmlElement = {
   val currentlySelected=Var(0)
   div(
     width.percent:=100,
