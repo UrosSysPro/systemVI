@@ -11,6 +11,7 @@ def Navbar():Element = {
   val showMenu = windowEvents(_.onResize).map { _ => dom.window.innerWidth < 1000 }.startWith(dom.window.innerWidth < 1000)
 
   val navItems=List(
+    NavbarEntry("Configurator",ConfiguratorPage),
     NavbarEntry("Keyboards",KeyboardsPage),
     NavbarEntry("Games",GamesPage),
     NavbarEntry("Engine",EnginePage)

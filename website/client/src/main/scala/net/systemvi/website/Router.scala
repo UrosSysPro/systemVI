@@ -17,6 +17,9 @@ case object EnginePage extends Page("Engine")
 
 case class KeyboardPage(keyboardId: Int)extends Page("Keyboard")
 case class GamePage(gameId: Int) extends Page("Game")
+
+case object ConfiguratorPage extends Page("Keyboard Configurator")
+
 case object NotFoundPage extends Page("404")
 
 given Decoder[HomePage.type] = cursor=>for{
@@ -42,11 +45,15 @@ given Decoder[KeyboardPage] = cursor=>for{
   child<-cursor.get[Json]("KeyboardPage")
   id<-child.hcursor.get[Int]("keyboardId")
 }yield KeyboardPage(id)
+given Decoder[ConfiguratorPage.type]=cursor => for{
+  _<-cursor.get[Json]("ConfiguratorPage")
+}yield ConfiguratorPage
 
 val homeRoute = Route.static(HomePage, root / endOfSegments)
 val keyboardsRoute = Route.static(KeyboardsPage, root / "keyboards" / endOfSegments)
 val gamesRoute = Route.static(GamesPage, root / "games" / endOfSegments)
 val engineRoute = Route.static(EnginePage, root / "engine" / endOfSegments)
+val configuratorRoute=Route.static(ConfiguratorPage, root / "configurator" / endOfSegments)
 
 val notFoundRoute=Route.static(NotFoundPage,root)
 
@@ -70,6 +77,7 @@ object router extends Router[Page](
     engineRoute,
     keyboardRoute,
     gameRoute,
+    configuratorRoute,
     notFoundRoute,
   ),
   getPageTitle = page => page.title,
@@ -86,6 +94,7 @@ object router extends Router[Page](
       json.as[NotFoundPage.type],
       json.as[KeyboardPage],
       json.as[GamePage],
+      json.as[ConfiguratorPage.type],
     ).flatMap{
         case Right(page)=>List(page)
         case Left(_)=>List.empty
