@@ -19,53 +19,28 @@ case class KeyboardPage(keyboardId: Int)extends Page("Keyboard")
 case class GamePage(gameId: Int) extends Page("Game")
 case object NotFoundPage extends Page("404")
 
-//encoders
-given Encoder[HomePage.type] = page=>Json.obj(
-  "home-page"->Json.fromString(page.title)
-)
-given Encoder[KeyboardsPage.type] = page=>Json.obj(
-  "keyboards-page"->Json.fromString(page.title)
-)
-given Encoder[GamesPage.type] = page=>Json.obj(
-  "games-page"->Json.fromString(page.title)
-)
-given Encoder[EnginePage.type] = page => Json.obj(
-  "engine-page" -> Json.fromString(page.title)
-)
-given Encoder[NotFoundPage.type] = page => Json.obj(
-  "not-found-page" -> Json.fromString(page.title)
-)
-given Encoder[KeyboardPage] = page => Json.obj(
-  "keyboard-page" -> Json.fromString(page.title),
-  "id"->Json.fromInt(page.keyboardId)
-)
-given Encoder[GamePage] = page => Json.obj(
-  "game-page" -> Json.fromString(page.title),
-  "id"->Json.fromInt(page.gameId)
-)
-//decoders
 given Decoder[HomePage.type] = cursor=>for{
-  _<-cursor.downField("HomePage").get[String]("home-page")
+  _<-cursor.get[Json]("HomePage")
 }yield HomePage
 given Decoder[GamesPage.type] = cursor => for{
-  _<-cursor.downField("GamesPage").get[String]("games-page")
+  _<-cursor.get[Json]("GamesPage")
 }yield GamesPage
 given Decoder[KeyboardsPage.type] =cursor=>for{
-  _<-cursor.downField("KeyboardsPage").get[String]("keyboards-page")
+  _<-cursor.get[Json]("KeyboardsPage")
 }yield KeyboardsPage
 given Decoder[EnginePage.type] = cursor=>for{
-  _<-cursor.downField("EnginePage").get[String]("engine-page")
+  _<-cursor.get[Json]("EnginePage")
 }yield EnginePage
 given Decoder[NotFoundPage.type] =cursor=>for{
-  _<-cursor.downField("NotFoundPage").get[String]("not-found-page")
+  _<-cursor.get[Json]("NotFoundPage")
 }yield NotFoundPage
 given Decoder[GamePage] = cursor=>for{
-  _<-cursor.downField("GamePage").get[String]("game-page")
-  id<-cursor.downField("GamePage").get[Int]("id")
+  child<-cursor.get[Json]("GamePage")
+  id<-child.hcursor.get[Int]("gameId")
 }yield GamePage(id)
 given Decoder[KeyboardPage] = cursor=>for{
-  _<-cursor.downField("KeyboardPage").get[String]("keyboard-page")
-  id<-cursor.downField("KeyboardPage").get[Int]("id")
+  child<-cursor.get[Json]("KeyboardPage")
+  id<-child.hcursor.get[Int]("keyboardId")
 }yield KeyboardPage(id)
 
 val homeRoute = Route.static(HomePage, root / endOfSegments)
@@ -111,29 +86,9 @@ object router extends Router[Page](
       json.as[NotFoundPage.type],
       json.as[KeyboardPage],
       json.as[GamePage],
-    )
-//      .map{ e =>
-//        dom.console.log(e)
-//        e
-//      }
-      .map{
-        case Right(page) => Some(page)
-        case _ => None
-      }
-//      .map{ e =>
-//        dom.console.log(e.asJson.toString)
-//        e
-//      }
-      .filter{
-        case Some(_)=>true
-        case None=>false
-      }
-//      .map{ e =>
-//        dom.console.log(e.asJson.toString)
-//        e
-//      }
-      .map{
-        _.getOrElse(NotFoundPage)
+    ).flatMap{
+        case Right(page)=>List(page)
+        case Left(_)=>List.empty
       }
       .get(0)
       .getOrElse(NotFoundPage)
