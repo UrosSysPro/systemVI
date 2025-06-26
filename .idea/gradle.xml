@@ -35,7 +35,6 @@
             <option value="$PROJECT_DIR$/examples/new-shape-renderer" />
             <option value="$PROJECT_DIR$/examples/noise" />
             <option value="$PROJECT_DIR$/examples/normal-mapping" />
-            <option value="$PROJECT_DIR$/examples/paint" />
             <option value="$PROJECT_DIR$/examples/parallel" />
             <option value="$PROJECT_DIR$/examples/particle-system" />
             <option value="$PROJECT_DIR$/examples/particle-system-homework" />
@@ -44,11 +43,14 @@
             <option value="$PROJECT_DIR$/examples/sdf" />
             <option value="$PROJECT_DIR$/examples/shadertoy" />
             <option value="$PROJECT_DIR$/examples/snake" />
+            <option value="$PROJECT_DIR$/examples/starter" />
             <option value="$PROJECT_DIR$/examples/test" />
             <option value="$PROJECT_DIR$/examples/test3dmodels" />
             <option value="$PROJECT_DIR$/examples/tetris" />
             <option value="$PROJECT_DIR$/examples/text-platformer" />
             <option value="$PROJECT_DIR$/examples/triangle" />
+            <option value="$PROJECT_DIR$/examples/ui-paint" />
+            <option value="$PROJECT_DIR$/examples/ui-snake" />
             <option value="$PROJECT_DIR$/examples/ui-tests" />
             <option value="$PROJECT_DIR$/examples/warriors" />
             <option value="$PROJECT_DIR$/ktor-server" />
