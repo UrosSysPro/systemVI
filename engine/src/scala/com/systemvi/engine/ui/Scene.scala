@@ -139,7 +139,7 @@ object Scene{
 object UIApplication{
   var font:Font=null
 }
-class UIApplication(title:String,home:Widget) extends Game(3,3,60,800,600,title){
+class UIApplication(title:String,home:Widget,width:Int,height:Int) extends Game(3,3,60,width,height,title){
   var scene:Scene=null
   override def setup(window: Window): Unit = {
     UIApplication.font=Font.load(
@@ -165,8 +165,8 @@ class UIApplication(title:String,home:Widget) extends Game(3,3,60,800,600,title)
 }
 
 object runApp{
-  def apply(title:String,home:Widget): Unit = {
+  def apply(title:String,home:Widget,width:Int=800,height:Int=600): Unit = {
 
-    new UIApplication(title,home).run()
+    new UIApplication(title,home,width,height).run()
   }
 }
