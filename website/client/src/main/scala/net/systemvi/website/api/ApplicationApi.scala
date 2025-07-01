@@ -1,6 +1,6 @@
 package net.systemvi.website.api
 
-import net.systemvi.common.model.Application
+import net.systemvi.common.model.{Application, DownloadLink}
 
 private val applications=List(
   Application(
@@ -10,16 +10,18 @@ private val applications=List(
     codeName = "keyboard_configurator",
     version = "v0.9.0",
     screenshots = List(
-      "images/application/configurator/settings.png",
-      "images/application/configurator/save-and-load.png",
-      "images/application/configurator/tester.png",
       "images/application/configurator/configurator.png",
+      "images/application/configurator/tester.png",
+      "images/application/configurator/save-and-load.png",
+      "images/application/configurator/settings.png",
     ),
-    downloadLinks = List(),
+    downloadLinks = List(
+      DownloadLink("download/application/configurator/app.jar","v0.9.0","Windows 11","Create, Edit, Save keymaps for custom keyboards")
+    ),
   )
 )
 
 object ApplicationApi {
-  def get(id: Int): Option[Application] =applications.find(app => app.id == id)
-  def all(): List[Application] =applications
+  def get(id: Int): Option[Application] =  applications.find(app => app.id == id)
+  def all(): List[Application] = applications
 }
