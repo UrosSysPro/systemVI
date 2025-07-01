@@ -35,3 +35,4 @@ client/node_modules/
 server/target/
 common/.jvm/target
 common/.js/target
+client/public/download/application/configurator/*.jar

@@ -4,8 +4,8 @@ import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.website.GamePage
 import net.systemvi.website.api.GameApi
 import net.systemvi.website.darkproject.navbar.Navbar
-import net.systemvi.website.darkproject.keyboard_info.*
-import net.systemvi.website.darkproject.slider.ImageSlider
+import net.systemvi.website.darkproject.product_info.*
+import net.systemvi.website.darkproject.product_info.given
 import net.systemvi.website.darkproject.big_title.BigTitle
 import net.systemvi.website.darkproject.expandable_specs.*
 import net.systemvi.website.darkproject.bill_of_materials.*
@@ -21,7 +21,7 @@ def GamePageView(page:GamePage):HtmlElement={
         game.name,
       ),
       Navbar(),
-      GameInfo(game),
+      ProductInfo(game),
 //      ImageSlider(game.images),
       BigTitle("Technical Specifications"),
       ExpandableSpecs(game.specs),

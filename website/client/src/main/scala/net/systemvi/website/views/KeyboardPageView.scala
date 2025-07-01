@@ -9,7 +9,8 @@ import net.systemvi.website.darkproject.big_title.BigTitle
 import net.systemvi.website.darkproject.bill_of_materials.BillOfMaterials
 import net.systemvi.website.darkproject.expandable_specs.ExpandableSpecs
 import net.systemvi.website.darkproject.footer.Footer
-import net.systemvi.website.darkproject.keyboard_info.KeyboardInfo
+import net.systemvi.website.darkproject.product_info.*
+import net.systemvi.website.darkproject.product_info.given
 import net.systemvi.website.darkproject.navbar.Navbar
 import net.systemvi.website.darkproject.slider.ImageSlider
 import org.scalajs.dom
@@ -101,7 +102,7 @@ def KeyboardPageView(page:KeyboardPage):HtmlElement = {
     div(
       className:="flex flex-col justify-start w-full max-w-[1450px]",
       Navbar(),
-      KeyboardInfo(keyboard),
+      ProductInfo(keyboard),
       ImageSlider(keyboard.images),
       BigTitle(
         keyboard.name,

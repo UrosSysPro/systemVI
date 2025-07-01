@@ -1,11 +1,16 @@
-package net.systemvi.website.darkproject.keyboard_info
+package net.systemvi.website.darkproject.product_info
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.common.model.{Game, Keyboard, ProductSpec}
+import net.systemvi.common.model.{Application, Game, Keyboard, ProductSpec}
 import net.systemvi.website.CSSProps.*
 import net.systemvi.website.darkproject.Theme
 import net.systemvi.website.darkproject.expandable_specs.UnderlinedRow
 import org.scalajs.dom
+
+case class ProductInfoParams(images:List[String],name:String,codeName:String,specs:List[ProductSpec])
+given Conversion[Keyboard,ProductInfoParams]=keyboard=>ProductInfoParams(keyboard.images,keyboard.name,keyboard.codeName,keyboard.specs)
+given Conversion[Game, ProductInfoParams] = game => ProductInfoParams(game.images, game.name, game.codeName, game.specs)
+given Conversion[Application, ProductInfoParams] = app => ProductInfoParams(app.screenshots, app.name, app.codeName, List())
 
 private def ProductInfoLeft(images:List[String]):HtmlElement={
   div(
@@ -77,7 +82,7 @@ private def ProductInfoRight(name:String,codeName:String,specs:List[ProductSpec]
   )
 }
 
-def KeyboardInfo(keyboard:Keyboard):HtmlElement = {
+def ProductInfo(params:ProductInfoParams):HtmlElement = {
   val horizontal=windowEvents(_.onResize).map(_=>dom.window.innerWidth>1000).startWith(dom.window.innerWidth>1000)
   div(
     height.rem:=40,
@@ -87,21 +92,7 @@ def KeyboardInfo(keyboard:Keyboard):HtmlElement = {
     paddingRight.rem:=1,
     flexDirection<--horizontal.map(if _ then "row" else "column"),
 
-    ProductInfoLeft(keyboard.images),
-    ProductInfoRight(keyboard.name,keyboard.codeName,keyboard.specs),
-  )
-}
-def GameInfo(game:Game):HtmlElement={
-  val horizontal=windowEvents(_.onResize).map(_=>dom.window.innerWidth>1000).startWith(dom.window.innerWidth>1000)
-  div(
-    height.rem:=40,
-    display.flex,
-    gap.rem:=2,
-    paddingLeft.rem:=1,
-    paddingRight.rem:=1,
-    flexDirection<--horizontal.map(if _ then "row" else "column"),
-
-    ProductInfoLeft(game.images),
-    ProductInfoRight(game.name,game.codeName,game.specs),
+    ProductInfoLeft(params.images),
+    ProductInfoRight(params.name,params.codeName,params.specs),
   )
 }
