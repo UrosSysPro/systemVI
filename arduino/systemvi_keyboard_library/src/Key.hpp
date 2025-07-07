@@ -1,6 +1,8 @@
 #ifndef __SYSTEMVI_KEY__
 #define __SYSTEMVI_KEY__
 
+#include"Keyboard.h"
+
 class Key{
 public:
 	Key();
@@ -13,13 +15,15 @@ class NormalKey:public Key{
 public:
 	NormalKey();
 	~NormalKey();
-	void onPress();
-	void onRelease();
+	void onPress() override;
+	void onRelease() override;
 };
 
 class MacroAction{
 public: 
+	int value;
 
+	MacroAction();
 };
 
 class MacroKey:public Key{
@@ -29,5 +33,8 @@ public:
 	void onPress();
 	void onRelease();
 };
+void f(){
+		
+}
 
 #endif
