@@ -7,14 +7,14 @@ class Key {
 public:
     bool pressed,justChanged,active;
     int width,height,matrixX,matrixY;
-    virtual void onPress();
-    virtual void onRelease();
+    virtual void onPress(){};
+    virtual void onRelease(){};
     Key();
 };
 
 class NormalKey : public Key {
 public:
-    char value[4]{},currentlyDown{};
+    char value[4],currentlyDown;
     void onPress()override;
     void onRelease()override;
     NormalKey();

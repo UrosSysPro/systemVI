@@ -4,17 +4,21 @@
 
 class SystemVIKeyboard{
 private:
-	int *columns,*rows;
-	int numColumns,numRows;
+	int *columnPins,*rowPins;
+	int columns,rows;
 	bool printKeyEventsToSerial;
 	char* name;
 	Key ***keys;
 public:
-	SystemVIKeyboard();
-	void setKey();
-	void setKeyOnLayer();
-	void printKeyPressToSerial();
-	void printKeyReleaseToSerial();
+	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins);
+	void updateKeyState();
+	void reportLayout();
+	void setNormalKey();
+	void setNormalKeyLayer();
+	void processSerialCommands();
+	void executeKeyboardEvents();
+	void printKeyPressToSerial(int column,int row);
+	void printKeyReleaseToSerial(int column,int row);
 	void printName();
 };
 
