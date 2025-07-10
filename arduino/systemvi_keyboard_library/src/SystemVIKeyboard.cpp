@@ -63,6 +63,25 @@ SystemVIKeyboard::SystemVIKeyboard(char* name, int columns,int rows,int* columnP
     Keyboard.begin();
 }
 
+SystemVIKeyboard::~SystemVIKeyboard() {
+    delete [] this->name;
+    delete [] this->rowPins;
+    delete [] this->columnPins;
+    for (int i=0;i<columns;i++) {
+        for (int j=0;j<rows;j++) {
+            delete this->keys[i][j];
+        }
+        delete [] this->keys[i];
+    }
+    delete [] this->keys;
+}
+
+void SystemVIKeyboard::update() {
+    this->updateKeyState();
+    this->executeKeyboardEvents();
+}
+
+
 void SystemVIKeyboard::updateKeyState() {
     for(int j=0;j<this->rows;j++){
         int rowPin=this->rowPins[j];
@@ -95,8 +114,10 @@ void SystemVIKeyboard::executeKeyboardEvents() {
                 Keycap* key=keys[i][j];
                 if(keys[i][j]->pressed){
                     key->onPress(layer);
+                    if (this->printKeyEventsToSerial)printKeyPressToSerial(i,j);
                 }else{
                     key->onRelease(layer);
+                    if (this->printKeyEventsToSerial)printKeyReleaseToSerial(i,j);
                 }
             }
         }
@@ -107,8 +128,8 @@ void SystemVIKeyboard::processSerialCommands() {
     if(Serial.available()>0){
         char cmd=Serial.read();
         if(cmd=='r')this->reportLayout();
-        if(cmd=='k')this->setNormalKey();
-        if(cmd=='l')this->setNormalKeyLayer();
+        // if(cmd=='k')this->setNormalKey();
+        // if(cmd=='l')this->setNormalKeyLayer();
         if(cmd=='e')this->printKeyEventsToSerial=true;
         if(cmd=='d')this->printKeyEventsToSerial=false;
         if(cmd=='n')printName();

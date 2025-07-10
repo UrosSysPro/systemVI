@@ -13,7 +13,6 @@ private:
 	char* name;
 	Keycap ***keys;
 public:
-	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins);
 	void updateKeyState();
 	void reportLayout();
 	void setNormalKeycap(int column,int row,char* values);
@@ -23,6 +22,9 @@ public:
 	void printKeyPressToSerial(int column,int row);
 	void printKeyReleaseToSerial(int column,int row);
 	void printName();
+	void update();
+	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins);
+	~SystemVIKeyboard();
 };
 
 #endif

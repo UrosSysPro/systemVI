@@ -22,6 +22,7 @@ public:
     boolean onPress(int layer)override;
     boolean onRelease(int layer)override;
     MacroKey(int n,MacroAction* actions);
+    ~MacroKey();
 };
 
 #endif
