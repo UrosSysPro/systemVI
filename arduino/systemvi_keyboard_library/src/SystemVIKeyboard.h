@@ -8,7 +8,7 @@ private:
 	int columns,rows;
 	bool printKeyEventsToSerial;
 	char* name;
-	Key ***keys;
+	Keycap ***keys;
 public:
 	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins);
 	void updateKeyState();

@@ -47,11 +47,11 @@ SystemVIKeyboard::SystemVIKeyboard(char* name, int columns,int rows,int* columnP
         digitalWrite(pin, 1);
     }
     //init keys
-    this->keys=new Key**[columns];
+    this->keys=new Keycap **[columns];
     for (int i=0;i<columns;i++) {
-        this->keys[i]=new Key*[rows];
+        this->keys[i]=new Keycap*[rows];
         for (int j=0;j<rows;j++) {
-            this->keys[i][j]=new Key();
+            this->keys[i][j]=new Keycap();
         }
     }
 
@@ -88,23 +88,11 @@ void SystemVIKeyboard::executeKeyboardEvents() {
         for(int j=0;j<this->columns;j++){
             if(keys[i][j]->justChanged){
                 keys[i][j]->justChanged=false;
+                Keycap* key=keys[i][j];
                 if(keys[i][j]->pressed){
-                    Key* key=keys[i][j];
-                    // for(int k=layer;k>=0;k--){
-                    //     char value=key->value[k];
-                    //     if(value){
-                    //         if(printKeyEventsToSerial)printKeyPressToSerial(i, j);
-                    //         key->currentlyDown=value;
-                    //         Keyboard.press(value);
-                    //         break;
-                    //     }
-                    // }
+                    key->onPress(layer);
                 }else{
-                    // char value=keys[i][j].currentlyDown;
-                    // if(value){
-                    //     if(printKeyEventsToSerial)printKeyReleaseToSerial(i, j);
-                    //     Keyboard.release(value);
-                    // }
+                    key->onRelease(layer);
                 }
             }
         }

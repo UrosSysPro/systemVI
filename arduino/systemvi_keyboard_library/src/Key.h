@@ -4,13 +4,20 @@
 #include "Arduino.h"
 
 class Key {
+    virtual void onPress(){};
+    virtual void onRelease(){};
+};
+
+class Keycap {
 public:
     bool pressed,justChanged,active;
     int width,height,matrixX,matrixY;
-    virtual void onPress(){};
-    virtual void onRelease(){};
-    Key();
+    Key *keys[4];
+    void onPress(int layer);
+    void onRelease(int layer);
+    Keycap();
 };
+
 
 class NormalKey : public Key {
 public:
@@ -30,6 +37,8 @@ public:
 class MacroKey : public Key {
 public:
     MacroAction* actions;
+    void onPress()override;
+    void onRelease()override;
     MacroKey();
 };
 
