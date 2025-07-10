@@ -7,6 +7,14 @@
 
 Keycap::Keycap() {
     for (int i=0;i<4;i++)this->keys[i]=new Key();
+    this->active=false;
+    this->width=0;
+    this->height=0;
+    this->justChanged=false;
+    this->pressed=false;
+    this->currentlyUsed=-1;
+    this->matrixX=0;
+    this->matrixY=0;
 }
 
 void Keycap::onPress(int layer) {

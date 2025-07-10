@@ -168,6 +168,7 @@ void SystemVIKeyboard::setNormalKeycap(int column,int row,char*values) {
         Key *key=new NormalKey(values[i]);
         this->keys[column][row]->keys[i]=key;
     }
+    this->keys[column][row]->active=true;
 }
 
 void SystemVIKeyboard::setNormalKeycap(int column,int row, int layer,char value) {
