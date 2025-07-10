@@ -19,6 +19,8 @@ add_executable(Keyboards
 		${ARDUINO_VARIANT_PATH}/pins_arduino.h
 		${ARDUINO_KEYBOARD_LIB}/Keyboard.h
 		${ARDUINO_HID_LIB}/HID.h
+		src/Keymap.h
+		src/Keymap.cpp
 )
 
 target_include_directories(Keyboards PUBLIC ${ARDUINO_SDK_PATH})

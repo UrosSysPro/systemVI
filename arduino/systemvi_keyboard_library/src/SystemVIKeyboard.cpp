@@ -2,6 +2,10 @@
 #include <string.h>
 #include "Arduino.h"
 #include "Keyboard.h"
+#include "Key.h"
+#include "Keycap.h"
+#include "MacroKey.h"
+#include "NormalKey.h"
 
 class ReportedKey{
 public:
@@ -135,12 +139,20 @@ void SystemVIKeyboard::reportLayout() {
     delete reportedKeys;
 }
 
-void SystemVIKeyboard::setNormalKey() {
+void SystemVIKeyboard::setNormalKeycap(int column,int row,char*values) {
     //set normal key
+    delete this->keys[column][row];
+    this->keys[column][row]=new Keycap();
+    for (int i=0;i<4;i++) {
+        Key *key=new NormalKey(values[i]);
+        this->keys[column][row]->keys[i]=key;
+    }
 }
 
-void SystemVIKeyboard::setNormalKeyLayer() {
+void SystemVIKeyboard::setNormalKeycap(int column,int row, int layer,char value) {
     //update normal key layer
+    NormalKey *key=(NormalKey*)this->keys[column][row]->keys[layer];
+    key->value=value;
 }
 
 void SystemVIKeyboard::printKeyPressToSerial(int column,int row) {
