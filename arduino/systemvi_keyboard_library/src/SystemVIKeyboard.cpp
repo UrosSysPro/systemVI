@@ -51,13 +51,15 @@ SystemVIKeyboard::SystemVIKeyboard(char* name, int columns,int rows,int* columnP
         digitalWrite(pin, 1);
     }
     //init keys
-    this->keys=new Keycap **[columns];
+    this->keys=new Keycap**[columns];
     for (int i=0;i<columns;i++) {
         this->keys[i]=new Keycap*[rows];
         for (int j=0;j<rows;j++) {
             this->keys[i][j]=new Keycap();
         }
     }
+
+    this->printKeyEventsToSerial=true;
 
     Serial.begin(9600);
     Keyboard.begin();
@@ -90,8 +92,10 @@ void SystemVIKeyboard::updateKeyState() {
         for(int i=0;i<this->columns;i++){
             int columnPin=columnPins[i];
             bool newState=digitalRead(columnPin) == 0;
-            if(newState!=keys[i][j]->pressed)keys[i][j]->justChanged=true;
-            keys[i][j]->pressed=newState;
+            if(newState!=keys[i][j]->pressed) {
+                keys[i][j]->justChanged=true;
+                keys[i][j]->pressed=newState;
+            }
         }
         digitalWrite(rowPin, 1);
     }
@@ -102,17 +106,11 @@ void SystemVIKeyboard::executeKeyboardEvents() {
     int layer=0;
     //process which layer is on
 
-    // if(keys[6][5].pressed){
-        // keys[6][5].justChanged=false;
-        // layer=1;
-    // }
-
     for(int i=0;i<this->columns;i++){
-        for(int j=0;j<this->columns;j++){
-            if(keys[i][j]->justChanged){
-                keys[i][j]->justChanged=false;
-                Keycap* key=keys[i][j];
-                if(keys[i][j]->pressed){
+        for(int j=0;j<this->rows;j++){
+            if(Keycap *key=this->keys[i][j]; key->justChanged){
+                key->justChanged=false;
+                if(key->pressed){
                     key->onPress(layer);
                     if (this->printKeyEventsToSerial)printKeyPressToSerial(i,j);
                 }else{

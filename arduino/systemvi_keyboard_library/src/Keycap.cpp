@@ -29,6 +29,6 @@ void Keycap::onPress(int layer) {
 
 void Keycap::onRelease(int layer) {
     if (this->currentlyUsed!=-1) {
-        this->keys[this->currentlyUsed].onRelease(layer);
+        this->keys[this->currentlyUsed]->onRelease(layer);
     }
 }
