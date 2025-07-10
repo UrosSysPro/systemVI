@@ -11,16 +11,14 @@ set(ARDUINO_HID_LIB "/home/uros/.arduino15/packages/arduino/hardware/avr/1.8.6/l
 
 add_executable(Keyboards
 		src/NormalKey.cpp
-		src/NormalKey.hpp
 		src/SystemVIKeyboard.h
 		src/SystemVIKeyboard.cpp
-	${ARDUINO_SDK_PATH}/Arduino.h
-	${ARDUINO_VARIANT_PATH}/pins_arduino.h
-	${ARDUINO_KEYBOARD_LIB}/Keyboard.h
-	${ARDUINO_HID_LIB}/HID.h
 		src/MacroKey.cpp
-		src/MacroKey.h
 		src/Key.h
+		${ARDUINO_SDK_PATH}/Arduino.h
+		${ARDUINO_VARIANT_PATH}/pins_arduino.h
+		${ARDUINO_KEYBOARD_LIB}/Keyboard.h
+		${ARDUINO_HID_LIB}/HID.h
 )
 
 target_include_directories(Keyboards PUBLIC ${ARDUINO_SDK_PATH})
