@@ -108,9 +108,25 @@ void SystemVIKeyboard::executeKeyboardEvents() {
             if(Keycap *key=this->keys[i][j]; key->justChanged){
                 key->justChanged=false;
                 if(key->pressed){
+                    for (int k=0;k<this->snapTapPairCount;k++) {
+                        SnapTapPair p=this->snapTapPairs[k];
+                        Keycap *second=this->keys[p.second.column][p.second.row];
+                        if (p.first.column==i && p.first.row==j && second->pressed) {
+                            second->onRelease(layer);
+                            break;
+                        }
+                    }
                     key->onPress(layer);
                     if (this->printKeyEventsToSerial)printKeyPressToSerial(i,j);
                 }else{
+                    for (int k=0;k<this->snapTapPairCount;k++) {
+                        SnapTapPair p=this->snapTapPairs[k];
+                        Keycap *second=this->keys[p.second.column][p.second.row];
+                        if (p.first.column==i && p.first.row==j && second->pressed) {
+                            second->onPress(layer);
+                            break;
+                        }
+                    }
                     key->onRelease(layer);
                     if (this->printKeyEventsToSerial)printKeyReleaseToSerial(i,j);
                 }
