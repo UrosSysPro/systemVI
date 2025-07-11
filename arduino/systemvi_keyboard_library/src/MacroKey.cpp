@@ -4,14 +4,12 @@
 
 MacroKey::MacroKey(int n,MacroAction* actions) {
     this->n=n;
-    this->actions=new MacroAction[n];
-    for(int i=0;i<n;i++)this->actions[i]=actions[i];
+    this->actions=actions;
 }
 
 MacroKey::~MacroKey() {
     delete[] this->actions;
 }
-
 
 boolean MacroKey::onPress(int layer) {
     return true;

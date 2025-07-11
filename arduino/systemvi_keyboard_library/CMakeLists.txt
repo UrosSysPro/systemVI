@@ -21,6 +21,8 @@ add_executable(Keyboards
 		#${ARDUINO_HID_LIB}/HID.h
 		src/Keycap.h
 		src/Keycap.cpp
+		src/NormalKey.h
+		src/MacroKey.h
 )
 
 #target_include_directories(Keyboards PUBLIC ${ARDUINO_SDK_PATH})

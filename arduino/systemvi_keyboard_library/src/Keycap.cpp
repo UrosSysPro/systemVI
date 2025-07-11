@@ -16,6 +16,10 @@ Keycap::Keycap() {
     this->matrixX=0;
     this->matrixY=0;
 }
+Keycap::~Keycap() {
+    for (int i=0;i<4;i++)delete this->keys[i];
+}
+
 
 void Keycap::onPress(int layer) {
     this->currentlyUsed=-1;

@@ -17,6 +17,8 @@ public:
 	void reportLayout();
 	void setNormalKeycap(int column,int row,char* values);
 	void setNormalKeycap(int column,int row, int layer, char value);
+	void setLayers(int column,int row,Key* values);
+	void setLayer(int column,int row,int layer,Key* values);
 	void processSerialCommands();
 	void executeKeyboardEvents();
 	void printKeyPressToSerial(int column,int row);

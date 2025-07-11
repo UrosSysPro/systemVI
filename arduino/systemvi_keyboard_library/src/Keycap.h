@@ -22,6 +22,7 @@ public:
     void onPress(int layer);
     void onRelease(int layer);
     Keycap();
+    ~Keycap();
 };
 
 #endif //KEYMAP_H

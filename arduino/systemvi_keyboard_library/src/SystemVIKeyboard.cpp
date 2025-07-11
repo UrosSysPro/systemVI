@@ -79,10 +79,10 @@ SystemVIKeyboard::~SystemVIKeyboard() {
 }
 
 void SystemVIKeyboard::update() {
+    this->processSerialCommands();
     this->updateKeyState();
     this->executeKeyboardEvents();
 }
-
 
 void SystemVIKeyboard::updateKeyState() {
     for(int j=0;j<this->rows;j++){
@@ -173,6 +173,14 @@ void SystemVIKeyboard::setNormalKeycap(int column,int row, int layer,char value)
     //update normal key layer
     NormalKey *key=(NormalKey*)this->keys[column][row]->keys[layer];
     key->value=value;
+}
+
+void SystemVIKeyboard::setLayer(int column, int row, int layer, Key *value) {
+    this->keys[column][row]->keys[layer]=value;
+}
+
+void SystemVIKeyboard::setLayers(int column, int row, Key *values) {
+    for (int i=0;i<4;i++) this->setLayer(column,row,i,values+i);
 }
 
 void SystemVIKeyboard::printKeyPressToSerial(int column,int row) {
