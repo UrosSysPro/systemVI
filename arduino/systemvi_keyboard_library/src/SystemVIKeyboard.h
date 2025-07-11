@@ -29,6 +29,8 @@ public:
 	void serialSetLayers();
 	void serialSetLayer();
 	void serialSetMacro();
+	void serialAddLayerKeyPosition();
+	void serialRemoveLayerKeyPosition();
 	void printName();
 	void printKeyPressToSerial(int column,int row);
 	void printKeyReleaseToSerial(int column,int row);

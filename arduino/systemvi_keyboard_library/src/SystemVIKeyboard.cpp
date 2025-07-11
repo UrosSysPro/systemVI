@@ -114,6 +114,8 @@ void SystemVIKeyboard::processSerialCommands() {
         if(cmd=='k')this->serialSetLayers();
         if(cmd=='l')this->serialSetLayer();
         if(cmd=='m')this->serialSetMacro();
+        if(cmd=='A')this->serialAddLayerKeyPosition();
+        if(cmd=='S')this->serialRemoveLayerKeyPosition();
         if(cmd=='e')this->printKeyEventsToSerial=true;
         if(cmd=='d')this->printKeyEventsToSerial=false;
         if(cmd=='n')this->printName();
@@ -221,4 +223,38 @@ void SystemVIKeyboard::serialSetMacro() {
         actions[i]=MacroAction(value,type);
     }
     this->setLayer(column,row,layer,new MacroKey(n,actions));
+}
+
+void SystemVIKeyboard::serialAddLayerKeyPosition() {
+    int column=Serial.read();
+    int row=Serial.read();
+    int layer=Serial.read();
+    for (int i=0;i<4;i++) {
+        delete this->keys[column][row]->keys[i];
+        this->keys[column][row]->keys[i]=new NormalKey('\0');
+    }
+    LayerKeyPosition* layerKeys=new LayerKeyPosition[this->layerKeyPositionCount+1];
+    for (int i=0;i<this->layerKeyPositionCount;i++) layerKeys[i]=this->layerKeyPositions[i];
+    layerKeys[this->layerKeyPositionCount].layer=layer;
+    layerKeys[this->layerKeyPositionCount].row=row;
+    layerKeys[this->layerKeyPositionCount].column=column;
+    delete[] this->layerKeyPositions;
+    this->layerKeyPositionCount++;
+    this->layerKeyPositions=layerKeys;
+}
+
+void SystemVIKeyboard::serialRemoveLayerKeyPosition() {
+    int column=Serial.read();
+    int row=Serial.read();
+    LayerKeyPosition* layerKeys=new LayerKeyPosition[this->layerKeyPositionCount-1];
+    int skip=0;
+    for (int i=0;i<this->layerKeyPositionCount-1;i++) {
+        if (this->layerKeyPositions[i].column==column&&this->layerKeyPositions[i].row==row) {
+            skip=1;
+        }
+        layerKeys[i]=this->layerKeyPositions[i+skip];
+    }
+    delete[] this->layerKeyPositions;
+    this->layerKeyPositionCount--;
+    this->layerKeyPositions=layerKeys;
 }
