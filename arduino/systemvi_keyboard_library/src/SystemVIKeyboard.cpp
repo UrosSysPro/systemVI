@@ -123,11 +123,17 @@ void SystemVIKeyboard::processSerialCommands() {
     if(Serial.available()>0){
         char cmd=Serial.read();
         if(cmd=='r')this->reportLayout();
+        //set keys and macros
         if(cmd=='k')this->serialSetLayers();
         if(cmd=='l')this->serialSetLayer();
         if(cmd=='m')this->serialSetMacro();
+        //set layer keys
         if(cmd=='A')this->serialAddLayerKeyPosition();
         if(cmd=='S')this->serialRemoveLayerKeyPosition();
+        //snap tap
+        if(cmd=='E')this->serialAddSnapTapKeyPair();
+        if(cmd=='D')this->serialRemoveSnapTapKeyPair();
+        //debug print
         if(cmd=='e')this->printKeyEventsToSerial=true;
         if(cmd=='d')this->printKeyEventsToSerial=false;
         if(cmd=='n')this->printName();
@@ -269,4 +275,45 @@ void SystemVIKeyboard::serialRemoveLayerKeyPosition() {
     delete[] this->layerKeyPositions;
     this->layerKeyPositionCount--;
     this->layerKeyPositions=layerKeys;
+}
+
+void SystemVIKeyboard::serialAddSnapTapKeyPair() {
+    int column0=Serial.read();
+    int row0=Serial.read();
+    int column1=Serial.read();
+    int row1=Serial.read();
+    SnapTapPair* snapTapKeys=new SnapTapPair[this->snapTapPairCount+2];
+    for (int i=0;i<this->snapTapPairCount;i++) snapTapKeys[i]=this->snapTapPairs[i];
+    //first pair
+    snapTapKeys[this->snapTapPairCount].first.column=column0;
+    snapTapKeys[this->snapTapPairCount].first.row=row0;
+    snapTapKeys[this->snapTapPairCount].second.column=column1;
+    snapTapKeys[this->snapTapPairCount].second.row=row1;
+    //second pair
+    snapTapKeys[this->snapTapPairCount+1].first.column=column1;
+    snapTapKeys[this->snapTapPairCount+1].first.row=row1;
+    snapTapKeys[this->snapTapPairCount+1].second.column=column0;
+    snapTapKeys[this->snapTapPairCount+1].second.row=row0;
+
+    delete[] this->snapTapPairs;
+    this->snapTapPairCount+=2;
+    this->snapTapPairs=snapTapKeys;
+}
+
+void SystemVIKeyboard::serialRemoveSnapTapKeyPair() {
+    int column0=Serial.read();
+    int row0=Serial.read();
+    int column1=Serial.read();
+    int row1=Serial.read();
+    SnapTapPair* snapTapKeys=new SnapTapPair[this->snapTapPairCount+2];
+    int skip=0;
+    // for (int i=0;i<this->snapTapPairCount-2;i++) {
+        // if (this->[i].column==column&&this->layerKeyPositions[i].row==row) {
+            // skip=1;
+        // }
+        // layerKeys[i]=this->layerKeyPositions[i+skip];
+    // }
+    // delete[] this->layerKeyPositions;
+    // this->layerKeyPositionCount--;
+    // this->layerKeyPositions=layerKeys;
 }

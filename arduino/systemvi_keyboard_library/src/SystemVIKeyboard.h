@@ -33,6 +33,8 @@ public:
 	void serialSetMacro();
 	void serialAddLayerKeyPosition();
 	void serialRemoveLayerKeyPosition();
+	void serialAddSnapTapKeyPair();
+	void serialRemoveSnapTapKeyPair();
 	void printName();
 	void printKeyPressToSerial(int column,int row);
 	void printKeyReleaseToSerial(int column,int row);
