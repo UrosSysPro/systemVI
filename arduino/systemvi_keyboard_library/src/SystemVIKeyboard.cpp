@@ -166,6 +166,14 @@ void SystemVIKeyboard::reportLayout() {
         }
     }
 
+    for (int i=0;i<this->layerKeyPositionCount;i++) {
+        this->layerKeyPositions[i].reportSerial();
+    }
+
+    for (int i=0;i<this->snapTapPairCount;i++) {
+        this->snapTapPairs[i].reportSerial();
+    }
+
     Serial.print('@');
 }
 
