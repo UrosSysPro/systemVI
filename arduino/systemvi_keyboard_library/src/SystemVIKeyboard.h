@@ -5,15 +5,17 @@
 #include "LayerKeyPosition.h"
 #include "MacroKey.h"
 #include "NormalKey.h"
+#include "SnapTapPair.h"
 
 class SystemVIKeyboard{
 private:
 	int *columnPins,*rowPins;
-	int columns,rows,layerKeyPositionCount;
+	int columns,rows,layerKeyPositionCount,snapTapPairCount;
 	bool printKeyEventsToSerial;
 	char* name;
 	Keycap ***keys;
 	LayerKeyPosition* layerKeyPositions;
+	SnapTapPair* snapTapPairs;
 public:
 	void updateKeyState();
 	void setNormalKeycap(int column,int row,char* values,int physicalX,int physicalY,int width,int height);
