@@ -19,11 +19,12 @@ bool MacroKey::onRelease(int layer) {
     for (int i=0;i<this->n;i++) {
         int type=this->actions[i].type;
         char value=this->actions[i].value;
-        if (type) {
+        if (type==PRESS) {
             Keyboard.press(value);
         }else {
             Keyboard.release(value);
         }
+        delay(20);
     }
     return true;
 }
@@ -38,4 +39,14 @@ void MacroKey::reportSerial() {
         message[1]=this->actions[i].type;
         Serial.write((byte*)message,2);
     }
+}
+
+MacroAction::MacroAction(char value, MacroActionType type) {
+    this->value=value;
+    this->type=type;
+}
+
+MacroAction::MacroAction() {
+    this->value=0;
+    this->type=PRESS;
 }

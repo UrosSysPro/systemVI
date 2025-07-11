@@ -75,6 +75,12 @@ void setup() {
   keyboard->setNormalKeycap(12,4,(char[]){KEY_LEFT_GUI,'\0','\0','\0'}      ,1 ,4,    1,0);
   keyboard->setNormalKeycap(11,4,(char[]){KEY_LEFT_ALT,'\0','\0','\0'}      ,2 ,4,    1,0);
   keyboard->setNormalKeycap(8 ,4,(char[]){' ','\0','\0','\0'}               ,3 ,4,    7,0);
+  MacroAction* actions=new MacroAction[4];
+  actions[0]=MacroAction('q',PRESS);
+  actions[1]=MacroAction('q',RELEASE);
+  actions[2]=MacroAction('w',PRESS);
+  actions[3]=MacroAction('w',RELEASE);
+  keyboard->setLayer(8, 4, 0, new MacroKey(4,actions));
   keyboard->setNormalKeycap(4 ,4,(char[]){KEY_RIGHT_ALT,'\0','\0','\0'}     ,4 ,4,    1,0);
   keyboard->setNormalKeycap(3 ,4,(char[]){' ','\0','\0','\0'}               ,5 ,4,    1,0);
   keyboard->setNormalKeycap(2 ,4,(char[]){KEY_MENU,'\0','\0','\0'}          ,6 ,4,    1,0);

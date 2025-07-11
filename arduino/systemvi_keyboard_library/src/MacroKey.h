@@ -5,13 +5,14 @@
 
 enum MacroActionType {
     PRESS=1,
-    RELEASE=2,
+    RELEASE=0,
 };
 
 class MacroAction {
 public:
     MacroActionType type;
     char value;
+    MacroAction(char value,MacroActionType type);
     MacroAction();
 };
 
