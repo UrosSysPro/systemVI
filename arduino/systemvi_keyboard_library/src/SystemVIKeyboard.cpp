@@ -108,11 +108,11 @@ void SystemVIKeyboard::processSerialCommands() {
     if(Serial.available()>0){
         char cmd=Serial.read();
         if(cmd=='r')this->reportLayout();
-        // if(cmd=='k')this->setNormalKey();
-        // if(cmd=='l')this->setNormalKeyLayer();
+        if(cmd=='k')this->serialSetLayers();
+        if(cmd=='l')this->serialSetLayer();
         if(cmd=='e')this->printKeyEventsToSerial=true;
         if(cmd=='d')this->printKeyEventsToSerial=false;
-        if(cmd=='n')printName();
+        if(cmd=='n')this->printName();
     }
 }
 
@@ -147,6 +147,7 @@ void SystemVIKeyboard::setNormalKeycap(int column,int row, int layer,char value)
 }
 
 void SystemVIKeyboard::setLayer(int column, int row, int layer, Key *value) {
+    delete this->keys[column][row]->keys[layer];
     this->keys[column][row]->keys[layer]=value;
 }
 
@@ -176,4 +177,19 @@ void SystemVIKeyboard::printName() {
     char *message=this->name;
     int size=strlen(message);
     Serial.write((byte*)message,size);
+    Serial.print('@');
+}
+
+void SystemVIKeyboard::serialSetLayer() {
+    int column=Serial.read();
+    int row=Serial.read();
+    int layer=Serial.read();
+    char value=Serial.read();
+    this->setLayer(column,row,layer,new NormalKey(value));
+}
+
+void SystemVIKeyboard::serialSetLayers() {
+    int column=Serial.read();
+    int row=Serial.read();
+    for (int i=0;i<4;i++)this->setLayer(column,row,i,new NormalKey((char)Serial.read()));
 }

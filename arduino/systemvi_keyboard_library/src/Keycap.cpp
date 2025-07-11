@@ -43,8 +43,8 @@ void Keycap::reportSerial(int column,int row) {
     message[2]=row;
     message[3]=this->width;
     message[4]=this->height;
-    message[5]=0;
-    message[6]=0;
+    message[5]=column;
+    message[6]=row;
 
     if (this->active) {
         Serial.write((byte*)message,7);
