@@ -129,7 +129,7 @@ void SystemVIKeyboard::reportLayout() {
     Serial.print('@');
 }
 
-void SystemVIKeyboard::setNormalKeycap(int column,int row,char*values) {
+void SystemVIKeyboard::setNormalKeycap(int column,int row,char*values,int physicalColumn,int physicalRow,int with,int height) {
     //set normal key
     delete this->keys[column][row];
     this->keys[column][row]=new Keycap();
@@ -137,7 +137,18 @@ void SystemVIKeyboard::setNormalKeycap(int column,int row,char*values) {
         Key *key=new NormalKey(values[i]);
         this->keys[column][row]->keys[i]=key;
     }
+    this->keys[column][row]->physicalColumn=physicalColumn;
+    this->keys[column][row]->physicalRow=physicalRow;
+    this->keys[column][row]->width=with;
+    this->keys[column][row]->height=height;
     this->keys[column][row]->active=true;
+}
+void SystemVIKeyboard::setNormalKeycap(int column, int row, char *values, int physicalX, int physicalY) {
+    this->setNormalKeycap(column,row,values,physicalX,physicalY,0,0);
+}
+
+void SystemVIKeyboard::setNormalKeycap(int column,int row,char* values) {
+    this->setNormalKeycap(column,row,values,0,0);
 }
 
 void SystemVIKeyboard::setNormalKeycap(int column,int row, int layer,char value) {

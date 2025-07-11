@@ -15,11 +15,13 @@ Keycap::Keycap() {
     this->currentlyUsed=-1;
     this->matrixX=0;
     this->matrixY=0;
+    this->physicalColumn=0;
+    this->physicalRow=0;
 }
+
 Keycap::~Keycap() {
     for (int i=0;i<4;i++)delete this->keys[i];
 }
-
 
 void Keycap::onPress(int layer) {
     this->currentlyUsed=-1;
@@ -43,8 +45,8 @@ void Keycap::reportSerial(int column,int row) {
     message[2]=row;
     message[3]=this->width;
     message[4]=this->height;
-    message[5]=column;
-    message[6]=row;
+    message[5]=this->physicalColumn;
+    message[6]=this->physicalRow;
 
     if (this->active) {
         Serial.write((byte*)message,7);

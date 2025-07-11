@@ -14,6 +14,8 @@ private:
 	Keycap ***keys;
 public:
 	void updateKeyState();
+	void setNormalKeycap(int column,int row,char* values,int physicalX,int physicalY,int width,int height);
+	void setNormalKeycap(int column,int row,char* values,int physicalX,int physicalY);
 	void setNormalKeycap(int column,int row,char* values);
 	void setNormalKeycap(int column,int row, int layer, char value);
 	void setLayers(int column,int row,Key* values);
