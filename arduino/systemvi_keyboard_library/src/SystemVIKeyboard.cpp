@@ -86,10 +86,20 @@ void SystemVIKeyboard::updateKeyState() {
     }
 }
 
+int max(int a,int b) {
+    if (a>b) return a; else return b;
+}
+
 void SystemVIKeyboard::executeKeyboardEvents() {
 
     int layer=0;
     //process which layer is on
+    for (int i=0;i<this->layerKeyPositionCount;i++) {
+        LayerKeyPosition p=this->layerKeyPositions[i];
+        if (this->keys[p.column][p.row]->pressed) {
+            layer=max(layer,p.layer);
+        }
+    }
 
     for(int i=0;i<this->columns;i++){
         for(int j=0;j<this->rows;j++){
