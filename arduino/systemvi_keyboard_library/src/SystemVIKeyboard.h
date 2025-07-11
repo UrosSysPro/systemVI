@@ -2,16 +2,18 @@
 #define __SYSTEMVI_KEYBOARD__
 #include "Key.h"
 #include "Keycap.h"
+#include "LayerKeyPosition.h"
 #include "MacroKey.h"
 #include "NormalKey.h"
 
 class SystemVIKeyboard{
 private:
 	int *columnPins,*rowPins;
-	int columns,rows;
+	int columns,rows,layerKeyPositionCount;
 	bool printKeyEventsToSerial;
 	char* name;
 	Keycap ***keys;
+	LayerKeyPosition* layerKeyPositions;
 public:
 	void updateKeyState();
 	void setNormalKeycap(int column,int row,char* values,int physicalX,int physicalY,int width,int height);

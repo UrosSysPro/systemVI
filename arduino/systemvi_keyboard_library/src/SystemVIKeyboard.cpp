@@ -15,12 +15,15 @@ SystemVIKeyboard::SystemVIKeyboard(char* name, int columns,int rows,int* columnP
 
     this->rows=rows;
     this->columns=columns;
+    this->layerKeyPositionCount=0;
 
     this->columnPins=new int[columns];
     for (int i=0;i<columns;i++)this->columnPins[i]=columnPins[i];
 
     this->rowPins=new int[rows];
     for (int i=0;i<rows;i++)this->rowPins[i]=rowPins[i];
+
+    this->layerKeyPositions=new LayerKeyPosition[1];
 
     for(int i=0;i<columns;i++){
         int pin=columnPins[i];
