@@ -6,14 +6,22 @@ NormalKey::NormalKey(char value) {
     this->value = value;
 }
 
-boolean NormalKey::onPress(int layer) {
+bool NormalKey::onPress(int layer) {
     if (this->value) {
         Keyboard.press(this->value);
         return true;
     }
     return false;
 }
-boolean NormalKey::onRelease(int layer) {
+
+bool NormalKey::onRelease(int layer) {
     Keyboard.release(this->value);
     return true;
+}
+
+void NormalKey::reportSerial() {
+    char message[2];
+    message[0]='n';
+    message[1]=this->value;
+    Serial.write((byte*)message,2);
 }

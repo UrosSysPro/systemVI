@@ -11,11 +11,11 @@ MacroKey::~MacroKey() {
     delete[] this->actions;
 }
 
-boolean MacroKey::onPress(int layer) {
+bool MacroKey::onPress(int layer) {
     return true;
 }
 
-boolean MacroKey::onRelease(int layer) {
+bool MacroKey::onRelease(int layer) {
     for (int i=0;i<this->n;i++) {
         int type=this->actions[i].type;
         char value=this->actions[i].value;
@@ -26,4 +26,16 @@ boolean MacroKey::onRelease(int layer) {
         }
     }
     return true;
+}
+
+void MacroKey::reportSerial() {
+    char message[2];
+    message[0]='m';
+    message[1]=this->n;
+    Serial.write((byte*)message,2);
+    for (int i=0;i<this->n;i++) {
+        message[0]=this->actions[i].value;
+        message[1]=this->actions[i].type;
+        Serial.write((byte*)message,2);
+    }
 }

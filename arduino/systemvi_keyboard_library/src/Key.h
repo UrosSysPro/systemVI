@@ -5,8 +5,9 @@
 
 class Key {
 public:
-    virtual boolean onPress(int layer){return false;}
-    virtual boolean onRelease(int layer){return false;}
+    virtual bool onPress(int layer){return false;}
+    virtual bool onRelease(int layer){return false;}
+    virtual void reportSerial(){}
 };
 
 #endif

@@ -19,8 +19,9 @@ class MacroKey : public Key {
 public:
     int n;
     MacroAction* actions;
-    boolean onPress(int layer)override;
-    boolean onRelease(int layer)override;
+    bool onPress(int layer)override;
+    bool onRelease(int layer)override;
+    void reportSerial()override;
     MacroKey(int n,MacroAction* actions);
     ~MacroKey();
 };

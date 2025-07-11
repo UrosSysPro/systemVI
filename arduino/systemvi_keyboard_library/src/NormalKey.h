@@ -6,8 +6,9 @@
 class NormalKey : public Key {
 public:
     char value;
-    boolean onPress(int layer)override;
-    boolean onRelease(int layer)override;
+    bool onPress(int layer)override;
+    bool onRelease(int layer)override;
+    void reportSerial()override;
     NormalKey(char value);
 };
 

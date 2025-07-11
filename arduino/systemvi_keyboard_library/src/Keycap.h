@@ -21,6 +21,7 @@ public:
     Key *keys[4];
     void onPress(int layer);
     void onRelease(int layer);
+    void reportSerial(int column,int row);
     Keycap();
     ~Keycap();
 };

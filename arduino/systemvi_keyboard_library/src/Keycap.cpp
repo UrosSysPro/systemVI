@@ -36,3 +36,20 @@ void Keycap::onRelease(int layer) {
         this->keys[this->currentlyUsed]->onRelease(layer);
     }
 }
+void Keycap::reportSerial(int column,int row) {
+    char message[7];
+    message[0]='c';
+    message[1]=column;
+    message[2]=row;
+    message[3]=this->width;
+    message[4]=this->height;
+    message[5]=0;
+    message[6]=0;
+
+    if (this->active) {
+        Serial.write((byte*)message,7);
+        for (int i=0;i<4;i++) {
+            this->keys[i]->reportSerial();
+        }
+    }
+}

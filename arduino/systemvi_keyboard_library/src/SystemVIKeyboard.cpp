@@ -7,24 +7,6 @@
 #include "MacroKey.h"
 #include "NormalKey.h"
 
-class ReportedKey{
-public:
-    byte x,y,value[4],width,height,physicalX,physicalY,active;
-    ReportedKey(){}
-    ReportedKey(byte x,byte y,byte* value,int width,int height,int px,int py,bool active){
-        this->x=x;
-        this->y=y;
-        for(int i=0;i<4;i++){
-            this->value[i]=value[i];
-        }
-        this->width=width;
-        this->height=height;
-        this->physicalX=px;
-        this->physicalY=py;
-        this->active=active;
-    }
-};
-
 SystemVIKeyboard::SystemVIKeyboard(char* name, int columns,int rows,int* columnPins,int* rowPins) {
     int length=strlen(name);
     this->name=new char[length+1];
@@ -135,27 +117,16 @@ void SystemVIKeyboard::processSerialCommands() {
 }
 
 void SystemVIKeyboard::reportLayout() {
-    int n=this->columns*this->rows;
-    ReportedKey* reportedKeys=new ReportedKey[n];
-    for(int i=0;i<this->columns;i++){
-        for(int j=0;j<this->rows;j++){
-            // reportedKeys[j*this->columns+i]=ReportedKey(
-              // i,
-              // j,
-              // (byte*)keys[i][j].value,
-              // keys[i][j].width,
-              // keys[i][j].height,
-              // keys[i][j].physicalX,
-              // keys[i][j].physicalY,
-              // keys[i][j].active
-            // );
-        }
-    }
     byte header[]={(byte)'l',(byte)this->columns,(byte)this->rows};
     Serial.write(header,3);
-    Serial.write((byte*)reportedKeys,n*sizeof(ReportedKey));
+
+    for(int i=0;i<this->columns;i++){
+        for(int j=0;j<this->rows;j++){
+            this->keys[i][j]->reportSerial(i,j);
+        }
+    }
+
     Serial.print('@');
-    delete reportedKeys;
 }
 
 void SystemVIKeyboard::setNormalKeycap(int column,int row,char*values) {
