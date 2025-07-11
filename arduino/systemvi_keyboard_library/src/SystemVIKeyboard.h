@@ -26,6 +26,7 @@ public:
 	void processSerialCommands();
 	void serialSetLayers();
 	void serialSetLayer();
+	void serialSetMacro();
 	void printName();
 	void printKeyPressToSerial(int column,int row);
 	void printKeyReleaseToSerial(int column,int row);

@@ -110,6 +110,7 @@ void SystemVIKeyboard::processSerialCommands() {
         if(cmd=='r')this->reportLayout();
         if(cmd=='k')this->serialSetLayers();
         if(cmd=='l')this->serialSetLayer();
+        if(cmd=='m')this->serialSetMacro();
         if(cmd=='e')this->printKeyEventsToSerial=true;
         if(cmd=='d')this->printKeyEventsToSerial=false;
         if(cmd=='n')this->printName();
@@ -203,4 +204,18 @@ void SystemVIKeyboard::serialSetLayers() {
     int column=Serial.read();
     int row=Serial.read();
     for (int i=0;i<4;i++)this->setLayer(column,row,i,new NormalKey((char)Serial.read()));
+}
+
+void SystemVIKeyboard::serialSetMacro() {
+    int column=Serial.read();
+    int row=Serial.read();
+    int layer=Serial.read();
+    int n=Serial.read();
+    MacroAction* actions=new MacroAction[n];
+    for (int i=0;i<n;i++) {
+        char value=Serial.read();
+        MacroActionType type=Serial.read()==1?PRESS:RELEASE;
+        actions[i]=MacroAction(value,type);
+    }
+    this->setLayer(column,row,layer,new MacroKey(n,actions));
 }
