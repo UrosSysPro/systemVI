@@ -7,7 +7,8 @@
 #include "MacroKey.h"
 #include "NormalKey.h"
 
-SystemVIKeyboard::SystemVIKeyboard(char* name, int columns,int rows,int* columnPins,int* rowPins) {
+void SystemVIKeyboard::init(char* name, int columns,int rows,int* columnPins,int* rowPins,bool debugPrint) {
+    this->debugPrint=debugPrint;
     int length=strlen(name);
     this->name=new char[length+1];
     for (int i=0;i<length;i++)this->name[i]=name[i];
@@ -50,6 +51,14 @@ SystemVIKeyboard::SystemVIKeyboard(char* name, int columns,int rows,int* columnP
 
     Serial.begin(9600);
     Keyboard.begin();
+}
+
+SystemVIKeyboard::SystemVIKeyboard(char* name, int columns,int rows,int* columnPins,int* rowPins,bool debugPrint) {
+    this->init(name,columns,rows,columnPins,rowPins,debugPrint);
+}
+
+SystemVIKeyboard::SystemVIKeyboard(char* name, int columns,int rows,int* columnPins,int* rowPins) {
+    this->init(name,columns,rows,columnPins,rowPins,false);
 }
 
 SystemVIKeyboard::~SystemVIKeyboard() {
@@ -118,6 +127,7 @@ void SystemVIKeyboard::executeKeyboardEvents() {
                     }
                     key->onPress(layer);
                     if (this->printKeyEventsToSerial)printKeyPressToSerial(i,j);
+                    if (this->debugPrint)Serial.printf("mDebug press column: %d row: %d columnPin: %d rowPin: %d\n@",i,j,this->columnPins[i],this->rowPins[j]);
                 }else{
                     for (int k=0;k<this->snapTapPairCount;k++) {
                         SnapTapPair p=this->snapTapPairs[k];
@@ -129,6 +139,7 @@ void SystemVIKeyboard::executeKeyboardEvents() {
                     }
                     key->onRelease(layer);
                     if (this->printKeyEventsToSerial)printKeyReleaseToSerial(i,j);
+                    if (this->debugPrint)Serial.printf("mDebug release column: %d row: %d columnPin: %d rowPin: %d\n@",i,j,this->columnPins[i],this->rowPins[j]);
                 }
             }
         }

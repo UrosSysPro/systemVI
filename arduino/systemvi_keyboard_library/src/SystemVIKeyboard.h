@@ -11,7 +11,7 @@ class SystemVIKeyboard{
 private:
 	int *columnPins,*rowPins;
 	int columns,rows,layerKeyPositionCount,snapTapPairCount;
-	bool printKeyEventsToSerial;
+	bool printKeyEventsToSerial,debugPrint;
 	char* name;
 	Keycap ***keys;
 	LayerKeyPosition* layerKeyPositions;
@@ -40,7 +40,10 @@ public:
 	void printKeyReleaseToSerial(int column,int row);
 	void reportLayout();
 
+
 	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins);
+	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins,bool debugPrint);
+	void init(char* name, int columns,int rows, int* columnPins, int* rowPins,bool debugPrint);
 	~SystemVIKeyboard();
 };
 
