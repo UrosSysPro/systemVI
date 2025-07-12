@@ -1,16 +1,18 @@
 #ifndef LAYER_KEY_POSITION
 #define LAYER_KEY_POSITION
 
+#include "Arduino.h"
+
 class LayerKeyPosition {
 public:
     int column,row,layer;
     void reportSerial() {
-        // byte message[4];
-        // message[0]=(byte)'p';
-        // message[1]=column;
-        // message[2]=row;
-        // message[3]='@';
-        // Serial.write(message,4);
+        byte message[4];
+        message[0]=(byte)'l';
+        message[1]=this->column;
+        message[2]=this->row;
+        message[3]=this->layer;
+        Serial.write(message,4);
     }
     LayerKeyPosition(int column, int row, int layer) {
         this->column=column;
