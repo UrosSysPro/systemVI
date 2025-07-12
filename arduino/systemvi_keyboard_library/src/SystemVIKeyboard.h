@@ -10,7 +10,7 @@
 class SystemVIKeyboard{
 private:
 	int *columnPins,*rowPins;
-	int columns,rows,layerKeyPositionCount,snapTapPairCount;
+	int columns,rows,reportedColumns,reportedRows,layerKeyPositionCount,snapTapPairCount;
 	bool printKeyEventsToSerial,debugPrint;
 	char* name;
 	Keycap ***keys;
@@ -42,8 +42,8 @@ public:
 
 
 	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins);
-	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins,bool debugPrint);
-	void init(char* name, int columns,int rows, int* columnPins, int* rowPins,bool debugPrint);
+	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins,bool debugPrint,int reportedColumns,int reportedRows);
+	void init(char* name, int columns,int rows, int* columnPins, int* rowPins,bool debugPrint,int reportedColumns,int reportedRows);
 	~SystemVIKeyboard();
 };
 

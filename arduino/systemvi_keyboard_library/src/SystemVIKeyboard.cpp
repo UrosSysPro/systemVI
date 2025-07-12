@@ -7,8 +7,10 @@
 #include "MacroKey.h"
 #include "NormalKey.h"
 
-void SystemVIKeyboard::init(char* name, int columns,int rows,int* columnPins,int* rowPins,bool debugPrint) {
+void SystemVIKeyboard::init(char* name, int columns,int rows,int* columnPins,int* rowPins,bool debugPrint,int reportedColumns,int reportedRows) {
     this->debugPrint=debugPrint;
+    this->reportedColumns=reportedColumns;
+    this->reportedRows=reportedRows;
     int length=strlen(name);
     this->name=new char[length+1];
     for (int i=0;i<length;i++)this->name[i]=name[i];
@@ -53,12 +55,12 @@ void SystemVIKeyboard::init(char* name, int columns,int rows,int* columnPins,int
     Keyboard.begin();
 }
 
-SystemVIKeyboard::SystemVIKeyboard(char* name, int columns,int rows,int* columnPins,int* rowPins,bool debugPrint) {
-    this->init(name,columns,rows,columnPins,rowPins,debugPrint);
+SystemVIKeyboard::SystemVIKeyboard(char* name, int columns,int rows,int* columnPins,int* rowPins,bool debugPrint,int reportedColumns,int reportedRows) {
+    this->init(name,columns,rows,columnPins,rowPins,debugPrint,reportedColumns,reportedRows);
 }
 
 SystemVIKeyboard::SystemVIKeyboard(char* name, int columns,int rows,int* columnPins,int* rowPins) {
-    this->init(name,columns,rows,columnPins,rowPins,false);
+    this->init(name,columns,rows,columnPins,rowPins,false,columns,rows);
 }
 
 SystemVIKeyboard::~SystemVIKeyboard() {
@@ -168,7 +170,7 @@ void SystemVIKeyboard::processSerialCommands() {
 }
 
 void SystemVIKeyboard::reportLayout() {
-    byte header[]={(byte)'l',(byte)this->columns,(byte)this->rows};
+    byte header[]={(byte)'l',(byte)this->reportedColumns,(byte)this->reportedRows};
     Serial.write(header,3);
 
     for(int i=0;i<this->columns;i++){
