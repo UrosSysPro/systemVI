@@ -37,7 +37,7 @@ void setup() {
   keyboard->setNormalKeycap(4,2,(char[]){'k','\0','\0','\0'},     2,4,     0,0);
   keyboard->setNormalKeycap(4,3,(char[]){'l','\0','\0','\0'},     3,4,     0,1);
   
-  keyboard->setNormalKeycap(5,1,(char[]){'m','\0','\0','\0'},     1,5,     3,0);
+  keyboard->setNormalKeycap(5,1,(char[]){'m','\0','\0','\0'},     1,5,     4,0);
   keyboard->setNormalKeycap(5,2,(char[]){',','\0','\0','\0'},     2,5,     0,0);
 }
 
