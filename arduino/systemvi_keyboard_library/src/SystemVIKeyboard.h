@@ -39,6 +39,7 @@ public:
 	void printKeyPressToSerial(int column,int row);
 	void printKeyReleaseToSerial(int column,int row);
 	void reportLayout();
+	void removeLayout();
 
 
 	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins);

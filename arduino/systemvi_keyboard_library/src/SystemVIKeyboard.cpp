@@ -151,7 +151,9 @@ void SystemVIKeyboard::executeKeyboardEvents() {
 void SystemVIKeyboard::processSerialCommands() {
     if(Serial.available()>0){
         char cmd=Serial.read();
+        //current keymap
         if(cmd=='r')this->reportLayout();
+        if(cmd=='R')this->removeLayout();
         //set keys and macros
         if(cmd=='k')this->serialSetLayers();
         if(cmd=='l')this->serialSetLayer();
@@ -188,6 +190,23 @@ void SystemVIKeyboard::reportLayout() {
     }
 
     Serial.print('@');
+}
+
+void SystemVIKeyboard::removeLayout() {
+    for(int i=0;i<this->columns;i++){
+        for(int j=0;j<this->rows;j++){
+            for(auto & key : this->keys[i][j]->keys) {
+                delete key;
+                key=new NormalKey('\0');
+            }
+        }
+    }
+    delete [] this->snapTapPairs;
+    delete [] this->layerKeyPositions;
+    this->snapTapPairCount=0;
+    this->layerKeyPositionCount=0;
+    this->snapTapPairs=new SnapTapPair[1];
+    this->layerKeyPositions=new LayerKeyPosition[1];
 }
 
 void SystemVIKeyboard::setNormalKeycap(int column,int row,char*values,int physicalColumn,int physicalRow,int with,int height) {
