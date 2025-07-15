@@ -183,7 +183,7 @@ void SystemVIKeyboard::reportLayout() {
         this->layerKeyPositions[i].reportSerial();
     }
 
-    for (int i=0;i<this->snapTapPairCount;i++) {
+    for (int i=0;i<this->snapTapPairCount;i+=2) {
         this->snapTapPairs[i].reportSerial();
     }
 
@@ -338,19 +338,17 @@ void SystemVIKeyboard::serialAddSnapTapKeyPair() {
 }
 
 void SystemVIKeyboard::serialRemoveSnapTapKeyPair() {
-    int column0=Serial.read();
-    int row0=Serial.read();
-    int column1=Serial.read();
-    int row1=Serial.read();
-    SnapTapPair* snapTapKeys=new SnapTapPair[this->snapTapPairCount+2];
+    int column=Serial.read();
+    int row=Serial.read();
+    SnapTapPair* snapTapKeys=new SnapTapPair[this->snapTapPairCount-2];
     int skip=0;
-    // for (int i=0;i<this->snapTapPairCount-2;i++) {
-        // if (this->[i].column==column&&this->layerKeyPositions[i].row==row) {
-            // skip=1;
-        // }
-        // layerKeys[i]=this->layerKeyPositions[i+skip];
-    // }
-    // delete[] this->layerKeyPositions;
-    // this->layerKeyPositionCount--;
-    // this->layerKeyPositions=layerKeys;
+    for (int i=0;i<this->snapTapPairCount-2;i++) {
+        if (this->snapTapPairs[i].first.column==column&&this->snapTapPairs[i].first.row==row) {
+            skip=2;
+        }
+        snapTapKeys[i]=this->snapTapPairs[i+skip];
+    }
+    delete[] this->snapTapPairs;
+    this->snapTapPairCount-=2;
+    this->snapTapPairs=snapTapKeys;
 }
