@@ -1,6 +1,5 @@
 #include"Arduino.h"
 #include "Wire.h"
-// #define __DEBUG__
 
 #define COLUMNS_NUMBER 7
 #define ROWS_NUMBER 3
@@ -77,17 +76,3 @@ void loop() {
   Wire.write((byte*)&state,4);
   Wire.endTransmission();
 }
-
-// void onRequest(){
-//   unsigned int state=0;
-//   for(int i=0;i<COLUMNS_NUMBER;i++){
-//     for(int j=0;j<ROWS_NUMBER;j++){
-//       state = state << 1;
-//       state = state | (int)keys[i][j].pressed;
-//     }
-//   }
-//   Wire.write((byte*)&state,4);
-// }
-
-
-

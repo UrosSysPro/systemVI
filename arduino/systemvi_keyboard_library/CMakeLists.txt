@@ -23,6 +23,8 @@ add_executable(Keyboards
 		src/Keycap.cpp
 		src/NormalKey.h
 		src/MacroKey.h
+		src/SplitMain.h
+		src/SplitPeripheral.h
 )
 
 #target_include_directories(Keyboards PUBLIC ${ARDUINO_SDK_PATH})
