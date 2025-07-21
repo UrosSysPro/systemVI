@@ -65,12 +65,12 @@ void setup() {
   keyboard->setNormalKeycap( 5,1,  (char[]){'-',                '\0','\0','\0'},     11,1,      0,0);
   keyboard->setNormalKeycap( 4,1,  (char[]){'=',                '\0','\0','\0'},     12,1,      0,0);
 
-  keyboard->setNormalKeycap( 3,1,  (char[]){KEY_BACKSPACE,      '\0','\0','\0'},      4,0,      0,0);
-  keyboard->setNormalKeycap( 2,1,  (char[]){KEY_INSERT,         '\0','\0','\0'},     13,1,      0,0);
-  keyboard->setNormalKeycap( 1,1,  (char[]){KEY_HOME,           '\0','\0','\0'},     14,1,      0,0);
-  keyboard->setNormalKeycap( 0,1,  (char[]){KEY_PAGE_UP,        '\0','\0','\0'},     15,1,      0,0);
+  keyboard->setNormalKeycap( 3,1,  (char[]){KEY_BACKSPACE,      '\0','\0','\0'},     13,1,      4,0);
+  keyboard->setNormalKeycap( 2,1,  (char[]){KEY_INSERT,         '\0','\0','\0'},     14,1,      0,0);
+  keyboard->setNormalKeycap( 1,1,  (char[]){KEY_HOME,           '\0','\0','\0'},     15,1,      0,0);
+  keyboard->setNormalKeycap( 0,1,  (char[]){KEY_PAGE_UP,        '\0','\0','\0'},     16,1,      0,0);
 // //red 2/////////////////////////////////////////////////////////////
-  keyboard->setNormalKeycap(16,2,  (char[]){KEY_TAB,            '\0','\0','\0'},      2,0,      0,0);
+  keyboard->setNormalKeycap(16,2,  (char[]){KEY_TAB,            '\0','\0','\0'},      0,2,      2,0);
   keyboard->setNormalKeycap(15,2,  (char[]){'q',                '\0','\0','\0'},      1,2,      0,0);
   keyboard->setNormalKeycap(14,2,  (char[]){'w',                '\0','\0','\0'},      2,2,      0,0);
   keyboard->setNormalKeycap(13,2,  (char[]){'e',                '\0','\0','\0'},      3,2,      0,0);
@@ -88,7 +88,7 @@ void setup() {
   keyboard->setNormalKeycap( 1,2,  (char[]){KEY_END,            '\0','\0','\0'},     15,2,      0,0);
   keyboard->setNormalKeycap( 0,2,  (char[]){KEY_PAGE_DOWN,      '\0','\0','\0'},     16,2,      0,0);
 // //red 3/////////////////////////////////////////////////////////////
-  keyboard->setNormalKeycap(16,3,  (char[]){KEY_CAPS_LOCK,      '\0','\0','\0'},      3,0,      0,0);
+  keyboard->setNormalKeycap(16,3,  (char[]){KEY_CAPS_LOCK,      '\0','\0','\0'},      0,3,      3,0);
   keyboard->setNormalKeycap(15,3,  (char[]){'a',                '\0','\0','\0'},      1,3,      0,0);
   keyboard->setNormalKeycap(14,3,  (char[]){'s',                '\0','\0','\0'},      2,3,      0,0);
   keyboard->setNormalKeycap(13,3,  (char[]){'d',                '\0','\0','\0'},      3,3,      0,0);
@@ -100,14 +100,13 @@ void setup() {
   keyboard->setNormalKeycap( 7,3,  (char[]){'l',                '\0','\0','\0'},      9,3,      0,0);
   keyboard->setNormalKeycap( 6,3,  (char[]){';',                '\0','\0','\0'},     10,3,      0,0);
   keyboard->setNormalKeycap( 5,3,  (char[]){'\'',               '\0','\0','\0'},     11,3,      0,0);
-  keyboard->setNormalKeycap( 4,3,  (char[]){'\\',               '\0','\0','\0'},      2,0,      0,0);
-  keyboard->setNormalKeycap( 3,3,  (char[]){'\n',               '\0','\0','\0'},      5,0,      0,0);
+  keyboard->setNormalKeycap( 4,3,  (char[]){'\\',               '\0','\0','\0'},     13,2,      2,0);
+  keyboard->setNormalKeycap( 3,3,  (char[]){'\n',               '\0','\0','\0'},     13,3,      5,0);
 
-  keyboard->setNormalKeycap( 2,3,  (char[]){KEY_DELETE,         '\0','\0','\0'},     13,3,      0,0);
-  keyboard->setNormalKeycap( 1,3,  (char[]){KEY_END,            '\0','\0','\0'},     14,3,      0,0);
+  keyboard->setNormalKeycap( 1,3,  (char[]){KEY_END,            '\0','\0','\0'},     14,3,      4,0);
   keyboard->setNormalKeycap( 0,3,  (char[]){KEY_PAGE_DOWN,      '\0','\0','\0'},     15,3,      0,0);
 // //red 4/////////////////////////////////////////////////////////////
-  keyboard->setNormalKeycap(16,4,  (char[]){KEY_LEFT_SHIFT,     '\0','\0','\0'},      1,0,      0,0);
+  keyboard->setNormalKeycap(16,4,  (char[]){KEY_LEFT_SHIFT,     '\0','\0','\0'},      0,4,      1,0);
   keyboard->setNormalKeycap(15,4,  (char[]){'/',                '\0','\0','\0'},      1,4,      0,0); 
   keyboard->setNormalKeycap(14,4,  (char[]){'z',                '\0','\0','\0'},      2,4,      0,0);
   keyboard->setNormalKeycap(13,4,  (char[]){'x',                '\0','\0','\0'},      3,4,      0,0); 
@@ -119,22 +118,22 @@ void setup() {
   keyboard->setNormalKeycap( 7,4,  (char[]){',',                '\0','\0','\0'},      9,4,      0,0); 
   keyboard->setNormalKeycap( 6,4,  (char[]){'.',                '\0','\0','\0'},     10,4,      0,0); 
   keyboard->setNormalKeycap( 5,4,  (char[]){'/',                '\0','\0','\0'},     11,4,      0,0); 
-  keyboard->setNormalKeycap( 4,4,  (char[]){KEY_RIGHT_SHIFT,    '\0','\0','\0'},      6,0,      0,0);
+  keyboard->setNormalKeycap( 4,4,  (char[]){KEY_RIGHT_SHIFT,    '\0','\0','\0'},     12,4,      6,0);
   keyboard->setNormalKeycap( 1,4,  (char[]){KEY_UP_ARROW,       '\0','\0','\0'},     13,4,      0,0); 
 
 // //red 5/////////////////////////////////////////////////////////////
-  keyboard->setNormalKeycap(16,5,  (char[]){KEY_LEFT_CTRL,      '\0','\0','\0'},      1,0,      0,0);
-  keyboard->setNormalKeycap(15,5,  (char[]){KEY_LEFT_GUI,       '\0','\0','\0'},      1,0,      0,0);
-  keyboard->setNormalKeycap(14,5,  (char[]){KEY_LEFT_ALT,       '\0','\0','\0'},      1,0,      0,0);
-  keyboard->setNormalKeycap(10,5,  (char[]){' ',                '\0','\0','\0'},      7,0,      0,0);
-  keyboard->setNormalKeycap( 6,5,  (char[]){KEY_RIGHT_CTRL,     '\0','\0','\0'},      1,0,      0,0);
-  keyboard->setNormalKeycap( 5,5,  (char[]){KEY_RIGHT_GUI,      '\0','\0','\0'},      1,0,      0,0);
-  keyboard->setNormalKeycap( 4,5,  (char[]){KEY_RIGHT_ALT,      '\0','\0','\0'},      1,0,      0,0);
-  keyboard->setNormalKeycap( 3,5,  (char[]){KEY_RIGHT_CTRL,     '\0','\0','\0'},      1,0,      0,0);
+  keyboard->setNormalKeycap(16,5,  (char[]){KEY_LEFT_CTRL,      '\0','\0','\0'},      0,5,      1,0);
+  keyboard->setNormalKeycap(15,5,  (char[]){KEY_LEFT_GUI,       '\0','\0','\0'},      1,5,      1,0);
+  keyboard->setNormalKeycap(14,5,  (char[]){KEY_LEFT_ALT,       '\0','\0','\0'},      2,5,      1,0);
+  keyboard->setNormalKeycap(10,5,  (char[]){' ',                '\0','\0','\0'},      3,5,      7,0);
+  keyboard->setNormalKeycap( 6,5,  (char[]){KEY_RIGHT_CTRL,     '\0','\0','\0'},      4,5,      1,0);
+  keyboard->setNormalKeycap( 5,5,  (char[]){KEY_RIGHT_GUI,      '\0','\0','\0'},      5,5,      1,0);
+  keyboard->setNormalKeycap( 4,5,  (char[]){KEY_RIGHT_ALT,      '\0','\0','\0'},      6,5,      1,0);
+  keyboard->setNormalKeycap( 3,5,  (char[]){KEY_RIGHT_CTRL,     '\0','\0','\0'},      7,5,      1,0);
   keyboard->setNormalKeycap( 2,5,  (char[]){KEY_LEFT_ARROW,     '\0','\0','\0'},      8,5,      0,0);
   keyboard->setNormalKeycap( 1,5,  (char[]){KEY_DOWN_ARROW,     '\0','\0','\0'},      9,5,      0,0);
   keyboard->setNormalKeycap( 0,5,  (char[]){KEY_RIGHT_ARROW,    '\0','\0','\0'},     10,5,      0,0);
-
+}
 
 void loop() {
   keyboard->update();
