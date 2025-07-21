@@ -18,7 +18,9 @@ public:
         matrixX,
         matrixY,
         physicalColumn,
-        physicalRow;
+        physicalRow,
+        paddingLeft,
+        paddingBottom;
     int currentlyUsed;
     Key *keys[4];
     void onPress(int layer);

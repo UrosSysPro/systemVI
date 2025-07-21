@@ -18,6 +18,7 @@ private:
 	SnapTapPair* snapTapPairs;
 public:
 	void updateKeyState();
+	void setNormalKeycap(int column,int row,char* values,int physicalX,int physicalY,int width,int height,int paddingLeft,int paddingBottom);
 	void setNormalKeycap(int column,int row,char* values,int physicalX,int physicalY,int width,int height);
 	void setNormalKeycap(int column,int row,char* values,int physicalX,int physicalY);
 	void setNormalKeycap(int column,int row,char* values);

@@ -17,6 +17,8 @@ Keycap::Keycap() {
     this->matrixY=0;
     this->physicalColumn=0;
     this->physicalRow=0;
+    this->paddingLeft=0;
+    this->paddingBottom=0;
 }
 
 Keycap::~Keycap() {
@@ -39,7 +41,7 @@ void Keycap::onRelease(int layer) {
     }
 }
 void Keycap::reportSerial(int column,int row) {
-    char message[7];
+    char message[9];
     message[0]='c';
     message[1]=column;
     message[2]=row;
@@ -47,9 +49,11 @@ void Keycap::reportSerial(int column,int row) {
     message[4]=this->height;
     message[5]=this->physicalColumn;
     message[6]=this->physicalRow;
+    message[7]=this->paddingLeft;
+    message[8]=this->paddingBottom;
 
     if (this->active) {
-        Serial.write((byte*)message,7);
+        Serial.write((byte*)message,9);
         for (int i=0;i<4;i++) {
             this->keys[i]->reportSerial();
         }

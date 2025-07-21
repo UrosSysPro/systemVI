@@ -209,7 +209,7 @@ void SystemVIKeyboard::removeLayout() {
     this->layerKeyPositions=new LayerKeyPosition[1];
 }
 
-void SystemVIKeyboard::setNormalKeycap(int column,int row,char*values,int physicalColumn,int physicalRow,int with,int height) {
+void SystemVIKeyboard::setNormalKeycap(int column,int row,char*values,int physicalColumn,int physicalRow,int with,int height,int paddingLeft,int paddingBottom) {
     //set normal key
     delete this->keys[column][row];
     this->keys[column][row]=new Keycap();
@@ -222,9 +222,14 @@ void SystemVIKeyboard::setNormalKeycap(int column,int row,char*values,int physic
     this->keys[column][row]->width=with;
     this->keys[column][row]->height=height;
     this->keys[column][row]->active=true;
+    this->keys[column][row]->paddingLeft=paddingLeft;
+    this->keys[column][row]->paddingBottom=paddingBottom;
+}
+void SystemVIKeyboard::setNormalKeycap(int column, int row, char *values, int physicalX, int physicalY,int width,int height) {
+    this->setNormalKeycap(column,row,values,physicalX,physicalY,width,height,0,0);
 }
 void SystemVIKeyboard::setNormalKeycap(int column, int row, char *values, int physicalX, int physicalY) {
-    this->setNormalKeycap(column,row,values,physicalX,physicalY,0,0);
+    this->setNormalKeycap(column,row,values,physicalX,physicalY,0,0,0,0);
 }
 
 void SystemVIKeyboard::setNormalKeycap(int column,int row,char* values) {
