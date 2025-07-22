@@ -6,6 +6,7 @@
 #include "Keycap.h"
 #include "MacroKey.h"
 #include "NormalKey.h"
+#include "LittleFS.h"
 
 void SystemVIKeyboard::init(char* name, int columns,int rows,int* columnPins,int* rowPins,bool debugPrint,int reportedColumns,int reportedRows) {
     this->debugPrint=debugPrint;
@@ -53,6 +54,7 @@ void SystemVIKeyboard::init(char* name, int columns,int rows,int* columnPins,int
 
     Serial.begin(9600);
     Keyboard.begin();
+    LittleFS.begin();
 }
 
 SystemVIKeyboard::SystemVIKeyboard(char* name, int columns,int rows,int* columnPins,int* rowPins,bool debugPrint,int reportedColumns,int reportedRows) {
@@ -74,6 +76,7 @@ SystemVIKeyboard::~SystemVIKeyboard() {
         delete [] this->keys[i];
     }
     delete [] this->keys;
+    LittleFS.end();
 }
 
 void SystemVIKeyboard::update() {
@@ -168,6 +171,9 @@ void SystemVIKeyboard::processSerialCommands() {
         if(cmd=='e')this->printKeyEventsToSerial=true;
         if(cmd=='d')this->printKeyEventsToSerial=false;
         if(cmd=='n')this->printName();
+        //flash storage
+        if(cmd=='f')this->saveToFlash();
+        if(cmd=='F')this->loadFromFlash();
     }
 }
 
@@ -375,4 +381,49 @@ void SystemVIKeyboard::serialRemoveSnapTapKeyPair() {
     delete[] this->snapTapPairs;
     this->snapTapPairCount-=2;
     this->snapTapPairs=snapTapKeys;
+}
+
+void SystemVIKeyboard::loadFromFlash() {
+    Serial.print("mStart Read from flash\n@");
+    File file=LittleFS.open("/keymaps/keymap0.txt","r");
+    for (int i=0;i<this->columns;i++) {
+        for (int j=0;j<this->rows;j++) {
+            Keycap* keycap=this->keys[i][j];
+            if (keycap->active) {
+                for (int k=0;k<4;k++) {
+                    char type=file.read();
+                    if (type=='k') {
+                        delete keycap->keys[k];
+                        keycap->keys[k]=new Key();
+                    }
+                    if (type=='n') {
+                        char value=file.read();
+                        delete keycap->keys[k];
+                        keycap->keys[k]=new NormalKey(value);
+                    }
+                    if (type=='m') {
+                        int n=file.read();
+                        for (int l=0;l<n;l++) {
+                            char value=file.read();
+                            bool type=file.read();
+                        }
+                    }
+                }
+            }
+        }
+    }
+    file.close();
+    Serial.print("mEnded Read from flash\n@");
+}
+
+void SystemVIKeyboard::saveToFlash() {
+    Serial.print("mStart Write to flash\n@");
+    File file=LittleFS.open("/keymaps/keymap0.txt","w");
+    for (int i=0;i<this->columns;i++) {
+        for (int j=0;j<this->rows;j++) {
+            this->keys[i][j]->printToFile(&file);
+        }
+    }
+    file.close();
+    Serial.print("mEnded Write to flash\n@");
 }

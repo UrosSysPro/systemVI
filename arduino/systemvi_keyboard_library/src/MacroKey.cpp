@@ -41,6 +41,21 @@ void MacroKey::reportSerial() {
     }
 }
 
+void MacroKey::printToFile(File *file) {
+    char buffer[3];
+    buffer[0]='m';
+    buffer[1]=this->n;
+    buffer[2]='\0';
+    file->print(buffer);
+    for (int i=0;i<this->n;i++) {
+        buffer[0]=this->actions[i].value;
+        buffer[1]=this->actions[i].type;
+        buffer[2]='\0';
+        file->print(buffer);
+    }
+}
+
+
 MacroAction::MacroAction(char value, MacroActionType type) {
     this->value=value;
     this->type=type;

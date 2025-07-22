@@ -5,6 +5,7 @@
 #ifndef KEYMAP_H
 #define KEYMAP_H
 #include "Key.h"
+#include "LittleFS.h"
 
 class Keycap {
 public:
@@ -26,6 +27,7 @@ public:
     void onPress(int layer);
     void onRelease(int layer);
     void reportSerial(int column,int row);
+    void printToFile(File *file);
     Keycap();
     ~Keycap();
 };

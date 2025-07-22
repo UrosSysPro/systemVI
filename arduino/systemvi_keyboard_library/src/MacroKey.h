@@ -2,6 +2,7 @@
 #define MACROKEY_H
 
 #include "Key.h"
+#include "LittleFS.h"
 
 enum MacroActionType {
     PRESS=1,
@@ -23,6 +24,7 @@ public:
     bool onPress(int layer)override;
     bool onRelease(int layer)override;
     void reportSerial()override;
+    void printToFile(File *file) override;
     MacroKey(int n,MacroAction* actions);
     ~MacroKey();
 };

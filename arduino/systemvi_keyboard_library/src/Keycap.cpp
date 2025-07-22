@@ -59,3 +59,11 @@ void Keycap::reportSerial(int column,int row) {
         }
     }
 }
+
+void Keycap::printToFile(File *file) {
+    if (this->active) {
+        for (int i=0;i<4;i++) {
+            this->keys[i]->printToFile(file);
+        }
+    }
+}

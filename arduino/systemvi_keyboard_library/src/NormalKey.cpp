@@ -25,3 +25,11 @@ void NormalKey::reportSerial() {
     message[1]=this->value;
     Serial.write((byte*)message,2);
 }
+
+void NormalKey::printToFile(File *file) {
+    char buffer[3];
+    buffer[0]='n';
+    buffer[1]=this->value;
+    buffer[2]='\0';
+    file->print(buffer);
+}
