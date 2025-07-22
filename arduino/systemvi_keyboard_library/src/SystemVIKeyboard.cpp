@@ -50,11 +50,10 @@ void SystemVIKeyboard::init(char* name, int columns,int rows,int* columnPins,int
         }
     }
 
-    this->printKeyEventsToSerial=true;
+    this->printKeyEventsToSerial=false;
 
     Serial.begin(9600);
     Keyboard.begin();
-    LittleFS.begin();
 }
 
 SystemVIKeyboard::SystemVIKeyboard(char* name, int columns,int rows,int* columnPins,int* rowPins,bool debugPrint,int reportedColumns,int reportedRows) {
@@ -76,7 +75,6 @@ SystemVIKeyboard::~SystemVIKeyboard() {
         delete [] this->keys[i];
     }
     delete [] this->keys;
-    LittleFS.end();
 }
 
 void SystemVIKeyboard::update() {
@@ -383,9 +381,22 @@ void SystemVIKeyboard::serialRemoveSnapTapKeyPair() {
     this->snapTapPairs=snapTapKeys;
 }
 
+void SystemVIKeyboard::serialMessage(char message[]) {
+    Serial.printf("m%s\n@",message);
+}
+
+
 void SystemVIKeyboard::loadFromFlash() {
+    if (!LittleFS.begin()) {
+        this->serialMessage("failed to mount file system");
+        return;
+    }
     Serial.print("mStart Read from flash\n@");
     File file=LittleFS.open("/keymaps/keymap0.txt","r");
+    if (!file) {
+        this->serialMessage("failed to open file for reading");
+        return;
+    }
     for (int i=0;i<this->columns;i++) {
         for (int j=0;j<this->rows;j++) {
             Keycap* keycap=this->keys[i][j];
@@ -395,11 +406,14 @@ void SystemVIKeyboard::loadFromFlash() {
                     if (type=='k') {
                         delete keycap->keys[k];
                         keycap->keys[k]=new Key();
+                        this->serialMessage("read key from flash");
                     }
                     if (type=='n') {
                         char value=file.read();
+                        if (value==1)value='\0';
                         delete keycap->keys[k];
                         keycap->keys[k]=new NormalKey(value);
+                        this->serialMessage("read normal key from flash");
                     }
                     if (type=='m') {
                         int n=file.read();
@@ -407,6 +421,7 @@ void SystemVIKeyboard::loadFromFlash() {
                             char value=file.read();
                             bool type=file.read();
                         }
+                        this->serialMessage("read macro from flash");
                     }
                 }
             }
@@ -414,16 +429,29 @@ void SystemVIKeyboard::loadFromFlash() {
     }
     file.close();
     Serial.print("mEnded Read from flash\n@");
+    LittleFS.end();
 }
 
 void SystemVIKeyboard::saveToFlash() {
+    if (!LittleFS.begin()) {
+        this->serialMessage("failed to mount file system");
+        return;
+    }
     Serial.print("mStart Write to flash\n@");
     File file=LittleFS.open("/keymaps/keymap0.txt","w");
+    if (!file) {
+        this->serialMessage("failed to open file for writing");
+        return;
+    }
     for (int i=0;i<this->columns;i++) {
         for (int j=0;j<this->rows;j++) {
-            this->keys[i][j]->printToFile(&file);
+            if (this->keys[i][j]->active) {
+                this->serialMessage("write key to flash");
+                this->keys[i][j]->printToFile(&file);
+            }
         }
     }
     file.close();
     Serial.print("mEnded Write to flash\n@");
+    LittleFS.end();
 }

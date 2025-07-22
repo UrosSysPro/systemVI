@@ -41,6 +41,7 @@ public:
 	void printKeyReleaseToSerial(int column,int row);
 	void reportLayout();
 	void removeLayout();
+	void serialMessage(char message[]);
 	//storage
 	void loadFromFlash();
 	void saveToFlash();

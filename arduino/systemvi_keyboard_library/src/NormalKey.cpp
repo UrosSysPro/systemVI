@@ -29,7 +29,11 @@ void NormalKey::reportSerial() {
 void NormalKey::printToFile(File *file) {
     char buffer[3];
     buffer[0]='n';
-    buffer[1]=this->value;
+    if (this->value=='\0') {
+        buffer[1]=1;
+    }else {
+        buffer[1]=this->value;
+    }
     buffer[2]='\0';
     file->print(buffer);
 }

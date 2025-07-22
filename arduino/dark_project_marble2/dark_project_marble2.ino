@@ -79,6 +79,8 @@ void setup() {
   keyboard->setNormalKeycap(3 ,4,   (char[]){KEY_RIGHT_GUI,'\0','\0','\0'}     ,5 ,4,    1,0);
   keyboard->setNormalKeycap(2 ,4,   (char[]){KEY_MENU,'\0','\0','\0'}          ,6 ,4,    1,0);
   keyboard->setNormalKeycap(1 ,4,   (char[]){KEY_RIGHT_CTRL,'\0','\0','\0'}    ,7 ,4,    1,0);
+
+  keyboard->loadFromFlash();
 }
 
 void loop() {
