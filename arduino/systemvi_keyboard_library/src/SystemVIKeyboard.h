@@ -45,6 +45,7 @@ public:
 	//storage
 	void loadFromFlash();
 	void saveToFlash();
+	void eraceFlash();
 
 	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins);
 	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins,bool debugPrint,int reportedColumns,int reportedRows);

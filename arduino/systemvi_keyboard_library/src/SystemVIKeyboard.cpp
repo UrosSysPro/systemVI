@@ -172,6 +172,7 @@ void SystemVIKeyboard::processSerialCommands() {
         //flash storage
         if(cmd=='f')this->saveToFlash();
         if(cmd=='F')this->loadFromFlash();
+        if(cmd=='q')this->eraceFlash();
     }
 }
 
@@ -453,5 +454,14 @@ void SystemVIKeyboard::saveToFlash() {
     }
     file.close();
     Serial.print("mEnded Write to flash\n@");
+    LittleFS.end();
+}
+
+void SystemVIKeyboard::eraceFlash() {
+    if (!LittleFS.begin()) {
+        this->serialMessage("failed to mount file system");
+        return;
+    }
+    LittleFS.remove("/keymaps/keymap0.txt");
     LittleFS.end();
 }
