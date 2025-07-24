@@ -45,6 +45,7 @@ lazy val website = project.in(file("client"))
   .dependsOn(common.js)
 
 lazy val server=project.in(file("server"))
+  .enablePlugins(JavaAppPackaging)
   .settings(
     Compile / run / fork := true,
     Compile / run / connectInput := true,
