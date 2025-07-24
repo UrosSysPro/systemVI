@@ -46,6 +46,13 @@ public:
 	void loadFromFlash();
 	void saveToFlash();
 	void eraceFlash();
+	//layer keys
+	void addLayerKeyPosition(int x,int y,int layer);
+	void removeLayerKeyPosition(int x,int y);
+	//snap tap keys
+	void addSnapTapKeyPair(int column0,int row0,int column1,int row1);
+	void removeSnapTapKeyPair(int column0,int row0);
+
 
 	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins);
 	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins,bool debugPrint,int reportedColumns,int reportedRows);

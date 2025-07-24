@@ -313,6 +313,16 @@ void SystemVIKeyboard::serialAddLayerKeyPosition() {
     int column=Serial.read();
     int row=Serial.read();
     int layer=Serial.read();
+    this->addLayerKeyPosition(column,row,layer);
+}
+
+void SystemVIKeyboard::serialRemoveLayerKeyPosition() {
+    int column=Serial.read();
+    int row=Serial.read();
+    this->removeLayerKeyPosition(column,row);
+}
+
+void SystemVIKeyboard::addLayerKeyPosition(int column,int row,int layer) {
     for (int i=0;i<4;i++) {
         delete this->keys[column][row]->keys[i];
         this->keys[column][row]->keys[i]=new NormalKey('\0');
@@ -327,9 +337,7 @@ void SystemVIKeyboard::serialAddLayerKeyPosition() {
     this->layerKeyPositions=layerKeys;
 }
 
-void SystemVIKeyboard::serialRemoveLayerKeyPosition() {
-    int column=Serial.read();
-    int row=Serial.read();
+void SystemVIKeyboard::removeLayerKeyPosition(int column,int row) {
     LayerKeyPosition* layerKeys=new LayerKeyPosition[this->layerKeyPositionCount-1];
     int skip=0;
     for (int i=0;i<this->layerKeyPositionCount-1;i++) {
@@ -348,6 +356,16 @@ void SystemVIKeyboard::serialAddSnapTapKeyPair() {
     int row0=Serial.read();
     int column1=Serial.read();
     int row1=Serial.read();
+    this->addSnapTapKeyPair(column0,row0,column1,row1);
+}
+
+void SystemVIKeyboard::serialRemoveSnapTapKeyPair() {
+    int column=Serial.read();
+    int row=Serial.read();
+    this->removeSnapTapKeyPair(column,row);
+}
+
+void SystemVIKeyboard::addSnapTapKeyPair(int column0,int row0,int column1,int row1) {
     SnapTapPair* snapTapKeys=new SnapTapPair[this->snapTapPairCount+2];
     for (int i=0;i<this->snapTapPairCount;i++) snapTapKeys[i]=this->snapTapPairs[i];
     //first pair
@@ -366,9 +384,7 @@ void SystemVIKeyboard::serialAddSnapTapKeyPair() {
     this->snapTapPairs=snapTapKeys;
 }
 
-void SystemVIKeyboard::serialRemoveSnapTapKeyPair() {
-    int column=Serial.read();
-    int row=Serial.read();
+void SystemVIKeyboard::removeSnapTapKeyPair(int column, int row) {
     SnapTapPair* snapTapKeys=new SnapTapPair[this->snapTapPairCount-2];
     int skip=0;
     for (int i=0;i<this->snapTapPairCount-2;i++) {
@@ -385,7 +401,6 @@ void SystemVIKeyboard::serialRemoveSnapTapKeyPair() {
 void SystemVIKeyboard::serialMessage(char message[]) {
     Serial.printf("m%s\n@",message);
 }
-
 
 void SystemVIKeyboard::loadFromFlash() {
     if (!LittleFS.begin()) {
