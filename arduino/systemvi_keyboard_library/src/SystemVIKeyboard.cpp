@@ -413,6 +413,7 @@ void SystemVIKeyboard::loadFromFlash() {
         this->serialMessage("failed to open file for reading");
         return;
     }
+    this->removeLayout();
     while (file.position()<file.size()) {
         char type=file.read();
         if (type=='n') {
@@ -438,6 +439,19 @@ void SystemVIKeyboard::loadFromFlash() {
             delete this->keys[i][j]->keys[layer];
             this->keys[i][j]->keys[layer]=new MacroKey(n,actions);
         }
+        if (type=='s') {
+            int column0=file.read();
+            int row0=file.read();
+            int column1=file.read();
+            int row1=file.read();
+            this->addSnapTapKeyPair(column0,row0,column1,row1);
+        }
+        if (type=='l') {
+            int column=file.read();
+            int row=file.read();
+            int layer=file.read();
+            this->addLayerKeyPosition(column,row,layer);
+        }
     }
     file.close();
     Serial.print("mEnded Read from flash\n@");
@@ -455,6 +469,7 @@ void SystemVIKeyboard::saveToFlash() {
         this->serialMessage("failed to open file for writing");
         return;
     }
+
     for (int i=0;i<this->columns;i++) {
         for (int j=0;j<this->rows;j++) {
             if (this->keys[i][j]->active) {
@@ -462,6 +477,13 @@ void SystemVIKeyboard::saveToFlash() {
             }
         }
     }
+    for (int i=0;i<this->snapTapPairCount;i+=2) {
+        this->snapTapPairs[i].printToFile(&file);
+    }
+    for (int i=0;i<this->layerKeyPositionCount;i++) {
+        this->layerKeyPositions[i].printToFile(&file);
+    }
+
     file.close();
     Serial.print("mEnded Write to flash\n@");
     LittleFS.end();

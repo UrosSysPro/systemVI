@@ -3,6 +3,7 @@
 
 #include "Arduino.h"
 #include "SnapTapKey.h"
+#include "LittleFS.h"
 
 class SnapTapPair {
 public:
@@ -16,6 +17,16 @@ public:
         message[3]=this->second.column;
         message[4]=this->second.row;
         Serial.write(message,5);
+    }
+
+    void printToFile(File *file) {
+        byte message[5];
+        message[0]=(byte)'s';
+        message[1]=this->first.column;
+        message[2]=this->first.row;
+        message[3]=this->second.column;
+        message[4]=this->second.row;
+        file->write(message,5);
     }
 
     SnapTapPair() {
