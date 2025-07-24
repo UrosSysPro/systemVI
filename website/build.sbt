@@ -8,7 +8,7 @@ ThisBuild / organization := "net.systemvi"
 ThisBuild / version      := "0.5"
 ThisBuild / scalaVersion := "3.3.3"
 
-lazy val root = project.in(file(".")).aggregate(website,server)
+lazy val root = project.in(file(".")).aggregate(client,server)
 
 lazy val common = crossProject(JSPlatform,JVMPlatform)
   .crossType(CrossType.Pure)
@@ -23,7 +23,7 @@ lazy val common = crossProject(JSPlatform,JVMPlatform)
     ).map(_ % circeVersion),
   )
 
-lazy val website = project.in(file("client"))
+lazy val client = project.in(file("client"))
   .enablePlugins(ScalaJSPlugin) // Enable the Scala.js plugin in this project
   .settings(
     scalaJSUseMainModuleInitializer := true, // Tell Scala.js that this is an application with a main method
