@@ -1,6 +1,6 @@
 package net.systemvi.common.model
 
-case class DownloadLink(url:String, version:String, platform:String, description:String)
+case class DownloadLink(name:String,url:String, version:String, platform:String, description:String)
 
 case class ProductSpec(name:String, value:String)
 case class Keyboard(id:Int, name:String, codeName:String, specs:List[ProductSpec], images:List[String])

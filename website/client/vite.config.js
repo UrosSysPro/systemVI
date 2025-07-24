@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [
       scalaJSPlugin({
           cwd:"..",
-          projectID:"website"
+          projectID:"client"
       }),
       tailwindcss(),
   ],

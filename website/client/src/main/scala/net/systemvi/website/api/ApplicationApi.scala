@@ -16,7 +16,13 @@ private val applications=List(
       "images/application/configurator/settings.png",
     ),
     downloadLinks = List(
-      DownloadLink("download/application/configurator/app.jar","v0.9.0","Windows 11","Create, Edit, Save keymaps for custom keyboards")
+      DownloadLink(
+        "Configurator v0.8",
+        "https://github.com/UrosSysPro/compose/releases/download/v0.8/config.jar",
+        "v0.8",
+        "Linux",
+        "Create, Edit, Save keymaps for custom keyboards"
+      )
     ),
   )
 )

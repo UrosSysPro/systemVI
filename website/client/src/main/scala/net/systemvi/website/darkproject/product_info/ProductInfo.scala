@@ -1,16 +1,24 @@
 package net.systemvi.website.darkproject.product_info
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.common.model.{Application, Game, Keyboard, ProductSpec}
+import net.systemvi.common.model.{Application, DownloadLink, Game, Keyboard, ProductSpec}
 import net.systemvi.website.CSSProps.*
 import net.systemvi.website.darkproject.Theme
 import net.systemvi.website.darkproject.expandable_specs.UnderlinedRow
+import net.systemvi.website.darkproject.download_link.DownloadLinkButton
 import org.scalajs.dom
 
-case class ProductInfoParams(images:List[String],name:String,codeName:String,specs:List[ProductSpec])
+case class ProductInfoParams(
+                              images:List[String],
+                              name:String,
+                              codeName:String,
+                              specs:List[ProductSpec],
+                              downloadLinks:List[DownloadLink] = List.empty
+                            )
+
 given Conversion[Keyboard,ProductInfoParams]=keyboard=>ProductInfoParams(keyboard.images,keyboard.name,keyboard.codeName,keyboard.specs)
 given Conversion[Game, ProductInfoParams] = game => ProductInfoParams(game.images, game.name, game.codeName, game.specs)
-given Conversion[Application, ProductInfoParams] = app => ProductInfoParams(app.screenshots, app.name, app.codeName, List())
+given Conversion[Application, ProductInfoParams] = app => ProductInfoParams(app.screenshots, app.name, app.codeName, List(),app.downloadLinks)
 
 private def ProductInfoLeft(images:List[String]):HtmlElement={
   div(
@@ -48,37 +56,44 @@ private def ProductInfoLeft(images:List[String]):HtmlElement={
   )
 }
 
-private def ProductInfoRight(name:String,codeName:String,specs:List[ProductSpec])={
+private def ProductInfoRight(name:String,codeName:String,specs:List[ProductSpec],links:List[DownloadLink])={
   div(
     display.flex,
     flexDirection.column,
-    flex := "1",
     height.percent := 100,
-    Theme.common.roundedXL,
+    flex := "1",
     backgroundColor := "#f6f6f6",
     overflow.hidden,
     padding.rem := 1,
-    span(
-      paddingBottom.rem := 1,
-      color := "#9e9e9e",
-      fontSize := "0.75rem",
-      codeName
+    Theme.common.roundedXL,
+    div(
+      display.flex,
+      flexDirection.column,
+      height.percent := 100,
+      overflow.hidden,
+      span(
+        paddingBottom.rem := 1,
+        color := "#9e9e9e",
+        fontSize := "0.75rem",
+        codeName
+      ),
+      span(
+        paddingBottom.rem := 2,
+        color := "#22272d",
+        fontSize := "1.25rem",
+        fontWeight.bolder,
+        name
+      ),
+      span(
+        paddingBottom.rem := 1,
+        color := "#22272d",
+        fontSize.rem := 1,
+        fontWeight.bold,
+        "Product Specs"
+      ),
+      for (spec <- specs) yield UnderlinedRow(spec.name,spec.value)
     ),
-    span(
-      paddingBottom.rem := 2,
-      color := "#22272d",
-      fontSize := "1.25rem",
-      fontWeight.bolder,
-      name
-    ),
-    span(
-      paddingBottom.rem := 1,
-      color := "#22272d",
-      fontSize.rem := 1,
-      fontWeight.bold,
-      "Product Specs"
-    ),
-    for (spec <- specs) yield UnderlinedRow(spec.name,spec.value)
+    if links.isEmpty then emptyNode else DownloadLinkButton(links)
   )
 }
 
@@ -93,6 +108,6 @@ def ProductInfo(params:ProductInfoParams):HtmlElement = {
     flexDirection<--horizontal.map(if _ then "row" else "column"),
 
     ProductInfoLeft(params.images),
-    ProductInfoRight(params.name,params.codeName,params.specs),
+    ProductInfoRight(params.name,params.codeName,params.specs,params.downloadLinks),
   )
 }
