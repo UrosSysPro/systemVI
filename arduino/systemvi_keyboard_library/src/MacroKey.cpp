@@ -41,17 +41,18 @@ void MacroKey::reportSerial() {
     }
 }
 
-void MacroKey::printToFile(File *file) {
-    char buffer[3];
+void MacroKey::printToFile(File *file,int i,int j,int layer) {
+    char buffer[5];
     buffer[0]='m';
-    buffer[1]=this->n;
-    buffer[2]='\0';
-    file->print(buffer);
+    buffer[1]=i;
+    buffer[2]=j;
+    buffer[3]=layer;
+    buffer[4]=this->n;
+    file->write(buffer,5);
     for (int i=0;i<this->n;i++) {
         buffer[0]=this->actions[i].value;
         buffer[1]=this->actions[i].type;
-        buffer[2]='\0';
-        file->print(buffer);
+        file->write(buffer,2);
     }
 }
 

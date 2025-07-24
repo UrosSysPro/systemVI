@@ -60,8 +60,8 @@ void Keycap::reportSerial(int column,int row) {
     }
 }
 
-void Keycap::printToFile(File *file) {
+void Keycap::printToFile(File *file,int x,int y) {
     for (int i=0;i<4;i++) {
-        this->keys[i]->printToFile(file);
+        this->keys[i]->printToFile(file,x,y,i);
     }
 }

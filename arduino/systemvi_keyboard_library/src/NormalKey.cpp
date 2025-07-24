@@ -26,14 +26,12 @@ void NormalKey::reportSerial() {
     Serial.write((byte*)message,2);
 }
 
-void NormalKey::printToFile(File *file) {
-    char buffer[3];
+void NormalKey::printToFile(File *file,int i,int j,int layer) {
+    char buffer[5];
     buffer[0]='n';
-    if (this->value=='\0') {
-        buffer[1]=1;
-    }else {
-        buffer[1]=this->value;
-    }
-    buffer[2]='\0';
-    file->print(buffer);
+    buffer[1]=i;
+    buffer[2]=j;
+    buffer[3]=layer;
+    buffer[4]=this->value;
+    file->write(buffer,5);
 }

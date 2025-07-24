@@ -10,7 +10,7 @@ public:
     bool onPress(int layer)override;
     bool onRelease(int layer)override;
     void reportSerial()override;
-    void printToFile(File *file) override;
+    void printToFile(File *file,int i,int j,int layer) override;
     NormalKey(char value);
 };
 

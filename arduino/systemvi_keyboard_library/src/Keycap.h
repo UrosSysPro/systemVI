@@ -27,7 +27,7 @@ public:
     void onPress(int layer);
     void onRelease(int layer);
     void reportSerial(int column,int row);
-    void printToFile(File *file);
+    void printToFile(File *file,int i,int j);
     Keycap();
     ~Keycap();
 };

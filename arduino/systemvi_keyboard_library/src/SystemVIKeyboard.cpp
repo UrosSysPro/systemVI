@@ -398,34 +398,30 @@ void SystemVIKeyboard::loadFromFlash() {
         this->serialMessage("failed to open file for reading");
         return;
     }
-    for (int i=0;i<this->columns;i++) {
-        for (int j=0;j<this->rows;j++) {
-            Keycap* keycap=this->keys[i][j];
-            if (keycap->active) {
-                for (int k=0;k<4;k++) {
-                    char type=file.read();
-                    if (type=='k') {
-                        delete keycap->keys[k];
-                        keycap->keys[k]=new Key();
-                        this->serialMessage("read key from flash");
-                    }
-                    if (type=='n') {
-                        char value=file.read();
-                        if (value==1)value='\0';
-                        delete keycap->keys[k];
-                        keycap->keys[k]=new NormalKey(value);
-                        this->serialMessage("read normal key from flash");
-                    }
-                    if (type=='m') {
-                        int n=file.read();
-                        for (int l=0;l<n;l++) {
-                            char value=file.read();
-                            bool type=file.read();
-                        }
-                        this->serialMessage("read macro from flash");
-                    }
-                }
+    while (file.position()<file.size()) {
+        char type=file.read();
+        if (type=='n') {
+            int i=file.read();
+            int j=file.read();
+            int layer=file.read();
+            char value=file.read();
+            delete this->keys[i][j]->keys[layer];
+            this->keys[i][j]->keys[layer]=new NormalKey(value);
+        }
+        if (type=='m') {
+            int i=file.read();
+            int j=file.read();
+            int layer=file.read();
+            int n=file.read();
+            MacroAction *actions=new MacroAction[n];
+            for (int k=0;k<n;k++) {
+                char value=file.read();
+                bool type=file.read()==1;
+                if (type)actions[k].type=PRESS; else actions[k].type=RELEASE;
+                actions[k].value=value;
             }
+            delete this->keys[i][j]->keys[layer];
+            this->keys[i][j]->keys[layer]=new MacroKey(n,actions);
         }
     }
     file.close();
@@ -447,8 +443,7 @@ void SystemVIKeyboard::saveToFlash() {
     for (int i=0;i<this->columns;i++) {
         for (int j=0;j<this->rows;j++) {
             if (this->keys[i][j]->active) {
-                this->serialMessage("write key to flash");
-                this->keys[i][j]->printToFile(&file);
+                this->keys[i][j]->printToFile(&file,i,j);
             }
         }
     }
