@@ -133,6 +133,8 @@ void setup() {
   keyboard->setNormalKeycap( 2,5,  (char[]){KEY_LEFT_ARROW,     '\0','\0','\0'},      8,5,      0,0,     1,0);
   keyboard->setNormalKeycap( 1,5,  (char[]){KEY_DOWN_ARROW,     '\0','\0','\0'},      9,5,      0,0);
   keyboard->setNormalKeycap( 0,5,  (char[]){KEY_RIGHT_ARROW,    '\0','\0','\0'},     10,5,      0,0);
+
+  keyboard->loadFromFlash();
 }
 
 void loop() {

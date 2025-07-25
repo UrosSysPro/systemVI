@@ -407,12 +407,19 @@ void SystemVIKeyboard::loadFromFlash() {
         this->serialMessage("failed to mount file system");
         return;
     }
-    Serial.print("mStart Read from flash\n@");
+
+    if (!LittleFS.exists("/keymaps/keymap0.txt")) {
+        this->serialMessage("File doesnt exist");
+        return;
+    }
+
     File file=LittleFS.open("/keymaps/keymap0.txt","r");
     if (!file) {
         this->serialMessage("failed to open file for reading");
         return;
     }
+
+    this->serialMessage("Start Read from flash");
     this->removeLayout();
     while (file.position()<file.size()) {
         char type=file.read();
@@ -453,6 +460,7 @@ void SystemVIKeyboard::loadFromFlash() {
             this->addLayerKeyPosition(column,row,layer);
         }
     }
+
     file.close();
     Serial.print("mEnded Read from flash\n@");
     LittleFS.end();
