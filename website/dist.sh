@@ -7,3 +7,4 @@ rm -rf dist
 mv server-0.5 dist
 cp -r server/public dist/public
 cp -r client/dist dist/public/dist
+chmod +x dist/bin/server
