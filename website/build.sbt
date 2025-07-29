@@ -66,12 +66,12 @@ lazy val server=project.in(file("server"))
     ).map(_ % circeVersion),
     libraryDependencies += "org.xerial" % "sqlite-jdbc" % "3.49.1.0", //sqlite
     libraryDependencies ++= Seq(
-      "org.tpolecat" %% "doobie-core"      % "1.0.0-RC8",
-//      "org.tpolecat" %% "doobie-h2"        % "1.0.0-RC8",          // H2 driver 1.4.200 + type mappings.
-//      "org.tpolecat" %% "doobie-hikari"    % "1.0.0-RC8",          // HikariCP transactor.
-//      "org.tpolecat" %% "doobie-postgres"  % "1.0.0-RC8",          // Postgres driver 42.7.5 + type mappings.
-//      "org.tpolecat" %% "doobie-specs2"    % "1.0.0-RC8" % "test", // Specs2 support for typechecking statements.
-//      "org.tpolecat" %% "doobie-scalatest" % "1.0.0-RC8" % "test"  // ScalaTest support for typechecking statements.
-    )
+      "org.tpolecat" %% "doobie-core"      ,
+      "org.tpolecat" %% "doobie-h2"        ,          // H2 driver 1.4.200 + type mappings.
+      "org.tpolecat" %% "doobie-hikari"    ,          // HikariCP transactor.
+      "org.tpolecat" %% "doobie-postgres"  ,          // Postgres driver 42.7.5 + type mappings.
+      "org.tpolecat" %% "doobie-specs2"    ,          // Specs2 support for typechecking statements.
+      "org.tpolecat" %% "doobie-scalatest" ,          // ScalaTest support for typechecking statements.
+    ).map(_ % "1.0.0-RC8")
   )
   .dependsOn(common.jvm)
