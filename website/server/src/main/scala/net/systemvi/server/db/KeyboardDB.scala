@@ -1,7 +1,6 @@
 package net.systemvi.server.db
 
 import cats.effect.IO
-import net.systemvi.server.domain.{KeyboadData, KeyboardService}
 import doobie.*
 import doobie.implicits.*
 import cats.*
@@ -10,6 +9,8 @@ import cats.effect.IO
 import cats.implicits.*
 import net.systemvi.common.model.Keyboard
 import net.systemvi.server.utils.getLogger
+
+case class KeyboardData()
 
 class KeyboardDB {
   
@@ -28,7 +29,7 @@ class KeyboardDB {
 //    result<-sql""
 //  }yield()
 
-  def add(data: KeyboadData): IO[Keyboard] = ???
+  def add(data: KeyboardData): IO[Keyboard] = ???
   
   def get(id: Int): IO[Keyboard] = ???
 }
