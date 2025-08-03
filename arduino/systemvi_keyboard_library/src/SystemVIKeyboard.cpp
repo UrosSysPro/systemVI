@@ -277,6 +277,7 @@ void SystemVIKeyboard::printKeyReleaseToSerial(int column, int row) {
 void SystemVIKeyboard::printName() {
     char *message=this->name;
     int size=strlen(message);
+    Serial.print('n');
     Serial.write((byte*)message,size);
     Serial.print('@');
 }
