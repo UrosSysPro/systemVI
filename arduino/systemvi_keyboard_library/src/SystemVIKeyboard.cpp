@@ -307,7 +307,11 @@ void SystemVIKeyboard::serialSetMacro() {
         MacroActionType type=Serial.read()==1?PRESS:RELEASE;
         actions[i]=MacroAction(value,type);
     }
-    this->setLayer(column,row,layer,new MacroKey(n,actions));
+    int nameLength=Serial.read();
+    char* name=new char[nameLength+1];
+    for (int i=0;i<nameLength;i++) name[i]=Serial.read();
+    name[nameLength]='\0';
+    this->setLayer(column,row,layer,new MacroKey(n,actions,name));
 }
 
 void SystemVIKeyboard::serialAddLayerKeyPosition() {
@@ -444,8 +448,12 @@ void SystemVIKeyboard::loadFromFlash() {
                 if (type)actions[k].type=PRESS; else actions[k].type=RELEASE;
                 actions[k].value=value;
             }
+            int nameLength=file.read();
+            char *name=new char[nameLength];
+            for (int k=0;k<nameLength;k++)name[k]=file.read();
+            name[nameLength]='\0';
             delete this->keys[i][j]->keys[layer];
-            this->keys[i][j]->keys[layer]=new MacroKey(n,actions);
+            this->keys[i][j]->keys[layer]=new MacroKey(n,actions,name);
         }
         if (type=='s') {
             int column0=file.read();

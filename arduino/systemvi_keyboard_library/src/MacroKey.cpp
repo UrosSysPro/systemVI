@@ -2,13 +2,19 @@
 #include "Keyboard.h"
 #include "MacroKey.h"
 
-MacroKey::MacroKey(int n,MacroAction* actions) {
+#include <cstddef>
+#include <stdlib.h>
+#include <string.h>
+
+MacroKey::MacroKey(int n,MacroAction* actions,char* name) {
     this->n=n;
     this->actions=actions;
+    this->name=name;
 }
 
 MacroKey::~MacroKey() {
     delete[] this->actions;
+    delete[] this->name;
 }
 
 bool MacroKey::onPress(int layer) {
@@ -39,6 +45,9 @@ void MacroKey::reportSerial() {
         message[1]=this->actions[i].type;
         Serial.write((byte*)message,2);
     }
+    char nameLength=strlen(this->name);
+    Serial.printf("%c",nameLength);
+    Serial.write((byte*)this->name,nameLength);
 }
 
 void MacroKey::printToFile(File *file,int i,int j,int layer) {
@@ -54,6 +63,9 @@ void MacroKey::printToFile(File *file,int i,int j,int layer) {
         buffer[1]=this->actions[i].type;
         file->write(buffer,2);
     }
+    byte nameLength=strlen(this->name);
+    file->write(&nameLength,1);
+    file->write(name,nameLength);
 }
 
 

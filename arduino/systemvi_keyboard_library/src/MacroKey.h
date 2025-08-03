@@ -21,11 +21,12 @@ class MacroKey : public Key {
 public:
     int n;
     MacroAction* actions;
+    char* name;
     bool onPress(int layer)override;
     bool onRelease(int layer)override;
     void reportSerial()override;
     void printToFile(File *file,int i,int j,int layer) override;
-    MacroKey(int n,MacroAction* actions);
+    MacroKey(int n,MacroAction* actions,char* name);
     ~MacroKey();
 };
 
