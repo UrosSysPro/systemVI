@@ -73,7 +73,7 @@ void setup() {
     
   keyboard->setNormalKeycap(13,4,   (char[]){KEY_LEFT_CTRL,'\0','\0','\0'}     ,0 ,4,    1,0);
   keyboard->setNormalKeycap(12,4,   (char[]){KEY_LEFT_GUI,'\0','\0','\0'}      ,1 ,4,    1,0);
-  keyboard->setNormalKeycap(11,4,   (char[]){KEY_LEFT_ALT,'\0','\0','\0'}      ,2 ,4,    1,0);
+  keyboard->setNormalKeycap(11,4,   (char[]){KEY_LEFT_ALTn,'\0','\0','\0'}      ,2 ,4,    1,0);
   keyboard->setNormalKeycap(8 ,4,   (char[]){' ','\0','\0','\0'}               ,3 ,4,    7,0);
   keyboard->setNormalKeycap(4 ,4,   (char[]){KEY_RIGHT_ALT,'\0','\0','\0'}     ,4 ,4,    1,0);
   keyboard->setNormalKeycap(3 ,4,   (char[]){KEY_RIGHT_GUI,'\0','\0','\0'}     ,5 ,4,    1,0);
