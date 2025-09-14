@@ -7,6 +7,9 @@ class KeyboardBuilder {
     int columns,rows,reportedColumns,reportedRows;
     bool debugPrint;
     char *name;
+    int sdaPin,sclPin;
+    bool reportToI2C,readFromI2C;
+    int readI2CColumn,readI2CRow,readI2CWitdh,readI2CHeight;
 public:
     KeyboardBuilder() {
         this->columnPins = nullptr;
@@ -18,6 +21,7 @@ public:
         this->debugPrint = false;
         this->name = nullptr;
     }
+
     KeyboardBuilder* setColumns(int columns, int *columnPins) {
         this->columns = columns;
         this->reportedColumns = columns;
@@ -40,6 +44,20 @@ public:
     KeyboardBuilder* setName(char *name) {
         this->name = name;
     }
+    KeyboardBuilder* sendsToI2C(int sdaPin,int sclPin) {
+        this->sdaPin=sdaPin;
+        this->sclPin=sclPin;
+        this->reportToI2C=true;
+    }
+    KeyboardBuilder* readsFromI2C(int sdaPin,int sclPin,int column,int row, int widht,int height) {
+        this->sdaPin=sdaPin;
+        this->sclPin=sclPin;
+        this->readFromI2C=true;
+        this->readI2CRow=row;
+        this->readI2CColumn=column;
+        this->readI2CWitdh=widht;
+        this->readI2CHeight=height;
+    }
 
     SystemVIKeyboard* build() {
         return new SystemVIKeyboard(
@@ -53,6 +71,8 @@ public:
             this->reportedRows
         );
     }
+
+
 };
 
 #endif //KEYBOARDBUILDER_H
