@@ -17,8 +17,8 @@ void setup() {
         ->setRows(rows,rowPins)
         ->setDebugPrint(true)
         ->build();
-    //
-    keyboard->setNormalKeycap(0,0, (char[]){'\0','\0','\0','\0',},0,0,0,0,0,0);
+    //                        matrix position   layers                              physical    size        padding
+    keyboard->setNormalKeycap(0,0,              (char[]){'\0','\0','\0','\0',},     0,0,        0,0,        0,0);
 }
 
 void loop() {
