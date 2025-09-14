@@ -8,7 +8,7 @@
 #include "keys/NormalKey.h"
 #include "LittleFS.h"
 
-void SystemVIKeyboard::init(char* name, int columns,int rows,int* columnPins,int* rowPins,bool debugPrint,int reportedColumns,int reportedRows) {
+void SystemVIKeyboard::init(char* name, int columns,int rows,int* columnPins,int* rowPins,bool debugPrint,int reportedColumns,int reportedRows,int sdaPin,int sclPin, bool reportToI2C,bool readFromI2C,int readI2CColumn,int readI2CRow, int readI2CWidth, int readI2CHeight) {
     this->debugPrint=debugPrint;
     this->reportedColumns=reportedColumns;
     this->reportedRows=reportedRows;
@@ -56,12 +56,15 @@ void SystemVIKeyboard::init(char* name, int columns,int rows,int* columnPins,int
     Keyboard.begin();
 }
 
+SystemVIKeyboard::SystemVIKeyboard(char* name, int columns,int rows,int* columnPins,int* rowPins,bool debugPrint,int reportedColumns,int reportedRows,int sdaPin,int sclPin, bool reportToI2C,bool readFromI2C,int readI2CColumn,int readI2CRow, int readI2CWidth, int readI2CHeight) {
+    this->init(name,columns,rows,columnPins,rowPins,debugPrint,reportedColumns,reportedRows,sdaPin,sclPin,reportToI2C,readFromI2C,readI2CColumn,readI2CRow,readI2CWidth,readI2CHeight);
+}
 SystemVIKeyboard::SystemVIKeyboard(char* name, int columns,int rows,int* columnPins,int* rowPins,bool debugPrint,int reportedColumns,int reportedRows) {
-    this->init(name,columns,rows,columnPins,rowPins,debugPrint,reportedColumns,reportedRows);
+    this->init(name,columns,rows,columnPins,rowPins,debugPrint,reportedColumns,reportedRows,-1,-1,false,false,-1,-1,-1,-1);
 }
 
 SystemVIKeyboard::SystemVIKeyboard(char* name, int columns,int rows,int* columnPins,int* rowPins) {
-    this->init(name,columns,rows,columnPins,rowPins,false,columns,rows);
+    this->init(name,columns,rows,columnPins,rowPins,false,columns,rows,-1,-1,false,false,-1,-1,-1,-1);
 }
 
 SystemVIKeyboard::~SystemVIKeyboard() {

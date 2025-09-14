@@ -56,7 +56,14 @@ public:
 
 	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins);
 	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins,bool debugPrint,int reportedColumns,int reportedRows);
-	void init(char* name, int columns,int rows, int* columnPins, int* rowPins,bool debugPrint,int reportedColumns,int reportedRows);
+	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins,bool debugPrint,int reportedColumns,int reportedRows,int sdaPin,int sclPin, bool reportToI2C,bool readFromI2C,int readI2CColumn,int readI2CRow, int readI2CWidth, int readI2CHeight);
+	void init(
+		char* name,
+		int columns,int rows, int* columnPins, int* rowPins,
+		bool debugPrint,
+		int reportedColumns,int reportedRows,
+		int sdaPin,int sclPin, bool reportToI2C,bool readFromI2C,int readI2CColumn,int readI2CRow, int readI2CWidth, int readI2CHeight
+	);
 	~SystemVIKeyboard();
 };
 
