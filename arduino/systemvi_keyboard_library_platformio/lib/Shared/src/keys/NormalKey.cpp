@@ -1,6 +1,6 @@
 #include "Keyboard.h"
-#include "Key.h"
-#include "NormalKey.h"
+#include "keys/Key.h"
+#include "keys/NormalKey.h"
 
 NormalKey::NormalKey(char value) {
     this->value = value;

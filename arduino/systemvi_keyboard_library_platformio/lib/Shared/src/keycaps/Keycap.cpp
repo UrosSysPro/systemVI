@@ -2,7 +2,7 @@
 // Created by uros on 7/10/25.
 //
 #include "Keycap.h"
-#include "Key.h"
+#include "keys/Key.h"
 #include "Keyboard.h"
 
 Keycap::Keycap() {

@@ -1,6 +1,6 @@
 #include "Arduino.h"
 #include "Keyboard.h"
-#include "SystemVIKeyboard.h"
+#include "../../lib/Shared/src/keyboard/SystemVIKeyboard.h"
 
 #define COLUMNS_NUMBER 14
 #define ROWS_NUMBER 5

@@ -1,11 +1,11 @@
-#include"SystemVIKeyboard.h"
+#include "SystemVIKeyboard.h"
 #include <string.h>
 #include "Arduino.h"
 #include "Keyboard.h"
-#include "Key.h"
-#include "Keycap.h"
-#include "MacroKey.h"
-#include "NormalKey.h"
+#include "keys/Key.h"
+#include "keycaps/Keycap.h"
+#include "keys/MacroKey.h"
+#include "keys/NormalKey.h"
 #include "LittleFS.h"
 
 void SystemVIKeyboard::init(char* name, int columns,int rows,int* columnPins,int* rowPins,bool debugPrint,int reportedColumns,int reportedRows) {

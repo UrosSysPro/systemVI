@@ -1,6 +1,6 @@
 #include <HID_Keyboard.h>
 
-#include "SystemVIKeyboard.h"
+#include "../../lib/Shared/src/keyboard/SystemVIKeyboard.h"
 
 SystemVIKeyboard *keyboard;
 

@@ -1,6 +1,6 @@
 #include "Key.h"
 #include "Keyboard.h"
-#include "MacroKey.h"
+#include "keys/MacroKey.h"
 
 #include <cstddef>
 #include <stdlib.h>

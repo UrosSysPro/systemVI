@@ -1,11 +1,11 @@
 #ifndef __SYSTEMVI_KEYBOARD__
 #define __SYSTEMVI_KEYBOARD__
-#include "Key.h"
-#include "Keycap.h"
-#include "LayerKeyPosition.h"
-#include "MacroKey.h"
-#include "NormalKey.h"
-#include "SnapTapPair.h"
+#include "keys/Key.h"
+#include "keycaps/Keycap.h"
+#include "special_keys/LayerKeyPosition.h"
+#include "keys/MacroKey.h"
+#include "keys/NormalKey.h"
+#include "special_keys/SnapTapPair.h"
 
 class SystemVIKeyboard{
 private:

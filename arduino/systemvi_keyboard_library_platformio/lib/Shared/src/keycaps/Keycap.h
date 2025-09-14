@@ -4,7 +4,7 @@
 
 #ifndef KEYMAP_H
 #define KEYMAP_H
-#include "Key.h"
+#include "../keys/Key.h"
 #include "LittleFS.h"
 
 class Keycap {
