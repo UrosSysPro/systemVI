@@ -1,6 +1,8 @@
 #ifndef KEYBOARDBUILDER_H
 #define KEYBOARDBUILDER_H
+#include "keyboard/I2CRegion.h"
 #include "keyboard/SystemVIKeyboard.h"
+
 
 class KeyboardBuilder {
     int *columnPins,*rowPins;
@@ -9,9 +11,9 @@ class KeyboardBuilder {
     char *name;
     int sdaPin,sclPin;
     bool reportToI2C,readFromI2C;
-    int readI2CColumn,readI2CRow,readI2CWidth,readI2CHeight;
+    I2CRegion i2cRegion=I2CRegion(-1,-1,0,0);
 public:
-    KeyboardBuilder() {
+    KeyboardBuilder(){
         this->columnPins = nullptr;
         this->rowPins = nullptr;
         this->columns = -1;
@@ -60,10 +62,10 @@ public:
         this->sdaPin=sdaPin;
         this->sclPin=sclPin;
         this->readFromI2C=true;
-        this->readI2CRow=row;
-        this->readI2CColumn=column;
-        this->readI2CWidth=width;
-        this->readI2CHeight=height;
+        this->i2cRegion.column=column;
+        this->i2cRegion.row=row;
+        this->i2cRegion.width=width;
+        this->i2cRegion.height=height;
         return this;
     }
 
@@ -81,10 +83,7 @@ public:
             this->sclPin,
             this->reportToI2C,
             this->readFromI2C,
-            this->readI2CColumn,
-            this->readI2CRow,
-            this->readI2CWidth,
-            this->readI2CHeight
+            this->i2cRegion
         );
     }
 };

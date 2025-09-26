@@ -1,5 +1,6 @@
 #ifndef __SYSTEMVI_KEYBOARD__
 #define __SYSTEMVI_KEYBOARD__
+#include "I2CRegion.h"
 #include "keys/Key.h"
 #include "keycaps/Keycap.h"
 #include "special_keys/LayerKeyPosition.h"
@@ -56,13 +57,13 @@ public:
 
 	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins);
 	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins,bool debugPrint,int reportedColumns,int reportedRows);
-	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins,bool debugPrint,int reportedColumns,int reportedRows,int sdaPin,int sclPin, bool reportToI2C,bool readFromI2C,int readI2CColumn,int readI2CRow, int readI2CWidth, int readI2CHeight);
+	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins,bool debugPrint,int reportedColumns,int reportedRows,int sdaPin,int sclPin, bool reportToI2C,bool readFromI2C,I2CRegion i2cRegion);
 	void init(
 		char* name,
 		int columns,int rows, int* columnPins, int* rowPins,
 		bool debugPrint,
 		int reportedColumns,int reportedRows,
-		int sdaPin,int sclPin, bool reportToI2C,bool readFromI2C,int readI2CColumn,int readI2CRow, int readI2CWidth, int readI2CHeight
+		int sdaPin,int sclPin, bool reportToI2C,bool readFromI2C,I2CRegion region
 	);
 	~SystemVIKeyboard();
 };

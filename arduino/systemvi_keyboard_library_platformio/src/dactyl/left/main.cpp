@@ -17,8 +17,21 @@ void setup() {
         ->setRows(rows,rowPins)
         ->setDebugPrint(true)
         ->build();
-    //                        matrix position   layers                              physical    size        padding
-    keyboard->setNormalKeycap(0,0,              (char[]){'\0','\0','\0','\0',},     0,0,        0,0,        0,0);
+    //                        matrix position   layers                                              physical    size        padding
+    keyboard->setNormalKeycap(6,0,              (char[]){(char)KEY_ESC,'\0','\0','\0',},             0,0,        0,0,        0,0);
+    keyboard->setNormalKeycap(5,0,              (char[]){'1',          '\0','\0','\0',},             1,0,        0,0,        0,0);
+    keyboard->setNormalKeycap(4,0,              (char[]){'2',          '\0','\0','\0',},             2,0,        0,0,        0,0);
+    keyboard->setNormalKeycap(3,0,              (char[]){'3',          '\0','\0','\0',},             3,0,        0,0,        0,0);
+    keyboard->setNormalKeycap(2,0,              (char[]){'4',          '\0','\0','\0',},             4,0,        0,0,        0,0);
+    keyboard->setNormalKeycap(1,0,              (char[]){'5',          '\0','\0','\0',},             5,0,        0,0,        0,0);
+    keyboard->setNormalKeycap(0,0,              (char[]){'6',          '\0','\0','\0',},             6,0,        0,0,        0,0);
+
+    keyboard->setNormalKeycap(6,1,              (char[]){'`',          '\0','\0','\0',},             0,1,        0,0,        0,0);
+    keyboard->setNormalKeycap(5,1,              (char[]){'q',          '\0','\0','\0',},             1,1,        0,0,        0,0);
+    keyboard->setNormalKeycap(4,1,              (char[]){'w',          '\0','\0','\0',},             2,1,        0,0,        0,0);
+    keyboard->setNormalKeycap(3,1,              (char[]){'e',          '\0','\0','\0',},             3,1,        0,0,        0,0);
+    keyboard->setNormalKeycap(2,1,              (char[]){'r',          '\0','\0','\0',},             4,1,        0,0,        0,0);
+    keyboard->setNormalKeycap(1,1,              (char[]){'t',          '\0','\0','\0',},             5,1,        0,0,        0,0);
 }
 
 void loop() {
