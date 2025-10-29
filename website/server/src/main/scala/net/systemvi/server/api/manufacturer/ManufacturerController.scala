@@ -27,6 +27,7 @@ val manufacturerRoutes=HttpRoutes.of[IO]{
     body <- request.body.fold("")((acc,b)=>acc+b.toChar).compile.toList
     response <- Ok(body.foldLeft(""){(acc,b)=>acc+b})
   }yield response
+
   case PUT -> Root => Ok("update manufacturer")
   case DELETE -> Root => Ok("delete manufacturer")
 }
