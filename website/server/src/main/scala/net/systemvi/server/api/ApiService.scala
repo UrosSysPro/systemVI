@@ -12,6 +12,7 @@ import net.systemvi.server.services.{EngineService, GameService, KeyboardService
 import net.systemvi.common.model.*
 
 val apiService=HttpRoutes.of[IO]{
+  case GET -> Root / "hello" => Ok("hello world")
   case GET -> Root / "keyboards" =>for{
     response<-Ok(KeyboardService.all().asJson)
   } yield response
