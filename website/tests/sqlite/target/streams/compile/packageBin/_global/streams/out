@@ -1,0 +1,17 @@
+[0m[[0m[0mdebug[0m] [0m[0mPackaging /home/uros/Projects/systemVI/website/tests/sqlite/target/scala-3.3.3/testsqlite_3-0.5.jar ...[0m
+[0m[[0m[0mdebug[0m] [0m[0mInput file mappings:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	net[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/uros/Projects/systemVI/website/tests/sqlite/target/scala-3.3.3/classes/net[0m
+[0m[[0m[0mdebug[0m] [0m[0m	net/systemvi[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/uros/Projects/systemVI/website/tests/sqlite/target/scala-3.3.3/classes/net/systemvi[0m
+[0m[[0m[0mdebug[0m] [0m[0m	net/systemvi/tests[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/uros/Projects/systemVI/website/tests/sqlite/target/scala-3.3.3/classes/net/systemvi/tests[0m
+[0m[[0m[0mdebug[0m] [0m[0m	net/systemvi/tests/sqlite[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/uros/Projects/systemVI/website/tests/sqlite/target/scala-3.3.3/classes/net/systemvi/tests/sqlite[0m
+[0m[[0m[0mdebug[0m] [0m[0m	net/systemvi/tests/sqlite/Main$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/uros/Projects/systemVI/website/tests/sqlite/target/scala-3.3.3/classes/net/systemvi/tests/sqlite/Main$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	net/systemvi/tests/sqlite/Main.tasty[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/uros/Projects/systemVI/website/tests/sqlite/target/scala-3.3.3/classes/net/systemvi/tests/sqlite/Main.tasty[0m
+[0m[[0m[0mdebug[0m] [0m[0m	net/systemvi/tests/sqlite/Main.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /home/uros/Projects/systemVI/website/tests/sqlite/target/scala-3.3.3/classes/net/systemvi/tests/sqlite/Main.class[0m
+[0m[[0m[0mdebug[0m] [0m[0mDone packaging.[0m

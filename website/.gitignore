@@ -22,6 +22,7 @@ project/target
 project/project/
 project/project/*
 project/project/**
+tests/target/
 !.vscode/extensions.json
 .idea
 .DS_Store
