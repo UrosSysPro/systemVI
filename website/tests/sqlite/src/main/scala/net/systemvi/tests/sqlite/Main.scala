@@ -19,7 +19,10 @@ object Main extends IOApp.Simple {
 
     for {
       _ <- IO.println("hello from sqlite test")
-      version<-sql"select sqlite_version()".query[String].unique.transact(xa)
+      version<-sql"select sqlite_version()"
+        .query[String]
+        .unique
+        .transact(xa)
       _<-IO.println(s"Sqlite version: $version")
     } yield ()
   }
