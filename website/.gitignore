@@ -24,6 +24,8 @@ project/project/*
 project/project/**
 tests/target/
 tests/sqlite/target/
+tests/sqlite/*.db
+tests/sqlite/**.db
 !.vscode/extensions.json
 .idea
 .DS_Store

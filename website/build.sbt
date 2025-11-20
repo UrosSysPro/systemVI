@@ -96,9 +96,8 @@ lazy val testSqlite = project.in(file("tests/sqlite"))
       "org.tpolecat" %% "doobie-core"      ,
       "org.tpolecat" %% "doobie-h2"        ,          // H2 driver 1.4.200 + type mappings.
       "org.tpolecat" %% "doobie-hikari"    ,          // HikariCP transactor.
-      "org.tpolecat" %% "doobie-postgres"  ,          // Postgres driver 42.7.5 + type mappings.
       "org.tpolecat" %% "doobie-specs2"    ,          // Specs2 support for typechecking statements.
       "org.tpolecat" %% "doobie-scalatest" ,          // ScalaTest support for typechecking statements.
-    ).map(_ % "1.0.0-RC8")
+    ).map(_ % "1.0.0-RC8"),
   )
   .dependsOn(common.jvm)
