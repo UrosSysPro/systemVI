@@ -21,7 +21,7 @@ SystemVIKeyboard *keyboard;
 // Convert color wheel value (0–255) into RGB
 uint32_t wheel(byte pos) {
     pos = 255 - pos;
-    float brightness = 0.05;
+    float brightness = 0.5;
     if (pos < 85) {
         return strip.Color((255 - pos * 3)*brightness, 0, (pos * 3)*brightness);
     }
@@ -129,6 +129,6 @@ void setup() {
 
 void loop() {
     keyboard->update();
-    rainbowCycle(5);
+    rainbowCycle(3);
 }
 
