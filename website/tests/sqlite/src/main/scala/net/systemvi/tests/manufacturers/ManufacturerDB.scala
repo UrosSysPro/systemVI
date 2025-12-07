@@ -8,30 +8,65 @@ import cats.data.*
 import cats.effect.*
 import cats.effect.implicits.*
 
-import doobie.*
-import doobie.implicits.*
-import doobie.generic.auto.*
-import doobie.util.transactor.Transactor.*
+import doobie.{*,given}
+import doobie.implicits.{*,given}
+import doobie.generic.auto.{*,given}
+import doobie.util.Read.{*,given}
+import doobie.util.transactor.Transactor.{*,given}
 
+object ManufacturerSQL {
+  given read:Read[Manufacturer] = Read[(UUID,String)].map{
+    case (uuid,name)=>Manufacturer(uuid,name)
+  }
+
+  given write:Write[Manufacturer] = Write[(UUID,String)].contramap{ m=>
+    (m.uuid,m.name)
+  }
+}
 
 trait ManufacturerDB[F[_]] {
-  def createTable():F[Unit]
-  def add(manufacturer: Manufacturer):F[Unit]
+  def createTable():F[Int]
+  def add(manufacturer: Manufacturer):F[Int]
   def get(uuid:UUID):F[Option[Manufacturer]]
   def get():F[List[Manufacturer]]
 }
 
 object ManufacturerDB {
-  def create(xa:Transactor[IO]) = {
-    new ManufacturerDB[IO] {
-      override def createTable(): IO[Unit] = sql"create table if not exists Manufacturers(uuid UUID, name varchar(255))".update.run.transact(xa).void
+  def create[F[_]: MonadCancelThrow](xa: Transactor[F]): ManufacturerDB[F] = {
+    new ManufacturerDB[F] {
 
-      override def add(manufacturer: Manufacturer): IO[Unit] = sql"insert into Manufacturers(uuid,name) values(${manufacturer.uuid.toString},${manufacturer.name})".update.run.transact(xa).void
+      import ManufacturerSQL.given
 
-      override def get(uuid: UUID): IO[Option[Manufacturer]] = ???
+      override def createTable(): F[Int] =
+        sql"""
+             |create table if not exists Manufacturers(
+             |  uuid UUID,
+             |  name varchar(255)
+             |)
+             |"""
+          .stripMargin('|').update.run.transact(xa)
 
-//      override def get(): IO[List[Manufacturer]] = sql"select name from Manufacturers".query[Manufacturer].to[List].transact(xa)
-      override def get(): IO[List[Manufacturer]] = ???
+      override def add(manufacturer: Manufacturer): F[Int] =
+        sql"""
+             |insert into Manufacturers(uuid,name)
+             |values(${manufacturer.uuid.toString},${manufacturer.name})
+             |"""
+          .stripMargin('|').update.run.transact(xa)
+
+      override def get(uuid: UUID): F[Option[Manufacturer]] =
+        sql"""
+             |select *
+             |from Manufacturers
+             |where uuid = ${uuid.toString}
+             |"""
+          .stripMargin('|').query[Manufacturer].option.transact(xa)
+
+      override def get(): F[List[Manufacturer]] =
+        sql"""
+             |select name
+             |from Manufacturers
+             |"""
+          .stripMargin('|').query[Manufacturer].to[List].transact(xa)
     }
   }
 }
