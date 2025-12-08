@@ -11,10 +11,11 @@ import cats.effect.implicits.*
 import doobie.{*,given}
 import doobie.implicits.{*,given}
 import doobie.generic.auto.{*,given}
-import doobie.util.Read.{*,given}
-import doobie.util.transactor.Transactor.{*,given}
 
 object ManufacturerSQL {
+  given uuidRead:Read[UUID] = Read[String].map(UUID.fromString)
+  given uuidWrite:Write[UUID] = Write[String].contramap(_.toString)
+
   given read:Read[Manufacturer] = Read[(UUID,String)].map{
     case (uuid,name)=>Manufacturer(uuid,name)
   }
@@ -63,7 +64,7 @@ object ManufacturerDB {
 
       override def get(): F[List[Manufacturer]] =
         sql"""
-             |select name
+             |select *
              |from Manufacturers
              |"""
           .stripMargin('|').query[Manufacturer].to[List].transact(xa)
