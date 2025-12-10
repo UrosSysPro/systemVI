@@ -15,13 +15,14 @@ trait KeyboardDB[F[_]] {
 
   def get(uuid:UUID):F[Option[Keyboard]]
   def get():F[List[Keyboard]]
+  def getDto():F[List[KeyboardDto]]
 }
 
 object KeyboardDB {
   def create[F[_]:MonadCancelThrow](xa:Transactor[F]):KeyboardDB[F] = {
     new KeyboardDB[F] {
       import SqlMappings.given
-      
+
       override def dropTable(): F[Int] =
         sql"""drop table if exists Keyboards""".stripMargin('|').update.run.transact(xa)
 
@@ -51,6 +52,13 @@ object KeyboardDB {
              | from Keyboards
            """.stripMargin('|').query[Keyboard].to[List].transact(xa)
 
+      override def getDto(): F[List[KeyboardDto]] =
+        sql"""
+          |select keyboard.uuid,keyboard.name,switch.uuid,switch.name,switch.type,manufacturer.uuid,manufacturer.name
+          |from Keyboards as keyboard
+          |join Switches as switch on keyboard.switchId = switch.uuid
+          |join Manufacturers as manufacturer on switch.manufacturerId = manufacturer.uuid
+           """.stripMargin('|').query[KeyboardDto].to[List].transact(xa)
     }
   }
 }

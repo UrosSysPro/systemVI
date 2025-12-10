@@ -14,10 +14,10 @@ object SqlMappings {
 
   given Read[Keyboard] = Read[(UUID,String,UUID)].map(Keyboard.apply)
   given Write[Keyboard] = Write[(UUID,String,UUID)].contramap{k=>(k.uuid,k.name,k.switchId)}
-  
+
   given Read[Manufacturer] = Read[(UUID,String)].map(Manufacturer.apply)
   given Write[Manufacturer] = Write[(UUID,String)].contramap{k=>(k.uuid,k.name)}
-  
+
   given Read[Switch] = Read[(UUID,String,UUID,Int)].map{
     case (uuid,name,manufacturerId,switchTypeId)=>Switch(
       uuid,name,manufacturerId,switchTypeId match {
@@ -28,4 +28,25 @@ object SqlMappings {
     )
   }
   given Write[Switch] = Write[(UUID,String,UUID,Int)].contramap{k=>(k.uuid,k.name,k.manufacturerId,k.switchType.value)}
+
+  given Read[KeyboardDto] = Read[(UUID,String,UUID,String,Int,UUID,String)].map{
+    case (keyboardId,keyboardName,switchId,switchName,switchType,manufacturerId,manufacturerName)=>
+      KeyboardDto(
+        keyboardId,
+        keyboardName,
+        SwitchDto(
+          switchId,
+          switchName,
+          Manufacturer(
+            manufacturerId,
+            manufacturerName
+          ),
+          switchType match {
+            case 0=> Linear
+            case 1=> Tactile
+            case 2=> Clicky
+          }
+        )
+      )
+  }
 }

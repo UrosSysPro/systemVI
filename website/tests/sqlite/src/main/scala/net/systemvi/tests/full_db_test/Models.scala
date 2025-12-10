@@ -12,3 +12,11 @@ object Clicky extends SwitchType(2)
 case class Switch(uuid:UUID, name:String, manufacturerId:UUID, switchType: SwitchType)
 
 case class Keyboard(uuid:UUID, name:String, switchId:UUID)
+
+case class SwitchDto(uuid:UUID,name:String,manufacturer:Manufacturer,switchType:SwitchType)
+
+case class KeyboardDto(
+                      uuid: UUID,
+                      name:String,
+                      switch:SwitchDto
+                      )

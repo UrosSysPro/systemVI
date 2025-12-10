@@ -23,7 +23,7 @@ object Main extends IOApp.Simple {
     val kProSilver = Switch(UUID.randomUUID(), "K Pro Silver", keychron.uuid, Linear)
     val phantomRed = Switch(UUID.randomUUID(), "Phantom Red", gateron.uuid, Linear)
 
-    val boxSilver = Switch(UUID.randomUUID(), "Box Silver", keychron.uuid, Linear)
+    val boxSilver = Switch(UUID.randomUUID(), "Box Silver", kailh.uuid, Linear)
 
     val otemuBrown = Switch(UUID.randomUUID(), "Otemu Brown", gateron.uuid, Tactile)
     val otemuPurple = Switch(UUID.randomUUID(), "Otemu Purple", gateron.uuid, Linear)
@@ -39,8 +39,10 @@ object Main extends IOApp.Simple {
       _ <- List(keychron,kailh,gateron,otemu).map(db.manufacturer.add).sequence
       _ <- List(kProBlue,kProMint,kProSilver,phantomRed,boxSilver,otemuBrown,otemuPurple,otemuYellow).map(db.switch.add).sequence
       _ <- List(ph60Marble,ph60MetallicViolet).map(db.keyboard.add).sequence
-      keyboards <- db.keyboard.get()
+      keyboards <- db.keyboard.getDto()
       _ <- keyboards.map(_.name).map(IO.println).sequence
+      _ <- keyboards.map(_.switch.name).map(IO.println).sequence
+      _ <- keyboards.map(_.switch.manufacturer.name).map(IO.println).sequence
     } yield ()
   }
 }
