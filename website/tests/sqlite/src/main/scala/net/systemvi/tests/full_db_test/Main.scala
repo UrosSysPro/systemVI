@@ -39,6 +39,8 @@ object Main extends IOApp.Simple {
       _ <- List(keychron,kailh,gateron,otemu).map(db.manufacturer.add).sequence
       _ <- List(kProBlue,kProMint,kProSilver,phantomRed,boxSilver,otemuBrown,otemuPurple,otemuYellow).map(db.switch.add).sequence
       _ <- List(ph60Marble,ph60MetallicViolet).map(db.keyboard.add).sequence
+      keyboards <- db.keyboard.get()
+      _ <- keyboards.map(_.name).map(IO.println).sequence
     } yield ()
   }
 }

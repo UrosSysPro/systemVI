@@ -4,7 +4,7 @@ import java.util.UUID
 
 case class Manufacturer(uuid: UUID,name:String)
 
-sealed trait SwitchType(value:Int)
+sealed trait SwitchType(val value:Int)
 object Linear extends SwitchType(0)
 object Tactile extends SwitchType(1)
 object Clicky extends SwitchType(2)

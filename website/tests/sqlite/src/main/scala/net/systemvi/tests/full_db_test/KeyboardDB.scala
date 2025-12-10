@@ -2,6 +2,8 @@ package net.systemvi.tests.full_db_test
 
 import cats.effect.kernel.MonadCancelThrow
 import doobie.*
+import doobie.implicits.*
+import doobie.generic.auto.*
 
 import java.util.UUID
 
@@ -18,15 +20,37 @@ trait KeyboardDB[F[_]] {
 object KeyboardDB {
   def create[F[_]:MonadCancelThrow](xa:Transactor[F]):KeyboardDB[F] = {
     new KeyboardDB[F] {
-      override def dropTable(): F[Int] = ???
+      import SqlMappings.given
+      
+      override def dropTable(): F[Int] =
+        sql"""drop table if exists Keyboards""".stripMargin('|').update.run.transact(xa)
 
-      override def createTable(): F[Int] = ???
+      override def createTable(): F[Int] =
+        sql"""create table if not exists Keyboards(
+             |  uuid UUID,
+             |  name varchar(255),
+             |  switchId UUID
+             |)""".stripMargin('|').update.run.transact(xa)
 
-      override def add(keyboard: Keyboard): F[Int] = ???
+      override def add(keyboard: Keyboard): F[Int] =
+        sql"""
+          |insert into Keyboards(uuid,name,switchId)
+          |values(${keyboard.uuid.toString},${keyboard.name},${keyboard.switchId.toString})
+           """.stripMargin('|').update.run.transact(xa)
 
-      override def get(uuid: UUID): F[Option[Keyboard]] = ???
+      override def get(uuid: UUID): F[Option[Keyboard]] =
+        sql"""
+          | select *
+          | from Keyboards
+          | where uuid = ${uuid.toString}
+           """.stripMargin('|').query[Keyboard].option.transact(xa)
 
-      override def get(): F[List[Keyboard]] = ???
+      override def get(): F[List[Keyboard]] =
+        sql"""
+             | select *
+             | from Keyboards
+           """.stripMargin('|').query[Keyboard].to[List].transact(xa)
+
     }
   }
 }
