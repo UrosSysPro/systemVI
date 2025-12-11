@@ -1,12 +1,17 @@
 package net.systemvi.tests.full_db_test
 
 import cats.effect.{IO, IOApp}
+import org.typelevel.log4cats.Logger
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import java.util.UUID
 
 object Main extends IOApp.Simple {
 
   override def run: IO[Unit] = sqlite.use { sqlite =>
+
+    val logger:Logger[IO] = Slf4jLogger.getLogger[IO]
+
     val db = DB(
       ManufacturerDB.create(sqlite),
       SwitchDB.create(sqlite),
@@ -33,16 +38,16 @@ object Main extends IOApp.Simple {
     val ph60MetallicViolet = Keyboard(UUID.randomUUID(),"PH 60 Metallic Violet Pla",boxSilver.uuid)
 
     for {
-      _ <- IO.println("hello")
+      _ <- logger.warn("hello")
       _ <- List(db.manufacturer.dropTable(),db.switch.dropTable(),db.keyboard.dropTable()).sequence
       _ <- List(db.manufacturer.createTable(),db.switch.createTable(),db.keyboard.createTable()).sequence
       _ <- List(keychron,kailh,gateron,otemu).map(db.manufacturer.add).sequence
       _ <- List(kProBlue,kProMint,kProSilver,phantomRed,boxSilver,otemuBrown,otemuPurple,otemuYellow).map(db.switch.add).sequence
       _ <- List(ph60Marble,ph60MetallicViolet).map(db.keyboard.add).sequence
       keyboards <- db.keyboard.getDto()
-      _ <- keyboards.map(_.name).map(IO.println).sequence
-      _ <- keyboards.map(_.switch.name).map(IO.println).sequence
-      _ <- keyboards.map(_.switch.manufacturer.name).map(IO.println).sequence
+      _ <- keyboards.map(_.name).map(logger.info(_)).sequence
+      _ <- keyboards.map(_.switch.name).map(logger.info(_)).sequence
+      _ <- keyboards.map(_.switch.manufacturer.name).map(logger.info(_)).sequence
     } yield ()
   }
 }
