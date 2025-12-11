@@ -26,6 +26,25 @@ val server=EmberServerBuilder
   .withHttpApp(httpApp)
   .build
 
-object Main extends IOApp .Simple {
-  override def run: IO[Unit] = server.use(_=>IO.never)
+object Main extends IOApp{
+  val serverApp = for {
+    _ <- server.use(_ => IO.never)
+  } yield ExitCode.Success
+
+  val migrationApp = for{
+    _ <- IO.println("not implemented")
+  }yield ExitCode.Success
+
+  val seedApp = for{
+    _ <- IO.println("not implemented")
+  }yield ExitCode.Success
+
+  override def run(args: List[String]): IO[ExitCode] = {
+    args match {
+      case _ if args.isEmpty => serverApp
+      case _ if args.head == "migrate" => migrationApp
+      case _ if args.head == "seed" => migrationApp
+      case _ => IO.println("wrong input").map(_=>ExitCode.Success)
+    }
+  }
 }
