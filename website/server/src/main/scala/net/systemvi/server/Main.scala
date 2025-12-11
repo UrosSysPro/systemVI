@@ -22,8 +22,8 @@ val server=EmberServerBuilder
   .default[IO]
   .withHost(ipv4"0.0.0.0")
   .withPort(port"8080")
+  .withLogger(Slf4jLogger.getLogger[IO])
   .withHttpApp(httpApp)
-  .withLogger(Slf4jLogger.getLoggerFromName("app"))
   .build
 
 object Main extends IOApp .Simple {
