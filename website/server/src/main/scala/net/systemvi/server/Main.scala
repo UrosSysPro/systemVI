@@ -8,9 +8,11 @@ import org.http4s.implicits.*
 import org.http4s.server.Router
 import net.systemvi.server.api.*
 import net.systemvi.server.api.manufacturer.*
+import net.systemvi.server.persistance.contexts.DatabaseContext
 import net.systemvi.server.website.*
 import org.http4s.ember.server.EmberServerBuilder
 import org.typelevel.log4cats.slf4j.Slf4jLogger
+import net.systemvi.server.persistance.database.*
 
 val httpApp:HttpApp[IO]=Router(
   "/api"->apiService,
@@ -27,9 +29,12 @@ val server=EmberServerBuilder
   .build
 
 object Main extends IOApp{
-  val serverApp = for {
-    _ <- server.use(_ => IO.never)
-  } yield ExitCode.Success
+  val serverApp = sqlite.use{ xa =>
+    val db = DatabaseContext.create(xa)
+    for {
+      _ <- server.use(_ => IO.never)
+    } yield ExitCode.Success
+  }
 
   val migrationApp = for{
     _ <- IO.println("not implemented")
