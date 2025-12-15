@@ -7,38 +7,43 @@ import org.http4s.*
 import org.http4s.implicits.*
 import org.http4s.server.Router
 import net.systemvi.server.api.*
-import net.systemvi.server.api.manufacturer.*
-import net.systemvi.server.persistance.contexts.DatabaseContext
+import net.systemvi.server.api.controllers.manufacturerRoutes
+import net.systemvi.server.persistance.contexts.ApplicationContext
 import net.systemvi.server.website.*
 import org.http4s.ember.server.EmberServerBuilder
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 import net.systemvi.server.persistance.database.*
+import net.systemvi.server.persistance.migrations.Migrations
 
-val httpApp:HttpApp[IO]=Router(
-  "/api"->apiService,
-  "/api/manufacturer"->manufacturerRoutes,
-  "/"->websiteService
-).orNotFound
+def httpApp(context: ApplicationContext[IO]):HttpApp[IO] = {
+  given ApplicationContext[IO] = context
+  Router(
+    "/api"->apiService,
+    "/api/manufacturers"->manufacturerRoutes,
+    "/"->websiteService
+  ).orNotFound
+}
 
-val server=EmberServerBuilder
+def server(context:ApplicationContext[IO])=EmberServerBuilder
   .default[IO]
   .withHost(ipv4"0.0.0.0")
   .withPort(port"8080")
   .withLogger(Slf4jLogger.getLogger[IO])
-  .withHttpApp(httpApp)
+  .withHttpApp(httpApp(context))
   .build
 
 object Main extends IOApp{
   val serverApp = sqlite.use{ xa =>
-    val db = DatabaseContext.create(xa)
+    val context = ApplicationContext.create(xa)
     for {
-      _ <- server.use(_ => IO.never)
+      _ <- server(context).use(_ => IO.never)
     } yield ExitCode.Success
   }
 
-  val migrationApp = for{
-    _ <- IO.println("not implemented")
-  }yield ExitCode.Success
+  val migrationApp = sqlite.use { xa => for {
+    _ <- Migrations.dropAll(xa)
+    _ <- Migrations.migrate(xa)
+  } yield ExitCode.Success }
 
   val seedApp = for{
     _ <- IO.println("not implemented")
