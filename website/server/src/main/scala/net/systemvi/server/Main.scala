@@ -3,24 +3,24 @@ package net.systemvi.server
 import cats.*
 import cats.effect.*
 import com.comcast.ip4s.{ipv4, port}
-import org.http4s.*
-import org.http4s.implicits.*
-import org.http4s.server.Router
 import net.systemvi.server.api.*
-import net.systemvi.server.api.controllers.manufacturerRoutes
+import net.systemvi.server.api.controllers.manufacturerController
 import net.systemvi.server.persistance.contexts.ApplicationContext
-import net.systemvi.server.website.*
-import org.http4s.ember.server.EmberServerBuilder
-import org.typelevel.log4cats.slf4j.Slf4jLogger
 import net.systemvi.server.persistance.database.*
 import net.systemvi.server.persistance.migrations.Migrations
+import net.systemvi.server.website.*
+import org.http4s.*
+import org.http4s.ember.server.EmberServerBuilder
+import org.http4s.implicits.*
+import org.http4s.server.Router
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 def httpApp(context: ApplicationContext[IO]):HttpApp[IO] = {
   given ApplicationContext[IO] = context
   Router(
-    "/api"->apiService,
-    "/api/manufacturers"->manufacturerRoutes,
-    "/"->websiteService
+    "/api" -> apiService,
+    "/api/manufacturers" -> manufacturerController,
+    "/" -> websiteService
   ).orNotFound
 }
 
