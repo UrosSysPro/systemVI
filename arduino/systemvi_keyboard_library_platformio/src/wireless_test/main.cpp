@@ -44,7 +44,7 @@
 
 #include "Arduino.h"
 
-int pin=18;
+int pin=1;
 
 void setup() {
     pinMode(pin,OUTPUT);
