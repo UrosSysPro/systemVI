@@ -3,7 +3,9 @@
 //
 #include "Keycap.h"
 #include "keys/Key.h"
+#ifdef ARDUINO_KEYBOARD
 #include "Keyboard.h"
+#endif
 
 Keycap::Keycap() {
     for (int i=0;i<4;i++)this->keys[i]=new Key();

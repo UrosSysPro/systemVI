@@ -1,4 +1,6 @@
+#ifdef ARDUINO_KEYBOARD
 #include "Keyboard.h"
+#endif
 #include "keys/Key.h"
 #include "keys/NormalKey.h"
 
@@ -8,14 +10,18 @@ NormalKey::NormalKey(char value) {
 
 bool NormalKey::onPress(int layer) {
     if (this->value) {
+#ifdef ARDUINO_KEYBOARD
         Keyboard.press(this->value);
+#endif
         return true;
     }
     return false;
 }
 
 bool NormalKey::onRelease(int layer) {
+#ifdef ARDUINO_KEYBOARD
     Keyboard.release(this->value);
+#endif
     return true;
 }
 
@@ -33,5 +39,5 @@ void NormalKey::printToFile(File *file,int i,int j,int layer) {
     buffer[2]=j;
     buffer[3]=layer;
     buffer[4]=this->value;
-    file->write(buffer,5);
+    file->write((uint8_t*)buffer,5);
 }

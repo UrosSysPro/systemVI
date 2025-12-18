@@ -1,7 +1,9 @@
 #include "SystemVIKeyboard.h"
 #include <string.h>
 #include "Arduino.h"
+#ifdef ARDUINO_KEYBOARD
 #include "Keyboard.h"
+#endif
 #include "keys/Key.h"
 #include "keycaps/Keycap.h"
 #include "keys/MacroKey.h"
@@ -59,7 +61,9 @@ void SystemVIKeyboard::init(
     this->printKeyEventsToSerial=false;
 
     Serial.begin(9600);
+#ifdef ARUDINO_KEYBOARD
     Keyboard.begin();
+#endif
 }
 
 SystemVIKeyboard::SystemVIKeyboard(char* name, int columns,int rows,int* columnPins,int* rowPins,bool debugPrint,int reportedColumns,int reportedRows,int sdaPin,int sclPin, bool reportToI2C,bool readFromI2C,I2CRegion region) {
@@ -126,7 +130,8 @@ void SystemVIKeyboard::executeKeyboardEvents() {
 
     for(int i=0;i<this->columns;i++){
         for(int j=0;j<this->rows;j++){
-            if(Keycap *key=this->keys[i][j]; key->justChanged){
+            Keycap *key=this->keys[i][j];
+            if(key->justChanged){
                 key->justChanged=false;
                 if(key->pressed){
                     for (int k=0;k<this->snapTapPairCount;k++) {

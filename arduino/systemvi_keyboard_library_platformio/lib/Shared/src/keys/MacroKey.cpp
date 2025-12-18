@@ -1,5 +1,7 @@
 #include "Key.h"
+#ifdef ARDUINO_KEYBOARD
 #include "Keyboard.h"
+#endif
 #include "keys/MacroKey.h"
 
 #include <cstddef>
@@ -25,11 +27,13 @@ bool MacroKey::onRelease(int layer) {
     for (int i=0;i<this->n;i++) {
         int type=this->actions[i].type;
         char value=this->actions[i].value;
+#ifdef ARDUINO_KEYBOARD
         if (type==PRESS) {
             Keyboard.press(value);
         }else {
             Keyboard.release(value);
         }
+#endif
         delay(20);
     }
     return true;
@@ -57,15 +61,15 @@ void MacroKey::printToFile(File *file,int i,int j,int layer) {
     buffer[2]=j;
     buffer[3]=layer;
     buffer[4]=this->n;
-    file->write(buffer,5);
+    file->write(reinterpret_cast<uint8_t *>(buffer),5);
     for (int i=0;i<this->n;i++) {
         buffer[0]=this->actions[i].value;
         buffer[1]=this->actions[i].type;
-        file->write(buffer,2);
+        file->write((uint8_t*)buffer,2);
     }
     byte nameLength=strlen(this->name);
     file->write(&nameLength,1);
-    file->write(name,nameLength);
+    file->write((uint8_t*)name,nameLength);
 }
 
 
