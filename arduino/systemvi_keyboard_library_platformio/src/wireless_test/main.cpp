@@ -1,5 +1,11 @@
 #include <Adafruit_NeoPixel.h>
 #include "../../lib/Shared/src/keyboard/SystemVIKeyboard.h"
+#include <WiFi.h>
+#include <esp_now.h>
+
+uint8_t receiverMac[] = {
+    0xD0,0xCF,0x13,0x09,0x8E,0xF8
+};
 
 #define PIN      41
 #define NUM_LEDS 61
@@ -47,6 +53,8 @@ int columnPins[14] = {
 SystemVIKeyboard *keyboard;
 
 char name[] = "wireless_test";
+
+uint8_t value=0;
 
 void setup() {
     strip.begin();
@@ -126,12 +134,45 @@ void setup() {
     // keyboard->setNormalKeycap( 3,4,         (char[]){static_cast<char>(KEY_LEFT_GUI),'\0','\0','\0'},       5,4,  0,0,    0,0);
     // keyboard->setNormalKeycap( 2,4,         (char[]){static_cast<char>(KEY_MENU),'\0','\0','\0'},           6,4,  0,0,    0,0);
     // keyboard->setNormalKeycap( 0,4,         (char[]){static_cast<char>(KEY_LEFT_CTRL),'\0','\0','\0'},      7,4,  0,0,    0,0);
+
+    WiFi.mode(WIFI_STA);
+    WiFi.disconnect();
+
+    if (esp_now_init() != ESP_OK) {
+        Serial.println("ESP-NOW init failed");
+        return;
+    }
+
+    esp_now_peer_info_t peer{};
+    memcpy(peer.peer_addr, receiverMac, 6);
+    peer.channel = 0;        // same channel
+    peer.encrypt = false;
+
+    if (esp_now_add_peer(&peer) != ESP_OK) {
+        Serial.println("Failed to add peer");
+        return;
+    }
 }
 
 void loop() {
     rainbowCycle(DELAY);
     keyboard->update();
+    for (int i=0;i<columns;i++) {
+        for (int j=0;j<rows;j++) {
+            auto key=keyboard->keys[i][j];
+            if (key->pressed) {
+                value = ((NormalKey*)key->keys[0])->value;
+                esp_err_t result = esp_now_send(receiverMac, &value, 1);
 
+                if (result == ESP_OK) {
+                    Serial.print("Sent byte: ");
+                    Serial.println(value);
+                } else {
+                    Serial.println("Send error");
+                }
+            }
+        }
+    }
 }
 
 // #include "Arduino.h"

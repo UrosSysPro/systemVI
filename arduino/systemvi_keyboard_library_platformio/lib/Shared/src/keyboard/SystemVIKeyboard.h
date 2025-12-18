@@ -14,10 +14,10 @@ private:
 	int columns,rows,reportedColumns,reportedRows,layerKeyPositionCount,snapTapPairCount;
 	bool printKeyEventsToSerial,debugPrint;
 	char* name;
-	Keycap ***keys;
 	LayerKeyPosition* layerKeyPositions;
 	SnapTapPair* snapTapPairs;
 public:
+	Keycap ***keys;
 	void updateKeyState();
 	void setNormalKeycap(int column,int row,char* values,int physicalX,int physicalY,int width,int height,int paddingLeft,int paddingBottom);
 	void setNormalKeycap(int column,int row,char* values,int physicalX,int physicalY,int width,int height);
