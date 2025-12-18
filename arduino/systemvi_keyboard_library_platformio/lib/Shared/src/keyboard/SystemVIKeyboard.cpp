@@ -1,14 +1,14 @@
 #include "SystemVIKeyboard.h"
-#include <string.h>
+#include <cstring>
 #include "Arduino.h"
-#ifdef ARDUINO_KEYBOARD
-#include "Keyboard.h"
-#endif
 #include "keys/Key.h"
 #include "keycaps/Keycap.h"
 #include "keys/MacroKey.h"
 #include "keys/NormalKey.h"
 #include "LittleFS.h"
+#ifdef ARDUINO_KEYBOARD
+#include "Keyboard.h"
+#endif
 
 void SystemVIKeyboard::init(
     char* name,
@@ -20,7 +20,7 @@ void SystemVIKeyboard::init(
     this->debugPrint=debugPrint;
     this->reportedColumns=reportedColumns;
     this->reportedRows=reportedRows;
-    int length=strlen(name);
+    int length=(int)strlen(name);
     this->name=new char[length+1];
     for (int i=0;i<length;i++)this->name[i]=name[i];
     this->name[length]='\0';

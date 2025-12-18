@@ -12,6 +12,8 @@ bool NormalKey::onPress(int layer) {
     if (this->value) {
 #ifdef ARDUINO_KEYBOARD
         Keyboard.press(this->value);
+#else
+        Serial.println(this->value);
 #endif
         return true;
     }
