@@ -61,7 +61,8 @@ void SystemVIKeyboard::init(
     this->printKeyEventsToSerial=false;
 
     Serial.begin(9600);
-#ifdef ARUDINO_KEYBOARD
+#ifdef ARDUINO_KEYBOARD
+#warning "arudino keyboard started"
     Keyboard.begin();
 #endif
 }

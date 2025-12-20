@@ -10,9 +10,16 @@ int rows[]={14,15,16,17,18};
 
 SystemVIKeyboard* keyboard;
 
+#ifdef ARDUINO_KEYBOARD
+#warning "ARDUINO_KEYBOARD IS DEFINED"
+#else
+#warning "ARDUINO_KEYBOARD IS NOT DEFINED"
+#endif
+
+
 void setup() {
   char name[]="Keyboard 60";
-  keyboard=new SystemVIKeyboard(name,14,5,columns,rows);
+  keyboard=new SystemVIKeyboard(name,14,5,columns,rows,true,COLUMNS_NUMBER,ROWS_NUMBER);
 
   keyboard->setNormalKeycap(13,0,   (char[]){static_cast<char>(KEY_ESC),'\0','\0','\0'}        ,0 ,0);
   keyboard->setNormalKeycap(12,0,   (char[]){'1','\0','\0','\0'}            ,1 ,0);

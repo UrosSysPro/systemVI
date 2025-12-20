@@ -4,8 +4,6 @@
 #include "keys/Key.h"
 #include "keycaps/Keycap.h"
 #include "special_keys/LayerKeyPosition.h"
-#include "keys/MacroKey.h"
-#include "keys/NormalKey.h"
 #include "special_keys/SnapTapPair.h"
 
 class SystemVIKeyboard{
