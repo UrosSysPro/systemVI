@@ -1,10 +1,10 @@
-import org.scalajs.linker.interface.ModuleSplitStyle
+import Versions.*
+import ServerDependencies.*
+import ClientDependencies.*
+import CommonDependencies.*
+import TestDependencies.*
 
-val catsVersion = "2.13.0"
-val circeVersion = "0.14.13"
-//val http4sVersion ="1.0.0-M44"
-val http4sVersion = "0.23.30"
-val doobieVersion = "1.0.0-RC8"
+import org.scalajs.linker.interface.ModuleSplitStyle
 
 ThisBuild / organization := "net.systemvi"
 ThisBuild / version      := "0.5"
@@ -57,9 +57,9 @@ lazy val server=project.in(file("server"))
     Compile / run / connectInput := true,
 //    cats
     libraryDependencies += "org.typelevel" %%% "cats-core"      % catsVersion, //cats dependency
-    libraryDependencies += "org.typelevel" %%% "cats-effect"    % "3.6.1", // cats effect dependency
+    libraryDependencies += "org.typelevel" %%% "cats-effect"    % catsEffectVersion, // cats effect dependency
 //    logger
-    libraryDependencies += "org.typelevel" %% "log4cats-slf4j" % "2.7.1",  // Direct Slf4j Support - Recommended
+    libraryDependencies += "org.typelevel" %% "log4cats-slf4j" % log4catsVersion,  // Direct Slf4j Support - Recommended
     libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.5.21",
 //    http4s
     libraryDependencies ++= Seq(
