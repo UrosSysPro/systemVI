@@ -55,33 +55,7 @@ lazy val server=project.in(file("server"))
   .settings(
     Compile / run / fork := true,
     Compile / run / connectInput := true,
-//    cats
-    libraryDependencies += "org.typelevel" %%% "cats-core"      % catsVersion, //cats dependency
-    libraryDependencies += "org.typelevel" %%% "cats-effect"    % catsEffectVersion, // cats effect dependency
-//    logger
-    libraryDependencies += "org.typelevel" %% "log4cats-slf4j" % log4catsVersion,  // Direct Slf4j Support - Recommended
-    libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.5.21",
-//    http4s
-    libraryDependencies ++= Seq(
-      "org.http4s" %% "http4s-dsl",
-      "org.http4s" %% "http4s-ember-server",
-      "org.http4s" %% "http4s-ember-client",
-      "org.http4s" %% "http4s-circe",
-    ).map(_ % http4sVersion),
-//    json
-    libraryDependencies ++= Seq(
-      "io.circe" %%% "circe-core",
-      "io.circe" %%% "circe-generic",
-      "io.circe" %%% "circe-parser"
-    ).map(_ % circeVersion),
-//    doobie
-    libraryDependencies += "org.xerial" % "sqlite-jdbc" % "3.49.1.0", //sqlite
-    libraryDependencies ++= Seq(
-      "org.tpolecat" %% "doobie-core"      ,
-      "org.tpolecat" %% "doobie-h2"        ,          // H2 driver 1.4.200 + type mappings.
-      "org.tpolecat" %% "doobie-hikari"    ,          // HikariCP transactor.
-      "org.tpolecat" %% "doobie-specs2"    ,          // Specs2 support for typechecking statements.
-    ).map(_ % doobieVersion)
+    libraryDependencies := serverDependencies
   )
   .dependsOn(common.jvm)
 
