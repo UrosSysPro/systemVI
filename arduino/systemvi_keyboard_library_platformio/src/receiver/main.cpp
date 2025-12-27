@@ -10,18 +10,22 @@ uint8_t const desc_hid_report[] = {
     TUD_HID_REPORT_DESC_KEYBOARD()
 };
 
-char justClicked;
+volatile char justClicked;
 
-void onReceive(const uint8_t *info, const uint8_t *data, int len) {
+void onReceive(const uint8_t *senderAddress, const uint8_t *data, int len) {
     if (len == 1) {
         justClicked = data[0];
     }
 }
 
+void hid_report_callback(uint8_t report_id, hid_report_type_t report_type, uint8_t const* buffer, uint16_t bufsize) {
+
+}
+
 void setup() {
-    setCpuFrequencyMhz(80);
+    // setCpuFrequencyMhz(80);
     Serial.begin(9600);
-    delay(1000);
+    delay(3000);
 
     WiFi.mode(WIFI_STA);
     WiFi.setSleep(true);
@@ -45,12 +49,13 @@ void setup() {
     usb_hid.setPollInterval(2);
     usb_hid.setReportDescriptor(desc_hid_report, sizeof(desc_hid_report));
     usb_hid.setStringDescriptor("TinyUSB Keyboard");
+    usb_hid.setReportCallback(nullptr,hid_report_callback);
     usb_hid.begin();
-    if (TinyUSBDevice.mounted()){
-        TinyUSBDevice.detach();
-        delay(10);
-        TinyUSBDevice.attach();
-    }
+    // if (TinyUSBDevice.mounted()){
+    //     TinyUSBDevice.detach();
+    //     delay(10);
+    //     TinyUSBDevice.attach();
+    // }
 }
 
 
