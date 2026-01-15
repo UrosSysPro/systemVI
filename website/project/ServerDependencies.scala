@@ -1,12 +1,13 @@
 import Versions.*
 import sbt.*
+import sbt.Keys.libraryDependencies
 
 object ServerDependencies {
   val cats = "org.typelevel" %% "cats-core" % catsVersion
   val catsEffect = "org.typelevel" %% "cats-effect" % catsEffectVersion
 
   val log4cats  = "org.typelevel" %% "log4cats-slf4j" % log4catsVersion
-  val logback = "ch.qos.logback" % "logback-classic" % "1.5.21"
+  val logback = "ch.qos.logback" % "logback-classic" % logBackVersion
 
   val http4s: Seq[ModuleID] = Seq(
     "org.http4s" %% "http4s-dsl",
@@ -21,7 +22,7 @@ object ServerDependencies {
     "io.circe" %% "circe-parser"
   ).map(_ % circeVersion)
 
-  val sqlite = "org.xerial" % "sqlite-jdbc" % "3.49.1.0"
+  val sqlite = "org.xerial" % "sqlite-jdbc" % sqliteVersion
 
   val doobie: Seq[ModuleID] = Seq(
     "org.tpolecat" %% "doobie-core"      ,
@@ -30,7 +31,7 @@ object ServerDependencies {
     "org.tpolecat" %% "doobie-specs2"    ,          // Specs2 support for typechecking statements.
   ).map(_ % doobieVersion)
 
-  val serverDependencies: Seq[ModuleID] = Seq(
+  val serverDependencies = libraryDependencies := Seq(
     cats,
     catsEffect,
     log4cats,

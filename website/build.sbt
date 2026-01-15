@@ -17,45 +17,28 @@ lazy val common = crossProject(JSPlatform,JVMPlatform)
   .withoutSuffixFor(JVMPlatform)
   .in(file("common"))
   .settings(
-    libraryDependencies += "org.typelevel" %%% "cats-core" % catsVersion,
-    libraryDependencies ++= Seq(
-      "io.circe" %%% "circe-core",
-      "io.circe" %%% "circe-generic",
-      "io.circe" %%% "circe-parser"
-    ).map(_ % circeVersion),
+    commonDependencies
   )
 
 lazy val client = project.in(file("client"))
-  .enablePlugins(ScalaJSPlugin) // Enable the Scala.js plugin in this project
+  .enablePlugins(ScalaJSPlugin)
   .settings(
-//    scala js
-    scalaJSUseMainModuleInitializer := true, // Tell Scala.js that this is an application with a main method
+    scalaJSUseMainModuleInitializer := true,
     scalaJSLinkerConfig ~= {
       _.withModuleKind(ModuleKind.ESModule)
         .withModuleSplitStyle(
           ModuleSplitStyle.SmallModulesFor(List("website")))
     },
-    libraryDependencies += "org.scala-js" %%% "scalajs-dom" % "2.8.0",  // scala.js for dom types
-//    laminar
-    libraryDependencies += "com.raquo" %%% "laminar" % "17.0.0",        // laminar library
-    libraryDependencies += "com.raquo" %%% "waypoint" % "10.0.0-M1",    // waypoint for laminar library
-//    cats
-    libraryDependencies += "org.typelevel" %%% "cats-core" % catsVersion,  // scala cats
-//    json
-    libraryDependencies ++= Seq(
-      "io.circe" %%% "circe-core",
-      "io.circe" %%% "circe-generic",
-      "io.circe" %%% "circe-parser"
-    ).map(_ % circeVersion), //json parser
+    clientDependencies
   )
   .dependsOn(common.js)
 
-lazy val server=project.in(file("server"))
+lazy val server = project.in(file("server"))
   .enablePlugins(JavaAppPackaging)
   .settings(
     Compile / run / fork := true,
     Compile / run / connectInput := true,
-    libraryDependencies := serverDependencies
+    serverDependencies
   )
   .dependsOn(common.jvm)
 
