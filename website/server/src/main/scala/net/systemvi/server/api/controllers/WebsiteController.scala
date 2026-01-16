@@ -1,13 +1,13 @@
-package net.systemvi.server.website
+package net.systemvi.server.api.controllers
 
 import cats.*
 import cats.effect.*
+import fs2.io.file.Path
+import net.systemvi.server.utils.getLogger
 import org.http4s.*
 import org.http4s.dsl.io.*
-import net.systemvi.server.utils.getLogger
-import fs2.io.file.Path
 
-val websiteService= HttpRoutes.of[IO] {
+val websiteController = HttpRoutes.of[IO] {
   case request => for{
     logger<-getLogger
 
