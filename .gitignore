@@ -18,3 +18,4 @@ gradle/
 **/.scala-build/
 .bsp/
 **/.bsp/
+./local.properties
