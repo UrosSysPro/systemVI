@@ -9,6 +9,7 @@ import net.systemvi.server.api.routes.*
 import net.systemvi.server.persistance.contexts.ApplicationContext
 import net.systemvi.server.persistance.database.*
 import net.systemvi.server.persistance.migrations.Migrations
+import net.systemvi.server.persistance.seeders.Seeders
 import org.http4s.*
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.implicits.*
@@ -37,15 +38,15 @@ object Main extends IOApp{
     _ <- Migrations.migrate(xa)
   } yield ExitCode.Success }
 
-  val seedApp:IO[ExitCode] = for{
-    _ <- IO.println("not implemented")
-  }yield ExitCode.Success
+  val seedApp:IO[ExitCode] = sqlite.use{xa=> for{
+    _ <- Seeders.seed(xa)
+  }yield ExitCode.Success}
 
   override def run(args: List[String]): IO[ExitCode] = {
     args match {
       case _ if args.isEmpty => serverApp
       case _ if args.head == "migrate" => migrationApp
-      case _ if args.head == "seed" => migrationApp
+      case _ if args.head == "seed" => seedApp
       case _ => IO.println("wrong input").map(_=>ExitCode.Success)
     }
   }

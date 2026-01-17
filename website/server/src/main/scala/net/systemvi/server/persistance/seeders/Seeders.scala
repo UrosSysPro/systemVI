@@ -1,5 +1,13 @@
 package net.systemvi.server.persistance.seeders
 
-class Seeders {
+import cats.effect.*
+import cats.effect.implicits.*
+import cats.*
+import cats.implicits.*
+import doobie.util.transactor.Transactor
 
+object Seeders {
+  def seed(xa:Transactor[IO]): IO[Unit] = for{
+    _<-KeyboardSeeders.seed(xa)
+  } yield ()
 }

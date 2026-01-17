@@ -10,6 +10,7 @@ case class ApplicationContext[F[_]](
                              db:DatabaseContext[F],
                              logger:Logger[IO]
                              )
+
 object ApplicationContext {
   def create[F[_]:MonadCancelThrow](xa:Transactor[F]):ApplicationContext[F]= {
     ApplicationContext(

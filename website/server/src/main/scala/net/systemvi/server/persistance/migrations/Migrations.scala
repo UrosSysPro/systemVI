@@ -9,9 +9,13 @@ import doobie.h2.*
 object Migrations {
   def migrate(xa:Transactor[IO]): IO[Unit] = for{
     _ <- ManufacturerMigration.createTable(xa)
+    _ <- SwitchMigration.createTable(xa)
+    _ <- KeyboardMigration.createTable(xa)
   }yield()
 
   def dropAll(xa:Transactor[IO]): IO[Unit] = for{
     _ <- ManufacturerMigration.dropTable(xa)
+    _ <- SwitchMigration.dropTable(xa)
+    _ <- KeyboardMigration.dropTable(xa)
   }yield()
 }

@@ -4,7 +4,7 @@ import doobie.*
 import doobie.implicits.*
 import doobie.generic.auto.*
 import doobie.h2.*
-import net.systemvi.server.persistance.models.{Manufacturer, Switch}
+import net.systemvi.server.persistance.models.*
 
 import java.util.UUID
 
@@ -16,4 +16,7 @@ object SqlMappings {
 
   given Read[Switch] = Read[(UUID,UUID,Int,String)].map(Switch.apply)
 
+  given Read[Keyboard] = Read[(UUID,UUID,Int,String,String)].map(Keyboard.apply)
+
+  given Read[Application] = Read[(UUID,String,String,String)].map(Application.apply)
 }
