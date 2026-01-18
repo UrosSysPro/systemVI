@@ -27,6 +27,8 @@ def keyboardController(using context: ApplicationContext[IO]) = HttpRoutes.of[IO
         switch = switchOption.get
         switchManufacturerOption <- context.db.manufacturers.get(switch.manufacturerUUID)
         switchManufacturer = switchManufacturerOption.get
+        images <- context.db.entityImageContext.get(keyboard.uuid)
+        imageDtos = images.map(a=>EntityImageDto(a.imageUrl,a.order))
         profile = KeyboardProfile.values.find(_.id == keyboard.profileId).get
         switchType = SwitchType.values.find(_.id == switch.switchTypeId).get
       }yield KeyboardDto(
@@ -48,7 +50,8 @@ def keyboardController(using context: ApplicationContext[IO]) = HttpRoutes.of[IO
             uuid = switchManufacturer.uuid,
             name = switchManufacturer.name,
           ),
-        )
+        ),
+        images = imageDtos,
       )
     }.sequence
     response <- Ok(dtos.asJson)
@@ -62,6 +65,8 @@ def keyboardController(using context: ApplicationContext[IO]) = HttpRoutes.of[IO
         switch = switchOption.get
         switchManufacturerOption <- context.db.manufacturers.get(switch.manufacturerUUID)
         switchManufacturer = switchManufacturerOption.get
+        images <- context.db.entityImageContext.get(keyboard.uuid)
+        imageDtos = images.map(a=>EntityImageDto(a.imageUrl,a.order))
         profile = KeyboardProfile.values.find(_.id == keyboard.profileId).get
         switchType = SwitchType.values.find(_.id == switch.switchTypeId).get
       }yield KeyboardDto(
@@ -83,7 +88,8 @@ def keyboardController(using context: ApplicationContext[IO]) = HttpRoutes.of[IO
             uuid = switchManufacturer.uuid,
             name = switchManufacturer.name,
           ),
-        )
+        ),
+        images = imageDtos,
       )
     }.sequence
     response <- Ok(dto.asJson)
