@@ -4,14 +4,18 @@ import cats.effect.kernel.MonadCancelThrow
 import doobie.util.transactor.Transactor
 
 case class DatabaseContext[F[_]](
-                            manufacturers:ManufacturerContext[F],
+                            manufacturers: ManufacturerContext[F],
+                            switches: SwitchContext[F],
+                            keyboards: KeyboardContext[F],
                           )
 
 
 object DatabaseContext {
   def create[F[_]:MonadCancelThrow](xa:Transactor[F]): DatabaseContext[F] = {
     DatabaseContext(
-      ManufacturerContext.create[F](xa)
+      ManufacturerContext.create(xa),
+      SwitchContext.create(xa),
+      KeyboardContext.create(xa)
     )
   }
 }
