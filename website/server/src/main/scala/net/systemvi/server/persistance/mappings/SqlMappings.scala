@@ -5,7 +5,6 @@ import doobie.implicits.*
 import doobie.generic.auto.*
 import doobie.h2.*
 import net.systemvi.server.persistance.models.*
-
 import java.util.UUID
 
 object SqlMappings {
@@ -19,4 +18,6 @@ object SqlMappings {
   given Read[Keyboard] = Read[(UUID,UUID,Int,String,String)].map(Keyboard.apply)
 
   given Read[Application] = Read[(UUID,String,String,String)].map(Application.apply)
+
+  given Read[EntityImage] = Read[(UUID,String,Int)].map(EntityImage.apply)
 }

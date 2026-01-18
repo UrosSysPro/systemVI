@@ -11,11 +11,13 @@ object Migrations {
     _ <- ManufacturerMigration.createTable(xa)
     _ <- SwitchMigration.createTable(xa)
     _ <- KeyboardMigration.createTable(xa)
+    _ <- EntityImageMigration.createTable(xa)
   }yield()
 
   def dropAll(xa:Transactor[IO]): IO[Unit] = for{
     _ <- ManufacturerMigration.dropTable(xa)
     _ <- SwitchMigration.dropTable(xa)
     _ <- KeyboardMigration.dropTable(xa)
+    _ <- EntityImageMigration.dropTable(xa)
   }yield()
 }

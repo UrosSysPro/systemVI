@@ -10,7 +10,7 @@ import net.systemvi.server.persistance.mappings.*
 import java.util.UUID
 
 trait KeyboardContext[F[_]] {
-  def add(switch:Keyboard):F[Int]
+  def add(keyboard:Keyboard):F[Int]
   def get(uuid:UUID):F[Option[Keyboard]]
   def get():F[List[Keyboard]]
   def remove(uuid:UUID):F[Int]

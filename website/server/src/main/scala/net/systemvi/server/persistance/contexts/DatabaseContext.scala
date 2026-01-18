@@ -7,6 +7,7 @@ case class DatabaseContext[F[_]](
                             manufacturers: ManufacturerContext[F],
                             switches: SwitchContext[F],
                             keyboards: KeyboardContext[F],
+                            entityImageContext: EntityImageContext[F]
                           )
 
 
@@ -15,7 +16,8 @@ object DatabaseContext {
     DatabaseContext(
       ManufacturerContext.create(xa),
       SwitchContext.create(xa),
-      KeyboardContext.create(xa)
+      KeyboardContext.create(xa),
+      EntityImageContext.create(xa)
     )
   }
 }

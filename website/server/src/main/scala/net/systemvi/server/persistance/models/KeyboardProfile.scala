@@ -8,6 +8,8 @@ object Profile75 extends KeyboardProfile(3)
 object Profile100 extends KeyboardProfile(4)
 object ProfileCorne extends KeyboardProfile(5)
 object ProfileDactyl extends KeyboardProfile(6)
+object Profile40 extends KeyboardProfile(7)
+object ProfileTKL extends KeyboardProfile(8)
 
 object KeyboardProfile {
   val values: List[KeyboardProfile] = List(
