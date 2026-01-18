@@ -8,7 +8,8 @@ import io.circe.*
 import io.circe.generic.auto.*
 import io.circe.syntax.*
 import net.systemvi.server.persistance.contexts.ApplicationContext
-import net.systemvi.server.persistance.models.Manufacturer
+import net.systemvi.server.persistance.models.*
+import net.systemvi.common.dtos.*
 import net.systemvi.server.services.*
 import org.http4s.*
 import org.http4s.circe.*
@@ -19,12 +20,72 @@ import org.http4s.dsl.io.*
 
 def keyboardController(using context: ApplicationContext[IO]) = HttpRoutes.of[IO]{
   case GET -> Root => for{
-    keyboard <- context.db.keyboards.get()
-    response <- Ok(keyboard.asJson)
+    keyboards <- context.db.keyboards.get()
+    dtos <- keyboards.map{keyboard=>
+      for{
+        switchOption <- context.db.switches.get(keyboard.switchUUID)
+        switch = switchOption.get
+        switchManufacturerOption <- context.db.manufacturers.get(switch.manufacturerUUID)
+        switchManufacturer = switchManufacturerOption.get
+        profile = KeyboardProfile.values.find(_.id == keyboard.profileId).get
+        switchType = SwitchType.values.find(_.id == switch.switchTypeId).get
+      }yield KeyboardDto(
+        uuid = keyboard.uuid,
+        name = keyboard.name,
+        codeName = keyboard.codeName,
+        profile = KeyboardProfileDto(
+          id = profile.id,
+          name = ""
+        ),
+        switch = SwitchDto(
+          uuid = switch.uuid,
+          name = switch.name,
+          switchType = SwitchTypeDto(
+            id = switchType.id,
+            name = switchType.name,
+          ),
+          manufacturer = ManufacturerDto(
+            uuid = switchManufacturer.uuid,
+            name = switchManufacturer.name,
+          ),
+        )
+      )
+    }.sequence
+    response <- Ok(dtos.asJson)
   } yield response
 
   case GET -> Root / UUIDVar(id) => for{
     keyboards <- context.db.keyboards.get(id)
-    response <- Ok(keyboards.asJson)
+    dto <- keyboards.map{keyboard=>
+      for{
+        switchOption <- context.db.switches.get(keyboard.switchUUID)
+        switch = switchOption.get
+        switchManufacturerOption <- context.db.manufacturers.get(switch.manufacturerUUID)
+        switchManufacturer = switchManufacturerOption.get
+        profile = KeyboardProfile.values.find(_.id == keyboard.profileId).get
+        switchType = SwitchType.values.find(_.id == switch.switchTypeId).get
+      }yield KeyboardDto(
+        uuid = keyboard.uuid,
+        name = keyboard.name,
+        codeName = keyboard.codeName,
+        profile = KeyboardProfileDto(
+          id = profile.id,
+          name = ""
+        ),
+        switch = SwitchDto(
+          uuid = switch.uuid,
+          name = switch.name,
+          switchType = SwitchTypeDto(
+            id = switchType.id,
+            name = switchType.name,
+          ),
+          manufacturer = ManufacturerDto(
+            uuid = switchManufacturer.uuid,
+            name = switchManufacturer.name,
+          ),
+        )
+      )
+    }.sequence
+    response <- Ok(dto.asJson)
   } yield response
 }
