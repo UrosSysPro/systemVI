@@ -1,10 +1,15 @@
 package net.systemvi.server.persistance.models
 
-sealed class SwitchType(val id:Int)
+sealed class SwitchType(val id:Int,val name: String)
 
-object Clicky extends SwitchType(1)
+object Clicky extends SwitchType(1,"Clicky")
+object Tactile extends SwitchType(2,"Tactile")
+object Linear extends SwitchType(3,"Linear")
 
-object Tactile extends SwitchType(2)
-
-object Linear extends SwitchType(3)
-
+object SwitchType {
+  val values: List[SwitchType] = List(
+    Clicky,
+    Tactile,
+    Linear,
+  )
+}
