@@ -27,8 +27,10 @@ def keyboardController(using context: ApplicationContext[IO]) = HttpRoutes.of[IO
         switch = switchOption.get
         switchManufacturerOption <- context.db.manufacturers.get(switch.manufacturerUUID)
         switchManufacturer = switchManufacturerOption.get
-        images <- context.db.entityImageContext.get(keyboard.uuid)
+        images <- context.db.entityImages.get(keyboard.uuid)
         imageDtos = images.map(a=>EntityImageDto(a.imageUrl,a.order))
+        specs <- context.db.entitySpecifications.get(keyboard.uuid)
+        specDtos = specs.map(a=>EntitySpecificationDto(a.key,a.value,a.order))
         profile = KeyboardProfile.values.find(_.id == keyboard.profileId).get
         switchType = SwitchType.values.find(_.id == switch.switchTypeId).get
       }yield KeyboardDto(
@@ -52,6 +54,7 @@ def keyboardController(using context: ApplicationContext[IO]) = HttpRoutes.of[IO
           ),
         ),
         images = imageDtos,
+        specs = specDtos,
       )
     }.sequence
     response <- Ok(dtos.asJson)
@@ -65,8 +68,10 @@ def keyboardController(using context: ApplicationContext[IO]) = HttpRoutes.of[IO
         switch = switchOption.get
         switchManufacturerOption <- context.db.manufacturers.get(switch.manufacturerUUID)
         switchManufacturer = switchManufacturerOption.get
-        images <- context.db.entityImageContext.get(keyboard.uuid)
+        images <- context.db.entityImages.get(keyboard.uuid)
         imageDtos = images.map(a=>EntityImageDto(a.imageUrl,a.order))
+        specs <- context.db.entitySpecifications.get(keyboard.uuid)
+        specDtos = specs.map(a=>EntitySpecificationDto(a.key,a.value,a.order))
         profile = KeyboardProfile.values.find(_.id == keyboard.profileId).get
         switchType = SwitchType.values.find(_.id == switch.switchTypeId).get
       }yield KeyboardDto(
@@ -90,6 +95,7 @@ def keyboardController(using context: ApplicationContext[IO]) = HttpRoutes.of[IO
           ),
         ),
         images = imageDtos,
+        specs = specDtos,
       )
     }.sequence
     response <- Ok(dto.asJson)

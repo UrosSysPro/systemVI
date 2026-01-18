@@ -19,5 +19,7 @@ object KeyboardProfile {
     Profile100,
     ProfileCorne,
     ProfileDactyl,
+    Profile40,
+    ProfileTKL,
   )
 }

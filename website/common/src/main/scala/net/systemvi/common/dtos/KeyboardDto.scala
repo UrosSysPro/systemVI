@@ -13,5 +13,6 @@ case class KeyboardDto(
                         profile: KeyboardProfileDto,
                         name: String,
                         codeName: String,
-                        images: List[EntityImageDto]
+                        images: List[EntityImageDto],
+                        specs: List[EntitySpecificationDto],
                       )

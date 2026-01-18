@@ -20,4 +20,6 @@ object SqlMappings {
   given Read[Application] = Read[(UUID,String,String,String)].map(Application.apply)
 
   given Read[EntityImage] = Read[(UUID,String,Int)].map(EntityImage.apply)
+  
+  given Read[EntitySpecification] = Read[(UUID,String,String,Int)].map(EntitySpecification.apply)
 }

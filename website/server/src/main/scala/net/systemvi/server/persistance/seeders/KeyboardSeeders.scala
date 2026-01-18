@@ -34,32 +34,38 @@ object KeyboardSeeders {
     val otemuPurple = Switch(UUID.randomUUID(),  gateron.uuid,  Linear.id,  "Otemu Purple")
     val otemuYellow = Switch(UUID.randomUUID(),  gateron.uuid,  Linear.id,  "Otemu Yellow")
 
-    val ph60MetallicViolet =  Keyboard(UUID.randomUUID(),boxSilver.uuid,  Profile60.id,"PH 60 Metallic Violet Pla", "ph_60_metallic_violet_pla")
-    val corneWireless =       Keyboard(UUID.randomUUID(),phantomRed.uuid,  ProfileCorne.id,"Corne Wireless", "corne_wireless")
-    val cornePrototype =      Keyboard(UUID.randomUUID(),otemuYellow.uuid,  ProfileCorne.id,"Corne Prototype", "corne_prototype")
-    val ph60Marble =          Keyboard(UUID.randomUUID(),kProMint.uuid,   Profile60.id,"PH 60 Marble Pla",          "ph_60_marble_pla")
-    val bana40 =              Keyboard(UUID.randomUUID(),phantomRed.uuid,   Profile40.id,"Bana 40%",          "bana_40")
-    val tklRabbit =           Keyboard(UUID.randomUUID(),kProMint.uuid,   ProfileTKL.id,"TKL Rabbit",          "tkl_rabbit")
-    val dactyl =              Keyboard(UUID.randomUUID(),otemuBrown.uuid,   ProfileDactyl.id,"7x5 Dactyl",          "dactyl")
+    val ph60MetallicViolet =  Keyboard(UUID.randomUUID(),boxSilver.uuid,    Profile60.id,     "PH 60 Metallic Violet Pla",  "ph_60_metallic_violet_pla")
+    val corneWireless =       Keyboard(UUID.randomUUID(),phantomRed.uuid,   ProfileCorne.id,  "Corne Wireless",             "corne_wireless")
+    val cornePrototype =      Keyboard(UUID.randomUUID(),otemuYellow.uuid,  ProfileCorne.id,  "Corne Prototype",            "corne_prototype")
+    val ph60Marble =          Keyboard(UUID.randomUUID(),kProMint.uuid,     Profile60.id,     "PH 60 Marble Pla",           "ph_60_marble_pla")
+    val bana40 =              Keyboard(UUID.randomUUID(),phantomRed.uuid,   Profile40.id,     "Bana 40%",                   "bana_40")
+    val tklRabbit =           Keyboard(UUID.randomUUID(),kProMint.uuid,     ProfileTKL.id,    "TKL Rabbit",                 "tkl_rabbit")
+    val dactyl =              Keyboard(UUID.randomUUID(),otemuBrown.uuid,   ProfileDactyl.id, "7x5 Dactyl",                 "dactyl")
 
     val corneWirelessImages = List(
       EntityImage(corneWireless.uuid,"/images/corne-wireless.jpg",0)
     )
+
     val cornePrototypeImages = List(
       EntityImage(cornePrototype.uuid,"/images/corne-prototype.jpg",0)
     )
+
     val ph60marbleImages = List(
       EntityImage(ph60Marble.uuid,"/images/keyboard-60.jpg",0)
     )
+
     val ph60MetallicVioletImages = List(
       EntityImage(ph60MetallicViolet.uuid,"/images/keyboard-60.jpg",0)
     )
+
     val bana40Images = List(
       EntityImage(bana40.uuid,"/images/red-keyboard.jpg",0)
     )
+
     val tklRabbitImages = List(
       EntityImage(tklRabbit.uuid,"/images/tkl-rabbit.jpg",0)
     )
+
     val dactylImages = List(
       EntityImage(dactyl.uuid,"/images/dactyl2.jpg",0)
     )
