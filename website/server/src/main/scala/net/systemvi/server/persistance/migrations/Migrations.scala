@@ -13,6 +13,7 @@ object Migrations {
     _ <- KeyboardMigration.createTable(xa)
     _ <- EntityImageMigration.createTable(xa)
     _ <- EntitySpecificationMigration.createTable(xa)
+    _ <- FilamentMigration.createTable(xa)
   }yield()
 
   def dropAll(xa:Transactor[IO]): IO[Unit] = for{
@@ -21,5 +22,6 @@ object Migrations {
     _ <- KeyboardMigration.dropTable(xa)
     _ <- EntityImageMigration.dropTable(xa)
     _ <- EntitySpecificationMigration.dropTable(xa)
+    _ <- FilamentMigration.dropTable(xa)
   }yield()
 }

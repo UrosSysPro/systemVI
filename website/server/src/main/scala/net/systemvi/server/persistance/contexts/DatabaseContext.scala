@@ -9,6 +9,7 @@ case class DatabaseContext[F[_]](
                             keyboards: KeyboardContext[F],
                             entityImages: EntityImageContext[F],
                             entitySpecifications: EntitySpecificationContext[F],
+                            filaments: FilamentContext[F]
                           )
 
 
@@ -20,6 +21,7 @@ object DatabaseContext {
       KeyboardContext.create(xa),
       EntityImageContext.create(xa),
       EntitySpecificationContext.create(xa),
+      FilamentContext.create(xa),
     )
   }
 }

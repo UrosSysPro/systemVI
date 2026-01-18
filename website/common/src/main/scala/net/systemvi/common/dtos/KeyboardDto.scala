@@ -11,8 +11,9 @@ case class KeyboardDto(
                         uuid: UUID,
                         switch: SwitchDto,
                         profile: KeyboardProfileDto,
-                        name: String,
-                        codeName: String,
+                        filament: FilamentDto,
                         images: List[EntityImageDto],
                         specs: List[EntitySpecificationDto],
+                        name: String,
+                        codeName: String,
                       )

@@ -19,11 +19,14 @@ object KeyboardSeeders {
     val switches = SwitchContext.create(xa)
     val keyboards = KeyboardContext.create(xa)
     val images = EntityImageContext.create(xa)
+    val filaments = FilamentContext.create(xa)
 
     val keychron =  Manufacturer(UUID.randomUUID(), "Keychron")
     val kailh =     Manufacturer(UUID.randomUUID(), "Kailh")
     val gateron =   Manufacturer(UUID.randomUUID(), "Gateron")
     val otemu =     Manufacturer(UUID.randomUUID(), "Otemu")
+    val devilDesign = Manufacturer(UUID.randomUUID(), "Devil Design")
+    val creality =  Manufacturer(UUID.randomUUID(), "Creality")
 
     val kProBlue =    Switch(UUID.randomUUID(),  keychron.uuid, Clicky.id,  "K Pro Blue")
     val kProMint =    Switch(UUID.randomUUID(),  keychron.uuid, Tactile.id, "K Pro Mint")
@@ -34,13 +37,25 @@ object KeyboardSeeders {
     val otemuPurple = Switch(UUID.randomUUID(),  gateron.uuid,  Linear.id,  "Otemu Purple")
     val otemuYellow = Switch(UUID.randomUUID(),  gateron.uuid,  Linear.id,  "Otemu Yellow")
 
-    val ph60MetallicViolet =  Keyboard(UUID.randomUUID(),boxSilver.uuid,    Profile60.id,     "PH 60 Metallic Violet Pla",  "ph_60_metallic_violet_pla")
-    val corneWireless =       Keyboard(UUID.randomUUID(),phantomRed.uuid,   ProfileCorne.id,  "Corne Wireless",             "corne_wireless")
-    val cornePrototype =      Keyboard(UUID.randomUUID(),otemuYellow.uuid,  ProfileCorne.id,  "Corne Prototype",            "corne_prototype")
-    val ph60Marble =          Keyboard(UUID.randomUUID(),kProMint.uuid,     Profile60.id,     "PH 60 Marble Pla",           "ph_60_marble_pla")
-    val bana40 =              Keyboard(UUID.randomUUID(),phantomRed.uuid,   Profile40.id,     "Bana 40%",                   "bana_40")
-    val tklRabbit =           Keyboard(UUID.randomUUID(),kProMint.uuid,     ProfileTKL.id,    "TKL Rabbit",                 "tkl_rabbit")
-    val dactyl =              Keyboard(UUID.randomUUID(),otemuBrown.uuid,   ProfileDactyl.id, "7x5 Dactyl",                 "dactyl")
+    val oliveGreenPla =   Filament(UUID.randomUUID(),Pla.id,devilDesign.uuid,"Olive Green")
+    val redPla =          Filament(UUID.randomUUID(),Pla.id,creality.uuid,"Red")
+    val hyperOrangePla =  Filament(UUID.randomUUID(),Pla.id,creality.uuid,"Hyper Orange")
+    val whitePla =        Filament(UUID.randomUUID(),PlaPlus.id,creality.uuid,"White")
+    val metallicVioletPla=Filament(UUID.randomUUID(),Pla.id,devilDesign.uuid,"Metallic Violet")
+    val crimsonRedPla=    Filament(UUID.randomUUID(),Pla.id,devilDesign.uuid,"Crimson Red")
+    val peachOrangePla=   Filament(UUID.randomUUID(),Pla.id,creality.uuid,"Peach Orange")
+    val mintGreenPla=     Filament(UUID.randomUUID(),Pla.id,devilDesign.uuid,"Mint Green")
+    val marbleWhitePla=   Filament(UUID.randomUUID(),Pla.id,devilDesign.uuid,"Marble White")
+    val silkRedPla=       Filament(UUID.randomUUID(),Pla.id,devilDesign.uuid,"Silk Red")
+    val hyperGreenPla=    Filament(UUID.randomUUID(),Pla.id,creality.uuid,"Hyper Green")
+
+    val ph60MetallicViolet =  Keyboard(UUID.randomUUID(),boxSilver.uuid,    Profile60.id,     metallicVioletPla.uuid,   "PH 60 Metallic Violet Pla",  "ph_60_metallic_violet_pla")
+    val corneWireless =       Keyboard(UUID.randomUUID(),phantomRed.uuid,   ProfileCorne.id,  oliveGreenPla.uuid    ,   "Corne Wireless",             "corne_wireless")
+    val cornePrototype =      Keyboard(UUID.randomUUID(),otemuYellow.uuid,  ProfileCorne.id,  hyperOrangePla.uuid   ,   "Corne Prototype",            "corne_prototype")
+    val ph60Marble =          Keyboard(UUID.randomUUID(),kProMint.uuid,     Profile60.id,     marbleWhitePla.uuid   ,   "PH 60 Marble Pla",           "ph_60_marble_pla")
+    val bana40 =              Keyboard(UUID.randomUUID(),phantomRed.uuid,   Profile40.id,     crimsonRedPla.uuid    ,   "Bana 40%",                   "bana_40")
+    val tklRabbit =           Keyboard(UUID.randomUUID(),kProMint.uuid,     ProfileTKL.id,    marbleWhitePla.uuid   ,   "TKL Rabbit",                 "tkl_rabbit")
+    val dactyl =              Keyboard(UUID.randomUUID(),otemuBrown.uuid,   ProfileDactyl.id, mintGreenPla.uuid     ,   "7x5 Dactyl",                 "dactyl")
 
     val corneWirelessImages = List(
       EntityImage(corneWireless.uuid,"/images/corne-wireless.jpg",0)
@@ -71,7 +86,7 @@ object KeyboardSeeders {
     )
 
     for{
-      _<-List(keychron,kailh,gateron,otemu).map(a=>manufacturers.add(a)).sequence
+      _<-List(keychron,kailh,gateron,otemu,devilDesign,creality).map(a=>manufacturers.add(a)).sequence
       _<-List(kProBlue,kProMint,kProSilver,phantomRed,boxSilver,otemuBrown,otemuPurple,otemuYellow).map(a=>switches.add(a)).sequence
       _<-List(
         ph60Marble,
@@ -91,6 +106,19 @@ object KeyboardSeeders {
         tklRabbitImages,
         dactylImages,
       ).flatten.map(a=>images.add(a)).sequence
+      _<-List(
+        oliveGreenPla,
+        redPla,
+        hyperOrangePla ,
+        whitePla ,
+        metallicVioletPla,
+        crimsonRedPla,
+        peachOrangePla,
+        mintGreenPla,
+        marbleWhitePla,
+        silkRedPla,
+        hyperGreenPla,
+      ).map(a=>filaments.add(a)).sequence
     } yield ()
   }
 }

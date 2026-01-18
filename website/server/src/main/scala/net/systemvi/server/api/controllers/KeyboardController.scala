@@ -25,12 +25,20 @@ def keyboardController(using context: ApplicationContext[IO]) = HttpRoutes.of[IO
       for{
         switchOption <- context.db.switches.get(keyboard.switchUUID)
         switch = switchOption.get
+
         switchManufacturerOption <- context.db.manufacturers.get(switch.manufacturerUUID)
         switchManufacturer = switchManufacturerOption.get
+
         images <- context.db.entityImages.get(keyboard.uuid)
         imageDtos = images.map(a=>EntityImageDto(a.imageUrl,a.order))
+
         specs <- context.db.entitySpecifications.get(keyboard.uuid)
         specDtos = specs.map(a=>EntitySpecificationDto(a.key,a.value,a.order))
+
+        filament <- context.db.filaments.get(keyboard.filamentUUID).map(_.get)
+        filamentManufacturer <- context.db.manufacturers.get(filament.manufacturerUUID).map(_.get)
+        polymer = FilamentPolymer.values.find{_.id==filament.polymerId}.get
+
         profile = KeyboardProfile.values.find(_.id == keyboard.profileId).get
         switchType = SwitchType.values.find(_.id == switch.switchTypeId).get
       }yield KeyboardDto(
@@ -39,7 +47,7 @@ def keyboardController(using context: ApplicationContext[IO]) = HttpRoutes.of[IO
         codeName = keyboard.codeName,
         profile = KeyboardProfileDto(
           id = profile.id,
-          name = ""
+          name = profile.name
         ),
         switch = SwitchDto(
           uuid = switch.uuid,
@@ -52,6 +60,16 @@ def keyboardController(using context: ApplicationContext[IO]) = HttpRoutes.of[IO
             uuid = switchManufacturer.uuid,
             name = switchManufacturer.name,
           ),
+        ),
+        filament = FilamentDto(
+          polymer = FilamentPolymerDto(
+            name = polymer.name
+          ),
+          manufacturer = ManufacturerDto(
+            uuid = filamentManufacturer.uuid,
+            name = filamentManufacturer.name,
+          ),
+          name = filament.name,
         ),
         images = imageDtos,
         specs = specDtos,
@@ -66,13 +84,22 @@ def keyboardController(using context: ApplicationContext[IO]) = HttpRoutes.of[IO
       for{
         switchOption <- context.db.switches.get(keyboard.switchUUID)
         switch = switchOption.get
+
         switchManufacturerOption <- context.db.manufacturers.get(switch.manufacturerUUID)
         switchManufacturer = switchManufacturerOption.get
+
         images <- context.db.entityImages.get(keyboard.uuid)
         imageDtos = images.map(a=>EntityImageDto(a.imageUrl,a.order))
+
         specs <- context.db.entitySpecifications.get(keyboard.uuid)
         specDtos = specs.map(a=>EntitySpecificationDto(a.key,a.value,a.order))
+
         profile = KeyboardProfile.values.find(_.id == keyboard.profileId).get
+
+        filament <- context.db.filaments.get(keyboard.filamentUUID).map(_.get)
+        filamentManufacturer <- context.db.manufacturers.get(filament.manufacturerUUID).map(_.get)
+        polymer = FilamentPolymer.values.find(_.id == filament.polymerId).get
+
         switchType = SwitchType.values.find(_.id == switch.switchTypeId).get
       }yield KeyboardDto(
         uuid = keyboard.uuid,
@@ -80,7 +107,7 @@ def keyboardController(using context: ApplicationContext[IO]) = HttpRoutes.of[IO
         codeName = keyboard.codeName,
         profile = KeyboardProfileDto(
           id = profile.id,
-          name = ""
+          name = profile.name,
         ),
         switch = SwitchDto(
           uuid = switch.uuid,
@@ -93,6 +120,16 @@ def keyboardController(using context: ApplicationContext[IO]) = HttpRoutes.of[IO
             uuid = switchManufacturer.uuid,
             name = switchManufacturer.name,
           ),
+        ),
+        filament = FilamentDto(
+          polymer = FilamentPolymerDto(
+            name = polymer.name
+          ),
+          manufacturer = ManufacturerDto(
+            uuid = filamentManufacturer.uuid,
+            name = filamentManufacturer.name,
+          ),
+          name = filament.name,
         ),
         images = imageDtos,
         specs = specDtos,

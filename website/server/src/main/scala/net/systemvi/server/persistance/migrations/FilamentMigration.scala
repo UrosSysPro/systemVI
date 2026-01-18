@@ -6,21 +6,19 @@ import doobie.implicits.*
 import doobie.generic.auto.*
 import doobie.h2.*
 
-object KeyboardMigration {
+object FilamentMigration {
   def createTable[F[_]:MonadCancelThrow](xa:Transactor[F]):F[Int] =
     sql"""
-         |create table if not exists Keyboards(
+         |create table if not exists Filaments(
          |  uuid UUID,
-         |  switchUUID UUID,
-         |  profileId int,
-         |  filamentUUID UUID,
-         |  name varchar(255),
-         |  codeName varchar(255)
+         |  polymerId int,
+         |  manufacturerUUID UUID,
+         |  name varchar(255)
          |)
          |""".stripMargin('|').update.run.transact(xa)
 
   def dropTable[F[_]:MonadCancelThrow](xa:Transactor[F]):F[Int] =
     sql"""
-         |drop table if exists Keyboards
+         |drop table if exists Filamnets
          |""".stripMargin('|').update.run.transact(xa)
 }

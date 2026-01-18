@@ -23,8 +23,8 @@ object KeyboardContext{
 
       override def add(keyboard: Keyboard): F[Int] =
         sql"""
-             |insert into Keyboards(uuid,switchUUID,profileId,name,codeName)
-             |values (${keyboard.uuid},${keyboard.switchUUID},${keyboard.profileId},${keyboard.name},${keyboard.codeName})
+             |insert into Keyboards(uuid,switchUUID,profileId,filamentUUID,name,codeName)
+             |values (${keyboard.uuid},${keyboard.switchUUID},${keyboard.profileId},${keyboard.filamentUUID},${keyboard.name},${keyboard.codeName})
            """.stripMargin('|').update.run.transact(xa)
 
       override def get(uuid: UUID): F[Option[Keyboard]] =

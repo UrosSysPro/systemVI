@@ -15,7 +15,7 @@ object SqlMappings {
 
   given Read[Switch] = Read[(UUID,UUID,Int,String)].map(Switch.apply)
 
-  given Read[Keyboard] = Read[(UUID,UUID,Int,String,String)].map(Keyboard.apply)
+  given Read[Keyboard] = Read[(UUID,UUID,Int,UUID,String,String)].map(Keyboard.apply)
 
   given Read[Application] = Read[(UUID,String,String,String)].map(Application.apply)
 
