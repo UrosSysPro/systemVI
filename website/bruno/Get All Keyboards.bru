@@ -1,0 +1,15 @@
+meta {
+  name: Get All Keyboards
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{cats-backend}}/api/keyboards
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}
