@@ -15,6 +15,7 @@ import net.systemvi.website.darkproject.product_info.given
 import net.systemvi.website.darkproject.navbar.Navbar
 import net.systemvi.website.darkproject.slider.ImageSlider
 import net.systemvi.common.dtos.*
+import scala.util.*
 import org.scalajs.dom
 
 sealed trait ScreenSize(val width:Int)
@@ -28,12 +29,9 @@ case class BentoBoxData(size:BentoBoxSize,items:List[BentoBoxRect])
 def KeyboardPageView(page:KeyboardPage):HtmlElement = {
   val keyboard = Var[Option[KeyboardDto]](None)
 
-  dom.console.log(page.keyboardId.toString)
-
   dom.fetch(s"http://localhost:8080/api/keyboards/${page.keyboardId}").`then`{ response=>
     response.json().`then`{json=>
-      dom.console.log(json)
-//      keyboard.writer.onNext(decodeJs[KeyboardDto](json).toOption)
+      keyboard.writer.onNext(decodeJs[KeyboardDto](json).toOption)
     }
   }
 
@@ -108,7 +106,6 @@ def KeyboardPageView(page:KeyboardPage):HtmlElement = {
   }
 
   div(
-    span("hello"),
     cls:="flex flex-col items-center pt-24",
     child <-- keyboard.signal.map{
       case Some(keyboard) =>
