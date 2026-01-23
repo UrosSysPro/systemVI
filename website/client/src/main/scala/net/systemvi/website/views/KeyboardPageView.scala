@@ -2,8 +2,9 @@ package net.systemvi.website.views
 
 import com.raquo.laminar.api.L.{*, given}
 import com.raquo.laminar.nodes.{ReactiveElement, ReactiveHtmlElement}
+import io.circe.scalajs.decodeJs
+import io.circe.generic.auto.*
 import net.systemvi.website.KeyboardPage
-import net.systemvi.website.api.KeyboardApi
 import net.systemvi.website.darkproject.bento_box.{BentoBox, BentoBoxItem, BentoBoxRect, BentoBoxSize}
 import net.systemvi.website.darkproject.big_title.BigTitle
 import net.systemvi.website.darkproject.bill_of_materials.BillOfMaterials
@@ -13,6 +14,7 @@ import net.systemvi.website.darkproject.product_info.*
 import net.systemvi.website.darkproject.product_info.given
 import net.systemvi.website.darkproject.navbar.Navbar
 import net.systemvi.website.darkproject.slider.ImageSlider
+import net.systemvi.common.dtos.*
 import org.scalajs.dom
 
 sealed trait ScreenSize(val width:Int)
@@ -24,7 +26,16 @@ object Extra extends ScreenSize(1500)
 case class BentoBoxData(size:BentoBoxSize,items:List[BentoBoxRect])
 
 def KeyboardPageView(page:KeyboardPage):HtmlElement = {
-  val keyboard=KeyboardApi.get(page.keyboardId)
+  val keyboard = Var[Option[KeyboardDto]](None)
+
+  dom.console.log(page.keyboardId.toString)
+
+  dom.fetch(s"http://localhost:8080/api/keyboards/${page.keyboardId}").`then`{ response=>
+    response.json().`then`{json=>
+      dom.console.log(json)
+//      keyboard.writer.onNext(decodeJs[KeyboardDto](json).toOption)
+    }
+  }
 
   def screenSizeToEnum=dom.window.innerWidth match{
     case x if x < Small.width => Small
@@ -99,37 +110,41 @@ def KeyboardPageView(page:KeyboardPage):HtmlElement = {
   div(
     span("hello"),
     cls:="flex flex-col items-center pt-24",
-    div(
-      className:="flex flex-col justify-start w-full max-w-[1450px]",
-      Navbar(),
-      ProductInfo(keyboard),
-      ImageSlider(keyboard.images),
-      BigTitle(
-        keyboard.name,
-        """
-          |Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-          |Phasellus aliquet purus a fringilla condimentum. Praesent
-          |vestibulum enim neque, eu placerat nulla molestie in
-          | """.stripMargin
-      ),
-      //4x3
-      child <-- boxes.map { boxData =>
-        BentoBox(
-          boxData.size,
-          boxData.items.zip(boxItems).zipWithIndex.map { (tuple, index) =>
-            val (rect, item) = tuple
-            BentoBoxItem(s"area_${index}", rect, item)
-          },
-          width.percent := 100,
-          height.rem := 50,
-          padding.rem := 1,
-        )
-      },
-      BigTitle("Technical Specifications"),
-      ExpandableSpecs(keyboard.specs),
-      BigTitle("Bill Of Materials"),
-      BillOfMaterials(),
-      Footer(),
-    )
+    child <-- keyboard.signal.map{
+      case Some(keyboard) =>
+          div(
+            className:="flex flex-col justify-start w-full max-w-[1450px]",
+            Navbar(),
+            ProductInfo(keyboard),
+            ImageSlider(keyboard.images.map{_.imageUrl}),
+            BigTitle(
+              keyboard.name,
+              """
+                |Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                |Phasellus aliquet purus a fringilla condimentum. Praesent
+                |vestibulum enim neque, eu placerat nulla molestie in
+                | """.stripMargin
+            ),
+            //4x3
+            child <-- boxes.map { boxData =>
+              BentoBox(
+                boxData.size,
+                boxData.items.zip(boxItems).zipWithIndex.map { (tuple, index) =>
+                  val (rect, item) = tuple
+                  BentoBoxItem(s"area_${index}", rect, item)
+                },
+                width.percent := 100,
+                height.rem := 50,
+                padding.rem := 1,
+              )
+            },
+            BigTitle("Technical Specifications"),
+            ExpandableSpecs(List.empty),
+            BigTitle("Bill Of Materials"),
+            BillOfMaterials(),
+            Footer(),
+          )
+      case None => emptyNode
+    }
   )
 }

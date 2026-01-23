@@ -8,6 +8,23 @@ import io.circe.generic.auto.*
 import io.circe.parser.*
 import io.circe.syntax.*
 import org.scalajs.dom
+import urldsl.errors.DummyError
+import urldsl.vocabulary.FromString
+import urldsl.vocabulary.Printer
+import urldsl.vocabulary.Segment.simpleSegment
+
+import java.util.UUID
+import scala.util.*
+
+
+given FromString[UUID,DummyError] = (str: String)=>{
+  Try{UUID.fromString(str)} match {
+    case Success(value) => value.asRight
+    case Failure(exception) => Left[DummyError, UUID](DummyError.dummyError)
+  }
+}
+
+given Printer[UUID] = (t: UUID) => t.toString
 
 sealed abstract class Page(val title: String)
 case object HomePage extends Page("Home")
@@ -15,7 +32,7 @@ case object KeyboardsPage extends Page("Keyboards")
 case object GamesPage extends Page("Games")
 case object EnginePage extends Page("Engine")
 
-case class KeyboardPage(keyboardId: Int)extends Page("Keyboard")
+case class KeyboardPage(keyboardId: UUID)extends Page("Keyboard")
 case class GamePage(gameId: Int) extends Page("Game")
 
 case object ConfiguratorPage extends Page("Keyboard Configurator")
@@ -43,8 +60,8 @@ given Decoder[GamePage] = cursor=>for{
 }yield GamePage(id)
 given Decoder[KeyboardPage] = cursor=>for{
   child<-cursor.get[Json]("KeyboardPage")
-  id<-child.hcursor.get[Int]("keyboardId")
-}yield KeyboardPage(id)
+  uuid<-child.hcursor.get[UUID]("keyboardId")
+}yield KeyboardPage(uuid)
 given Decoder[ConfiguratorPage.type]=cursor => for{
   _<-cursor.get[Json]("ConfiguratorPage")
 }yield ConfiguratorPage
@@ -57,10 +74,10 @@ val configuratorRoute=Route.static(ConfiguratorPage, root / "configurator" / end
 
 val notFoundRoute=Route.static(NotFoundPage,root)
 
-val keyboardRoute=Route[KeyboardPage,Int](
+val keyboardRoute=Route[KeyboardPage,UUID](
   encode = (page:KeyboardPage)=>page.keyboardId,
-  decode = (args:Int)=>KeyboardPage(args),
-  pattern = root / "keyboard" / segment[Int] / endOfSegments
+  decode = (args:UUID)=>KeyboardPage(args),
+  pattern = root / "keyboard" / segment[UUID] / endOfSegments
 )
 
 val gameRoute=Route[GamePage,Int](

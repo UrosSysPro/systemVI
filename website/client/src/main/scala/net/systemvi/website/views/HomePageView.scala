@@ -24,11 +24,11 @@ def HomePageView():HtmlElement = {
           "images/keyboards-all-rotated.jpg",
         )
       ),
-      Section(
-        "Keyboards",
-        keyboards.take(4).map(k=>SectionItem(k.name,k.images.head,KeyboardPage(k.id))),
-        KeyboardsPage
-      ),
+//      Section(
+//        "Keyboards",
+//        keyboards.take(4).map(k=>SectionItem(k.name,k.images.head,KeyboardPage(k.id))),
+//        KeyboardsPage
+//      ),
       Section(
         "Games",
         games.take(4).map(g=>SectionItem(g.name,g.images.head,GamePage(g.id))),

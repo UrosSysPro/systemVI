@@ -16,10 +16,6 @@ case class ProductInfoParams(
                               downloadLinks:List[DownloadLink] = List.empty
                             )
 
-given Conversion[Keyboard,ProductInfoParams]=keyboard=>ProductInfoParams(keyboard.images,keyboard.name,keyboard.codeName,keyboard.specs)
-given Conversion[Game, ProductInfoParams] = game => ProductInfoParams(game.images, game.name, game.codeName, game.specs)
-given Conversion[Application, ProductInfoParams] = app => ProductInfoParams(app.screenshots, app.name, app.codeName, List(),app.downloadLinks)
-
 private def ProductInfoLeft(images:List[String]):HtmlElement={
   div(
     flex := "1",

@@ -1,23 +1,29 @@
 package net.systemvi.website.views
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.website.KeyboardPage
-import net.systemvi.website.api.KeyboardApi
-import net.systemvi.website.darkproject.big_title.BigTitle
-import net.systemvi.website.darkproject.footer.Footer
+import net.systemvi.common.dtos.KeyboardDto
+import net.systemvi.website.darkproject.big_title.*
+import net.systemvi.website.darkproject.footer.*
+import net.systemvi.website.darkproject.navbar.*
 import net.systemvi.website.darkproject.navbar.Navbar
-import net.systemvi.website.darkproject.section.{Section, SectionItem}
+import net.systemvi.website.darkproject.section.*
+import io.circe.scalajs.*
+import io.circe.scalajs.EncoderJsOps.*
+import io.circe.generic.*
+import io.circe.generic.auto.*
+import net.systemvi.website.KeyboardPage
 import org.scalajs.dom
 
-def KeyboardsPageView():HtmlElement = {
-//  val keyboards=KeyboardApi.all()
-  val response = dom.fetch("http://localhost:8080/api/keyboards",new {
-    val `Allow-Cross-Origin` = true
-  })
+def KeyboardsPageView(): HtmlElement = {
+
+  val response = dom.fetch("http://localhost:8080/api/keyboards")
+
+  val keyboards = Var[List[KeyboardDto]](List.empty)
 
   response.`then`{ response=>
     response.json().`then`{json=>
-      dom.console.log(json)
+      val list = decodeJs[List[KeyboardDto]](json).getOrElse(List.empty)
+      keyboards.writer.onNext(list)
     }
   }
 
@@ -27,10 +33,12 @@ def KeyboardsPageView():HtmlElement = {
       className:="flex flex-col justify-start w-full max-w-[1450px]",
       Navbar(),
       BigTitle("Keyboards"),
-//      Section(
-//        title = "",
-//        items = keyboards.map(k=>SectionItem(k.name,k.images.head,KeyboardPage(k.id)))
-//      ),
+      child <-- keyboards.signal.map{ keyboards =>
+        Section(
+          title = "",
+          items = keyboards.map(k => SectionItem(k.name, k.images.head.imageUrl, KeyboardPage(k.uuid)))
+        )
+      },
       Footer(),
     )
   )
