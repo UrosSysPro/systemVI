@@ -6,7 +6,7 @@ import com.comcast.ip4s.{ipv4, port}
 import net.systemvi.server.api.*
 import net.systemvi.server.api.controllers.*
 import net.systemvi.server.api.routes.*
-import net.systemvi.server.persistance.contexts.ApplicationContext
+import net.systemvi.server.persistance.contexts.AppContext
 import net.systemvi.server.persistance.database.*
 import net.systemvi.server.persistance.migrations.Migrations
 import net.systemvi.server.persistance.seeders.Seeders
@@ -16,7 +16,7 @@ import org.http4s.implicits.*
 import org.http4s.server.Router
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
-def server(using context:ApplicationContext[IO])=EmberServerBuilder
+def server(using context:AppContext[IO])=EmberServerBuilder
   .default[IO]
   .withHost(ipv4"0.0.0.0")
   .withPort(port"8080")
@@ -27,7 +27,7 @@ def server(using context:ApplicationContext[IO])=EmberServerBuilder
 object Main extends IOApp{
 
   val serverApp:IO[ExitCode] = sqlite.use{ xa =>
-    given ApplicationContext[IO] = ApplicationContext.create(xa)
+    given AppContext[IO] = AppContext.create(xa)
     for {
       _ <- server.use(_ => IO.never)
     } yield ExitCode.Success

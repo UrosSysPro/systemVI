@@ -7,18 +7,18 @@ import net.systemvi.common.dtos.*
 import net.systemvi.website.api.{EngineApi, GameApi}
 import net.systemvi.website.darkproject.footer.Footer
 import net.systemvi.website.darkproject.navbar.Navbar
-import net.systemvi.website.darkproject.section.{AboutSection, Section, SectionItem}
+import net.systemvi.website.darkproject.section.*
 import net.systemvi.website.darkproject.slider.ImageSlider
 import net.systemvi.website.*
 import org.scalajs.dom
 
 def HomePageView():HtmlElement = {
   val keyboards = Var[List[KeyboardDto]](List.empty)
-  val engine=EngineApi.get()
-  val games=GameApi.all()
+  val engine = EngineApi.get()
+  val games = GameApi.all()
 
-  dom.fetch("http://localhost:8080/api/keyboards").`then`{ response=>
-    response.json().`then`{json=>
+  dom.fetch("http://localhost:8080/api/keyboards").`then`{ response =>
+    response.json().`then`{ json =>
       val list = decodeJs[List[KeyboardDto]](json).getOrElse(List.empty)
       keyboards.writer.onNext(list)
     }

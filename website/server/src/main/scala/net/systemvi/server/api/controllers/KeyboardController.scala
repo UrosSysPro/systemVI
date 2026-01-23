@@ -7,7 +7,7 @@ import cats.effect.implicits.*
 import io.circe.*
 import io.circe.generic.auto.*
 import io.circe.syntax.*
-import net.systemvi.server.persistance.contexts.ApplicationContext
+import net.systemvi.server.persistance.contexts.AppContext
 import net.systemvi.server.persistance.models.*
 import net.systemvi.common.dtos.*
 import net.systemvi.server.services.*
@@ -18,7 +18,7 @@ import org.http4s.circe.CirceEntityDecoder.circeEntityDecoder
 import org.http4s.circe.CirceSensitiveDataEntityDecoder.circeEntityDecoder
 import org.http4s.dsl.io.*
 
-def keyboardController(using context: ApplicationContext[IO]) = HttpRoutes.of[IO]{
+def keyboardController(using context: AppContext[IO]) = HttpRoutes.of[IO]{
   case GET -> Root => for{
     keyboards <- context.db.keyboards.get()
     dtos <- keyboards.map{keyboard=>
