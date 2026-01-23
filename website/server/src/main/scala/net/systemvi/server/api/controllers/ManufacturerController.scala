@@ -19,7 +19,7 @@ import org.http4s.dsl.io.*
 
 import java.util.UUID
 
-def manufacturerController(using context:ApplicationContext[IO]) = HttpRoutes.of[IO] {
+def manufacturerController(using context:ApplicationContext[IO]):HttpRoutes[IO] = HttpRoutes.of[IO] {
   case GET -> Root =>
     val db = context.db
     val logger = context.logger
