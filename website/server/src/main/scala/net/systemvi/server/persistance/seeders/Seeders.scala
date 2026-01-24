@@ -8,6 +8,7 @@ import doobie.util.transactor.Transactor
 
 object Seeders {
   def seed(xa:Transactor[IO]): IO[Unit] = for{
-    _<-KeyboardSeeders.seed(xa)
+    _ <- KeyboardSeeders.seed(xa)
+    _ <- ApplicationSeeders.seed(xa)
   } yield ()
 }
