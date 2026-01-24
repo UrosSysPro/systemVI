@@ -19,6 +19,12 @@ object ApplicationSeeders {
       a
     }
 
+    var imgs = List.empty[EntityImage]
+    def addImg(l: List[EntityImage]): List[EntityImage] = {
+      imgs = imgs ++ l
+      l
+    }
+
     val normalMapping                   = addApp(Application(UUID.randomUUID(),TechDemo.id,   "Normal Mapping",           "normal_mapping","Demo of blin-phong shading with normal mapping."))
     val box2dDemo                       = addApp(Application(UUID.randomUUID(),TechDemo.id,   "Box2d Demo",               "box2d_demo",  "Simple demo of box2d rigid body physics"))
     val rayMarchingGpu                  = addApp(Application(UUID.randomUUID(),TechDemo.id,   "Ray Marching (GPU)",       "ray_marching_gpu","Simple demo of box2d rigid body physics"))
@@ -36,8 +42,59 @@ object ApplicationSeeders {
 
     val keyboardConfigurator            = addApp(Application(UUID.randomUUID(),Tool.id,       "Keyborad Configurator",    "keyboard_configurator","Simple demo of box2d rigid body physics"))
 
+    val normalMappingImgs = addImg(List(
+      EntityImage(normalMapping.uuid,"/images/engine/normal-mapping.png",1)
+    ))
+    val box2dImgs = addImg(List(
+      EntityImage(box2dDemo.uuid,"/images/engine/box2d.png",1)
+    ))
+    val rayMarchingImgs = addImg(List(
+      EntityImage(rayMarchingGpu.uuid,"/images/engine/ray-marching-gpu.png",1),
+    ))
+    val assimpImgs = addImg(List(
+      EntityImage(assetImport.uuid,"/images/engine/model-importer.png",1),
+    ))
+    val mazeGenerationImgs = addImg(List(
+      EntityImage(mazeGeneration.uuid,"/images/engine/maze.png",1),
+    ))
+    val fragmentShaderFractalImgs = addImg(List(
+      EntityImage(fragmentShaderFractals.uuid, "/images/engine/mandelbrot-set.png",1),
+      EntityImage(fragmentShaderFractals.uuid,"/images/engine/jullia-set.png",2),
+    ))
+    val fluidSimulationGpuImgs = addImg(List(
+      EntityImage(fluidSimulationGpu.uuid, "/images/engine/fluid-gpu.png",1),
+    ))
+    val fabrikImgs = addImg(List(
+      EntityImage(fabrik.uuid, "/images/engine/fabrik.png",1),
+    ))
+    val reactionDiffusionImgs = addImg(List(
+      EntityImage(reactionDiffusionSimulationCpu.uuid, "/images/engine/reaction-diffusion.png",1),
+    ))
+    val atariBreakoutImgs = addImg(List(
+      EntityImage(breakOut.uuid, "/images/games/breakout.png",1),
+    ))
+    val voxelImgs = addImg(List(
+      EntityImage(voxels.uuid, "/images/games/voxels1.png",1),
+      EntityImage(voxels.uuid, "/images/games/voxels2.png",2),
+      EntityImage(voxels.uuid, "/images/games/voxels3.png",3),
+      EntityImage(voxels.uuid, "/images/games/voxels4.png",4),
+    ))
+    val snakeImgs = addImg(List(
+      EntityImage(snake.uuid, "/images/games/snake.png",1),
+    ))
+    val flappyBirdImgs = addImg(List(
+      EntityImage(flappyBird.uuid, "/images/games/flappy-bird.png",1),
+    ))
+    val keyboardConfiguratorImgs = addImg(List(
+      EntityImage(keyboardConfigurator.uuid,"images/application/configurator/configurator.png",1),
+      EntityImage(keyboardConfigurator.uuid,"images/application/configurator/tester.png",2),
+      EntityImage(keyboardConfigurator.uuid,"images/application/configurator/save-and-load.png",3),
+      EntityImage(keyboardConfigurator.uuid,"images/application/configurator/settings.png",4),
+    ))
+
     for {
-      _ <- apps.traverse{a=>applications.add(a)}
+      _ <- apps.traverse{a => applications.add(a)}
+      _ <- imgs.traverse{i => images.add(i)}
     } yield ()
   }
 }
