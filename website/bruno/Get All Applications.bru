@@ -1,0 +1,16 @@
+meta {
+  name: Get All Applications
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{cats-backend}}/api/applications
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

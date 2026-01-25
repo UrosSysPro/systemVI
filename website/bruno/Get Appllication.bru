@@ -1,0 +1,16 @@
+meta {
+  name: Get Appllication
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{cats-backend}}/api/applications/b9611f92-cd95-40ba-9571-cf22933f1ea5
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

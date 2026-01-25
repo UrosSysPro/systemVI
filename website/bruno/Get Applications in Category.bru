@@ -1,0 +1,16 @@
+meta {
+  name: Get Applications in Category
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{cats-backend}}/api/applications/categories/2
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
