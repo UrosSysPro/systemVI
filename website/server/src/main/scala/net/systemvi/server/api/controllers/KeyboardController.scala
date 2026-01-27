@@ -20,7 +20,7 @@ import org.http4s.dsl.io.*
 import java.util.UUID
 import scala.util.*
 
-def getKeyboardDto(uuid: UUID)(using context: AppContext[IO]): IO[KeyboardDto] =
+private def getKeyboardDto(uuid: UUID)(using context: AppContext[IO]): IO[KeyboardDto] =
   for{
     keyboard <- context.db.keyboards.get(uuid).map(_.getOrElse(throw Exception("keyboard not found")))
     switchOption <- context.db.switches.get(keyboard.switchUUID)

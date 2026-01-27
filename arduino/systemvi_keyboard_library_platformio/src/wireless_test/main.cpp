@@ -15,7 +15,7 @@ Adafruit_NeoPixel strip(NUM_LEDS, PIN, NEO_GRB + NEO_KHZ800);
 
 uint32_t wheel(byte pos) {
     pos = 255 - pos;
-    float brightness = 0.05;
+    float brightness = 1;
     if (pos < 85) {
         return strip.Color((255 - pos * 3)*brightness, 0, (pos * 3)*brightness);
     }
@@ -45,9 +45,17 @@ int rowPins[] = { 1,2,3,38,45 };
 
 int columns = 14;
 int columnPins[14] = {
-    4, 5, 6, 7, 8, 9, 10,
-    11, 12, 13, 14, 15, 16, 17
+    4, 5, 6, 7,
+    8, 9, 10, 11,
+    12, 13, 14, 15,
+    16, 17
 };
+// int columnPins[] = {
+//  29, 26, 15, 13,
+//  27, 1, 3, 6,
+//  7, 8, 9, 10,
+//  11, 12
+//  };
 
 
 SystemVIKeyboard *keyboard;
@@ -160,17 +168,17 @@ void loop() {
     for (int i=0;i<columns;i++) {
         for (int j=0;j<rows;j++) {
             auto key=keyboard->keys[i][j];
-            if (key->pressed) {
-                value = ((NormalKey*)key->keys[0])->value;
-                esp_err_t result = esp_now_send(receiverMac, &value, 1);
-
-                if (result == ESP_OK) {
-                    Serial.print("Sent byte: ");
-                    Serial.println(value);
-                } else {
-                    Serial.println("Send error");
-                }
-            }
+            // if (key->pressed) {
+            //     value = ((NormalKey*)key->keys[0])->value;
+            //     esp_err_t result = esp_now_send(receiverMac, &value, 1);
+            //
+            //     if (result == ESP_OK) {
+            //         Serial.print("Sent byte: ");
+            //         Serial.println(value);
+            //     } else {
+            //         Serial.println("Send error");
+            //     }
+            // }
         }
     }
 }
