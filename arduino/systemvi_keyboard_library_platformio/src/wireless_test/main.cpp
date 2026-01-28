@@ -1,5 +1,6 @@
 #include <Adafruit_NeoPixel.h>
 #include "../../lib/Shared/src/keyboard/SystemVIKeyboard.h"
+#include "../../lib/Shared/src/keys/NormalKey.h"
 #include <WiFi.h>
 #include <esp_now.h>
 
@@ -168,31 +169,17 @@ void loop() {
     for (int i=0;i<columns;i++) {
         for (int j=0;j<rows;j++) {
             auto key=keyboard->keys[i][j];
-            // if (key->pressed) {
-            //     value = ((NormalKey*)key->keys[0])->value;
-            //     esp_err_t result = esp_now_send(receiverMac, &value, 1);
-            //
-            //     if (result == ESP_OK) {
-            //         Serial.print("Sent byte: ");
-            //         Serial.println(value);
-            //     } else {
-            //         Serial.println("Send error");
-            //     }
-            // }
+            if (key->pressed) {
+                value = ((NormalKey *) key->keys[0])->value;
+                esp_err_t result = esp_now_send(receiverMac, &value, 1);
+
+                if (result == ESP_OK) {
+                    Serial.print("Sent byte: ");
+                    Serial.println(value);
+                } else {
+                    Serial.println("Send error");
+                }
+            }
         }
     }
 }
-
-// #include "Arduino.h"
-//
-// int pin=1;
-//
-// void setup() {
-//     pinMode(pin,OUTPUT);
-//     digitalWrite(pin,1);
-// }
-//
-// void loop() {
-//     digitalWrite(pin,1);
-//     sleep(100);
-// }
