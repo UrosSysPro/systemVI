@@ -7,7 +7,7 @@
 
 USBHIDKeyboard Keyboard;
 
-volatile char justClicked;
+volatile char justClicked = 0;
 
 void onReceive(const uint8_t *senderAddress, const uint8_t *data, int len) {
     if (len == 1) {
@@ -16,9 +16,8 @@ void onReceive(const uint8_t *senderAddress, const uint8_t *data, int len) {
 }
 
 void setup() {
-    // setCpuFrequencyMhz(80);
+    setCpuFrequencyMhz(80);
     Serial.begin(9600);
-    delay(3000);
 
     WiFi.mode(WIFI_STA);
     WiFi.setSleep(true);
@@ -34,8 +33,9 @@ void setup() {
     }
 
     esp_now_register_recv_cb(onReceive);
-    USB.begin();
+
     Keyboard.begin();
+    USB.begin();
 }
 
 
