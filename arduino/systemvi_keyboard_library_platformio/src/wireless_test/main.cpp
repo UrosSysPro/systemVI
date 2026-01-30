@@ -4,6 +4,8 @@
 #include "../../lib/Shared/src/keys/NormalKey.h"
 #include <WiFi.h>
 #include <esp_now.h>
+#include <USB.h>
+#include <USBHIDKeyboard.h>
 
 uint8_t receiverMac[] = {
     0xD0,0xCF,0x13,0x09,0x95,0x88
@@ -61,6 +63,7 @@ int columnPins[14] = {
 
 
 SystemVIKeyboard *keyboard;
+USBHIDKeyboard usbKeyboard;
 
 char name[] = "wireless_test";
 
@@ -74,6 +77,8 @@ void setup() {
     ->setColumns(columns,columnPins)
     ->setRows(rows,rowPins)
     ->build();
+    usbKeyboard.begin();
+    USB.begin();
 
     // keyboard->setNormalKeycap(13,0,         (char[]){static_cast<char>(KEY_ESC), '\0', '\0', '\0'}, 0, 0, 0, 0, 0, 0);
     keyboard->setNormalKeycap(13,0,         new  (char[4]){' ', '\0', '\0', '\0'}, 0, 0, 0, 0, 0, 0);
@@ -189,6 +194,14 @@ void loop() {
             Serial.printf("Sent byte: %c\n",key);
         } else {
             Serial.printf("Send error\n");
+        }
+
+        if (Serial) {
+            if (pressed) {
+                usbKeyboard.press(key);
+            }else {
+                usbKeyboard.release(key);
+            }
         }
     });
     keyboard->clearJustPressedKeyState();
