@@ -22,6 +22,8 @@ public:
 	//key matrix
 	void updateKeyState();
 	void executeKeyboardEvents();
+	void forEachJustPressedKey(std::function<void(int column,int row, int currentLayer, Keycap *keycap)> callback);
+	void clearJustPressedKeyState();
 	void update();
 
 	//normal keys

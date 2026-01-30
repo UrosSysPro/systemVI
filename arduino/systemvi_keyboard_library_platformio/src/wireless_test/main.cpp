@@ -1,5 +1,6 @@
 #include <Adafruit_NeoPixel.h>
 #include "../../lib/Shared/src/keyboard/SystemVIKeyboard.h"
+#include "../../lib/Shared/src/builders/KeyboardBuilder.h"
 #include "../../lib/Shared/src/keys/NormalKey.h"
 #include <WiFi.h>
 #include <esp_now.h>
@@ -68,17 +69,14 @@ uint8_t value=0;
 void setup() {
     strip.begin();
     strip.show();
-    keyboard = new SystemVIKeyboard(
-        name,
-        columns,
-        rows,
-        columnPins,
-        rowPins,
-        false,
-        columns,
-        rows
-    );
+
+    keyboard = KeyboardBuilder().setName(name)
+    ->setColumns(columns,columnPins)
+    ->setRows(rows,rowPins)
+    ->build();
+
     // keyboard->setNormalKeycap(13,0,         (char[]){static_cast<char>(KEY_ESC), '\0', '\0', '\0'}, 0, 0, 0, 0, 0, 0);
+    keyboard->setNormalKeycap(13,0,         new  (char[4]){' ', '\0', '\0', '\0'}, 0, 0, 0, 0, 0, 0);
     keyboard->setNormalKeycap(12,0,         new  (char[4]){'1','\0','\0','\0'},       1,0,  0,0,    0,0);
     keyboard->setNormalKeycap(11,0,         new  (char[4]){'2','\0','\0','\0'},       2,0,  0,0,    0,0);
     keyboard->setNormalKeycap(10,0,         new  (char[4]){'3','\0','\0','\0'},       3,0,  0,0,    0,0);
@@ -91,9 +89,11 @@ void setup() {
     keyboard->setNormalKeycap( 3,0,         new  (char[4]){'0','\0','\0','\0'},      10,0,  0,0,    0,0);
     keyboard->setNormalKeycap( 2,0,         new  (char[4]){'-','\0','\0','\0'},      11,0,  0,0,    0,0);
     keyboard->setNormalKeycap( 1,0,         new  (char[4]){'=','\0','\0','\0'},      12,0,  0,0,    0,0);
+    keyboard->setNormalKeycap( 0,0,         new  (char[4]){' ','\0','\0','\0'},      13,0,  0,0,    0,0);
     // keyboard->setNormalKeycap( 0,0,         (char[]){static_cast<char>(KEY_BACKSPACE),'\0','\0','\0'},      13,0,  0,0,    0,0);
     //row 1
     // keyboard->setNormalKeycap(13,1,         (char[]){static_cast<char>(KEY_TAB), '\0', '\0', '\0'}, 0, 1, 0, 0, 0, 0);
+    keyboard->setNormalKeycap(13,1,         new (char[4]){' ','\0','\0','\0'}, 0, 1, 0, 0, 0, 0);
     keyboard->setNormalKeycap(12,1,         new (char[4]){'q','\0','\0','\0'},       1,1,  0,0,    0,0);
     keyboard->setNormalKeycap(11,1,         new (char[4]){'w','\0','\0','\0'},       2,1,  0,0,    0,0);
     keyboard->setNormalKeycap(10,1,         new (char[4]){'e','\0','\0','\0'},       3,1,  0,0,    0,0);
@@ -109,6 +109,7 @@ void setup() {
     keyboard->setNormalKeycap( 0,1,         new (char[4]){'\\','\0','\0','\0'},     13,1,  0,0,    0,0);
     //row 2
     // keyboard->setNormalKeycap(13,2,         (char[]){static_cast<char>(KEY_CAPS_LOCK), '\0', '\0', '\0'}, 0, 2, 0, 0, 0, 0);
+    keyboard->setNormalKeycap(13,2,        new  (char[4]){' ', '\0', '\0', '\0'}, 0, 2, 0, 0, 0, 0);
     keyboard->setNormalKeycap(12,2,        new  (char[4]){'a','\0','\0','\0'},       1,2,  0,0,    0,0);
     keyboard->setNormalKeycap(11,2,        new  (char[4]){'s','\0','\0','\0'},       2,2,  0,0,    0,0);
     keyboard->setNormalKeycap(10,2,        new  (char[4]){'d','\0','\0','\0'},       3,2,  0,0,    0,0);
@@ -120,9 +121,11 @@ void setup() {
     keyboard->setNormalKeycap( 4,2,        new  (char[4]){'l','\0','\0','\0'},       9,2,  0,0,    0,0);
     keyboard->setNormalKeycap( 3,2,        new  (char[4]){';','\0','\0','\0'},      10,2,  0,0,    0,0);
     keyboard->setNormalKeycap( 2,2,        new  (char[4]){'\'','\0','\0','\0'},      11,2,  0,0,    0,0);
+    keyboard->setNormalKeycap( 0,2,        new  (char[4]){' ','\0','\0','\0'},     13,2,  0,0,    0,0);
     // keyboard->setNormalKeycap( 0,2,         (char[]){static_cast<char>(KEY_RETURN),'\0','\0','\0'},     13,2,  0,0,    0,0);
     //row 3
     // keyboard->setNormalKeycap(13,3,         (char[]){static_cast<char>(KEY_LEFT_SHIFT), '\0', '\0', '\0'}, 0, 3, 0, 0, 0, 0);
+    keyboard->setNormalKeycap(13,3,        new (char[4]){' ', '\0', '\0', '\0'}, 0, 3, 0, 0, 0, 0);
     keyboard->setNormalKeycap(12,3,        new (char[4]){'z','\0','\0','\0'},       1,3,  0,0,    0,0);
     keyboard->setNormalKeycap(11,3,        new (char[4]){'x','\0','\0','\0'},       2,3,  0,0,    0,0);
     keyboard->setNormalKeycap(10,3,        new (char[4]){'c','\0','\0','\0'},       3,3,  0,0,    0,0);
@@ -133,12 +136,20 @@ void setup() {
     keyboard->setNormalKeycap( 5,3,        new (char[4]){',','\0','\0','\0'},       8,3,  0,0,    0,0);
     keyboard->setNormalKeycap( 4,3,        new (char[4]){'.','\0','\0','\0'},       9,3,  0,0,    0,0);
     keyboard->setNormalKeycap( 3,3,        new (char[4]){'/','\0','\0','\0'},      10,3,  0,0,    0,0);
+    keyboard->setNormalKeycap( 0,3,        new (char[4]){' ','\0','\0','\0'},     13,3,  0,0,    0,0);
     // keyboard->setNormalKeycap( 0,3,         (char[]){static_cast<char>(KEY_RIGHT_SHIFT),'\0','\0','\0'},     13,3,  0,0,    0,0);
     //row 4
     // keyboard->setNormalKeycap(13,4,         (char[]){static_cast<char>(KEY_LEFT_CTRL), '\0', '\0', '\0'},   0,4,  0,0,    0,0);
     // keyboard->setNormalKeycap(12,4,         (char[]){static_cast<char>(KEY_LEFT_GUI),'\0','\0','\0'},       1,4,  0,0,    0,0);
     // keyboard->setNormalKeycap(11,4,         (char[]){static_cast<char>(KEY_LEFT_ALT),'\0','\0','\0'},       2,4,  0,0,    0,0);
-    keyboard->setNormalKeycap( 8,4,         new (char[4]){' ','\0','\0','\0'},                                   3,4,  0,0,    0,0);
+    keyboard->setNormalKeycap(13,4,         new (char[4]){' ','\0','\0','\0'},       0,4,  0,0,    0,0);
+    keyboard->setNormalKeycap(12,4,         new (char[4]){' ','\0','\0','\0'},       1,4,  0,0,    0,0);
+    keyboard->setNormalKeycap(11,4,         new (char[4]){' ','\0','\0','\0'},       2,4,  0,0,    0,0);
+    keyboard->setNormalKeycap( 8,4,         new (char[4]){' ','\0','\0','\0'},       3,4,  0,0,    0,0);
+    keyboard->setNormalKeycap( 4,4,         new (char[4]){' ','\0','\0','\0'},       4,4,  0,0,    0,0);
+    keyboard->setNormalKeycap( 3,4,         new (char[4]){' ','\0','\0','\0'},       5,4,  0,0,    0,0);
+    keyboard->setNormalKeycap( 2,4,         new (char[4]){' ','\0','\0','\0'},       6,4,  0,0,    0,0);
+    keyboard->setNormalKeycap( 0,4,         new (char[4]){' ','\0','\0','\0'},       7,4,  0,0,    0,0);
     // keyboard->setNormalKeycap( 4,4,         (char[]){static_cast<char>(KEY_LEFT_ALT),'\0','\0','\0'},       4,4,  0,0,    0,0);
     // keyboard->setNormalKeycap( 3,4,         (char[]){static_cast<char>(KEY_LEFT_GUI),'\0','\0','\0'},       5,4,  0,0,    0,0);
     // keyboard->setNormalKeycap( 2,4,         (char[]){static_cast<char>(KEY_MENU),'\0','\0','\0'},           6,4,  0,0,    0,0);
@@ -165,21 +176,20 @@ void setup() {
 
 void loop() {
     rainbowCycle(DELAY);
-    keyboard->update();
-    for (int i=0;i<columns;i++) {
-        for (int j=0;j<rows;j++) {
-            auto key=keyboard->keys[i][j];
-            if (key->pressed) {
-                value = ((NormalKey *) key->keys[0])->value;
-                esp_err_t result = esp_now_send(receiverMac, &value, 1);
 
-                if (result == ESP_OK) {
-                    Serial.print("Sent byte: ");
-                    Serial.println(value);
-                } else {
-                    Serial.println("Send error");
-                }
-            }
+    keyboard->updateKeyState();
+    keyboard->forEachJustPressedKey([](int column, int row, int currentLayer, Keycap* keycap){
+        auto pressed = keycap->pressed;
+        auto key = ((NormalKey*)keycap->keys[currentLayer])->value;
+        char message[2];
+        message[0] = static_cast<char>(pressed);
+        message[1] = key;
+        esp_err_t result = esp_now_send(receiverMac, reinterpret_cast<uint8_t*>(message), 2);
+        if (result == ESP_OK) {
+            Serial.printf("Sent byte: %c\n",key);
+        } else {
+            Serial.printf("Send error\n");
         }
-    }
+    });
+    keyboard->clearJustPressedKeyState();
 }
