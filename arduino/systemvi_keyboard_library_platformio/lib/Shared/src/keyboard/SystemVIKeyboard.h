@@ -7,6 +7,7 @@
 #include "special_keys/SnapTapPair.h"
 
 class SystemVIKeyboard{
+
 private:
 	int *columnPins,*rowPins;
 	int columns,rows,reportedColumns,reportedRows,layerKeyPositionCount,snapTapPairCount;
@@ -14,9 +15,16 @@ private:
 	char* name;
 	LayerKeyPosition* layerKeyPositions;
 	SnapTapPair* snapTapPairs;
+
 public:
 	Keycap ***keys;
+
+	//key matrix
 	void updateKeyState();
+	void executeKeyboardEvents();
+	void update();
+
+	//normal keys
 	void setNormalKeycap(int column,int row,char* values,int physicalX,int physicalY,int width,int height,int paddingLeft,int paddingBottom);
 	void setNormalKeycap(int column,int row,char* values,int physicalX,int physicalY,int width,int height);
 	void setNormalKeycap(int column,int row,char* values,int physicalX,int physicalY);
@@ -24,8 +32,7 @@ public:
 	void setNormalKeycap(int column,int row, int layer, char value);
 	void setLayers(int column,int row,Key* values);
 	void setLayer(int column,int row,int layer,Key* values);
-	void executeKeyboardEvents();
-	void update();
+
 	//serial api
 	void processSerialCommands();
 	void serialSetLayers();
@@ -41,18 +48,21 @@ public:
 	void reportLayout();
 	void removeLayout();
 	void serialMessage(char message[]);
+
 	//storage
 	void loadFromFlash();
 	void saveToFlash();
 	void eraceFlash();
+
 	//layer keys
 	void addLayerKeyPosition(int x,int y,int layer);
 	void removeLayerKeyPosition(int x,int y);
+
 	//snap tap keys
 	void addSnapTapKeyPair(int column0,int row0,int column1,int row1);
 	void removeSnapTapKeyPair(int column0,int row0);
 
-
+	//constructor
 	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins);
 	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins,bool debugPrint,int reportedColumns,int reportedRows);
 	SystemVIKeyboard(char* name, int columns,int rows, int* columnPins, int* rowPins,bool debugPrint,int reportedColumns,int reportedRows,int sdaPin,int sclPin, bool reportToI2C,bool readFromI2C,I2CRegion i2cRegion);
@@ -63,6 +73,8 @@ public:
 		int reportedColumns,int reportedRows,
 		int sdaPin,int sclPin, bool reportToI2C,bool readFromI2C,I2CRegion region
 	);
+
+	//destructor
 	~SystemVIKeyboard();
 };
 
