@@ -4,22 +4,28 @@
 #include <Arduino.h>
 #include "USB.h"
 #include "USBHIDKeyboard.h"
-#include "../../lib/Shared/src/keys/Key.h"
+#include "../../lib/Shared/src/esp_now/EspNowMessage.h"
 
 USBHIDKeyboard Keyboard;
 
 volatile bool pressed = false;
 volatile char justClicked = 0;
 
+bool hasEspNowMessage = false;
+EspNowMessage espNowMessage;
+
 void onReceive(const uint8_t* senderAddress, const uint8_t* data, int len) {
-    if (len == 2) {
-        pressed = data[0];
-        justClicked = data[1];
-    }
+    memcpy(espNowMessage.data, data, len);
+    memcpy(espNowMessage.senderMacAddress, senderAddress, 6);
+    hasEspNowMessage = true;
+    // if (len == 2) {
+    //     pressed = data[0];
+    //     justClicked = data[1];
+    // }
 }
 
 void setup() {
-    setCpuFrequencyMhz(80);
+    // setCpuFrequencyMhz(80);
     Serial.begin(9600);
     Keyboard.begin();
     USB.begin();
@@ -45,16 +51,24 @@ void setup() {
 void loop() {
     delay(10);
 
-    if (justClicked) {
-        if (pressed) {
-            Serial.printf("Pressed %c", justClicked);
-            Keyboard.press(justClicked);
+    if (hasEspNowMessage) {
+        hasEspNowMessage=false;
+        char cmd = espNowMessage.data[0];
+        switch (cmd) {
+            case 'u': break;
+            default:{}break;
         }
-        else {
-            Serial.printf("Released %c", justClicked);
-            Keyboard.release(justClicked);
-        }
-
-        justClicked = 0;
     }
+    // if (justClicked) {
+    //     if (pressed) {
+    //         Serial.printf("Pressed %c", justClicked);
+    //         Keyboard.press(justClicked);
+    //     }
+    //     else {
+    //         Serial.printf("Released %c", justClicked);
+    //         Keyboard.release(justClicked);
+    //     }
+    //
+    //     justClicked = 0;
+    // }
 }

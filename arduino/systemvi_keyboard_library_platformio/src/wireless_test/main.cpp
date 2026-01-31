@@ -71,7 +71,7 @@ char name[] = "wireless_test";
 uint8_t value=0;
 
 void setup() {
-    setCpuFrequencyMhz(80);
+    // setCpuFrequencyMhz(80);
     strip.begin();
     strip.show();
 
