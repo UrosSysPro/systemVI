@@ -4,6 +4,7 @@
 #include "../../lib/Shared/src/keys/NormalKey.h"
 #include <WiFi.h>
 #include <esp_now.h>
+#include <esp_wifi.h>
 #include <USB.h>
 #include <USBHIDKeyboard.h>
 
@@ -70,6 +71,7 @@ char name[] = "wireless_test";
 uint8_t value=0;
 
 void setup() {
+    setCpuFrequencyMhz(80);
     strip.begin();
     strip.show();
 
@@ -147,6 +149,9 @@ void setup() {
     keyboard->setNormalKeycap( 0,4,         new (char[4]){static_cast<char>(KEY_LEFT_CTRL),'\0','\0','\0'},      7,4,  0,0,    0,0);
 
     WiFi.mode(WIFI_STA);
+    WiFi.setSleep(true);
+    esp_wifi_set_ps(WIFI_PS_MIN_MODEM);
+    esp_wifi_set_max_tx_power(44);
     WiFi.disconnect();
 
     if (esp_now_init() != ESP_OK) {

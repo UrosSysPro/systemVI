@@ -19,6 +19,7 @@ void onReceive(const uint8_t* senderAddress, const uint8_t* data, int len) {
 }
 
 void setup() {
+    setCpuFrequencyMhz(80);
     Serial.begin(9600);
     Keyboard.begin();
     USB.begin();
@@ -26,6 +27,7 @@ void setup() {
     WiFi.mode(WIFI_STA);
     WiFi.setSleep(true);
     esp_wifi_set_ps(WIFI_PS_MIN_MODEM);
+    esp_wifi_set_max_tx_power(44);
     WiFi.disconnect();
 
 
