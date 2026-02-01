@@ -11,12 +11,13 @@ import io.circe.scalajs.*
 import io.circe.scalajs.EncoderJsOps.*
 import io.circe.generic.*
 import io.circe.generic.auto.*
-import net.systemvi.website.KeyboardPage
+import net.systemvi.website.{Constants, KeyboardPage}
 import org.scalajs.dom
 
-def KeyboardsPageView(): HtmlElement = {
+import scala.scalajs.LinkingInfo.*
 
-  val response = dom.fetch("http://localhost:8080/api/keyboards")
+def KeyboardsPageView(): HtmlElement = {
+  val response = dom.fetch(s"${Constants.serverUrl}/keyboards")
 
   val keyboards = Var[List[KeyboardDto]](List.empty)
 
