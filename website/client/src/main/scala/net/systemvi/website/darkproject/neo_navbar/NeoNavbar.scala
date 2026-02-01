@@ -107,20 +107,44 @@ private def SlideInNavbar(slideInNavbarExpanded: Var[Boolean], navbarLinks: List
       backgroundColor("white"),
 
       div(
-        display.flex,
+        display.flex, alignItems.center, justifyContent.start,
+        padding.rem(1),
+        gap.rem(1),
         img(
           src(s"${Constants.clientUrl}/images/logo/Logo.svg"),
           alt("Logo.svg"),
         ),
-        span("System VI")
+        span(
+          fontSize.rem(1.5f),
+          "System VI",
+        )
       ),
+      hr(),
       div(
         display.flex, flexDirection.column,
         navbarLinks.map{ case (name, page) =>
-          a(
-            display.flex,
-            router.navigateTo(page),
-            name
+          val hover = Var[Boolean](false)
+          div(
+            width.percent(100),
+            paddingLeft.rem(1),
+            paddingRight.rem(1),
+            paddingTop.rem(0.5f),
+            paddingBottom.rem(0.5f),
+            onMouseEnter --> { _ => hover.writer.onNext(true) },
+            onMouseLeave --> { _ => hover.writer.onNext(false) },
+            a(
+              display.block,
+              paddingLeft.rem(2),
+              paddingRight.rem(2),
+              paddingTop.rem(1),
+              paddingBottom.rem(1),
+              transition("300ms"),
+              borderRadius.rem(1),
+              width.percent(100),
+              backgroundColor <-- hover.signal.map{ if _ then "rgba(200,200,200,0.3)" else "rgba(200,200,200,0.0)" },
+              router.navigateTo(page),
+              name
+            )
           )
         }
       )
