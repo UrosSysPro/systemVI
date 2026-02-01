@@ -5,7 +5,7 @@ import net.systemvi.website.api.ApplicationApi
 import net.systemvi.website.darkproject.bento_box.{*,given}
 import org.scalajs.dom
 import net.systemvi.website.darkproject.big_title.BigTitle
-import net.systemvi.website.darkproject.navbar.Navbar
+import net.systemvi.website.darkproject.neo_navbar.*
 import net.systemvi.website.darkproject.product_info.{ProductInfo, given}
 import net.systemvi.website.darkproject.expandable_specs.ExpandableSpecs
 import net.systemvi.website.darkproject.bill_of_materials
@@ -46,7 +46,7 @@ def ConfiguratorPageView():HtmlElement={
         justifyContent.start,
         width.percent:=100,
 
-        Navbar(),
+        NeoNavbar(),
         BigTitle(app.name),
         ProductInfo(app),
         ImageSlider(app.screenshots),

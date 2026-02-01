@@ -12,7 +12,7 @@ import net.systemvi.website.darkproject.expandable_specs.ExpandableSpecs
 import net.systemvi.website.darkproject.footer.Footer
 import net.systemvi.website.darkproject.product_info.*
 import net.systemvi.website.darkproject.product_info.given
-import net.systemvi.website.darkproject.navbar.Navbar
+import net.systemvi.website.darkproject.neo_navbar.*
 import net.systemvi.website.darkproject.slider.ImageSlider
 import net.systemvi.common.dtos.*
 
@@ -112,7 +112,7 @@ def KeyboardPageView(page:KeyboardPage):HtmlElement = {
       case Some(keyboard) =>
           div(
             className:="flex flex-col justify-start w-full max-w-[1450px]",
-            Navbar(),
+            NeoNavbar(),
             ProductInfo(keyboard),
             ImageSlider(keyboard.images.map{_.imageUrl}),
             BigTitle(

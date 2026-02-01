@@ -3,7 +3,7 @@ package net.systemvi.website.views
 import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.website.GamePage
 import net.systemvi.website.api.GameApi
-import net.systemvi.website.darkproject.navbar.Navbar
+import net.systemvi.website.darkproject.neo_navbar.*
 import net.systemvi.website.darkproject.product_info.*
 import net.systemvi.website.darkproject.product_info.given
 import net.systemvi.website.darkproject.big_title.BigTitle
@@ -20,7 +20,7 @@ def GamePageView(page:GamePage):HtmlElement={
       BigTitle(
         game.name,
       ),
-      Navbar(),
+      NeoNavbar(),
       ProductInfo(game),
 //      ImageSlider(game.images),
       BigTitle("Technical Specifications"),

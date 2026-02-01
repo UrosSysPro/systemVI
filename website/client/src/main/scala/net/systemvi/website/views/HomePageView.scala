@@ -6,7 +6,6 @@ import io.circe.generic.auto.*
 import net.systemvi.common.dtos.*
 import net.systemvi.website.api.{EngineApi, GameApi}
 import net.systemvi.website.darkproject.footer.Footer
-import net.systemvi.website.darkproject.navbar.Navbar
 import net.systemvi.website.darkproject.neo_navbar.*
 import net.systemvi.website.darkproject.section.*
 import net.systemvi.website.darkproject.slider.ImageSlider
@@ -29,7 +28,6 @@ def HomePageView():HtmlElement = {
     cls:="flex flex-col items-center pt-24",
     div(
       className:="flex flex-col justify-start w-full max-w-[1450px]",
-//      Navbar(),
       NeoNavbar(),
       ImageSlider(
         images = List(

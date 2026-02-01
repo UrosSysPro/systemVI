@@ -4,8 +4,7 @@ import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.common.dtos.KeyboardDto
 import net.systemvi.website.darkproject.big_title.*
 import net.systemvi.website.darkproject.footer.*
-import net.systemvi.website.darkproject.navbar.*
-import net.systemvi.website.darkproject.navbar.Navbar
+import net.systemvi.website.darkproject.neo_navbar.*
 import net.systemvi.website.darkproject.section.*
 import io.circe.scalajs.*
 import io.circe.scalajs.EncoderJsOps.*
@@ -32,7 +31,7 @@ def KeyboardsPageView(): HtmlElement = {
     cls:="flex flex-col items-center pt-24",
     div(
       className:="flex flex-col justify-start w-full max-w-[1450px]",
-      Navbar(),
+      NeoNavbar(),
       BigTitle("Keyboards"),
       child <-- keyboards.signal.map{ keyboards =>
         Section(
