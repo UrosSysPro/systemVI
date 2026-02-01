@@ -15,6 +15,9 @@ val splitter= SplitRender[Page,HtmlElement](router.currentPageSignal)
   .collect[GamePage] {page => GamePageView(page)}
   .collect[NotFoundPage.type ]{_=>div("page not found")}
   .collect[ConfiguratorPage.type ]{_=>ConfiguratorPageView()}
+  .collect[ThreeDPrintingPage.type] { _ => div("coming soon") }
+  .collect[KnittingPage.type] { _ => div("coming soon") }
+  .collect[OrigamiPage.type] { _ => div("coming soon") }
 
 
 val app: Div = div(

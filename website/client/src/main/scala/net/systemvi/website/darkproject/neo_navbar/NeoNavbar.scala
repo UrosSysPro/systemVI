@@ -6,7 +6,7 @@ import net.systemvi.website.CSSProps.*
 import org.scalajs.dom
 
 private def Logo(): HtmlElement = {
-  div(
+  a(
     display.flex,
     justifyContent.center,
     alignItems.center,
@@ -18,6 +18,7 @@ private def Logo(): HtmlElement = {
       display.block,
       width.rem(2), width.rem(2)
     ),
+    router.navigateTo(HomePage)
   )
 }
 
@@ -90,7 +91,7 @@ private def ShowMenuButton(slideInNavbarExpanded: Var[Boolean]): HtmlElement = {
   )
 }
 
-private def SlideInNavbar(slideInNavbarExpanded: Var[Boolean]): HtmlElement = {
+private def SlideInNavbar(slideInNavbarExpanded: Var[Boolean], navbarLinks: List[(String,Page)]): HtmlElement = {
   div(
     position.fixed, top.percent(0), left.percent(0), width.vw(100),height.vh(100), zIndex(2),
     transition("300ms"),
@@ -104,6 +105,25 @@ private def SlideInNavbar(slideInNavbarExpanded: Var[Boolean]): HtmlElement = {
       right.percent <-- slideInNavbarExpanded.signal.map(if _ then 0 else -100),
       width.rem(20), height.vh(100),
       backgroundColor("white"),
+
+      div(
+        display.flex,
+        img(
+          src(s"${Constants.clientUrl}/images/logo/Logo.svg"),
+          alt("Logo.svg"),
+        ),
+        span("System VI")
+      ),
+      div(
+        display.flex, flexDirection.column,
+        navbarLinks.map{ case (name, page) =>
+          a(
+            display.flex,
+            router.navigateTo(page),
+            name
+          )
+        }
+      )
     )
   )
 }
@@ -118,9 +138,9 @@ def NeoNavbar(): List[Modifier[HtmlElement]] = {
     ("Keyboards",     KeyboardsPage),
     ("Games",         GamesPage),
     ("Engine",        EnginePage),
-    ("3D Printing",   ThreeDPrinting),
-    ("Knitting",      Knitting),
-    ("Origami",       Origami),
+    ("3D Printing",   ThreeDPrintingPage),
+    ("Knitting",      KnittingPage),
+    ("Origami",       OrigamiPage),
   )
 
   List(
@@ -165,6 +185,6 @@ def NeoNavbar(): List[Modifier[HtmlElement]] = {
         }
       )
     ),
-    child <-- showMenu.map{ if _ then SlideInNavbar(slideInNavbarExpanded) else emptyNode},
+    child <-- showMenu.map{ if _ then SlideInNavbar(slideInNavbarExpanded,navbarLinks) else emptyNode},
   )
 }
