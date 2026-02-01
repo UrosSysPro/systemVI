@@ -7,6 +7,7 @@ import net.systemvi.common.dtos.*
 import net.systemvi.website.api.{EngineApi, GameApi}
 import net.systemvi.website.darkproject.footer.Footer
 import net.systemvi.website.darkproject.navbar.Navbar
+import net.systemvi.website.darkproject.neo_navbar.*
 import net.systemvi.website.darkproject.section.*
 import net.systemvi.website.darkproject.slider.ImageSlider
 import net.systemvi.website.*
@@ -17,7 +18,7 @@ def HomePageView():HtmlElement = {
   val engine = EngineApi.get()
   val games = GameApi.all()
 
-  dom.fetch("http://localhost:8080/api/keyboards").`then`{ response =>
+  dom.fetch(s"${Constants.serverUrl}/keyboards").`then`{ response =>
     response.json().`then`{ json =>
       val list = decodeJs[List[KeyboardDto]](json).getOrElse(List.empty)
       keyboards.writer.onNext(list)
@@ -28,7 +29,8 @@ def HomePageView():HtmlElement = {
     cls:="flex flex-col items-center pt-24",
     div(
       className:="flex flex-col justify-start w-full max-w-[1450px]",
-      Navbar(),
+//      Navbar(),
+      NeoNavbar(),
       ImageSlider(
         images = List(
           "images/keyboards-all.jpg",
