@@ -20,7 +20,7 @@ Adafruit_NeoPixel strip(NUM_LEDS, PIN, NEO_GRB + NEO_KHZ800);
 
 uint32_t wheel(byte pos) {
     pos = 255 - pos;
-    float brightness = 1;
+    float brightness = 0.3;
     if (pos < 85) {
         return strip.Color((255 - pos * 3)*brightness, 0, (pos * 3)*brightness);
     }
@@ -70,18 +70,7 @@ char name[] = "wireless_test";
 
 uint8_t value=0;
 
-void setup() {
-    // setCpuFrequencyMhz(80);
-    strip.begin();
-    strip.show();
-
-    keyboard = KeyboardBuilder().setName(name)
-    ->setColumns(columns,columnPins)
-    ->setRows(rows,rowPins)
-    ->build();
-    usbKeyboard.begin();
-    USB.begin();
-
+void setDefaultLayout(SystemVIKeyboard *keyboard) {
     keyboard->setNormalKeycap(13,0,         new  (char[4]){static_cast<char>(KEY_ESC), '\0', '\0', '\0'}, 0, 0, 0, 0, 0, 0);
     keyboard->setNormalKeycap(12,0,         new  (char[4]){'1','\0','\0','\0'},       1,0,  0,0,    0,0);
     keyboard->setNormalKeycap(11,0,         new  (char[4]){'2','\0','\0','\0'},       2,0,  0,0,    0,0);
@@ -139,35 +128,71 @@ void setup() {
     keyboard->setNormalKeycap( 3,3,        new (char[4]){'/','\0','\0','\0'},      10,3,  0,0,    0,0);
     keyboard->setNormalKeycap( 0,3,        new (char[4]){static_cast<char>(KEY_RIGHT_SHIFT),'\0','\0','\0'},     13,3,  0,0,    0,0);
     //row 4
-    keyboard->setNormalKeycap(13,4,         new (char[4]){static_cast<char>(KEY_LEFT_CTRL), '\0', '\0', '\0'},   0,4,  0,0,    0,0);
+    keyboard->setNormalKeycap(13,4,         new (char[4]){static_cast<char>(KEY_LEFT_CTRL),'\0','\0','\0'},      0,4,  0,0,    0,0);
     keyboard->setNormalKeycap(12,4,         new (char[4]){static_cast<char>(KEY_LEFT_GUI),'\0','\0','\0'},       1,4,  0,0,    0,0);
     keyboard->setNormalKeycap(11,4,         new (char[4]){static_cast<char>(KEY_LEFT_ALT),'\0','\0','\0'},       2,4,  0,0,    0,0);
     keyboard->setNormalKeycap( 8,4,         new (char[4]){' ','\0','\0','\0'},       3,4,  0,0,    0,0);
     keyboard->setNormalKeycap( 4,4,         new (char[4]){static_cast<char>(KEY_LEFT_ALT),'\0','\0','\0'},       4,4,  0,0,    0,0);
     keyboard->setNormalKeycap( 3,4,         new (char[4]){static_cast<char>(KEY_LEFT_GUI),'\0','\0','\0'},       5,4,  0,0,    0,0);
-    keyboard->setNormalKeycap( 2,4,         new (char[4]){static_cast<char>(KEY_LEFT_GUI),'\0','\0','\0'},           6,4,  0,0,    0,0);
+    keyboard->setNormalKeycap( 1,4,         new (char[4]){static_cast<char>(KEY_LEFT_GUI),'\0','\0','\0'},       6,4,  0,0,    0,0);
     keyboard->setNormalKeycap( 0,4,         new (char[4]){static_cast<char>(KEY_LEFT_CTRL),'\0','\0','\0'},      7,4,  0,0,    0,0);
+}
 
-    WiFi.mode(WIFI_STA);
-    WiFi.setSleep(true);
-    esp_wifi_set_ps(WIFI_PS_MIN_MODEM);
-    esp_wifi_set_max_tx_power(44);
-    WiFi.disconnect();
+class EspNow {
+public:
+    static void init() {
+        WiFi.mode(WIFI_STA);
+        WiFi.setSleep(true);
+        esp_wifi_set_ps(WIFI_PS_MIN_MODEM);
+        esp_wifi_set_max_tx_power(44);
+        WiFi.disconnect();
 
-    if (esp_now_init() != ESP_OK) {
-        Serial.println("ESP-NOW init failed");
-        return;
+        if (esp_now_init() != ESP_OK) {
+            Serial.println("ESP-NOW init failed");
+            return;
+        }
+
+        esp_now_peer_info_t peer{};
+        memcpy(peer.peer_addr, receiverMac, 6);
+        peer.channel = 0;        // same channel
+        peer.encrypt = false;
+
+        if (esp_now_add_peer(&peer) != ESP_OK) {
+            Serial.println("Failed to add peer");
+            return;
+        }
     }
 
-    esp_now_peer_info_t peer{};
-    memcpy(peer.peer_addr, receiverMac, 6);
-    peer.channel = 0;        // same channel
-    peer.encrypt = false;
+    static void deinit() {
+        if (esp_now_deinit() != ESP_OK) {
 
-    if (esp_now_add_peer(&peer) != ESP_OK) {
-        Serial.println("Failed to add peer");
-        return;
+        }
     }
+};
+
+enum ConnectionMode {
+    Usb,
+    Wireless,
+    BluetoothLE,
+};
+
+ConnectionMode connectionMode;
+
+void setup() {
+    strip.begin();
+    strip.show();
+
+    keyboard = KeyboardBuilder().setName(name)
+    ->setColumns(columns,columnPins)
+    ->setRows(rows,rowPins)
+    ->build();
+    usbKeyboard.begin();
+    // USB.begin();
+
+    connectionMode = ConnectionMode::Usb;
+
+    setDefaultLayout(keyboard);
+    EspNow::init();
 }
 
 void loop() {
@@ -180,18 +205,45 @@ void loop() {
         char message[2];
         message[0] = static_cast<char>(pressed);
         message[1] = key;
-        esp_err_t result = esp_now_send(receiverMac, reinterpret_cast<uint8_t*>(message), 2);
-        if (result == ESP_OK) {
-            Serial.printf("Sent byte: %c\n",key);
-        } else {
-            Serial.printf("Send error\n");
+
+        if (column == 1 && row == 4 && pressed) {
+            if (connectionMode == Usb) {
+                connectionMode = Wireless;
+                return;
+            }
+            if (connectionMode == Wireless) {
+                connectionMode = Usb;
+                return;
+            }
         }
 
-        if (pressed) {
-            usbKeyboard.press(key);
-        }
-        else {
-            usbKeyboard.release(key);
+        switch (connectionMode) {
+            case Usb: {
+                if (pressed) {
+                    usbKeyboard.press(key);
+                } else {
+                    usbKeyboard.release(key);
+                }
+                if (pressed) {
+                    Serial.printf("press: %d %d %2c\n",column,row,key);
+                } else {
+                    Serial.printf("release: %d %d %2c\n",column,row,key);
+                }
+            }
+            break;
+            case Wireless: {
+                esp_err_t result = esp_now_send(receiverMac, reinterpret_cast<uint8_t *>(message), 2);
+                if (result == ESP_OK) {
+                    Serial.printf("Sent byte: %c\n", key);
+                } else {
+                    Serial.printf("Send error\n");
+                }
+            }
+            break;
+            case BluetoothLE: {
+                Serial.println("Not Implemented");
+            }
+            break;
         }
     });
     keyboard->clearJustPressedKeyState();

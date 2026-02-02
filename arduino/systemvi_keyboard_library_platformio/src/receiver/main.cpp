@@ -8,9 +8,6 @@
 
 USBHIDKeyboard Keyboard;
 
-volatile bool pressed = false;
-volatile char justClicked = 0;
-
 bool hasEspNowMessage = false;
 EspNowMessage espNowMessage;
 
@@ -18,10 +15,6 @@ void onReceive(const uint8_t* senderAddress, const uint8_t* data, int len) {
     memcpy(espNowMessage.data, data, len);
     memcpy(espNowMessage.senderMacAddress, senderAddress, 6);
     hasEspNowMessage = true;
-    // if (len == 2) {
-    //     pressed = data[0];
-    //     justClicked = data[1];
-    // }
 }
 
 void setup() {
@@ -33,7 +26,7 @@ void setup() {
     WiFi.mode(WIFI_STA);
     WiFi.setSleep(true);
     esp_wifi_set_ps(WIFI_PS_MIN_MODEM);
-    esp_wifi_set_max_tx_power(44);
+    esp_wifi_set_max_tx_power(20);
     WiFi.disconnect();
 
 
@@ -49,26 +42,24 @@ void setup() {
 
 
 void loop() {
-    delay(10);
+    delay(2);
 
     if (hasEspNowMessage) {
         hasEspNowMessage=false;
-        char cmd = espNowMessage.data[0];
-        switch (cmd) {
-            case 'u': break;
-            default:{}break;
+        bool pressed = espNowMessage.data[0];
+        char key = espNowMessage.data[1];
+        if (pressed) {
+            Serial.printf("Pressed %c", key);
+            Keyboard.press(key);
         }
+        else {
+            Serial.printf("Released %c", key);
+            Keyboard.release(key);
+        }
+        // char cmd = espNowMessage.data[0];
+        // switch (cmd) {
+        //     case 'u': break;
+        //     default:{}break;
+        // }
     }
-    // if (justClicked) {
-    //     if (pressed) {
-    //         Serial.printf("Pressed %c", justClicked);
-    //         Keyboard.press(justClicked);
-    //     }
-    //     else {
-    //         Serial.printf("Released %c", justClicked);
-    //         Keyboard.release(justClicked);
-    //     }
-    //
-    //     justClicked = 0;
-    // }
 }
