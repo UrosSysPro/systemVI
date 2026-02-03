@@ -46,7 +46,9 @@ private def getApplicationDto(uuid: UUID)(using context: AppContext[IO]): IO[App
 def applicationController(using context: AppContext[IO]) = HttpRoutes.of[IO]{
   case GET -> Root => for{
     applications <- context.db.applications.get()
-    dtos <- applications.map(_.uuid).traverse(getApplicationDto)
+    dtos <- applications
+      .map(_.uuid)
+      .traverse(getApplicationDto)
     response <- Ok(dtos.asJson)
   } yield response
 

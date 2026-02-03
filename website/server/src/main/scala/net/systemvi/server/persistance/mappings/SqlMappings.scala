@@ -18,7 +18,6 @@ object SqlMappings {
   given Read[Keyboard] = Read[(UUID,UUID,Int,UUID,String,String)].map(Keyboard.apply)
 
   given Read[Application] = Read[(UUID,Int,String,String,String)].map(Application.apply)
-  given Write[Application] = Write[(UUID,Int,String,String,String)].contramap(a=>(a.uuid,a.categoryId,a.name,a.codeName,a.description))
 
   given Read[EntityImage] = Read[(UUID,String,Int)].map(EntityImage.apply)
   
