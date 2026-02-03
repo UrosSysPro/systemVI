@@ -63,12 +63,9 @@ int columnPins[14] = {
 //  };
 
 
-SystemVIKeyboard *keyboard;
-USBHIDKeyboard usbKeyboard;
 
 char name[] = "wireless_test";
 
-uint8_t value=0;
 
 void setDefaultLayout(SystemVIKeyboard *keyboard) {
     keyboard->setNormalKeycap(13,0,         new  (char[4]){static_cast<char>(KEY_ESC), '\0', '\0', '\0'}, 0, 0, 0, 0, 0, 0);
@@ -140,7 +137,7 @@ void setDefaultLayout(SystemVIKeyboard *keyboard) {
 
 class EspNow {
 public:
-    static void init() {
+    void begin() {
         WiFi.mode(WIFI_STA);
         WiFi.setSleep(true);
         esp_wifi_set_ps(WIFI_PS_MIN_MODEM);
@@ -163,7 +160,7 @@ public:
         }
     }
 
-    static void deinit() {
+    void deinit() {
         if (esp_now_deinit() != ESP_OK) {
 
         }
@@ -177,22 +174,26 @@ enum ConnectionMode {
 };
 
 ConnectionMode connectionMode;
+EspNow espNow;
+SystemVIKeyboard *keyboard;
+USBHIDKeyboard usbKeyboard;
 
 void setup() {
+    // rgb
     strip.begin();
     strip.show();
-
+    // systemvi keyboard
     keyboard = KeyboardBuilder().setName(name)
     ->setColumns(columns,columnPins)
     ->setRows(rows,rowPins)
     ->build();
-    usbKeyboard.begin();
-    // USB.begin();
-
-    connectionMode = ConnectionMode::Usb;
-
     setDefaultLayout(keyboard);
-    EspNow::init();
+    connectionMode = Usb;
+    // usb hid keyboard
+    usbKeyboard.begin();
+    USB.begin();
+    // esp now
+    espNow.begin();
 }
 
 void loop() {
