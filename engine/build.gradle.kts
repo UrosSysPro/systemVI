@@ -15,9 +15,6 @@ java{
     withSourcesJar()
 }
 
-scala {
-    zincVersion = "1.6.1"
-}
 
 application {
     mainClass = "com.systemvi.Main"

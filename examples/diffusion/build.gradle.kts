@@ -3,9 +3,6 @@ plugins {
     id("scala")
     id("com.gradleup.shadow") version "9.3.1"
 }
-scala {
-    zincVersion = "1.6.1"
-}
 
 val startClassName:String="com.systemvi.diffusion.Main"
 

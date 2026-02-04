@@ -28,7 +28,7 @@ object Main {
     initialPlayerPosition = Vector3f(-1,32,-1)
   )
   def main(args: Array[String]): Unit = {
-    val config=smallWorldConfig
+    val config = largeWorldConfig
 
     DemoApp(config).run()
   }

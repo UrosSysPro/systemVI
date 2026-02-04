@@ -4,7 +4,9 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleHome" value="C:\Users\uros\.sdkman\candidates\gradle\current" />
         <option name="gradleJvm" value="graalvm-21" />
         <option name="modules">
           <set>
@@ -19,15 +21,12 @@
             <option value="$PROJECT_DIR$/examples/compute-graph" />
             <option value="$PROJECT_DIR$/examples/diffusion" />
             <option value="$PROJECT_DIR$/examples/fabrik" />
-            <option value="$PROJECT_DIR$/examples/firmata" />
             <option value="$PROJECT_DIR$/examples/flappybird" />
             <option value="$PROJECT_DIR$/examples/fluid" />
             <option value="$PROJECT_DIR$/examples/fractals" />
             <option value="$PROJECT_DIR$/examples/game-of-life" />
             <option value="$PROJECT_DIR$/examples/generative-shaders" />
             <option value="$PROJECT_DIR$/examples/instancing" />
-            <option value="$PROJECT_DIR$/examples/java-and-scala" />
-            <option value="$PROJECT_DIR$/examples/jni-lib" />
             <option value="$PROJECT_DIR$/examples/lanterna-powerline" />
             <option value="$PROJECT_DIR$/examples/maze" />
             <option value="$PROJECT_DIR$/examples/model-viewer" />
@@ -52,8 +51,6 @@
             <option value="$PROJECT_DIR$/examples/ui-paint" />
             <option value="$PROJECT_DIR$/examples/ui-snake" />
             <option value="$PROJECT_DIR$/examples/ui-tests" />
-            <option value="$PROJECT_DIR$/examples/warriors" />
-            <option value="$PROJECT_DIR$/ktor-server" />
             <option value="$PROJECT_DIR$/voxel-world" />
             <option value="$PROJECT_DIR$/website" />
           </set>
