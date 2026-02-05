@@ -5,7 +5,7 @@ import net.systemvi.website.Page
 
 case class SectionItem(name:String,image:String,page:Page)
 
-def Section(title:String, items:List[SectionItem],viewAllPage:Page=null):Element=div(
+def Section(title: String, items: List[SectionItem], viewAllPage: Page = null):Element=div(
   className:="w-full flex flex-col items-start justify-start px-4 py-3",
   if title.isEmpty then emptyNode else SectionTitle(title,viewAllPage),
   div(

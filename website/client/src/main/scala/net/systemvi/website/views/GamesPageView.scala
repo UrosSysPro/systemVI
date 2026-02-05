@@ -1,28 +1,31 @@
 package net.systemvi.website.views
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.website.{GamePage, HomePage}
-import net.systemvi.website.api.GameApi
-import net.systemvi.website.darkproject.big_title.BigTitle
-import net.systemvi.website.darkproject.footer.Footer
-import net.systemvi.website.darkproject.neo_navbar.NeoNavbar
-import net.systemvi.website.darkproject.section.{Section, SectionItem}
-import net.systemvi.website.darkproject.slider.ImageSlider
+import net.systemvi.common.dtos.ApplicationDto
+import cats.*
+import cats.implicits.*
+import io.circe.scalajs.*
+import io.circe.generic.*
+import io.circe.generic.auto.*
+import net.systemvi.website.*
 import org.scalajs.dom
 
-def GamesPageView():HtmlElement = {
-  val games=GameApi.all()
-  div(
-    cls:="flex flex-col items-center pt-24",
-    div(
-      className:="flex flex-col justify-start w-full max-w-[1450px]",
-      NeoNavbar(),
-      BigTitle("Games"),
-      Section(
-        title="",
-        items = games.map(g=>SectionItem(g.name,g.images.head,GamePage(g.id)))
-      ),
-      Footer(),
-    )
+import scala.concurrent.ExecutionContext
+
+given ExecutionContext = ExecutionContext.global
+
+def GamesPageView(): HtmlElement = {
+  val gamesVar = EventStream.fromFuture(
+    dom.fetch(s"${Constants.serverUrl}/applications")
+      .toFuture
+      .flatMap(_.json().toFuture)
+      .map(decodeJs[List[ApplicationDto]](_))
+      .map(_.getOrElse(List.empty))
+  ).startWith(List.empty)
+
+  ApplicationsPageView(
+    title = "Games",
+    appsSignal = gamesVar.signal,
+    showImageSlider = false
   )
 }
