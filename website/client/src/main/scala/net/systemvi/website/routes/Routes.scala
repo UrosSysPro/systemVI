@@ -35,6 +35,12 @@ object Routes {
     pattern = root / "keyboard" / segment[UUID] / endOfSegments
   )
 
+  val applicationDetailsRoute: Route.Total[ApplicationDetailsPage, UUID] = Route[ApplicationDetailsPage, UUID](
+    encode = (page: ApplicationDetailsPage) => page.applicationUUID,
+    decode = (appId: UUID) => ApplicationDetailsPage(appId),
+    pattern = root / "application-details" / segment[UUID] / endOfSegments
+  )
+
   val gameRoute: Route.Total[GamePage, Int] = Route[GamePage, Int](
     encode = (page: GamePage) => page.gameId,
     decode = (args: Int) => GamePage(args),

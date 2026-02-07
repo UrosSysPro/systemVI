@@ -12,7 +12,7 @@ import net.systemvi.website.utils.Constants
 import org.scalajs.dom
 def EnginePageView():HtmlElement = {
   val engineDemosVar = EventStream.fromFuture(
-    dom.fetch(s"${Constants.serverUrl}/applications")
+    dom.fetch(s"${Constants.serverUrl}/applications/tech-demos")
       .toFuture
       .flatMap(_.json().toFuture)
       .map(decodeJs[List[ApplicationDto]](_))

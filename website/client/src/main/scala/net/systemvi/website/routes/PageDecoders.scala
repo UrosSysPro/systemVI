@@ -54,6 +54,11 @@ object PageDecoders {
     uuid <- child.hcursor.get[UUID]("keyboardId")
   } yield KeyboardPage(uuid)
 
+  given Decoder[ApplicationDetailsPage] = cursor => for {
+    child <- cursor.get[Json]("ApplicationDetailsPage")
+    uuid <- child.hcursor.get[UUID]("applicationUUID")
+  } yield ApplicationDetailsPage(uuid)
+
   given Decoder[ConfiguratorPage.type] = cursor => for {
     _ <- cursor.get[Json]("ConfiguratorPage")
   } yield ConfiguratorPage

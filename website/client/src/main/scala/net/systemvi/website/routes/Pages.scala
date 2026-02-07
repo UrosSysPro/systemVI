@@ -22,6 +22,8 @@ object Pages {
 
   case class KeyboardPage(keyboardId: UUID) extends Page("Keyboard")
 
+  case class ApplicationDetailsPage(applicationUUID: UUID) extends Page("Application Details")
+
   case class GamePage(gameId: Int) extends Page("Game")
 
   case object ConfiguratorPage extends Page("Keyboard Configurator")

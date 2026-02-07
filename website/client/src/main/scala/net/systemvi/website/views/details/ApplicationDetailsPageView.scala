@@ -17,10 +17,11 @@ import net.systemvi.website.darkproject.neo_navbar.*
 import net.systemvi.website.darkproject.product_info.*
 import net.systemvi.website.darkproject.section.*
 import net.systemvi.website.darkproject.slider.*
+import net.systemvi.website.routes.Pages.*
 import org.scalajs.dom
 
 
-def ApplicationDetailsPageView(appSignal: EventStream[ApplicationDto]): HtmlElement = {
+def ApplicationDetailsPageView(page: ApplicationDetailsPage): HtmlElement = {
 
   div(
     cls:="flex flex-col items-center pt-24",

@@ -35,9 +35,10 @@ def GamePageView(page: GamePage): HtmlElement = {
       .map(_.getOrElse(throw Exception()))
   )
 
-  ApplicationDetailsPageView(
-       appEventStream
-  )
+//  ApplicationDetailsPageView(
+//       appEventStream
+//  )
+  div("hello")
 //  val game=GameApi.get(page.gameId)
 //  div(
 //    cls:="flex flex-col items-center pt-24",

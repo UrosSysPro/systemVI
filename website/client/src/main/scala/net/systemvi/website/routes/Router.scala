@@ -14,7 +14,6 @@ import net.systemvi.website.routes.PageDecoders.*
 import java.util.UUID
 import scala.util.*
 
-
 object Router extends Router[Page](
   routes = List(
     homeRoute,
@@ -33,7 +32,7 @@ object Router extends Router[Page](
   serializePage = (page: Page) => {
     page.asJson.noSpaces
   },
-  deserializePage = pageData=>{
+  deserializePage = pageData => {
     val json = parse(pageData).getOrElse(Json.obj())
     val page = List(
       json.as[HomePage.type],
@@ -42,6 +41,7 @@ object Router extends Router[Page](
       json.as[EnginePage.type],
       json.as[NotFoundPage.type],
       json.as[KeyboardPage],
+      json.as[ApplicationDetailsPage],
       json.as[GamePage],
       json.as[ConfiguratorPage.type],
       json.as[ThreeDPrintingPage.type],

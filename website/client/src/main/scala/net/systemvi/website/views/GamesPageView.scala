@@ -17,7 +17,7 @@ given ExecutionContext = ExecutionContext.global
 
 def GamesPageView(): HtmlElement = {
   val gamesVar = EventStream.fromFuture(
-    dom.fetch(s"${Constants.serverUrl}/applications")
+    dom.fetch(s"${Constants.serverUrl}/applications/games")
       .toFuture
       .flatMap(_.json().toFuture)
       .map(decodeJs[List[ApplicationDto]](_))
