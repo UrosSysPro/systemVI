@@ -15,29 +15,40 @@ import net.systemvi.website.darkproject.expandable_specs.*
 import net.systemvi.website.darkproject.footer.*
 import net.systemvi.website.darkproject.neo_navbar.*
 import net.systemvi.website.darkproject.product_info.*
-import net.systemvi.website.darkproject.section.*
+import net.systemvi.website.darkproject.product_info.given
 import net.systemvi.website.darkproject.slider.*
 import net.systemvi.website.routes.Pages.*
+import net.systemvi.website.utils.Constants
 import org.scalajs.dom
 
 
 def ApplicationDetailsPageView(page: ApplicationDetailsPage): HtmlElement = {
 
+  val applicationSignal = EventStream.fromFuture(
+    dom.fetch(s"${Constants.serverUrl}/applications/${page.applicationUUID}")
+      .toFuture
+      .flatMap(_.json().toFuture)
+      .map(decodeJs[ApplicationDto](_))
+      .map(_.getOrElse(throw Exception()))
+  )
+
   div(
     cls:="flex flex-col items-center pt-24",
-    div(
-      className:="flex flex-col justify-start w-full max-w-[1450px]",
-//      BigTitle(
-//        game.name,
-//      ),
-      NeoNavbar(),
-//      ProductInfo(game),
-      //      ImageSlider(game.images),
-      BigTitle("Technical Specifications"),
-//      ExpandableSpecs(game.specs),
-      BigTitle("Bill Of Materials"),
-      BillOfMaterials(),
-      Footer(),
-    )
+    child <-- applicationSignal.map{ app =>
+      div(
+        className := "flex flex-col justify-start w-full max-w-[1450px]",
+        BigTitle(
+          app.name,
+        ),
+        NeoNavbar(),
+        ProductInfo(app),
+        ImageSlider(app.images.map(_.imageUrl)),
+        BigTitle("Technical Specifications"),
+        ExpandableSpecs(List.empty),
+        BigTitle("Bill Of Materials"),
+        BillOfMaterials(),
+        Footer(),
+      )
+    }
   )
 }

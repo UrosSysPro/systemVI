@@ -16,13 +16,27 @@ import org.scalajs.dom
 
 def HomePageView():HtmlElement = {
   val keyboards = Var[List[KeyboardDto]](List.empty)
-  val engine = EngineApi.get()
-  val games = GameApi.all()
+  val engine = Var[List[ApplicationDto]](List.empty)
+  val games = Var[List[ApplicationDto]](List.empty)
 
   dom.fetch(s"${Constants.serverUrl}/keyboards").`then`{ response =>
     response.json().`then`{ json =>
       val list = decodeJs[List[KeyboardDto]](json).getOrElse(List.empty)
       keyboards.writer.onNext(list)
+    }
+  }
+
+  dom.fetch(s"${Constants.serverUrl}/applications/games").`then`{ response =>
+    response.json().`then`{ json =>
+      val list = decodeJs[List[ApplicationDto]](json).getOrElse(List.empty)
+      games.writer.onNext(list)
+    }
+  }
+
+  dom.fetch(s"${Constants.serverUrl}/applications/tech-demos").`then`{ response =>
+    response.json().`then`{ json =>
+      val list = decodeJs[List[ApplicationDto]](json).getOrElse(List.empty)
+      engine.writer.onNext(list)
     }
   }
 
@@ -44,16 +58,20 @@ def HomePageView():HtmlElement = {
           KeyboardsPage
         )
       },
-      Section(
-        "Games",
-        games.take(4).map(g=>SectionItem(g.name,g.images.head,GamePage(g.id))),
-        GamesPage
-      ),
-      Section(
-        "Engine Demo",
-        engine.demos.take(4).map(e=>SectionItem(e.name,e.images.head,HomePage)),
-        EnginePage
-      ),
+      child <-- games.signal.map{ games =>
+        Section(
+          "Games",
+          games.take(4).map(g => SectionItem(g.name, g.images.head.imageUrl, ApplicationDetailsPage(g.uuid))),
+          GamesPage
+        )
+      },
+      child <-- engine.signal.map{ engine =>
+        Section(
+          "Engine Demo",
+          engine.take(4).map(e => SectionItem(e.name, e.images.head.imageUrl, ApplicationDetailsPage(e.uuid))),
+          EnginePage
+        )
+      },
       AboutSection(),
       Footer(),
     )

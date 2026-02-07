@@ -93,8 +93,11 @@ private def ProductInfoRight(name:String,codeName:String,specs:List[ProductSpec]
   )
 }
 
-def ProductInfo(params:ProductInfoParams):HtmlElement = {
-  val horizontal=windowEvents(_.onResize).map(_=>dom.window.innerWidth>1000).startWith(dom.window.innerWidth>1000)
+def ProductInfo(params: ProductInfoParams): HtmlElement = {
+  val horizontal = windowEvents(_.onResize)
+    .map(_ => dom.window.innerWidth > 1000)
+    .startWith(dom.window.innerWidth > 1000)
+
   div(
     height.rem:=40,
     display.flex,

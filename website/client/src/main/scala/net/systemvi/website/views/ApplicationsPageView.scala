@@ -43,7 +43,7 @@ def ApplicationsPageView(
             SectionItem(
               app.name,
               app.images.map(_.imageUrl).head,
-              HomePage
+              ApplicationDetailsPage(app.uuid)
             )
           }
         )
