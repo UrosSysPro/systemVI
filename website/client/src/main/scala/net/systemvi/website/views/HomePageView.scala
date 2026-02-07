@@ -11,6 +11,7 @@ import net.systemvi.website.darkproject.section.*
 import net.systemvi.website.darkproject.slider.ImageSlider
 import net.systemvi.website.*
 import net.systemvi.website.routes.Pages.*
+import net.systemvi.website.utils.Constants
 import org.scalajs.dom
 
 def HomePageView():HtmlElement = {

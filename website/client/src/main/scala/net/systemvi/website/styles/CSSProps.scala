@@ -1,4 +1,4 @@
-package net.systemvi.website
+package net.systemvi.website.styles
 
 import com.raquo.laminar.api.L.{*, given}
 import com.raquo.laminar.modifiers.CompositeKeySetter

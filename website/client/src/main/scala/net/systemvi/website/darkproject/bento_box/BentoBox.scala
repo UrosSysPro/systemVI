@@ -2,7 +2,7 @@ package net.systemvi.website.darkproject.bento_box
 
 import com.raquo.laminar.api.L.{*, given}
 import com.raquo.laminar.nodes.{ReactiveElement, ReactiveHtmlElement}
-import net.systemvi.website.CSSProps.*
+import net.systemvi.website.styles.CSSProps.*
 import org.scalajs.dom
 
 

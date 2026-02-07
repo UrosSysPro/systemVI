@@ -8,6 +8,7 @@ import io.circe.scalajs.*
 import io.circe.generic.*
 import io.circe.generic.auto.*
 import net.systemvi.website.*
+import net.systemvi.website.utils.Constants
 import org.scalajs.dom
 
 import scala.concurrent.ExecutionContext

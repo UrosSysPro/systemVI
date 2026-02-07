@@ -1,23 +1,19 @@
-package net.systemvi.website.views
+package net.systemvi.website.views.details
 
 import com.raquo.laminar.api.L.{*, given}
-import com.raquo.laminar.nodes.{ReactiveElement, ReactiveHtmlElement}
-import io.circe.scalajs.decodeJs
 import io.circe.generic.auto.*
-import net.systemvi.website.Constants
+import io.circe.scalajs.decodeJs
+import net.systemvi.common.dtos.*
 import net.systemvi.website.darkproject.bento_box.{BentoBox, BentoBoxItem, BentoBoxRect, BentoBoxSize}
 import net.systemvi.website.darkproject.big_title.BigTitle
 import net.systemvi.website.darkproject.bill_of_materials.BillOfMaterials
 import net.systemvi.website.darkproject.expandable_specs.ExpandableSpecs
 import net.systemvi.website.darkproject.footer.Footer
-import net.systemvi.website.darkproject.product_info.*
-import net.systemvi.website.darkproject.product_info.given
 import net.systemvi.website.darkproject.neo_navbar.*
+import net.systemvi.website.darkproject.product_info.{*, given}
 import net.systemvi.website.darkproject.slider.ImageSlider
-import net.systemvi.common.dtos.*
 import net.systemvi.website.routes.Pages.*
-
-import scala.util.*
+import net.systemvi.website.utils.Constants
 import org.scalajs.dom
 
 sealed trait ScreenSize(val width:Int)

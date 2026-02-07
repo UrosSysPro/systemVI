@@ -52,7 +52,6 @@
             <option value="$PROJECT_DIR$/examples/ui-snake" />
             <option value="$PROJECT_DIR$/examples/ui-tests" />
             <option value="$PROJECT_DIR$/voxel-world" />
-            <option value="$PROJECT_DIR$/website" />
           </set>
         </option>
       </GradleProjectSettings>

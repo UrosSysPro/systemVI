@@ -2,7 +2,7 @@ package net.systemvi.website.darkproject.slider
 
 import com.raquo.laminar.api.L.{*, given}
 import com.raquo.laminar.modifiers.EventListener
-import net.systemvi.website.CSSProps.*
+import net.systemvi.website.styles.CSSProps.*
 import net.systemvi.website.darkproject.Theme
 import org.scalajs.dom.MouseEvent
 

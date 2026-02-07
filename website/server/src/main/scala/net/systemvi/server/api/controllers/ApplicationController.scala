@@ -65,4 +65,32 @@ def applicationController(using context: AppContext[IO]) = HttpRoutes.of[IO]{
       .traverse(getApplicationDto)
     response <- Ok(dtos.asJson)
   } yield response
+
+  case GET -> Root / "games" => for{
+    applications <- context.db.applications.get()
+    dtos <- applications
+      .filter(_.categoryId == Game.id)
+      .map(_.uuid)
+      .traverse(getApplicationDto)
+    response <- Ok(dtos.asJson)
+  } yield response
+
+  case GET -> Root / "tech-demos" => for{
+    applications <- context.db.applications.get()
+    dtos <- applications
+      .filter(_.categoryId == TechDemo.id)
+      .map(_.uuid)
+      .traverse(getApplicationDto)
+    response <- Ok(dtos.asJson)
+  } yield response
+
+  case GET -> Root / "configurator" => for{
+    applications <- context.db.applications.get()
+    configuratorId = applications
+      .filter(_.categoryId == Tool.id)
+      .map(_.uuid)
+      .head
+    dto <- getApplicationDto(configuratorId)
+    response <- Ok(dto.asJson)
+  } yield response
 }

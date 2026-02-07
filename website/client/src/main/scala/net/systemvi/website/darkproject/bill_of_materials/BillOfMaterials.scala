@@ -1,7 +1,7 @@
 package net.systemvi.website.darkproject.bill_of_materials
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.website.CSSProps.*
+import net.systemvi.website.styles.CSSProps.*
 
 def BillOfMaterials():HtmlElement ={
   div(

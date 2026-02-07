@@ -10,8 +10,8 @@ import io.circe.scalajs.*
 import io.circe.scalajs.EncoderJsOps.*
 import io.circe.generic.*
 import io.circe.generic.auto.*
-import net.systemvi.website.Constants
 import net.systemvi.website.routes.Pages.*
+import net.systemvi.website.utils.Constants
 import org.scalajs.dom
 import scala.scalajs.LinkingInfo.*
 

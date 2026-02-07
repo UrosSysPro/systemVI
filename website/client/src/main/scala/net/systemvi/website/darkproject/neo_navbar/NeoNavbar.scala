@@ -2,9 +2,10 @@ package net.systemvi.website.darkproject.neo_navbar
 
 import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.website.*
-import net.systemvi.website.CSSProps.*
+import net.systemvi.website.styles.CSSProps.*
 import net.systemvi.website.routes.Pages.*
 import net.systemvi.website.routes.Router
+import net.systemvi.website.utils.Constants
 import org.scalajs.dom
 
 private def Logo(): HtmlElement = {

@@ -9,7 +9,7 @@ import org.http4s.*
 import org.http4s.implicits.*
 import org.http4s.server.Router
 
-def Router(using context:AppContext[IO]) = Router(
+def router(using context:AppContext[IO]) = Router(
   "/api" -> cors(api),
   "/" -> website
 ).orNotFound

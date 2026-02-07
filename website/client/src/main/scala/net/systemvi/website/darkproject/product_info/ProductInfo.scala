@@ -2,7 +2,7 @@ package net.systemvi.website.darkproject.product_info
 
 import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.common.model.{Application, DownloadLink, Game, Keyboard, ProductSpec}
-import net.systemvi.website.CSSProps.*
+import net.systemvi.website.styles.CSSProps.*
 import net.systemvi.website.darkproject.Theme
 import net.systemvi.website.darkproject.expandable_specs.UnderlinedRow
 import net.systemvi.website.darkproject.download_link.DownloadLinkButton

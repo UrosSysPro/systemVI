@@ -1,0 +1,16 @@
+meta {
+  name: Get All Games
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{cats-backend}}/api/applications/games
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
