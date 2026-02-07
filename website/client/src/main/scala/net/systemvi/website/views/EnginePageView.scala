@@ -9,7 +9,6 @@ import io.circe.generic.*
 import io.circe.generic.auto.*
 import net.systemvi.website.*
 import org.scalajs.dom
-
 def EnginePageView():HtmlElement = {
   val engineDemosVar = EventStream.fromFuture(
     dom.fetch(s"${Constants.serverUrl}/applications")

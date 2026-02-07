@@ -21,7 +21,7 @@ def server(using context:AppContext[IO])=EmberServerBuilder
   .withHost(ipv4"0.0.0.0")
   .withPort(port"8080")
   .withLogger(Slf4jLogger.getLogger[IO])
-  .withHttpApp(router)
+  .withHttpApp(Router)
   .build
 
 object Main extends IOApp{

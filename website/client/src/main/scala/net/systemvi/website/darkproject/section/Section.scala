@@ -1,7 +1,7 @@
 package net.systemvi.website.darkproject.section
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.website.Page
+import net.systemvi.website.routes.Pages.*
 
 case class SectionItem(name:String,image:String,page:Page)
 

@@ -3,6 +3,8 @@ package net.systemvi.website.darkproject.neo_navbar
 import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.website.*
 import net.systemvi.website.CSSProps.*
+import net.systemvi.website.routes.Pages.*
+import net.systemvi.website.routes.Router
 import org.scalajs.dom
 
 private def Logo(): HtmlElement = {
@@ -18,7 +20,7 @@ private def Logo(): HtmlElement = {
       display.block,
       width.rem(2), width.rem(2)
     ),
-    router.navigateTo(HomePage)
+    Router.navigateTo(HomePage)
   )
 }
 
@@ -62,7 +64,7 @@ private def Link(name: String, page: Page): HtmlElement = {
     paddingLeft.rem(0.5),
     paddingRight.rem(0.5),
     height.percent(100),
-    router.navigateTo(page),
+    Router.navigateTo(page),
     transition("300ms"),
     cursor.pointer,
     onMouseEnter --> { _ => hover.writer.onNext(true) },
@@ -142,7 +144,7 @@ private def SlideInNavbar(slideInNavbarExpanded: Var[Boolean], navbarLinks: List
               borderRadius.rem(1),
               width.percent(100),
               backgroundColor <-- hover.signal.map{ if _ then "rgba(200,200,200,0.3)" else "rgba(200,200,200,0.0)" },
-              router.navigateTo(page),
+              Router.navigateTo(page),
               name
             )
           )

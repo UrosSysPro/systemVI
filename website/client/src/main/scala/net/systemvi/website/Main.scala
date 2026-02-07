@@ -2,11 +2,14 @@ package net.systemvi.website
 
 import com.raquo.laminar.api.L.{*, given}
 import com.raquo.waypoint.SplitRender
+import net.systemvi.website.routes.Pages.*
+import net.systemvi.website.routes.Router
 import net.systemvi.website.views.*
 import org.scalajs.dom
+
 import scala.scalajs.js
 
-val splitter= SplitRender[Page,HtmlElement](router.currentPageSignal)
+val splitter= SplitRender[Page,HtmlElement](Router.currentPageSignal)
   .collect[HomePage.type]{_ => HomePageView()}
   .collect[KeyboardsPage.type]{_ => KeyboardsPageView()}
   .collect[GamesPage.type ]{_ => GamesPageView()}

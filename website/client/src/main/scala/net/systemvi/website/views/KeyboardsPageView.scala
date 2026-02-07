@@ -10,9 +10,9 @@ import io.circe.scalajs.*
 import io.circe.scalajs.EncoderJsOps.*
 import io.circe.generic.*
 import io.circe.generic.auto.*
-import net.systemvi.website.{Constants, KeyboardPage}
+import net.systemvi.website.Constants
+import net.systemvi.website.routes.Pages.*
 import org.scalajs.dom
-
 import scala.scalajs.LinkingInfo.*
 
 def KeyboardsPageView(): HtmlElement = {

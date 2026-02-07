@@ -21,34 +21,24 @@ import io.circe.generic.auto.*
 import net.systemvi.website.*
 import org.scalajs.dom
 
-import scala.concurrent.ExecutionContext
 
-given ExecutionContext = ExecutionContext.global
-
-def ApplicationView(page: GamePage): HtmlElement = {
-  val applicationStream = EventStream.fromFuture(
-    dom.fetch(s"${Constants.serverUrl}/applications")
-      .toFuture
-      .flatMap(_.json().toFuture)
-      .map(decodeJs[ApplicationDto](_))
-      .map(_.getOrElse(throw Exception("error parsing json")))
-  )
+def ApplicationPageView(appSignal: EventStream[ApplicationDto]): HtmlElement = {
 
   div(
-    className("flex flex-col items-center pt-24"),
-    child <-- applicationStream.map{ app =>
-      div(
-        className("flex flex-col justify-start w-full max-w-[1450px]"),
-        child <-- applicationStream.map { a => BigTitle(a.name) },
-        NeoNavbar(),
-//        ProductInfo(app),
-//        ImageSlider(game.images),
-        BigTitle("Technical Specifications"),
-//        ExpandableSpecs(game.specs),
-        BigTitle("Bill Of Materials"),
-        BillOfMaterials(),
-        Footer(),
-      )
-    }
+    cls:="flex flex-col items-center pt-24",
+    div(
+      className:="flex flex-col justify-start w-full max-w-[1450px]",
+//      BigTitle(
+//        game.name,
+//      ),
+      NeoNavbar(),
+//      ProductInfo(game),
+      //      ImageSlider(game.images),
+      BigTitle("Technical Specifications"),
+//      ExpandableSpecs(game.specs),
+      BigTitle("Bill Of Materials"),
+      BillOfMaterials(),
+      Footer(),
+    )
   )
 }

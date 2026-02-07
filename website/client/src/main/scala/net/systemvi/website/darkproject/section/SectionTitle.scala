@@ -1,7 +1,8 @@
 package net.systemvi.website.darkproject.section
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.website.{Page, router}
+import net.systemvi.website.routes.Pages.*
+import net.systemvi.website.routes.Router
 
 def SectionTitle(text:String,viewAllPage:Page=null):HtmlElement=div(
   display.flex,
@@ -17,7 +18,7 @@ def SectionTitle(text:String,viewAllPage:Page=null):HtmlElement=div(
     justifyContent.center,
     alignItems.center,
     a(
-      router.navigateTo(viewAllPage),
+      Router.navigateTo(viewAllPage),
       borderRadius:="0.3rem",
       backgroundColor:="#eee",
       transition:="300ms",

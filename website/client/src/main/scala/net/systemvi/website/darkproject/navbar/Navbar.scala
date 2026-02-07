@@ -2,6 +2,8 @@ package net.systemvi.website.darkproject.navbar
 
 import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.website.*
+import net.systemvi.website.routes.Pages.*
+import net.systemvi.website.routes.Router
 import org.scalajs.dom
 
 case class NavbarEntry(text:String,page:Page)

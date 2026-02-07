@@ -16,6 +16,7 @@ import io.circe.scalajs.EncoderJsOps.*
 import io.circe.generic.*
 import io.circe.generic.auto.*
 import net.systemvi.website.*
+import net.systemvi.website.routes.Pages.*
 import org.scalajs.dom
 
 def ApplicationsPageView(

@@ -16,13 +16,4 @@ object CSSProps {
   val gridTemplateAreas:StyleProp[String]                         = styleProp[String]("grid-template-areas")
 
   val gridArea:StyleProp[String]                                  = styleProp[String]("grid-area")
-
-//  def hover(props:List[Modifier[HtmlElement]]*) = List[Modifier[HtmlElement]]{
-//    val hover = Var[Boolean](false)
-//    List(
-//      onMouseEnter --> { _ => hover.writer.onNext(true) },
-//      onMouseLeave --> { _ => hover.writer.onNext(false) },
-//       <-- hover.signal.map(if _ then props else List.empty),
-//    )
-//  }
 }

@@ -25,26 +25,28 @@ object KeyboardContext{
         sql"""
              |insert into Keyboards(uuid,switchUUID,profileId,filamentUUID,name,codeName)
              |values (${keyboard.uuid},${keyboard.switchUUID},${keyboard.profileId},${keyboard.filamentUUID},${keyboard.name},${keyboard.codeName})
-           """.stripMargin('|').update.run.transact(xa)
+           """.stripMargin('|')
+          .update
+          .run
+          .transact(xa)
 
       override def get(uuid: UUID): F[Option[Keyboard]] =
-        sql"""
-             |select *
-             |from Keyboards
-             |where uuid = $uuid
-           """.stripMargin('|').query[Keyboard].option.transact(xa)
+        sql"select * from Keyboards where uuid = $uuid"
+          .query[Keyboard]
+          .option
+          .transact(xa)
 
       override def get(): F[List[Keyboard]] =
-        sql"""
-             |select *
-             |from Keyboards
-           """.stripMargin('|').query[Keyboard].to[List].transact(xa)
+        sql"select * from Keyboards"
+          .query[Keyboard]
+          .to[List]
+          .transact(xa)
 
       override def remove(uuid: UUID): F[Int] =
-        sql"""
-             |delete from Keyboards
-             |where uuid = $uuid
-           """.stripMargin('|').update.run.transact(xa)
+        sql"delete from Keyboards where uuid = $uuid"
+          .update
+          .run
+          .transact(xa)
     }
   }
 }
