@@ -20,7 +20,9 @@ import net.systemvi.website.darkproject.slider.*
 import net.systemvi.website.routes.Pages.*
 import net.systemvi.website.utils.Constants
 import org.scalajs.dom
+import scala.concurrent.ExecutionContext
 
+given ExecutionContext = ExecutionContext.global
 
 def ApplicationDetailsPageView(page: ApplicationDetailsPage): HtmlElement = {
 

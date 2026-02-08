@@ -40,10 +40,4 @@ object Routes {
     decode = (appId: UUID) => ApplicationDetailsPage(appId),
     pattern = root / "application-details" / segment[UUID] / endOfSegments
   )
-
-  val gameRoute: Route.Total[GamePage, Int] = Route[GamePage, Int](
-    encode = (page: GamePage) => page.gameId,
-    decode = (args: Int) => GamePage(args),
-    pattern = root / "game" / segment[Int] / endOfSegments
-  )
 }

@@ -1,16 +1,19 @@
 package net.systemvi.website.views.details
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.website.api.ApplicationApi
-import net.systemvi.website.darkproject.bento_box.{*, given}
-import net.systemvi.website.darkproject.big_title.BigTitle
-import net.systemvi.website.darkproject.bill_of_materials
-import net.systemvi.website.darkproject.expandable_specs.ExpandableSpecs
-import net.systemvi.website.darkproject.footer.Footer
+import net.systemvi.website.darkproject.big_title.*
+import net.systemvi.website.darkproject.footer.*
 import net.systemvi.website.darkproject.neo_navbar.*
-import net.systemvi.website.darkproject.product_info.{ProductInfo, given}
-import net.systemvi.website.darkproject.slider.ImageSlider
-import org.scalajs.dom
+import net.systemvi.website.darkproject.bento_box.*
+import net.systemvi.website.darkproject.product_info.{ *, given }
+import net.systemvi.website.darkproject.slider.*
+import net.systemvi.website.utils.Constants
+import cats.*
+import cats.implicits.*
+import io.circe.*
+import io.circe.generic.auto.*
+import io.circe.parser.*
+import net.systemvi.common.dtos.ApplicationDto
 
 def BentoCard(title:String): HtmlElement = {
   div(
@@ -31,25 +34,28 @@ def BentoCard(title:String): HtmlElement = {
   )
 }
 
-def ConfiguratorPageView():HtmlElement={
-  val application=ApplicationApi.get(0)
-  application.map{app=>
-    div(
-      display.flex,
-      flexDirection.column,
-      alignItems.center,
-      paddingTop.rem:=6,
+def ConfiguratorPageView(): HtmlElement={
+  val application = FetchStream.get(s"${Constants.serverUrl}/applications/configurator")
+      .map(decode[ApplicationDto](_))
+      .map(_.getOrElse(throw Exception()))
+
+  div(
+    display.flex,
+    flexDirection.column,
+    alignItems.center,
+    paddingTop.rem(6),
+    child <-- application.map{ app =>
       div(
-        className := "max-w-[1450px]",
         display.flex,
         flexDirection.column,
         justifyContent.start,
-        width.percent:=100,
+        width.percent(100),
+        maxWidth.px(1450),
 
         NeoNavbar(),
         BigTitle(app.name),
         ProductInfo(app),
-        ImageSlider(app.screenshots),
+        ImageSlider(app.images.map(_.imageUrl)),
         BentoBox(
           BentoBoxSize(4,3),
           List(
@@ -117,6 +123,6 @@ def ConfiguratorPageView():HtmlElement={
         ),
         Footer(),
       )
-    )
-  }.getOrElse(div("keyboard not found"))
+    }
+  )
 }

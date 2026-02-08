@@ -10,6 +10,7 @@ import io.circe.syntax.*
 import net.systemvi.website.*
 import net.systemvi.website.routes.Pages.*
 import net.systemvi.website.routes.Routes.*
+import net.systemvi.website.routes.PageDecoders.given
 import java.util.UUID
 import scala.util.*
 import org.scalajs.dom
@@ -22,7 +23,6 @@ object Router extends Router[Page](
     engineRoute,
     keyboardRoute,
     applicationDetailsRoute,
-    gameRoute,
     configuratorRoute,
     threeDPrintingRoute,
     knittingRoute,
@@ -31,11 +31,11 @@ object Router extends Router[Page](
   ),
   getPageTitle = page => page.title,
   serializePage = (page: Page) => {
-//    dom.console.log("serialize: ", page.asJson.noSpaces)
+    dom.console.log("serialize: ", page.asJson.noSpaces)
     page.asJson.noSpaces
   },
   deserializePage = pageData => {
-//    dom.console.log("deserialize: ", pageData)
+    dom.console.log("deserialize: ", pageData)
     val json = parse(pageData).getOrElse(Json.obj())
     val page = List(
       json.as[HomePage.type],
@@ -45,7 +45,6 @@ object Router extends Router[Page](
       json.as[NotFoundPage.type],
       json.as[KeyboardPage],
       json.as[ApplicationDetailsPage],
-      json.as[GamePage],
       json.as[ConfiguratorPage.type],
       json.as[ThreeDPrintingPage.type],
       json.as[KnittingPage.type],

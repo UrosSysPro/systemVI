@@ -9,18 +9,17 @@ import net.systemvi.website.views.details.*
 import org.scalajs.dom
 
 val splitter = SplitRender[Page, HtmlElement](Router.currentPageSignal)
-  .collect[HomePage.type]           { _ => HomePageView()}
-  .collect[KeyboardsPage.type]      { _ => KeyboardsPageView()}
-  .collect[GamesPage.type]          { _ => GamesPageView()}
-  .collect[EnginePage.type]         { _ => EnginePageView()}
-  .collect[KeyboardPage]            { page => KeyboardPageView(page)}
-  .collect[ApplicationDetailsPage]  { page => ApplicationDetailsPageView(page)}
-  .collect[GamePage]                { page => GamePageView(page)}
-  .collect[ConfiguratorPage.type]   { _ => ConfiguratorPageView()}
-  .collect[ThreeDPrintingPage.type] { _ => div("coming soon") }
-  .collect[KnittingPage.type]       { _ => div("coming soon") }
-  .collect[OrigamiPage.type]        { _ => div("coming soon") }
-  .collect[NotFoundPage.type]       { _ => div("page not found") }
+  .collectStatic(HomePage)          { HomePageView() }
+  .collectStatic(KeyboardsPage)     { KeyboardsPageView() }
+  .collectStatic(GamesPage)         { GamesPageView() }
+  .collectStatic(EnginePage)        { EnginePageView() }
+  .collect[KeyboardPage]            { page => KeyboardPageView(page) }
+  .collect[ApplicationDetailsPage]  { page => ApplicationDetailsPageView(page) }
+  .collectStatic(ConfiguratorPage)  { ConfiguratorPageView() }
+  .collectStatic(ThreeDPrintingPage){ div("coming soon") }
+  .collectStatic(KnittingPage)      { div("coming soon") }
+  .collectStatic(OrigamiPage)       { div("coming soon") }
+  .collectStatic(NotFoundPage)      { div("page not found") }
 
 val app: Div = div(
     child <-- splitter.signal

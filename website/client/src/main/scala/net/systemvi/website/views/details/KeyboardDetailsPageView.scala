@@ -22,9 +22,9 @@ object Medium extends ScreenSize(1000)
 object Large extends ScreenSize(1300)
 object Extra extends ScreenSize(1500)
 
-case class BentoBoxData(size:BentoBoxSize,items:List[BentoBoxRect])
+case class BentoBoxData(size: BentoBoxSize, items: List[BentoBoxRect])
 
-def KeyboardPageView(page:KeyboardPage):HtmlElement = {
+def KeyboardPageView(page: KeyboardPage): HtmlElement = {
   val keyboard = Var[Option[KeyboardDto]](None)
 
   dom.fetch(s"${Constants.serverUrl}/keyboards/${page.keyboardId}").`then`{ response=>
@@ -33,27 +33,27 @@ def KeyboardPageView(page:KeyboardPage):HtmlElement = {
     }
   }
 
-  def screenSizeToEnum=dom.window.innerWidth match{
+  def screenSizeToEnum = dom.window.innerWidth match{
     case x if x < Small.width => Small
     case x if x < Medium.width => Medium
     case x if x < Large.width => Large
     case _ => Extra
   }
 
-  val screenSize=windowEvents(_.onResize).map(_=>screenSizeToEnum).distinct.startWith(screenSizeToEnum)
+  val screenSize = windowEvents(_.onResize).map(_=>screenSizeToEnum).distinct.startWith(screenSizeToEnum)
 
-  val boxItems=List.range(0,8).map(_=>div(
-    padding:="0.25rem",
-    height.percent:=100,
+  val boxItems = List.range(0,8).map(_=>div(
+    padding := "0.25rem",
+    height.percent := 100,
     div(
-      borderRadius.rem:=1,
-      height.percent:=100,
+      borderRadius.rem := 1,
+      height.percent := 100,
       backgroundColor.rgb(246,246,246),
     )
   ))
 
   val boxes = screenSize.map{
-    case Small =>BentoBoxData(
+    case Small => BentoBoxData(
       BentoBoxSize(1,8),
       List(
         BentoBoxRect(0,0,1,1),

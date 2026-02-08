@@ -44,11 +44,6 @@ object PageDecoders {
     _ <- cursor.get[Json]("NotFoundPage")
   } yield NotFoundPage
 
-  given Decoder[GamePage] = cursor => for {
-    child <- cursor.get[Json]("GamePage")
-    id <- child.hcursor.get[Int]("gameId")
-  } yield GamePage(id)
-
   given Decoder[KeyboardPage] = cursor => for {
     child <- cursor.get[Json]("KeyboardPage")
     uuid <- child.hcursor.get[UUID]("keyboardId")

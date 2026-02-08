@@ -24,8 +24,6 @@ object Pages {
 
   case class ApplicationDetailsPage(applicationUUID: UUID) extends Page("Application Details")
 
-  case class GamePage(gameId: Int) extends Page("Game")
-
   case object ConfiguratorPage extends Page("Keyboard Configurator")
 
   case object NotFoundPage extends Page("404")
