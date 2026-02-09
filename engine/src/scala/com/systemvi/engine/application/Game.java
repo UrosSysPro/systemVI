@@ -3,7 +3,6 @@ package com.systemvi.engine.application;
 import com.systemvi.engine.window.InputProcessor;
 import com.systemvi.engine.window.Window;
 
-
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL33.*;
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
