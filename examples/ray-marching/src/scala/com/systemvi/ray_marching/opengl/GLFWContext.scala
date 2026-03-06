@@ -5,21 +5,49 @@ import cats.implicits.*
 import cats.effect.*
 import cats.effect.implicits.*
 import org.lwjgl.glfw.GLFW.*
+import org.lwjgl.opengl.GL11.{GL_RENDERER, GL_VENDOR, GL_VERSION, glGetString}
+import org.lwjgl.opengl.GL20.GL_SHADING_LANGUAGE_VERSION
 import org.lwjgl.opengl.GL33.*
+
+import java.util.concurrent.{Executors, ThreadFactory, TimeUnit}
 import scala.concurrent.ExecutionContext
 
+case class GLFWContext(
+                   versionMajor: Int,
+                   versionMinor: Int,
+                   ec: ExecutionContext
+                 )
+
 object GLFWContext {
-  def make(versionMajor: Int, versionMinor: Int): Resource[IO, Unit] = Resource.make[IO,Unit]{
-    IO{
-      glfwInit
-      glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, versionMajor)
-      glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, versionMinor)
-      glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
-      glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE)
-    }
-  }{ _ =>
-    IO{
-      glfwTerminate()
-    }
+  def make(versionMajor: Int, versionMinor: Int): Resource[IO, GLFWContext] = Resource.make[IO,GLFWContext]{
+    for{
+      ec <- IO{
+        ExecutionContext.fromExecutorService {
+          Executors.newSingleThreadExecutor { (r: Runnable) =>
+            val t = Thread(r, "render-thread")
+            t.setDaemon(true)
+            t
+          }
+        }
+      }
+      context <- IO{
+        glfwInit
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, versionMajor)
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, versionMinor)
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
+        glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE)
+        GLFWContext(
+          versionMajor,
+          versionMinor,
+          ec
+        )
+      }.evalOn(ec)
+    } yield context
+  }{ context =>
+    for{
+      _ <- IO{
+        glfwTerminate()
+      }.evalOn(context.ec)
+    }yield()
   }
 }
