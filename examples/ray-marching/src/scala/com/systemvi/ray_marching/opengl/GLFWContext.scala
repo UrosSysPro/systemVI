@@ -12,11 +12,13 @@ import org.lwjgl.opengl.GL33.*
 import java.util.concurrent.{Executors, ThreadFactory, TimeUnit}
 import scala.concurrent.ExecutionContext
 
-case class GLFWContext(
-                   versionMajor: Int,
-                   versionMinor: Int,
-                   ec: ExecutionContext
-                 )
+trait GLFWContext(
+                   val versionMajor: Int,
+                   val versionMinor: Int,
+                   val ec: ExecutionContext
+                 ){
+  def getTime:IO[Double]
+}
 
 object GLFWContext {
   def make(versionMajor: Int, versionMinor: Int): Resource[IO, GLFWContext] = Resource.make[IO,GLFWContext]{
@@ -36,11 +38,13 @@ object GLFWContext {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, versionMinor)
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE)
         glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE)
-        GLFWContext(
+        new GLFWContext(
           versionMajor,
           versionMinor,
           ec
-        )
+        ) {
+          override def getTime: IO[Double] = IO{ glfwGetTime() }.evalOn(this.ec)
+        }
       }.evalOn(ec)
     } yield context
   }{ context =>
