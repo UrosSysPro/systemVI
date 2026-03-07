@@ -24,7 +24,7 @@ object Test extends IOApp.Simple {
           for
             lastFrameStart <- lastFrameStartRef.get
             startTime <- context.getTime
-            _ <- update(startTime - lastFrameStart,context,window)
+            _ <- update(startTime - lastFrameStart, running, context, window)
             endTime <- context.getTime
             _ <- lastFrameStartRef.set(startTime)
             elapsed = endTime - startTime
@@ -35,12 +35,19 @@ object Test extends IOApp.Simple {
     }
 
   }
-  def update(delta: Double, context: GLFWContext, window: GLFWWindow): IO[Unit] = for{
-//    _<-IO.cede
-    _<-IO{println(Thread.currentThread().getName)}
-    _<-IO{println(Thread.currentThread().getName)}.evalOn(context.ec)
-    _<-IO.println(s"time since last frame: $delta")
-  }yield ()
+
+  def update(delta: Double,running: Ref[IO,Boolean], context: GLFWContext, window: GLFWWindow): IO[Unit] = {
+    given GLFWContext = context
+    for{
+      //input
+      _ <- window.pollEvents
+      //update
+      shouldClose <- window.shouldClose
+      _ <- running.set(!shouldClose)
+      //draw
+      _ <- window.swapBuffers
+    }yield ()
+  }
 
 
   override def run: IO[Unit] = {

@@ -25,8 +25,12 @@ trait GLFWWindow(
                       val capabilities: GLCapabilities,
                      ) {
   def makeCurrent(using context: GLFWContext): IO[Unit]
+  def setPosition(x: Int, y: Int)(using context: GLFWContext): IO[Unit]
   def setSize(width: Int, height: Int)(using context: GLFWContext): IO[Unit]
   def setTitle(title: String)(using context: GLFWContext): IO[Unit]
+  def swapBuffers(using context: GLFWContext): IO[Unit]
+  def pollEvents(using context: GLFWContext): IO[Unit]
+  def shouldClose(using context: GLFWContext): IO[Boolean]
 }
 
 object GLFWWindow {
@@ -55,7 +59,6 @@ object GLFWWindow {
           glslVersion,
           capabilities
         ) {
-
           override def makeCurrent(using context: GLFWContext): IO[Unit] = IO{
             glfwMakeContextCurrent(this.id)
             glViewport(0,0,this.width,this.height)
@@ -71,6 +74,22 @@ object GLFWWindow {
           override def setTitle(title: String)(using context: GLFWContext): IO[Unit] = IO{
             this.title = title
             glfwSetWindowTitle(this.id, this.title)
+          }.evalOn(context.ec)
+
+          override def swapBuffers(using context: GLFWContext): IO[Unit] = IO{
+            glfwSwapBuffers(this.id)
+          }.evalOn(context.ec)
+
+          override def setPosition(x: Int, y: Int)(using context: GLFWContext): IO[Unit] =  IO{
+            glfwSetWindowPos(this.id,x,y)
+          }.evalOn(context.ec)
+
+          override def pollEvents(using context: GLFWContext): IO[Unit] = IO{
+            glfwPollEvents()
+          }.evalOn(context.ec)
+
+          override def shouldClose(using context: GLFWContext): IO[Boolean] = IO{
+            glfwWindowShouldClose(this.id)
           }.evalOn(context.ec)
         }
       }.evalOn(context.ec)
