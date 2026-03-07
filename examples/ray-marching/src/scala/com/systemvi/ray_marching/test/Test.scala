@@ -4,9 +4,13 @@ import cats.*
 import cats.implicits.*
 import cats.effect.*
 import cats.effect.implicits.*
+import com.systemvi.engine.shader.Primitive
 import com.systemvi.ray_marching.opengl.*
 import com.systemvi.ray_marching.opengl.buffer.{ArrayBuffer, Buffer, VertexArray, VertexAttribute}
 import com.systemvi.ray_marching.opengl.shader.Shader
+import com.systemvi.ray_marching.opengl.utils.BufferBit.{ColorBit, DepthBit}
+import com.systemvi.ray_marching.opengl.utils.Utils
+import org.joml.Vector4f
 import org.lwjgl.opengl.GL11.*
 
 import scala.concurrent.duration.*
@@ -65,7 +69,6 @@ object Test extends IOApp.Simple {
             _ <- loop(state, context, window)
           yield ()
     }
-
   }
 
   def update(delta: Double, state:GameState, context: GLFWContext, window: GLFWWindow): IO[Unit] = {
@@ -78,11 +81,10 @@ object Test extends IOApp.Simple {
       _ <- state.running.set(!shouldClose)
       //draw
       _ <- IO{
-        glClearColor(0.4f,0.1f,0.1f,1.0f)
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT)
+        Utils.clear(Vector4f(0.4f,0.1f,0.1f,1.0f),ColorBit,DepthBit)
         state.shader.use()
         state.vertexArray.bind()
-        glDrawArrays(GL_TRIANGLES,0,3)
+        state.shader.drawArrays(Primitive.TRIANGLES,0,3)
       }.evalOn(context.ec)
       _ <- window.swapBuffers
     }yield ()
