@@ -4,6 +4,7 @@ import cats.*
 import cats.implicits.*
 import cats.effect.*
 import cats.effect.implicits.*
+import cats.effect.unsafe.IORuntime
 import org.lwjgl.glfw.GLFW.*
 import org.lwjgl.opengl.{GL, GLCapabilities}
 import org.lwjgl.opengl.GL11.{GL_RENDERER, GL_VENDOR, GL_VERSION, glGetString, glViewport}
@@ -11,9 +12,53 @@ import org.lwjgl.opengl.GL20.GL_SHADING_LANGUAGE_VERSION
 import org.lwjgl.opengl.GL33.*
 import org.lwjgl.system.MemoryStack
 
-import java.util.concurrent.{Executors, ThreadFactory, TimeUnit}
-import scala.concurrent.ExecutionContext
-import scala.util.Try
+import scala.util.*
+
+enum KeyAction {
+  case Press, Release, Repeat
+}
+object KeyAction {
+  def fromGLFW(code: Int): KeyAction = code match {
+    case GLFW_PRESS => Press
+    case GLFW_RELEASE => Release
+    case GLFW_REPEAT => Repeat
+  }
+}
+
+sealed trait MouseButton
+object MouseButton {
+  case object Left extends MouseButton
+  case object Right extends MouseButton
+  case object Middle extends MouseButton
+  case class Unknown(code: Int) extends MouseButton
+  def fromGLFW(code: Int): MouseButton = code match{
+    case GLFW_MOUSE_BUTTON_LEFT => MouseButton.Left
+    case GLFW_MOUSE_BUTTON_RIGHT => MouseButton.Right
+    case GLFW_MOUSE_BUTTON_MIDDLE => MouseButton.Middle
+    case _ => MouseButton.Unknown(code)
+  }
+}
+
+sealed trait InputEvent
+object InputEvent{
+  case class KeyEvent(key: Int, action: KeyAction, mods: Int) extends InputEvent
+  case class MouseMove(x: Double, y: Double) extends InputEvent
+  case class MouseButtonEvent(mouseButton: MouseButton, action: KeyAction) extends InputEvent
+  case class MouseScroll(dx: Double, dy: Double) extends InputEvent
+  case class WindowResize(window: Int, height: Int) extends InputEvent
+  case class WindowMove(x: Int, y: Int) extends InputEvent
+  case object WindowCloseRequest extends InputEvent
+}
+
+class EventQueue(private val ref:Ref[IO,List[InputEvent]]) {
+  def push(event:InputEvent): Unit = ref.update(_:+event).unsafeRunSync()(using IORuntime.global)
+
+  def drain(): IO[List[InputEvent]]= ref.getAndSet(List.empty)
+}
+
+object EventQueue {
+  def make():IO[EventQueue] = Ref.of[IO,List[InputEvent]](List.empty).map(EventQueue(_))
+}
 
 class GLFWWindow(
                       val id: Long,
@@ -21,10 +66,10 @@ class GLFWWindow(
                       private var _height: Int,
                       private var _title: String,
                       val capabilities: GLCapabilities,
+                      val eventQueue: EventQueue,
                      ) {
   private var (_x: Int, _y: Int) = {
-    Try{
-      val stack = MemoryStack.stackPush()
+    Using(MemoryStack.stackPush()){ stack =>
       val xBuffer = stack.ints(1)
       val yBuffer = stack.ints(1)
       glfwGetWindowPos(id,xBuffer,yBuffer)
@@ -84,10 +129,40 @@ class GLFWWindow(
   def getVersion: String = glGetString(GL_VERSION)
 
   def getGlslVersion: String = glGetString(GL_SHADING_LANGUAGE_VERSION)
+
+  private def registerCallbacks(): Unit = {
+    glfwSetKeyCallback(id, (_, key, _, action, mods) =>
+      eventQueue.push(InputEvent.KeyEvent(key, KeyAction.fromGLFW(action), mods))
+    )
+    glfwSetCursorPosCallback(id, (_, x, y) =>
+      eventQueue.push(InputEvent.MouseMove(x, y))
+    )
+    glfwSetMouseButtonCallback(id, (_, btn, action, _) =>
+      eventQueue.push(InputEvent.MouseButtonEvent(MouseButton.fromGLFW(btn), KeyAction.fromGLFW(action)))
+    )
+    glfwSetScrollCallback(id, (_, dx, dy) =>
+      eventQueue.push(InputEvent.MouseScroll(dx, dy))
+    )
+    glfwSetWindowSizeCallback(id, (_, w, h) =>
+      _width = w
+      _height = h
+      eventQueue.push(InputEvent.WindowResize(w, h))
+    )
+    glfwSetWindowPosCallback(id, (_, x, y) =>
+      _x = x
+      _y = y
+      eventQueue.push(InputEvent.WindowMove(x, y))
+    )
+    glfwSetWindowCloseCallback(id, _ =>
+      eventQueue.push(InputEvent.WindowCloseRequest)
+    )
+  }
 }
 
 object GLFWWindow {
-  def make(context: GLFWContext, width: Int, height: Int, title: String): Resource[IO, GLFWWindow] = Resource.make{
+  def make(context: GLFWContext, width: Int, height: Int, title: String): Resource[IO, GLFWWindow] = for{
+    eventQueue <- Resource.eval(EventQueue.make())
+    window <- Resource.make {
     IO{
       val id = glfwCreateWindow(width, height, title, 0, 0)
       if(id==0){
@@ -96,17 +171,21 @@ object GLFWWindow {
       glfwMakeContextCurrent(id)
       val capabilities = GL.createCapabilities
       glViewport(0, 0, width, height)
-      GLFWWindow(
+      val window = GLFWWindow(
         id,
         width,
         height,
         title,
-        capabilities
+        capabilities,
+        eventQueue
       )
+      window.registerCallbacks()
+      window
     }.evalOn(context.ec)
   }{ window =>
     IO{
       glfwDestroyWindow(window.id)
     }.evalOn(context.ec)
   }
+  }yield window
 }

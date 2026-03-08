@@ -4,6 +4,7 @@ import cats.*
 import cats.implicits.*
 import cats.effect.*
 import cats.effect.implicits.*
+import com.systemvi.engine.camera.CameraController3
 import com.systemvi.engine.shader.Primitive
 import com.systemvi.ray_marching.opengl.*
 import com.systemvi.ray_marching.opengl.buffer.{ArrayBuffer, Buffer, VertexArray, VertexAttribute}
@@ -15,6 +16,10 @@ import org.joml.Vector4f
 import org.lwjgl.opengl.GL11.*
 
 import scala.concurrent.duration.*
+
+case class Camera(
+                  
+                 )
 
 case class GameState(
                       running: Ref[IO, Boolean],
@@ -98,6 +103,7 @@ object Test extends IOApp.Simple {
     val window = resources.window
     val shader = resources.shader
     val vertexArray = resources.vertexArray
+
     for {
       shouldClose <- IO{
         window.pollEvents()
@@ -108,8 +114,17 @@ object Test extends IOApp.Simple {
   }
 
   private def update(delta: Double, state:GameState, resources: GameResources): IO[Unit] = {
+    val context = resources.context
+    val window = resources.window
+    val shader = resources.shader
+    val vertexArray = resources.vertexArray
+
     for{
-      _ <- IO.unit
+      events <- window.eventQueue.drain()
+      _ <- events.traverse{
+        case InputEvent.MouseMove(x, y) => IO.println(s"$x $y")
+        case _ => IO.unit
+      }
     }yield ()
   }
 
@@ -118,6 +133,7 @@ object Test extends IOApp.Simple {
     val window = resources.window
     val shader = resources.shader
     val vertexArray = resources.vertexArray
+
     for{
       _ <- IO{
         Utils.clear(Vector4f(0.4f,0.1f,0.1f,1.0f),ColorBit,DepthBit)
@@ -134,12 +150,17 @@ object Test extends IOApp.Simple {
       val window = resources.window
       for {
         _ <- IO{
-          println(window.getRenderer)
-          println(window.getVendor)
-          println(window.getVersion)
-          println(window.getGlslVersion)
-          println(window.x)
-          println(window.y)
+          println(
+            s"""
+               |renderer: ${window.getRenderer}
+               |vendor: ${window.getVendor}
+               |version: ${window.getVersion}
+               |glsl version: ${window.getGlslVersion}
+               |x: ${window.x}
+               |y: ${window.y}
+               |width: ${window.width}
+               |height: ${window.height}
+               |""".stripMargin)
         }.evalOn(resources.context.ec)
         running <- Ref.of[IO,Boolean](true)
         lastFrameStart <- Ref.of[IO,Double](-targetFrameTime)
