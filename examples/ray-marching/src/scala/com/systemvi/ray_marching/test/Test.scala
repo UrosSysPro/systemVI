@@ -10,6 +10,7 @@ import com.systemvi.ray_marching.opengl.buffer.{ArrayBuffer, Buffer, VertexArray
 import com.systemvi.ray_marching.opengl.shader.Shader
 import com.systemvi.ray_marching.opengl.utils.BufferBit.{ColorBit, DepthBit}
 import com.systemvi.ray_marching.opengl.utils.Utils
+import com.systemvi.ray_marching.test.Test.resources
 import org.joml.Vector4f
 import org.lwjgl.opengl.GL11.*
 
@@ -18,9 +19,14 @@ import scala.concurrent.duration.*
 case class GameState(
                       running: Ref[IO, Boolean],
                       lastFrameStart: Ref[IO, Double],
-                      vertexArray: VertexArray,
-                      arrayBuffer: Buffer[ArrayBuffer],
-                      shader: Shader,
+                    )
+
+case class GameResources(
+                     context:GLFWContext,
+                     window: GLFWWindow,
+                     vertexArray: VertexArray,
+                     arrayBuffer: Buffer[ArrayBuffer],
+                     shader: Shader,
                     )
 
 object Test extends IOApp.Simple {
@@ -48,43 +54,79 @@ object Test extends IOApp.Simple {
         |""".stripMargin,
       context
     )
-  } yield (context,window,vertexArray,arrayBuffer,shader)
+    _ <- Resource.eval[IO,Unit]{
+      IO{
+        vertexArray.bind()
+        arrayBuffer.bind()
+        vertexArray.configure(List(VertexAttribute("position",3)))
+        arrayBuffer.upload(Array(
+          0.5f, 0.5f, 0.0f,
+          -0.5f, 0.5f, 0.0f,
+          0.5f, -0.5f, 0.0f,
+        ))
+      }.evalOn(context.ec)
+    }
+  } yield GameResources(context,window,vertexArray,arrayBuffer,shader)
 
   private val targetFPS:Int =  20
   private val targetFrameTime: Double = 1000d / targetFPS
 
-  private def loop(state:GameState, context:GLFWContext, window: GLFWWindow): IO[Unit] = {
-      state.running.get.flatMap {
-        case false => IO.unit // Exit loop
-        case true =>
-          for
-            lastFrameStart <- state.lastFrameStart.get
-            startTime <- context.getTime
-            _ <- update(startTime - lastFrameStart, state, context, window)
-            endTime <- context.getTime
-            _ <- state.lastFrameStart.set(startTime)
-            elapsed = endTime - startTime
-            sleepTime = (targetFrameTime - elapsed).millis
-            _ <- IO.sleep(sleepTime).whenA(sleepTime > Duration.Zero)
-            _ <- loop(state, context, window)
-          yield ()
+  private def loop(state:GameState, resources: GameResources): IO[Unit] = {
+    val context = resources.context
+    val window = resources.window
+    state.running.get.flatMap {
+      case false => IO.unit // Exit loop
+      case true =>
+        for
+          lastFrameStart <- state.lastFrameStart.get
+          startTime <- context.getTime
+          _ <- input(state, resources)
+          _ <- update(startTime - lastFrameStart, state, resources)
+          _ <- render(startTime - lastFrameStart, state, resources)
+          endTime <- context.getTime
+          _ <- state.lastFrameStart.set(startTime)
+          elapsed = endTime - startTime
+          sleepTime = (targetFrameTime - elapsed).millis
+          _ <- IO.sleep(sleepTime).whenA(sleepTime > Duration.Zero)
+          _ <- loop(state, resources)
+        yield ()
     }
   }
 
-  def update(delta: Double, state:GameState, context: GLFWContext, window: GLFWWindow): IO[Unit] = {
+  def input(state:GameState, resources: GameResources):IO[Unit] ={
+    val context = resources.context
+    val window = resources.window
+    val shader = resources.shader
+    val vertexArray = resources.vertexArray
     given GLFWContext = context
-    for{
+    for {
       //input
-      _ <- window.pollEvents
+      _ <- resources.window.pollEvents
       //update
       shouldClose <- window.shouldClose
       _ <- state.running.set(!shouldClose)
+    } yield ()
+  }
+
+  def update(delta: Double, state:GameState, resources: GameResources): IO[Unit] = {
+    for{
+      _ <- IO.unit
+    }yield ()
+  }
+
+  def render(delta: Double, state:GameState, resources: GameResources):IO[Unit] ={
+    val context = resources.context
+    val window = resources.window
+    val shader = resources.shader
+    val vertexArray = resources.vertexArray
+    given GLFWContext = context
+    for{
       //draw
       _ <- IO{
         Utils.clear(Vector4f(0.4f,0.1f,0.1f,1.0f),ColorBit,DepthBit)
-        state.shader.use()
-        state.vertexArray.bind()
-        state.shader.drawArrays(Primitive.TRIANGLES,0,3)
+        shader.use()
+        vertexArray.bind()
+        shader.drawArrays(Primitive.TRIANGLES,0,3)
       }.evalOn(context.ec)
       _ <- window.swapBuffers
     }yield ()
@@ -92,26 +134,17 @@ object Test extends IOApp.Simple {
 
 
   override def run: IO[Unit] = {
-    resources.use{ (context, window,vertexArray,arrayBuffer,shader) =>
+    resources.use{ resources =>
+      val window = resources.window
       for {
         _ <- IO.println(window.renderer)
         _ <- IO.println(window.vendor)
         _ <- IO.println(window.version)
         _ <- IO.println(window.glslVersion)
-        _ <- IO{
-          vertexArray.bind()
-          arrayBuffer.bind()
-          vertexArray.configure(List(VertexAttribute("position",3)))
-          arrayBuffer.upload(Array(
-            0.5f, 0.5f, 0.0f,
-            -0.5f, 0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-          ))
-        }.evalOn(context.ec)
         running <- Ref.of[IO,Boolean](true)
         lastFrameStart <- Ref.of[IO,Double](-targetFrameTime)
-        state = GameState(running,lastFrameStart,vertexArray,arrayBuffer,shader)
-        _ <- loop(state, context, window)
+        state = GameState(running,lastFrameStart)
+        _ <- loop(state, resources)
       } yield ()
     }
   }
