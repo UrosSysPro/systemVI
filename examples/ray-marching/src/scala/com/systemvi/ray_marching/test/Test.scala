@@ -68,7 +68,7 @@ object Test extends IOApp.Simple {
     }
   } yield GameResources(context,window,vertexArray,arrayBuffer,shader)
 
-  private val targetFPS:Int =  20
+  private val targetFPS: Int =  20
   private val targetFrameTime: Double = 1000d / targetFPS
 
   private def loop(state:GameState, resources: GameResources): IO[Unit] = {
@@ -84,8 +84,8 @@ object Test extends IOApp.Simple {
           _ <- update(startTime - lastFrameStart, state, resources)
           _ <- render(startTime - lastFrameStart, state, resources)
           endTime <- context.getTime
-          _ <- state.lastFrameStart.set(startTime)
           elapsed = endTime - startTime
+          _ <- state.lastFrameStart.set(startTime)
           sleepTime = (targetFrameTime - elapsed).millis
           _ <- IO.sleep(sleepTime).whenA(sleepTime > Duration.Zero)
           _ <- loop(state, resources)
@@ -93,7 +93,7 @@ object Test extends IOApp.Simple {
     }
   }
 
-  def input(state:GameState, resources: GameResources):IO[Unit] ={
+  private def input(state:GameState, resources: GameResources):IO[Unit] ={
     val context = resources.context
     val window = resources.window
     val shader = resources.shader
@@ -107,20 +107,18 @@ object Test extends IOApp.Simple {
     } yield ()
   }
 
-  def update(delta: Double, state:GameState, resources: GameResources): IO[Unit] = {
+  private def update(delta: Double, state:GameState, resources: GameResources): IO[Unit] = {
     for{
       _ <- IO.unit
     }yield ()
   }
 
-  def render(delta: Double, state:GameState, resources: GameResources):IO[Unit] ={
+  private def render(delta: Double, state:GameState, resources: GameResources):IO[Unit] ={
     val context = resources.context
     val window = resources.window
     val shader = resources.shader
     val vertexArray = resources.vertexArray
-    given GLFWContext = context
     for{
-      //draw
       _ <- IO{
         Utils.clear(Vector4f(0.4f,0.1f,0.1f,1.0f),ColorBit,DepthBit)
         shader.use()
@@ -131,7 +129,6 @@ object Test extends IOApp.Simple {
     }yield ()
   }
 
-
   override def run: IO[Unit] = {
     resources.use{ resources =>
       val window = resources.window
@@ -141,6 +138,8 @@ object Test extends IOApp.Simple {
           println(window.getVendor)
           println(window.getVersion)
           println(window.getGlslVersion)
+          println(window.x)
+          println(window.y)
         }.evalOn(resources.context.ec)
         running <- Ref.of[IO,Boolean](true)
         lastFrameStart <- Ref.of[IO,Double](-targetFrameTime)
