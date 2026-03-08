@@ -98,12 +98,11 @@ object Test extends IOApp.Simple {
     val window = resources.window
     val shader = resources.shader
     val vertexArray = resources.vertexArray
-    given GLFWContext = context
     for {
-      //input
-      _ <- resources.window.pollEvents
-      //update
-      shouldClose <- window.shouldClose
+      shouldClose <- IO{
+        window.pollEvents()
+        window.shouldClose()
+      }.evalOn(context.ec)
       _ <- state.running.set(!shouldClose)
     } yield ()
   }
@@ -127,8 +126,8 @@ object Test extends IOApp.Simple {
         shader.use()
         vertexArray.bind()
         shader.drawArrays(Primitive.TRIANGLES,0,3)
+        window.swapBuffers()
       }.evalOn(context.ec)
-      _ <- window.swapBuffers
     }yield ()
   }
 
@@ -137,10 +136,12 @@ object Test extends IOApp.Simple {
     resources.use{ resources =>
       val window = resources.window
       for {
-        _ <- IO.println(window.renderer)
-        _ <- IO.println(window.vendor)
-        _ <- IO.println(window.version)
-        _ <- IO.println(window.glslVersion)
+        _ <- IO{
+          println(window.getRenderer)
+          println(window.getVendor)
+          println(window.getVersion)
+          println(window.getGlslVersion)
+        }.evalOn(resources.context.ec)
         running <- Ref.of[IO,Boolean](true)
         lastFrameStart <- Ref.of[IO,Double](-targetFrameTime)
         state = GameState(running,lastFrameStart)
