@@ -12,18 +12,23 @@ import com.systemvi.ray_marching.opengl.shader.Shader
 import com.systemvi.ray_marching.opengl.utils.BufferBit.{ColorBit, DepthBit}
 import com.systemvi.ray_marching.opengl.utils.Utils
 import com.systemvi.ray_marching.test.Test.resources
-import org.joml.Vector4f
+import org.joml.{Vector2f, Vector3f, Vector4f}
 import org.lwjgl.opengl.GL11.*
 
 import scala.concurrent.duration.*
 
 case class Camera(
-                  
+                  position: Vector3f,
+                  aspect: Float,
+                  fi: Float,
+                  pitch: Float,
+                  yaw: Float
                  )
 
 case class GameState(
                       running: Ref[IO, Boolean],
                       lastFrameStart: Ref[IO, Double],
+                      camera: Camera
                     )
 
 case class GameResources(
@@ -122,7 +127,11 @@ object Test extends IOApp.Simple {
     for{
       events <- window.eventQueue.drain()
       _ <- events.traverse{
-        case InputEvent.MouseMove(x, y) => IO.println(s"$x $y")
+        case InputEvent.MouseMove(x, y) => IO{
+//          val mouseSpeed = Vector2f(x,y)
+        }
+        case InputEvent.KeyEvent(key,action,mods) => IO{}
+        case InputEvent.MouseButtonEvent(button,action) => IO{}
         case _ => IO.unit
       }
     }yield ()
@@ -164,7 +173,16 @@ object Test extends IOApp.Simple {
         }.evalOn(resources.context.ec)
         running <- Ref.of[IO,Boolean](true)
         lastFrameStart <- Ref.of[IO,Double](-targetFrameTime)
-        state = GameState(running,lastFrameStart)
+        camera <- IO{
+          Camera(
+            position = Vector3f(),
+            aspect = window.width.toFloat / window.height.toFloat,
+            fi = 2.2f,
+            pitch = 0f,
+            yaw = 0f,
+          )
+        }.evalOn(resources.context.ec)
+        state = GameState(running,lastFrameStart,camera)
         _ <- loop(state, resources)
       } yield ()
     }
