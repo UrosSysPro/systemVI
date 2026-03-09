@@ -7,12 +7,14 @@ import cats.effect.implicits.*
 import com.systemvi.engine.camera.CameraController3
 import com.systemvi.engine.shader.Primitive
 import com.systemvi.ray_marching.opengl.*
+import com.systemvi.ray_marching.opengl.KeyAction.Press
 import com.systemvi.ray_marching.opengl.buffer.{ArrayBuffer, Buffer, VertexArray, VertexAttribute}
 import com.systemvi.ray_marching.opengl.shader.Shader
 import com.systemvi.ray_marching.opengl.utils.BufferBit.{ColorBit, DepthBit}
 import com.systemvi.ray_marching.opengl.utils.Utils
 import com.systemvi.ray_marching.test.Test.resources
 import org.joml.{Vector2f, Vector3f, Vector4f}
+import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL11.*
 
 import scala.concurrent.duration.*
@@ -25,10 +27,16 @@ case class Camera(
                   yaw: Float
                  )
 
+case class MouseState(x: Double, y: Double, dx: Double, dy: Double, captured: Boolean, pressedButtons: Set[MouseButton])
+
+case class KeyboardState(pressedKeys: Set[Int])
+
 case class GameState(
                       running: Ref[IO, Boolean],
                       lastFrameStart: Ref[IO, Double],
-                      camera: Camera
+                      camera: Ref[IO,Camera],
+                      mouseState: Ref[IO,MouseState],
+                      keyboardState: Ref[IO,KeyboardState],
                     )
 
 case class GameResources(
@@ -56,10 +64,17 @@ object Test extends IOApp.Simple {
         |""".stripMargin,
       """
         |#version 330
+        |
+        |struct Camera{
+        | float fi,aspect,yaw,pitch;
+        | vec3 position;
+        |};
+        |
+        |uniform Camera camera;
         |out vec4 FragColor;
         |
         |void main(){
-        | FragColor = vec4(0.2,0.5,0.9,1.0);
+        | FragColor = vec4(camera.pitch,camera.yaw,0.9,1.0);
         |}
         |""".stripMargin,
       context
@@ -77,6 +92,14 @@ object Test extends IOApp.Simple {
       }.evalOn(context.ec)
     }
   } yield GameResources(context,window,vertexArray,arrayBuffer,shader)
+
+  private def gameState = for{
+    running <- Ref.of[IO,Boolean](true)
+    lastFrameStart <- Ref.of[IO,Double](0.0)
+    camera <- Ref.of[IO,Camera](Camera(Vector3f(),0,2.2f,0,0))
+    mouseState <- Ref.of[IO,MouseState](MouseState(0,0,0,0,false,Set.empty))
+    keyboardState <- Ref.of[IO,KeyboardState](KeyboardState(Set.empty))
+  } yield GameState(running,lastFrameStart,camera,mouseState,keyboardState)
 
   private val targetFPS: Int =  20
   private val targetFrameTime: Double = 1000d / targetFPS
@@ -115,6 +138,29 @@ object Test extends IOApp.Simple {
         window.shouldClose()
       }.evalOn(context.ec)
       _ <- state.running.set(!shouldClose)
+      events <- window.eventQueue.drain()
+      _ <- events.traverse{
+        case InputEvent.MouseButtonEvent(button, action) => state.mouseState.update{state=>MouseState(
+          state.x,
+          state.y,
+          state.dx,
+          state.dy,
+          state.captured,
+          if action == Press then state.pressedButtons + button else state.pressedButtons - button)
+        }
+        case InputEvent.MouseMove(x, y) =>  state.mouseState.update{state=>MouseState(
+          x,
+          y,
+          x - state.x,
+          y - state.y,
+          state.captured,
+          state.pressedButtons,
+        )}
+        case InputEvent.KeyEvent(key, action, mods) => state.keyboardState.update{state=>KeyboardState(
+          if action == Press then state.pressedKeys + key else state.pressedKeys - key
+        )}
+        case _ => IO.unit
+      }
     } yield ()
   }
 
@@ -123,18 +169,32 @@ object Test extends IOApp.Simple {
     val window = resources.window
     val shader = resources.shader
     val vertexArray = resources.vertexArray
-
+    val mouseSensitivity = 0.001d
     for{
-      events <- window.eventQueue.drain()
-      _ <- events.traverse{
-        case InputEvent.MouseMove(x, y) => IO{
-//          val mouseSpeed = Vector2f(x,y)
-        }
-        case InputEvent.KeyEvent(key,action,mods) => IO{}
-        case InputEvent.MouseButtonEvent(button,action) => IO{}
-        case _ => IO.unit
+      mouseState <- state.mouseState.get
+      keyboardState <- state.keyboardState.get
+      _ <- state.camera.update{camera =>
+        val yaw = camera.yaw + mouseState.dx / delta * mouseSensitivity
+        val pitch = camera.pitch + mouseState.dy / delta * mouseSensitivity
+        val position = Vector3f(camera.position)
+        if(keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_W)) position.add(Vector3f(-Math.sin(yaw).toFloat,0,Math.cos(yaw).toFloat))
+        Camera(
+          position,
+          camera.aspect,
+          camera.fi,
+          pitch.toFloat,
+          yaw.toFloat,
+        )
       }
-    }yield ()
+      _ <- state.mouseState.update{state => MouseState(
+        state.x,
+        state.y,
+        0,
+        0,
+        state.captured,
+        state.pressedButtons
+      )}
+    } yield ()
   }
 
   private def render(delta: Double, state:GameState, resources: GameResources):IO[Unit] ={
@@ -144,9 +204,15 @@ object Test extends IOApp.Simple {
     val vertexArray = resources.vertexArray
 
     for{
+      camera <- state.camera.get
       _ <- IO{
         Utils.clear(Vector4f(0.4f,0.1f,0.1f,1.0f),ColorBit,DepthBit)
         shader.use()
+        shader.setUniform("camera.yaw",camera.yaw)
+        shader.setUniform("camera.pitch",camera.pitch)
+        shader.setUniform("camera.fi",camera.fi)
+        shader.setUniform("camera.aspect",camera.aspect)
+        shader.setUniform("camera.position",camera.position)
         vertexArray.bind()
         shader.drawArrays(Primitive.TRIANGLES,0,3)
         window.swapBuffers()
@@ -171,18 +237,7 @@ object Test extends IOApp.Simple {
                |height: ${window.height}
                |""".stripMargin)
         }.evalOn(resources.context.ec)
-        running <- Ref.of[IO,Boolean](true)
-        lastFrameStart <- Ref.of[IO,Double](-targetFrameTime)
-        camera <- IO{
-          Camera(
-            position = Vector3f(),
-            aspect = window.width.toFloat / window.height.toFloat,
-            fi = 2.2f,
-            pitch = 0f,
-            yaw = 0f,
-          )
-        }.evalOn(resources.context.ec)
-        state = GameState(running,lastFrameStart,camera)
+        state <- gameState
         _ <- loop(state, resources)
       } yield ()
     }
