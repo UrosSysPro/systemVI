@@ -4,16 +4,17 @@ import cats.*
 import cats.implicits.*
 import cats.effect.*
 import cats.effect.implicits.*
+import com.systemvi.engine
 import com.systemvi.engine.camera.CameraController3
 import com.systemvi.engine.shader.Primitive
 import com.systemvi.ray_marching.opengl.*
-import com.systemvi.ray_marching.opengl.KeyAction.Press
+import com.systemvi.ray_marching.opengl.KeyAction.{Press, Release}
 import com.systemvi.ray_marching.opengl.buffer.{ArrayBuffer, Buffer, VertexArray, VertexAttribute}
 import com.systemvi.ray_marching.opengl.shader.Shader
 import com.systemvi.ray_marching.opengl.utils.BufferBit.{ColorBit, DepthBit}
 import com.systemvi.ray_marching.opengl.utils.Utils
 import com.systemvi.ray_marching.test.Test.resources
-import org.joml.{Vector2f, Vector3f, Vector4f}
+import org.joml.{Matrix4f, Vector2f, Vector3f, Vector4f}
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL11.*
 
@@ -53,41 +54,22 @@ object Test extends IOApp.Simple {
     window <- GLFWWindow.make(context,800,600,"window")
     vertexArray <- VertexArray.make(context)
     arrayBuffer <- Buffer.make[ArrayBuffer](context)
-    shader <- Shader.make(
-      """
-        |#version 330
-        |layout(location=0) in vec3 position;
-        |
-        |void main(){
-        | gl_Position = vec4(position,1.0);
-        |}
-        |""".stripMargin,
-      """
-        |#version 330
-        |
-        |struct Camera{
-        | float fi,aspect,yaw,pitch;
-        | vec3 position;
-        |};
-        |
-        |uniform Camera camera;
-        |out vec4 FragColor;
-        |
-        |void main(){
-        | FragColor = vec4(camera.pitch,camera.yaw,0.9,1.0);
-        |}
-        |""".stripMargin,
-      context
-    )
+    vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("vertex.glsl")}}
+    fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("fragment.glsl")}}
+    shader <- Shader.make(vertexShader, fragmentShader, context)
     _ <- Resource.eval[IO,Unit]{
       IO{
         vertexArray.bind()
         arrayBuffer.bind()
         vertexArray.configure(List(VertexAttribute("position",3)))
         arrayBuffer.upload(Array(
-          0.5f, 0.5f, 0.0f,
-          -0.5f, 0.5f, 0.0f,
-          0.5f, -0.5f, 0.0f,
+           1f,  1f, 0.0f,
+           1f, -1f, 0.0f,
+          -1f, -1f, 0.0f,
+
+          -1f, -1f, 0.0f,
+          -1f,  1f, 0.0f,
+           1f,  1f, 0.0f,
         ))
       }.evalOn(context.ec)
     }
@@ -96,12 +78,12 @@ object Test extends IOApp.Simple {
   private def gameState = for{
     running <- Ref.of[IO,Boolean](true)
     lastFrameStart <- Ref.of[IO,Double](0.0)
-    camera <- Ref.of[IO,Camera](Camera(Vector3f(),0,2.2f,0,0))
+    camera <- Ref.of[IO,Camera](Camera(Vector3f(),800f/600f,2.2f,0,0))
     mouseState <- Ref.of[IO,MouseState](MouseState(0,0,0,0,false,Set.empty))
     keyboardState <- Ref.of[IO,KeyboardState](KeyboardState(Set.empty))
   } yield GameState(running,lastFrameStart,camera,mouseState,keyboardState)
 
-  private val targetFPS: Int =  20
+  private val targetFPS: Int = 165
   private val targetFrameTime: Double = 1000d / targetFPS
 
   private def loop(state:GameState, resources: GameResources): IO[Unit] = {
@@ -146,8 +128,12 @@ object Test extends IOApp.Simple {
           state.dx,
           state.dy,
           state.captured,
-          if action == Press then state.pressedButtons + button else state.pressedButtons - button)
-        }
+          action match {
+            case Press =>state.pressedButtons + button
+            case Release => state.pressedButtons - button
+            case _ => state.pressedButtons
+          }
+        )}
         case InputEvent.MouseMove(x, y) =>  state.mouseState.update{state=>MouseState(
           x,
           y,
@@ -157,7 +143,11 @@ object Test extends IOApp.Simple {
           state.pressedButtons,
         )}
         case InputEvent.KeyEvent(key, action, mods) => state.keyboardState.update{state=>KeyboardState(
-          if action == Press then state.pressedKeys + key else state.pressedKeys - key
+          action match {
+            case Press =>state.pressedKeys + key
+            case Release => state.pressedKeys - key
+            case _ => state.pressedKeys
+          }
         )}
         case _ => IO.unit
       }
@@ -169,15 +159,33 @@ object Test extends IOApp.Simple {
     val window = resources.window
     val shader = resources.shader
     val vertexArray = resources.vertexArray
-    val mouseSensitivity = 0.001d
+    val mouseSensitivity = 0.0001d
+    val mouseInvert = -1.0d
+
     for{
       mouseState <- state.mouseState.get
       keyboardState <- state.keyboardState.get
       _ <- state.camera.update{camera =>
-        val yaw = camera.yaw + mouseState.dx / delta * mouseSensitivity
-        val pitch = camera.pitch + mouseState.dy / delta * mouseSensitivity
+        val yaw = camera.yaw + mouseState.dx / delta * mouseSensitivity * mouseInvert
+        val pitch = Math.clamp(
+          camera.pitch + mouseState.dy / delta * mouseSensitivity * mouseInvert,
+          -Math.PI/2,
+          Math.PI/2
+        )
         val position = Vector3f(camera.position)
-        if(keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_W)) position.add(Vector3f(-Math.sin(yaw).toFloat,0,Math.cos(yaw).toFloat))
+
+        val movementSpeed = 0.1f
+        val forward = Vector3f(Math.sin(yaw).toFloat, 0f, Math.cos(yaw).toFloat).mul(1f/delta.toFloat*movementSpeed)
+        val right = Vector3f(forward).rotateY(-Math.PI.toFloat/2f)
+        val up = Vector3f(0f,-1.0,0f).mul(1f/delta.toFloat*movementSpeed)
+
+        if(keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_W)) position.add(forward)
+        if(keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_S)) position.sub(forward)
+        if(keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_D)) position.add(right)
+        if(keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_A)) position.sub(right)
+        if(keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_SPACE)) position.add(up)
+        if(keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_LEFT_SHIFT)) position.sub(up)
+
         Camera(
           position,
           camera.aspect,
@@ -205,6 +213,14 @@ object Test extends IOApp.Simple {
 
     for{
       camera <- state.camera.get
+      _<-IO{
+        val x=camera.position.x
+        val y=camera.position.y
+        val z=camera.position.z
+        val yaw=camera.yaw
+        val pitch=camera.pitch
+        window.setTitle(s"x: $x y:$y z: $z yaw: $yaw pitch: $pitch")
+      }.evalOn(context.ec)
       _ <- IO{
         Utils.clear(Vector4f(0.4f,0.1f,0.1f,1.0f),ColorBit,DepthBit)
         shader.use()
@@ -213,8 +229,13 @@ object Test extends IOApp.Simple {
         shader.setUniform("camera.fi",camera.fi)
         shader.setUniform("camera.aspect",camera.aspect)
         shader.setUniform("camera.position",camera.position)
+        shader.setUniform("camera.view",Matrix4f().identity()
+          .translate(Vector3f(camera.position).mul(-1))
+          .rotateY(camera.yaw)
+          .rotateX(camera.pitch)
+        )
         vertexArray.bind()
-        shader.drawArrays(Primitive.TRIANGLES,0,3)
+        shader.drawArrays(Primitive.TRIANGLES,0,6)
         window.swapBuffers()
       }.evalOn(context.ec)
     }yield ()
