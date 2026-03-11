@@ -5,16 +5,15 @@ import cats.implicits.*
 import cats.effect.*
 import cats.effect.implicits.*
 import com.systemvi.engine
-import com.systemvi.engine.camera.CameraController3
 import com.systemvi.engine.shader.Primitive
 import com.systemvi.ray_marching.opengl.*
-import com.systemvi.ray_marching.opengl.KeyAction.{Press, Release}
-import com.systemvi.ray_marching.opengl.buffer.{ArrayBuffer, Buffer, VertexArray, VertexAttribute}
+import com.systemvi.ray_marching.opengl.KeyAction.*
+import com.systemvi.ray_marching.opengl.buffer.*
 import com.systemvi.ray_marching.opengl.shader.Shader
-import com.systemvi.ray_marching.opengl.utils.BufferBit.{ColorBit, DepthBit}
+import com.systemvi.ray_marching.opengl.utils.BufferBit.*
 import com.systemvi.ray_marching.opengl.utils.Utils
-import com.systemvi.ray_marching.test.Test.resources
-import org.joml.{Matrix4f, Vector2f, Vector3f, Vector4f}
+import com.systemvi.ray_marching.sdf.*
+import org.joml.*
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL11.*
 
@@ -49,6 +48,7 @@ case class GameResources(
                     )
 
 object Test extends IOApp.Simple {
+
   private def resources = for{
     context <- GLFWContext.make(3,3)
     window <- GLFWWindow.make(context,800,600,"window")
@@ -56,7 +56,8 @@ object Test extends IOApp.Simple {
     arrayBuffer <- Buffer.make[ArrayBuffer](context)
     vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("vertex.glsl")}}
     fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("fragment.glsl")}}
-    shader <- Shader.make(vertexShader, fragmentShader, context)
+    sdfGlsl <- Resource.eval(IO{sdf.toGlsl})
+    shader <- Shader.make(vertexShader, fragmentShader.replace("???",sdfGlsl), context)
     _ <- Resource.eval[IO,Unit]{
       IO{
         vertexArray.bind()
@@ -78,10 +79,30 @@ object Test extends IOApp.Simple {
   private def gameState = for{
     running <- Ref.of[IO,Boolean](true)
     lastFrameStart <- Ref.of[IO,Double](0.0)
-    camera <- Ref.of[IO,Camera](Camera(Vector3f(),800f/600f,2.2f,0,0))
+    camera <- Ref.of[IO,Camera](Camera(Vector3f(0,0,-300),800f/600f,2.2f,0,0))
     mouseState <- Ref.of[IO,MouseState](MouseState(0,0,0,0,false,Set.empty))
     keyboardState <- Ref.of[IO,KeyboardState](KeyboardState(Set.empty))
   } yield GameState(running,lastFrameStart,camera,mouseState,keyboardState)
+
+  val sdf = Union(
+    Union(
+      Translate(
+        position = Vector3f(0,0,0),
+        sdf = Sphere(radius = 10),
+      ),
+      Translate(
+        position = Vector3f(-100,0,0),
+        sdf = Scale(
+          scale = 2,
+          sdf = Sphere(radius = 50),
+        ),
+      )
+    ),
+    Translate(
+      position = Vector3f(100,0,0),
+      sdf = Box(halfSize = Vector3f(50)),
+    )
+  )
 
   private val targetFPS: Int = 165
   private val targetFrameTime: Double = 1000d / targetFPS
@@ -175,8 +196,8 @@ object Test extends IOApp.Simple {
         val position = Vector3f(camera.position)
 
         val movementSpeed = 0.1f
-        val forward = Vector3f(Math.sin(yaw).toFloat, 0f, Math.cos(yaw).toFloat).mul(1f/delta.toFloat*movementSpeed)
-        val right = Vector3f(forward).rotateY(-Math.PI.toFloat/2f)
+        val forward = Vector3f(Math.sin(yaw).toFloat, 0f, Math.cos(yaw).toFloat).mul(1f / delta.toFloat*movementSpeed)
+        val right = Vector3f(forward).rotateY(-Math.PI.toFloat / 2f)
         val up = Vector3f(0f,-1.0,0f).mul(1f/delta.toFloat*movementSpeed)
 
         if(keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_W)) position.add(forward)

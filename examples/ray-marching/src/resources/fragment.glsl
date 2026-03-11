@@ -10,45 +10,37 @@ uniform Camera camera;
 in vec3 uv;
 out vec4 FragColor;
 
+//primitives
 float sphereSdf(float r, vec3 p){
     return length(p)-r;
 }
 
+float boxSdf(vec3 halfSize, vec3 p)
+{
+    vec3 q = abs(p) - halfSize;
+    return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
+}
+
+//operations
 float unionSdf(float d1,float d2){
     return min(d1,d2);
 }
 
 float differenceSdf(float d1,float d2){
-    return max(d1,-d2);
+    return max(-d1,d2);
 }
 
+float intersectionSdf(float d1,float d2){
+    return max(d1,d2);
+}
+
+//transforms
 vec3 translateSdf(vec3 t,vec3 p){
     return p-t;
 }
 
 float sdf(vec3 p){
-    return differenceSdf(
-        differenceSdf(
-            sphereSdf(100.0,
-                translateSdf(
-                    vec3(0,0,-300),
-                    p
-                )
-            ),
-            sphereSdf(50.0,
-                translateSdf(
-                    vec3(70,0,-200),
-                    p
-                )
-            )
-        ),
-        sphereSdf(50.0,
-            translateSdf(
-                vec3(-70,0,-200),
-                p
-            )
-        )
-    );
+    return ???;
 }
 
 float rayMarch(vec3 rayOrigin, vec3 rayDirection){
