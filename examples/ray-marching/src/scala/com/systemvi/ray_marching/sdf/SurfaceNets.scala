@@ -132,9 +132,28 @@ object SurfaceNets {
       }
     }
 
-    Mesh(
+    val mesh = Mesh(
       vertices = vertexPositions.toList,
       indices = triangleIndices.toList
     )
+    val v = mesh.vertices.map(identity).toArray
+    val eps = 1e-4f
+    val iterations = 10
+    val stepSize = 0.1f
+    for (_ <- 0 until iterations) {
+      for (i <- 0 until v.length / 3) {
+        val p = new Vector3f(v(i * 3), v(i * 3 + 1), v(i * 3 + 2))
+        val d = sdf.getValue(p)
+        // Numerical gradient
+        val gx = (sdf.getValue(new Vector3f(p.x + eps, p.y, p.z)) - sdf.getValue(new Vector3f(p.x - eps, p.y, p.z))) / (2 * eps)
+        val gy = (sdf.getValue(new Vector3f(p.x, p.y + eps, p.z)) - sdf.getValue(new Vector3f(p.x, p.y - eps, p.z))) / (2 * eps)
+        val gz = (sdf.getValue(new Vector3f(p.x, p.y, p.z + eps)) - sdf.getValue(new Vector3f(p.x, p.y, p.z - eps))) / (2 * eps)
+        // Project back onto surface along gradient
+        v(i * 3) -= gx * d * stepSize
+        v(i * 3 + 1) -= gy * d * stepSize
+        v(i * 3 + 2) -= gz * d * stepSize
+      }
+    }
+    mesh.copy(vertices = v.toList)
   }
 }

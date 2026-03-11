@@ -13,6 +13,8 @@ import com.systemvi.ray_marching.opengl.shader.Shader
 import com.systemvi.ray_marching.opengl.utils.BufferBit.*
 import com.systemvi.ray_marching.opengl.utils.Utils
 import com.systemvi.ray_marching.sdf.*
+import com.systemvi.ray_marching.test.RenderPipeline.RayMarching
+import com.systemvi.ray_marching.test.Test.resources
 import org.joml.*
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL11.*
@@ -37,8 +39,13 @@ case class GameState(
                       camera: Ref[IO,Camera],
                       mouseState: Ref[IO,MouseState],
                       keyboardState: Ref[IO,KeyboardState],
+                      renderPipeline: RenderPipeline,
                     )
 
+enum RenderPipeline {
+  case RayMarching extends RenderPipeline
+  case Mesh extends RenderPipeline
+}
 
 case class RayMarchingPipeline(
                                 vertexArray: VertexArray,
@@ -96,7 +103,7 @@ object Test extends IOApp.Simple {
     elementBuffer <- Buffer.make[ElementBuffer](context)
     vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/vertex.glsl")}}
     fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/fragment.glsl")}}
-    mesh <- Resource.eval(IO{SurfaceNets.sdfToMesh(sdf,Bounds(Vector3f(-100),Vector3f(1000)),100)})
+    mesh <- Resource.eval(IO{SurfaceNets.sdfToMesh(sdf,Bounds(Vector3f(-200),Vector3f(200)),200)})
     _<-Resource.eval(IO.println(mesh.vertices.length))
     _<-Resource.eval(IO.println(mesh.indices.length))
     shader <- Shader.make(vertexShader, fragmentShader, context)
@@ -105,18 +112,8 @@ object Test extends IOApp.Simple {
         vertexArray.bind()
         arrayBuffer.bind()
         arrayBuffer.upload(mesh.vertices.toArray)
-//        arrayBuffer.upload(Array(
-//          1f,  1f, 0.0f,
-//          1f, -1f, 0.0f,
-//          -1f,  1f, 0.0f,
-//          -1f,  -1f, 0.0f,
-//        ))
         elementBuffer.bind()
         elementBuffer.upload(mesh.indices.toArray)
-//        elementBuffer.upload(Array(
-//          0,1,2,
-//          1,2,3,
-//        ))
         vertexArray.configure(List(VertexAttribute("position",3)))
       }.evalOn(context.ec)
     }
@@ -127,30 +124,34 @@ object Test extends IOApp.Simple {
     mesh,
     shader
   )
-  private def resources = for{
-    context <- GLFWContext.make(3,3)
+
+  private def resources(renderThreadName:String) = for{
+    context <- GLFWContext.make(3,3,renderThreadName)
     window <- GLFWWindow.make(context,800,600,"window")
     rayMarchingPipeline <- rayMarchingPipelineResource(context)
     meshPipeline <- meshPipelineResource(context)
   } yield GameResources(context,window,rayMarchingPipeline,meshPipeline)
 
-  private def gameState = for{
+  private def gameState(pipeline: RenderPipeline) = for{
     running <- Ref.of[IO,Boolean](true)
     lastFrameStart <- Ref.of[IO,Double](0.0)
     camera <- Ref.of[IO,Camera](Camera(Vector3f(0,0,-300),800f/600f,2.2f,0,0))
     mouseState <- Ref.of[IO,MouseState](MouseState(0,0,0,0,false,Set.empty))
     keyboardState <- Ref.of[IO,KeyboardState](KeyboardState(Set.empty))
-  } yield GameState(running,lastFrameStart,camera,mouseState,keyboardState)
+  } yield GameState(running,lastFrameStart,camera,mouseState,keyboardState,pipeline)
 
+  val n = 10
   val sdf: SDF = Union(
-    List(
-      Sphere(radius = 10).translate(Vector3f(0,0,0)),
-      Sphere(radius = 50).scale(2).scale(0.5f).translate(Vector3f(-100,0,0)),
-      Box(halfSize = Vector3f(50)).translate(Vector3f(100,0,0))
-    ) ++
-    (for(i<-0 until 10)
-      yield Box(halfSize = Vector3f(50f))
-        .translate(Vector3f(i*100f))
+    (for(i<-0 until n)
+      yield {
+        val angle = Math.PI.toFloat * 2 / n * i
+        val x = Math.cos(angle) * 100f
+        val y = 0f
+        val z = Math.sin(angle) * 100f
+        val r = 25f
+        Sphere(r)
+          .translate(Vector3f(x,y,z))
+      }
     ).toList *
   )
 
@@ -161,7 +162,7 @@ object Test extends IOApp.Simple {
     val context = resources.context
     val window = resources.window
     state.running.get.flatMap {
-      case false => IO.unit // Exit loop
+      case false => IO.unit
       case true =>
         for
           lastFrameStart <- state.lastFrameStart.get
@@ -320,13 +321,15 @@ object Test extends IOApp.Simple {
         val pitch=camera.pitch
         window.setTitle(s"x: $x y:$y z: $z yaw: $yaw pitch: $pitch")
       }.evalOn(context.ec)
-//      _ <- drawRayMarchingPipeline(camera,resources.rayMarchingPipeline)
-      _ <- drawMeshPipeline(camera,resources.meshPipeline)
+      _ <- state.renderPipeline match {
+        case RayMarching => drawRayMarchingPipeline(camera,resources.rayMarchingPipeline)
+        case RenderPipeline.Mesh => drawMeshPipeline(camera,resources.meshPipeline)
+      }
     }yield ()
   }
 
-  override def run: IO[Unit] = {
-    resources.use{ resources =>
+  private def app(renderThreadName: String, pipeline: RenderPipeline): IO[Unit] = {
+    resources(renderThreadName).use{ resources =>
       val window = resources.window
       for {
         _ <- IO{
@@ -342,10 +345,13 @@ object Test extends IOApp.Simple {
                |height: ${window.height}
                |""".stripMargin)
         }.evalOn(resources.context.ec)
-        state <- gameState
+        state <- gameState(pipeline)
         _ <- loop(state, resources)
       } yield ()
     }
   }
+
+//  override def run: IO[Unit] = app("render-thread-1",RayMarching)
+  override def run: IO[Unit] = app("render-thread-2",RenderPipeline.Mesh)
 }
 
