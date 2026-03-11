@@ -96,7 +96,7 @@ object Test extends IOApp.Simple {
     elementBuffer <- Buffer.make[ElementBuffer](context)
     vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/vertex.glsl")}}
     fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/fragment.glsl")}}
-    mesh <- Resource.eval(IO{SurfaceNets.sdfToMesh(sdf,Bounds(Vector3f(-100),Vector3f(1000)),200)})
+    mesh <- Resource.eval(IO{SurfaceNets.sdfToMesh(sdf,Bounds(Vector3f(-100),Vector3f(1000)),100)})
     _<-Resource.eval(IO.println(mesh.vertices.length))
     _<-Resource.eval(IO.println(mesh.indices.length))
     shader <- Shader.make(vertexShader, fragmentShader, context)
