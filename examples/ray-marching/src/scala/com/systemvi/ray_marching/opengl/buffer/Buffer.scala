@@ -12,15 +12,24 @@ import org.lwjgl.opengl.GL15.*
 import scala.concurrent.ExecutionContext
 
 sealed trait ArrayBuffer
+sealed trait ElementBuffer
 
-class Buffer[T : BufferTarget](val id: Int):
+class Buffer[T : BufferTarget](val id: Int) {
   def bind():   Unit = glBindBuffer(summon[BufferTarget[T]].targetId, id)
   def unbind(): Unit = glBindBuffer(summon[BufferTarget[T]].targetId, 0)
+
   def upload(data: Array[Float]): Unit = {
     val bindTarget = summon[BufferTarget[T]].targetId
     bind()
     glBufferData(bindTarget,data,GL_STATIC_DRAW)
   }
+
+  def upload(data: Array[Int]): Unit = {
+    val bindTarget = summon[BufferTarget[T]].targetId
+    bind()
+    glBufferData(bindTarget, data, GL_STATIC_DRAW)
+  }
+}
 
 object Buffer:
   def make[T : BufferTarget](context: GLFWContext): Resource[IO, Buffer[T]] = Resource.make[IO,Buffer[T]]{
@@ -38,10 +47,15 @@ object Buffer:
 trait BufferTarget[T]:
   def targetId: Int
 
-object BufferTarget:
+object BufferTarget {
   given BufferTarget[ArrayBuffer] = new BufferTarget[ArrayBuffer] {
     override def targetId: Int = GL_ARRAY_BUFFER
   }
+
+  given BufferTarget[ElementBuffer] = new BufferTarget[ElementBuffer] {
+    override def targetId: Int = GL_ELEMENT_ARRAY_BUFFER
+  }
+}
 
 
 

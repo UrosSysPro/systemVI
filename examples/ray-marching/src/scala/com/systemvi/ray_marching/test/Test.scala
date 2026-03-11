@@ -39,19 +39,29 @@ case class GameState(
                       keyboardState: Ref[IO,KeyboardState],
                     )
 
+
+case class RayMarchingPipeline(
+                                vertexArray: VertexArray,
+                                arrayBuffer: Buffer[ArrayBuffer],
+                                shader: Shader,
+                              )
+case class MeshPipeline(
+                         vertexArray: VertexArray,
+                         arrayBuffer: Buffer[ArrayBuffer],
+                         elementBuffer: Buffer[ElementBuffer],
+                         mesh: Mesh,
+                         shader: Shader,
+                       )
 case class GameResources(
-                     context:GLFWContext,
+                     context: GLFWContext,
                      window: GLFWWindow,
-                     vertexArray: VertexArray,
-                     arrayBuffer: Buffer[ArrayBuffer],
-                     shader: Shader,
+                     rayMarchingPipeline: RayMarchingPipeline,
+                     meshPipeline: MeshPipeline,
                     )
 
 object Test extends IOApp.Simple {
 
-  private def resources = for{
-    context <- GLFWContext.make(3,3)
-    window <- GLFWWindow.make(context,800,600,"window")
+  private def rayMarchingPipelineResource(context: GLFWContext) = for{
     vertexArray <- VertexArray.make(context)
     arrayBuffer <- Buffer.make[ArrayBuffer](context)
     vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("vertex.glsl")}}
@@ -64,17 +74,53 @@ object Test extends IOApp.Simple {
         arrayBuffer.bind()
         vertexArray.configure(List(VertexAttribute("position",3)))
         arrayBuffer.upload(Array(
-           1f,  1f, 0.0f,
-           1f, -1f, 0.0f,
+          1f,  1f, 0.0f,
+          1f, -1f, 0.0f,
           -1f, -1f, 0.0f,
 
           -1f, -1f, 0.0f,
           -1f,  1f, 0.0f,
-           1f,  1f, 0.0f,
+          1f,  1f, 0.0f,
         ))
       }.evalOn(context.ec)
     }
-  } yield GameResources(context,window,vertexArray,arrayBuffer,shader)
+  }yield RayMarchingPipeline(
+    vertexArray,
+    arrayBuffer,
+    shader
+  )
+
+  private def meshPipelineResource(context: GLFWContext) = for{
+    vertexArray <- VertexArray.make(context)
+    arrayBuffer <- Buffer.make[ArrayBuffer](context)
+    elementBuffer <- Buffer.make[ElementBuffer](context)
+    vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/vertex.glsl")}}
+    fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/fragment.glsl")}}
+    mesh <- Resource.eval(IO{SurfaceNets.sdfToMesh(sdf,Bounds(Vector3f(-1000),Vector3f(1000)),100)})
+    shader <- Shader.make(vertexShader, fragmentShader, context)
+    _ <- Resource.eval[IO,Unit]{
+      IO{
+        vertexArray.bind()
+        arrayBuffer.bind()
+        elementBuffer.bind()
+        vertexArray.configure(List(VertexAttribute("position",3)))
+        arrayBuffer.upload(mesh.vertices.toArray)
+        elementBuffer.upload(mesh.indices.toArray)
+      }.evalOn(context.ec)
+    }
+  }yield MeshPipeline(
+    vertexArray,
+    arrayBuffer,
+    elementBuffer,
+    mesh,
+    shader
+  )
+  private def resources = for{
+    context <- GLFWContext.make(3,3)
+    window <- GLFWWindow.make(context,800,600,"window")
+    rayMarchingPipeline <- rayMarchingPipelineResource(context)
+    meshPipeline <- meshPipelineResource(context)
+  } yield GameResources(context,window,rayMarchingPipeline,meshPipeline)
 
   private def gameState = for{
     running <- Ref.of[IO,Boolean](true)
@@ -84,24 +130,13 @@ object Test extends IOApp.Simple {
     keyboardState <- Ref.of[IO,KeyboardState](KeyboardState(Set.empty))
   } yield GameState(running,lastFrameStart,camera,mouseState,keyboardState)
 
-  val sdf = Union(
-    Union(
-      Translate(
-        position = Vector3f(0,0,0),
-        sdf = Sphere(radius = 10),
-      ),
-      Translate(
-        position = Vector3f(-100,0,0),
-        sdf = Scale(
-          scale = 2,
-          sdf = Sphere(radius = 50),
-        ),
-      )
-    ),
-    Translate(
-      position = Vector3f(100,0,0),
-      sdf = Box(halfSize = Vector3f(50)),
-    )
+  val sdf: SDF = Union(
+    List(
+      Sphere(radius = 10).translate(Vector3f(0,0,0)),
+      Sphere(radius = 50).scale(2).scale(0.5f).translate(Vector3f(-100,0,0)),
+      Box(halfSize = Vector3f(50)).translate(Vector3f(100,0,0))
+    ) ++
+    (for(i<-0 until 10)yield Box(halfSize = Vector3f(50f)).translate(Vector3f(i*100f))).toList *
   )
 
   private val targetFPS: Int = 165
@@ -132,8 +167,6 @@ object Test extends IOApp.Simple {
   private def input(state:GameState, resources: GameResources):IO[Unit] ={
     val context = resources.context
     val window = resources.window
-    val shader = resources.shader
-    val vertexArray = resources.vertexArray
 
     for {
       shouldClose <- IO{
@@ -178,8 +211,6 @@ object Test extends IOApp.Simple {
   private def update(delta: Double, state:GameState, resources: GameResources): IO[Unit] = {
     val context = resources.context
     val window = resources.window
-    val shader = resources.shader
-    val vertexArray = resources.vertexArray
     val mouseSensitivity = 0.0001d
     val mouseInvert = -1.0d
 
@@ -229,8 +260,28 @@ object Test extends IOApp.Simple {
   private def render(delta: Double, state:GameState, resources: GameResources):IO[Unit] ={
     val context = resources.context
     val window = resources.window
-    val shader = resources.shader
-    val vertexArray = resources.vertexArray
+
+    def drawRayMarchingPipeline(camera: Camera,pipeline: RayMarchingPipeline) = IO{
+      Utils.clear(Vector4f(0.4f,0.1f,0.1f,1.0f),ColorBit,DepthBit)
+      pipeline.shader.use()
+      pipeline.shader.setUniform("camera.yaw",camera.yaw)
+      pipeline.shader.setUniform("camera.pitch",camera.pitch)
+      pipeline.shader.setUniform("camera.fi",camera.fi)
+      pipeline.shader.setUniform("camera.aspect",camera.aspect)
+      pipeline.shader.setUniform("camera.position",camera.position)
+      pipeline.shader.setUniform("camera.view",Matrix4f().identity()
+        .translate(Vector3f(camera.position).mul(-1))
+        .rotateY(camera.yaw)
+        .rotateX(camera.pitch)
+      )
+      pipeline.vertexArray.bind()
+      pipeline.shader.drawArrays(Primitive.TRIANGLES,0,6)
+      window.swapBuffers()
+    }.evalOn(context.ec)
+
+    def drawMeshPipeline(camera: Camera,pipeline: MeshPipeline) = IO{
+      ???
+    }.evalOn(context.ec)
 
     for{
       camera <- state.camera.get
@@ -242,23 +293,8 @@ object Test extends IOApp.Simple {
         val pitch=camera.pitch
         window.setTitle(s"x: $x y:$y z: $z yaw: $yaw pitch: $pitch")
       }.evalOn(context.ec)
-      _ <- IO{
-        Utils.clear(Vector4f(0.4f,0.1f,0.1f,1.0f),ColorBit,DepthBit)
-        shader.use()
-        shader.setUniform("camera.yaw",camera.yaw)
-        shader.setUniform("camera.pitch",camera.pitch)
-        shader.setUniform("camera.fi",camera.fi)
-        shader.setUniform("camera.aspect",camera.aspect)
-        shader.setUniform("camera.position",camera.position)
-        shader.setUniform("camera.view",Matrix4f().identity()
-          .translate(Vector3f(camera.position).mul(-1))
-          .rotateY(camera.yaw)
-          .rotateX(camera.pitch)
-        )
-        vertexArray.bind()
-        shader.drawArrays(Primitive.TRIANGLES,0,6)
-        window.swapBuffers()
-      }.evalOn(context.ec)
+      _ <- drawRayMarchingPipeline(camera,resources.rayMarchingPipeline)
+//      _ <- drawMeshPipeline(camera,resources.meshPipeline)
     }yield ()
   }
 

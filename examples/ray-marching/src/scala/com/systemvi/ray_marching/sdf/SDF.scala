@@ -5,6 +5,9 @@ import org.joml.{Matrix4f, Vector3f, Vector4f}
 trait SDF {
   def getValue(point: Vector3f): Float
   def toGlsl: String
+  def translate(position: Vector3f) = Translate(this,position)
+  def rotate(rotateXYZ: Vector3f) = Rotate(this,rotateXYZ)
+  def scale(scale: Float) = Scale(this,scale)
 }
 
 //primitives
@@ -28,6 +31,11 @@ class Union(a:SDF,b:SDF) extends SDF {
   override def getValue(point: Vector3f): Float = Math.min(a.getValue(point),b.getValue(point))
 
   override def toGlsl: String = s"unionSdf(${a.toGlsl},${b.toGlsl})"
+}
+object Union {
+  def apply(sdfs: SDF*): SDF = {
+    sdfs.drop(1).foldLeft(sdfs.head){(acc,sdf) => new Union(acc,sdf)}
+  }
 }
 
 class Difference(a:SDF,b:SDF) extends SDF {
