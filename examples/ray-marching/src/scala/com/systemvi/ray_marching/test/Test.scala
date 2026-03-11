@@ -96,16 +96,28 @@ object Test extends IOApp.Simple {
     elementBuffer <- Buffer.make[ElementBuffer](context)
     vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/vertex.glsl")}}
     fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/fragment.glsl")}}
-    mesh <- Resource.eval(IO{SurfaceNets.sdfToMesh(sdf,Bounds(Vector3f(-1000),Vector3f(1000)),100)})
+    mesh <- Resource.eval(IO{SurfaceNets.sdfToMesh(sdf,Bounds(Vector3f(-100),Vector3f(1000)),200)})
+    _<-Resource.eval(IO.println(mesh.vertices.length))
+    _<-Resource.eval(IO.println(mesh.indices.length))
     shader <- Shader.make(vertexShader, fragmentShader, context)
     _ <- Resource.eval[IO,Unit]{
       IO{
         vertexArray.bind()
         arrayBuffer.bind()
-        elementBuffer.bind()
-        vertexArray.configure(List(VertexAttribute("position",3)))
         arrayBuffer.upload(mesh.vertices.toArray)
+//        arrayBuffer.upload(Array(
+//          1f,  1f, 0.0f,
+//          1f, -1f, 0.0f,
+//          -1f,  1f, 0.0f,
+//          -1f,  -1f, 0.0f,
+//        ))
+        elementBuffer.bind()
         elementBuffer.upload(mesh.indices.toArray)
+//        elementBuffer.upload(Array(
+//          0,1,2,
+//          1,2,3,
+//        ))
+        vertexArray.configure(List(VertexAttribute("position",3)))
       }.evalOn(context.ec)
     }
   }yield MeshPipeline(
@@ -136,7 +148,10 @@ object Test extends IOApp.Simple {
       Sphere(radius = 50).scale(2).scale(0.5f).translate(Vector3f(-100,0,0)),
       Box(halfSize = Vector3f(50)).translate(Vector3f(100,0,0))
     ) ++
-    (for(i<-0 until 10)yield Box(halfSize = Vector3f(50f)).translate(Vector3f(i*100f))).toList *
+    (for(i<-0 until 10)
+      yield Box(halfSize = Vector3f(50f))
+        .translate(Vector3f(i*100f))
+    ).toList *
   )
 
   private val targetFPS: Int = 165
@@ -280,7 +295,19 @@ object Test extends IOApp.Simple {
     }.evalOn(context.ec)
 
     def drawMeshPipeline(camera: Camera,pipeline: MeshPipeline) = IO{
-      ???
+      Utils.clear(Vector4f(0.4f,0.1f,0.1f,1.0f),ColorBit,DepthBit)
+      pipeline.shader.use()
+      pipeline.shader.setUniform("projection",Matrix4f().identity()
+        .perspective(Math.PI.toFloat/3,camera.aspect,0.1f,10000f)
+      )
+      pipeline.shader.setUniform("view",Matrix4f().identity()
+        .rotateX(-camera.pitch)
+        .rotateY(-camera.yaw)
+        .translate(Vector3f(camera.position))
+      )
+      pipeline.vertexArray.bind()
+      pipeline.shader.drawElements(Primitive.TRIANGLES,pipeline.mesh.indices.length)
+      window.swapBuffers()
     }.evalOn(context.ec)
 
     for{
@@ -293,8 +320,8 @@ object Test extends IOApp.Simple {
         val pitch=camera.pitch
         window.setTitle(s"x: $x y:$y z: $z yaw: $yaw pitch: $pitch")
       }.evalOn(context.ec)
-      _ <- drawRayMarchingPipeline(camera,resources.rayMarchingPipeline)
-//      _ <- drawMeshPipeline(camera,resources.meshPipeline)
+//      _ <- drawRayMarchingPipeline(camera,resources.rayMarchingPipeline)
+      _ <- drawMeshPipeline(camera,resources.meshPipeline)
     }yield ()
   }
 

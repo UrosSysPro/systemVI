@@ -4,7 +4,7 @@ import cats.*
 import cats.implicits.*
 import cats.effect.*
 import cats.effect.implicits.*
-import com.systemvi.engine.shader.Primitive
+import com.systemvi.engine.shader.{ElementsDataType, Primitive}
 import com.systemvi.ray_marching.opengl.GLFWContext
 import org.joml.{Matrix2f, Matrix3f, Matrix4f, Vector2f, Vector2i, Vector3f, Vector3i, Vector4f, Vector4i}
 import org.lwjgl.opengl.GL11.*
@@ -17,7 +17,11 @@ class Shader(val id: Int) {
 
   def use():   Unit = glUseProgram(id)
   def unuse(): Unit = glUseProgram(0)
+
   def drawArrays(primitive: Primitive,start:Int,count:Int): Unit = glDrawArrays(primitive.id,start,count)
+
+  def drawElements(primitive: Primitive, indicesCount: Int): Unit = glDrawElements(primitive.id, indicesCount, GL_UNSIGNED_INT, 0)
+
   def setUniform(name: String, mat: Matrix4f): Unit = {
     val data = new Array[Float](16)
     val uniformId = glGetUniformLocation(id, name)
