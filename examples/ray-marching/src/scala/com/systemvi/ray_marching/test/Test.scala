@@ -13,6 +13,7 @@ import com.systemvi.ray_marching.opengl.shader.Shader
 import com.systemvi.ray_marching.opengl.utils.BufferBit.*
 import com.systemvi.ray_marching.opengl.utils.Utils
 import com.systemvi.ray_marching.sdf.*
+import com.systemvi.ray_marching.sdf.mesh.{Bounds, Mesh, StlExporter, SurfaceNets}
 import com.systemvi.ray_marching.test.RenderPipeline.RayMarching
 import com.systemvi.ray_marching.test.Test.resources
 import org.joml.*
@@ -106,6 +107,7 @@ object Test extends IOApp.Simple {
     mesh <- Resource.eval(IO{SurfaceNets.sdfToMesh(sdf,Bounds(Vector3f(-200),Vector3f(200)),200)})
     _<-Resource.eval(IO.println(mesh.vertices.length))
     _<-Resource.eval(IO.println(mesh.indices.length))
+    _<-Resource.eval(IO{StlExporter().exportToFile(mesh.vertices,mesh.indices,"test.stl")})
     shader <- Shader.make(vertexShader, fragmentShader, context)
     _ <- Resource.eval[IO,Unit]{
       IO{
