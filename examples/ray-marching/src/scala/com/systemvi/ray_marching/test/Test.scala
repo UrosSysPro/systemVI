@@ -13,7 +13,7 @@ import com.systemvi.ray_marching.opengl.shader.Shader
 import com.systemvi.ray_marching.opengl.utils.BufferBit.*
 import com.systemvi.ray_marching.opengl.utils.Utils
 import com.systemvi.ray_marching.sdf.*
-import com.systemvi.ray_marching.sdf.mesh.{Bounds, Mesh, StlExporter, SurfaceNets}
+import com.systemvi.ray_marching.sdf.mesh.{Bounds, MarchingCubes, Mesh, StlExporter, SurfaceNets}
 import com.systemvi.ray_marching.test.RenderPipeline.RayMarching
 import com.systemvi.ray_marching.test.Test.resources
 import org.joml.*
@@ -104,7 +104,8 @@ object Test extends IOApp.Simple {
     elementBuffer <- Buffer.make[ElementBuffer](context)
     vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/vertex.glsl")}}
     fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/fragment.glsl")}}
-    mesh <- Resource.eval(IO{SurfaceNets.sdfToMesh(sdf,Bounds(Vector3f(-200),Vector3f(200)),200)})
+//    mesh <- Resource.eval(IO{SurfaceNets.sdfToMesh(sdf,Bounds(Vector3f(-200),Vector3f(200)),50)})
+    mesh <- Resource.eval(IO{MarchingCubes.sdfToMesh(sdf,Bounds(Vector3f(-200),Vector3f(200)),50)})
     _<-Resource.eval(IO.println(mesh.vertices.length))
     _<-Resource.eval(IO.println(mesh.indices.length))
     _<-Resource.eval(IO{StlExporter().exportToFile(mesh.vertices,mesh.indices,"test.stl")})
