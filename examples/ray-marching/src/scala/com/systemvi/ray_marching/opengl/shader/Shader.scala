@@ -5,11 +5,12 @@ import cats.implicits.*
 import cats.effect.*
 import cats.effect.implicits.*
 import com.systemvi.engine.shader.{ElementsDataType, Primitive}
-import com.systemvi.ray_marching.opengl.GLFWContext
+import com.systemvi.ray_marching.opengl.{GLFWContext, GLFWWindow}
 import org.joml.{Matrix2f, Matrix3f, Matrix4f, Vector2f, Vector2i, Vector3f, Vector3i, Vector4f, Vector4i}
 import org.lwjgl.opengl.GL11.*
 import org.lwjgl.opengl.GL20.*
 import org.lwjgl.opengl.GL40.glUniform1d
+import com.systemvi.ray_marching.opengl.utils.printThread
 
 import scala.concurrent.ExecutionContext
 
@@ -76,7 +77,7 @@ class Shader(val id: Int) {
 
 }
 object Shader:
-  def make(vert: String, frag: String, context: GLFWContext): Resource[IO, Shader] =
+  def make(vert: String, frag: String, window: GLFWWindow): Resource[IO, Shader] =
     Resource.make{
       IO {
         val v = compile(GL_VERTEX_SHADER, vert)
@@ -88,11 +89,11 @@ object Shader:
         glDeleteShader(v)
         glDeleteShader(f)
         Shader(p)
-      }.evalOn(context.ec)
+      }.printThread.evalOn(window.ec)
     }{p =>
       IO{
         glDeleteProgram(p.id)
-      }.evalOn(context.ec)
+      }.evalOn(window.ec)
     }
 
   private def compile(tpe: Int, src: String): Int =

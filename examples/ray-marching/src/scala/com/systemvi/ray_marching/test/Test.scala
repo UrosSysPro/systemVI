@@ -37,7 +37,7 @@ case class KeyboardState(pressedKeys: Set[Int])
 
 case class GameState(
                       running: Ref[IO, Boolean],
-                      lastFrameStart: Ref[IO, Double],
+                      lastFrameStart: Ref[IO, Duration],
                       camera: Ref[IO,Camera],
                       mouseState: Ref[IO,MouseState],
                       keyboardState: Ref[IO,KeyboardState],
@@ -61,6 +61,7 @@ case class MeshPipeline(
                          mesh: Mesh,
                          shader: Shader,
                        )
+
 case class GameResources(
                      context: GLFWContext,
                      window: GLFWWindow,
@@ -69,14 +70,19 @@ case class GameResources(
                     )
 
 object Test extends IOApp.Simple {
+  private def executionContexts = for{
+    mainEc <- RenderThreadPool.make("main")
+    rayMarchingEc <- RenderThreadPool.make("ray-marching-render-pool")
+    meshEc <- RenderThreadPool.make("mesh-render-pool")
+  }yield (mainEc, rayMarchingEc, meshEc)
 
-  private def rayMarchingPipelineResource(context: GLFWContext) = for{
-    vertexArray <- VertexArray.make(context)
-    arrayBuffer <- Buffer.make[ArrayBuffer](context)
+  private def rayMarchingPipelineResource(window: GLFWWindow) = for{
+    vertexArray <- VertexArray.make(window)
+    arrayBuffer <- Buffer.make[ArrayBuffer](window)
     vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("vertex.glsl")}}
     fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("fragment.glsl")}}
     sdfGlsl <- Resource.eval(IO{sdf.toGlsl})
-    shader <- Shader.make(vertexShader, fragmentShader.replace("???",sdfGlsl), context)
+    shader <- Shader.make(vertexShader, fragmentShader.replace("???",sdfGlsl), window)
     _ <- Resource.eval[IO,Unit]{
       IO{
         vertexArray.bind()
@@ -91,7 +97,7 @@ object Test extends IOApp.Simple {
           -1f,  1f, 0.0f,
           1f,  1f, 0.0f,
         ))
-      }.evalOn(context.ec)
+      }.evalOn(window.ec)
     }
   }yield RayMarchingPipeline(
     vertexArray,
@@ -99,10 +105,10 @@ object Test extends IOApp.Simple {
     shader
   )
 
-  private def meshPipelineResource(context: GLFWContext) = for{
-    vertexArray <- VertexArray.make(context)
-    arrayBuffer <- Buffer.make[ArrayBuffer](context)
-    elementBuffer <- Buffer.make[ElementBuffer](context)
+  private def meshPipelineResource(window: GLFWWindow) = for{
+    vertexArray <- VertexArray.make(window)
+    arrayBuffer <- Buffer.make[ArrayBuffer](window)
+    elementBuffer <- Buffer.make[ElementBuffer](window)
     vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/vertex.glsl")}}
     fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/fragment.glsl")}}
 //    mesh <- Resource.eval(IO{SurfaceNets.sdfToMesh(sdf,Bounds(Vector3f(-200),Vector3f(200)),50)})
@@ -110,7 +116,7 @@ object Test extends IOApp.Simple {
     _<-Resource.eval(IO.println(mesh.vertices.length))
     _<-Resource.eval(IO.println(mesh.indices.length))
     _<-Resource.eval(IO{StlExporter().exportToFile(mesh.vertices,mesh.indices,"test.stl")})
-    shader <- Shader.make(vertexShader, fragmentShader, context)
+    shader <- Shader.make(vertexShader, fragmentShader, window)
     _ <- Resource.eval[IO,Unit]{
       IO{
         vertexArray.bind()
@@ -119,7 +125,7 @@ object Test extends IOApp.Simple {
         elementBuffer.bind()
         elementBuffer.upload(mesh.indices.toArray)
         vertexArray.configure(List(VertexAttribute("position",3)))
-      }.evalOn(context.ec)
+      }.evalOn(window.ec)
     }
   }yield MeshPipeline(
     vertexArray,
@@ -130,15 +136,18 @@ object Test extends IOApp.Simple {
   )
 
   private def resources(renderThreadName:String) = for{
-    context <- GLFWContext.make(3,3,renderThreadName)
-    window <- GLFWWindow.make(context,800,600,"window")
-    rayMarchingPipeline <- rayMarchingPipelineResource(context)
-    meshPipeline <- meshPipelineResource(context)
+    mainEc <- RenderThreadPool.make("main")
+    windowEc <- RenderThreadPool.make("window-render-pool")
+    context <- GLFWContext.make(3,3,mainEc)
+    window <- GLFWWindow.make(context,mainEc,800,600,"window")
+    rayMarchingPipeline <- rayMarchingPipelineResource(window)
+    meshPipeline <- meshPipelineResource(window)
   } yield GameResources(context,window,rayMarchingPipeline,meshPipeline)
 
   private def gameState(pipeline: RenderPipeline) = for{
     running <- Ref.of[IO,Boolean](true)
-    lastFrameStart <- Ref.of[IO,Double](0.0)
+    time<-IO.monotonic
+    lastFrameStart <- Ref.of[IO,Duration](time)
     camera <- Ref.of[IO,Camera](Camera(Vector3f(0,0,-300),800f/600f,2.2f,0,0))
     mouseState <- Ref.of[IO,MouseState](MouseState(0,0,0,0,false,Set.empty))
     keyboardState <- Ref.of[IO,KeyboardState](KeyboardState(Set.empty))
@@ -160,7 +169,7 @@ object Test extends IOApp.Simple {
   )
 
   private val targetFPS: Int = 165
-  private val targetFrameTime: Double = 1000d / targetFPS
+  private val targetFrameTime: Duration = (1000d / targetFPS).millis
 
   private def loop(state:GameState, resources: GameResources): IO[Unit] = {
     val context = resources.context
@@ -169,15 +178,27 @@ object Test extends IOApp.Simple {
       case false => IO.unit
       case true =>
         for
+          shouldClose <- IO{
+            window.pollEvents()
+            window.shouldClose()
+          }.evalOn(context.ec)
+          _ <- state.running.set(!shouldClose)
           lastFrameStart <- state.lastFrameStart.get
-          startTime <- context.getTime
-          _ <- input(state, resources)
-          _ <- update(startTime - lastFrameStart, state, resources)
-          _ <- render(startTime - lastFrameStart, state, resources)
-          endTime <- context.getTime
+          startTime <- IO.monotonic
+//          _<-IO{
+//            GLFW.glfwMakeContextCurrent(0)
+//          }.evalOn(context.ec)
+//          _<-IO{
+//            GLFW.glfwMakeContextCurrent(0)
+//            GLFW.glfwMakeContextCurrent(window.id)
+//          }.evalOn(window.ec)
+          _ <- input(state, resources).evalOn(window.ec)
+          _ <- update(startTime - lastFrameStart, state, resources).evalOn(window.ec)
+          _ <- render(startTime - lastFrameStart, state, resources).evalOn(window.ec)
+          endTime <- IO.monotonic
           elapsed = endTime - startTime
           _ <- state.lastFrameStart.set(startTime)
-          sleepTime = (targetFrameTime - elapsed).millis
+          sleepTime = targetFrameTime - elapsed
           _ <- IO.sleep(sleepTime).whenA(sleepTime > Duration.Zero)
           _ <- loop(state, resources)
         yield ()
@@ -189,11 +210,6 @@ object Test extends IOApp.Simple {
     val window = resources.window
 
     for {
-      shouldClose <- IO{
-        window.pollEvents()
-        window.shouldClose()
-      }.evalOn(context.ec)
-      _ <- state.running.set(!shouldClose)
       events <- window.eventQueue.drain()
       _ <- events.traverse{
         case InputEvent.MouseButtonEvent(button, action) => state.mouseState.update{state=>MouseState(
@@ -228,11 +244,12 @@ object Test extends IOApp.Simple {
     } yield ()
   }
 
-  private def update(delta: Double, state:GameState, resources: GameResources): IO[Unit] = {
+  private def update(deltaDuration: Duration, state:GameState, resources: GameResources): IO[Unit] = {
     val context = resources.context
     val window = resources.window
     val mouseSensitivity = 0.0001d
     val mouseInvert = -1.0d
+    val delta = deltaDuration.toMillis.toDouble / 1000
 
     for{
       mouseState <- state.mouseState.get
@@ -242,7 +259,7 @@ object Test extends IOApp.Simple {
           mouseState.captured = true
           println("capture")
         }
-      }.evalOn(context.ec)
+      }
       keyboardState <- state.keyboardState.get
       _ <- state.camera.update{camera =>
         val yaw = camera.yaw + mouseState.dx / delta * mouseSensitivity * mouseInvert
@@ -254,7 +271,7 @@ object Test extends IOApp.Simple {
         val position = Vector3f(camera.position)
 
         val movementSpeed = 0.1f
-        val forward = Vector3f(Math.sin(yaw).toFloat, 0f, Math.cos(yaw).toFloat).mul(1f / delta.toFloat*movementSpeed)
+        val forward = Vector3f(Math.sin(yaw).toFloat, 0f, Math.cos(yaw).toFloat).mul(1f / delta.toFloat * movementSpeed)
         val right = Vector3f(forward).rotateY(-Math.PI.toFloat / 2f)
         val up = Vector3f(0f,-1.0,0f).mul(1f/delta.toFloat*movementSpeed)
 
@@ -265,7 +282,7 @@ object Test extends IOApp.Simple {
         if (keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_SPACE)) position.add(up)
         if (keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_LEFT_SHIFT)) position.sub(up)
 
-        if(keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_Q) && mouseState.captured) {
+        if(keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_ESCAPE) && mouseState.captured) {
           window.setCursorMode(CursorMode.Normal)
           mouseState.captured = false
           println("release")
@@ -293,9 +310,10 @@ object Test extends IOApp.Simple {
     } yield ()
   }
 
-  private def render(delta: Double, state:GameState, resources: GameResources):IO[Unit] ={
+  private def render(deltaDuration: Duration, state:GameState, resources: GameResources):IO[Unit] ={
     val context = resources.context
     val window = resources.window
+    val delta = deltaDuration.toMillis.toDouble / 1000
 
     def drawRayMarchingPipeline(camera: Camera,pipeline: RayMarchingPipeline) = IO{
       Utils.clear(Vector4f(0.4f,0.1f,0.1f,1.0f),ColorBit,DepthBit)
@@ -313,7 +331,7 @@ object Test extends IOApp.Simple {
       pipeline.vertexArray.bind()
       pipeline.shader.drawArrays(Primitive.TRIANGLES,0,6)
       window.swapBuffers()
-    }.evalOn(context.ec)
+    }
 
     def drawMeshPipeline(camera: Camera,pipeline: MeshPipeline) = IO{
       Utils.clear(Vector4f(0.4f,0.1f,0.1f,1.0f),ColorBit,DepthBit)
@@ -329,7 +347,7 @@ object Test extends IOApp.Simple {
       pipeline.vertexArray.bind()
       pipeline.shader.drawElements(Primitive.TRIANGLES,pipeline.mesh.indices.length)
       window.swapBuffers()
-    }.evalOn(context.ec)
+    }
 
     for{
       camera <- state.camera.get
@@ -340,7 +358,7 @@ object Test extends IOApp.Simple {
         val yaw=camera.yaw
         val pitch=camera.pitch
         window.setTitle(s"x: $x y:$y z: $z yaw: $yaw pitch: $pitch")
-      }.evalOn(context.ec)
+      }
       _ <- state.renderPipeline match {
         case RayMarching => drawRayMarchingPipeline(camera,resources.rayMarchingPipeline)
         case RenderPipeline.Mesh => drawMeshPipeline(camera,resources.meshPipeline)
@@ -364,14 +382,39 @@ object Test extends IOApp.Simple {
                |width: ${window.width}
                |height: ${window.height}
                |""".stripMargin)
-        }.evalOn(resources.context.ec)
+        }.evalOn(window.ec)
         state <- gameState(pipeline)
         _ <- loop(state, resources)
       } yield ()
     }
   }
 
-    override def run: IO[Unit] = app("render-thread",RenderPipeline.Mesh)
-  //  override def run: IO[Unit] = app("render-thread-2",RenderPipeline.Mesh)
+//    override def run: IO[Unit] = executionContexts.use{ (mainEc,rayMarchingEc,meshEc) =>
+//      (for{
+//        context <- GLFWContext.make( 3, 3, mainEc)
+//        rayMarchingWindow <- GLFWWindow.make(context,rayMarchingEc,800,600,"Ray Marching")
+//        meshWindow <- GLFWWindow.make(context,meshEc,800,600,"Mesh")
+//      }yield(context,rayMarchingWindow,meshWindow)).use{ (context,rayMarchingWindow,meshWindow)=>
+//        (rayMarchingWindow,meshWindow).parTupled
+//        for {
+//          _ <- IO {
+//            println(
+//              s"""
+//                 |renderer: ${window.getRenderer}
+//                 |vendor: ${window.getVendor}
+//                 |version: ${window.getVersion}
+//                 |glsl version: ${window.getGlslVersion}
+//                 |x: ${window.x}
+//                 |y: ${window.y}
+//                 |width: ${window.width}
+//                 |height: ${window.height}
+//                 |""".stripMargin)
+//          }.evalOn(resources.context.ec)
+//          state <- gameState(pipeline)
+//          _ <- loop(state, resources)
+//        } yield ()
+//      }
+//    }
+    override def run: IO[Unit] = app("render-thread-2",RenderPipeline.Mesh)
 }
 

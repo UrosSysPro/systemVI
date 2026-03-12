@@ -21,17 +21,8 @@ trait GLFWContext(
 }
 
 object GLFWContext {
-  def make(versionMajor: Int, versionMinor: Int,renderThreadName:String = "render-thread"): Resource[IO, GLFWContext] = Resource.make[IO,GLFWContext]{
+  def make(versionMajor: Int, versionMinor: Int,ec: ExecutionContext): Resource[IO, GLFWContext] = Resource.make[IO,GLFWContext]{
     for{
-      ec <- IO{
-        ExecutionContext.fromExecutorService {
-          Executors.newSingleThreadExecutor { (r: Runnable) =>
-            val t = Thread(r, renderThreadName)
-            t.setDaemon(true)
-            t
-          }
-        }
-      }
       context <- IO{
         glfwInit
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, versionMajor)

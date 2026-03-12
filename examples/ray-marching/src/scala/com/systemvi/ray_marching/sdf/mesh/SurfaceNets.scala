@@ -1,6 +1,6 @@
 package com.systemvi.ray_marching.sdf.mesh
 
-import com.systemvi.ray_marching.sdf.{Bounds, Mesh, SDF}
+import com.systemvi.ray_marching.sdf.SDF
 import org.joml.Vector3f
 
 case class Bounds(min: Vector3f, max: Vector3f)

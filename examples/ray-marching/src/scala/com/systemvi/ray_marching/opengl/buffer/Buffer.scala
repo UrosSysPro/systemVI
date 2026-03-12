@@ -8,8 +8,8 @@ import com.systemvi.ray_marching.opengl.*
 import org.lwjgl.opengl.GL33.*
 import org.lwjgl.opengl.GL15.*
 import org.lwjgl.opengl.GL15.*
-
 import scala.concurrent.ExecutionContext
+import com.systemvi.ray_marching.opengl.utils.printThread
 
 class Buffer[T : BufferTarget](val id: Int) {
   def bind():   Unit = glBindBuffer(summon[BufferTarget[T]].targetId, id)
@@ -29,16 +29,16 @@ class Buffer[T : BufferTarget](val id: Int) {
 }
 
 object Buffer:
-  def make[T : BufferTarget](context: GLFWContext): Resource[IO, Buffer[T]] = Resource.make[IO,Buffer[T]]{
+  def make[T : BufferTarget](window: GLFWWindow): Resource[IO, Buffer[T]] = Resource.make[IO,Buffer[T]]{
     IO{
       val id = glGenBuffers()
       Buffer[T](id)
-    }.evalOn(context.ec)
+    }.printThread.evalOn(window.ec)
   }{ buffer =>
     IO{
       buffer.unbind()
       glDeleteBuffers(buffer.id)
-    }.evalOn(context.ec)
+    }.evalOn(window.ec)
   }
 
 sealed trait ArrayBuffer

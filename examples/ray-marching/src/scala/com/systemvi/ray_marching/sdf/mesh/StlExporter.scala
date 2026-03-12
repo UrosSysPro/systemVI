@@ -62,7 +62,7 @@ class StlExporter(stride: Int = 3) {
         val v1 = vertex(vertices, elements(i * 3 + 1))
         val v2 = vertex(vertices, elements(i * 3 + 2))
 
-        val normal = ((v1 - v0) cross (v2 - v0)).normalized
+        val normal = (v1 - v0).cross(v2 - v0).normalized
 
         writeVec3(normal)   // face normal
         writeVec3(v0)       // vertex 1

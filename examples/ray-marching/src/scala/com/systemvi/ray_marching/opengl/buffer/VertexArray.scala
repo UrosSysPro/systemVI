@@ -4,13 +4,14 @@ import cats.*
 import cats.implicits.*
 import cats.effect.*
 import cats.effect.implicits.*
-import com.systemvi.ray_marching.opengl.GLFWContext
+import com.systemvi.ray_marching.opengl.{GLFWContext, GLFWWindow}
 import org.lwjgl.opengl.GL11.GL_FLOAT
 import org.lwjgl.opengl.GL33.*
 import org.lwjgl.opengl.GL15.*
 import org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER
 import org.lwjgl.opengl.GL20.{glEnableVertexAttribArray, glVertexAttribPointer}
 import org.lwjgl.opengl.GL30.{glBindVertexArray, glDeleteVertexArrays, glGenVertexArrays}
+import com.systemvi.ray_marching.opengl.utils.printThread
 
 import scala.concurrent.ExecutionContext
 
@@ -34,15 +35,15 @@ class VertexArray(val id: Int):
   }
 
 object VertexArray:
-  def make(context: GLFWContext): Resource[IO, VertexArray] = Resource.make[IO,VertexArray]{
+  def make(window: GLFWWindow): Resource[IO, VertexArray] = Resource.make[IO,VertexArray]{
     IO{
       val id = glGenVertexArrays()
       VertexArray(id)
-    }.evalOn(context.ec)
+    }.printThread.evalOn(window.ec)
   }{ vertexArray =>
     IO{
       vertexArray.unbind()
       glDeleteVertexArrays(vertexArray.id)
-    }.evalOn(context.ec)
+    }.evalOn(window.ec)
   }
 

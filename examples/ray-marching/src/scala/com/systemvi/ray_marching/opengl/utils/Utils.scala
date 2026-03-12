@@ -1,5 +1,6 @@
 package com.systemvi.ray_marching.opengl.utils
 
+import cats.effect.*
 import org.joml.Vector4f
 import org.lwjgl.opengl.GL11.*
 
@@ -14,5 +15,12 @@ object Utils {
     glClearColor(color.x,color.y,color.z,color.w)
     val bits = bufferBits.foldLeft(0){(acc,bit) => acc|bit.id}
     glClear(bits)
+  }
+}
+
+extension[T](a:IO[T]){
+  def printThread:IO[T] = a.map{ a =>
+    println(Thread.currentThread().getName)
+    a
   }
 }

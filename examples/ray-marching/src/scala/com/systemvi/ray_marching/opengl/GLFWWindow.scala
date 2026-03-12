@@ -11,7 +11,9 @@ import org.lwjgl.opengl.GL11.{GL_RENDERER, GL_VENDOR, GL_VERSION, glGetString, g
 import org.lwjgl.opengl.GL20.GL_SHADING_LANGUAGE_VERSION
 import org.lwjgl.opengl.GL33.*
 import org.lwjgl.system.MemoryStack
+import com.systemvi.ray_marching.opengl.utils.printThread
 
+import scala.concurrent.ExecutionContext
 import scala.util.*
 
 enum KeyAction {
@@ -74,6 +76,7 @@ class GLFWWindow(
                       private var _title: String,
                       val capabilities: GLCapabilities,
                       val eventQueue: EventQueue,
+                      val ec: ExecutionContext,
                      ) {
   private var (_x: Int, _y: Int) = {
     Using(MemoryStack.stackPush()){ stack =>
@@ -137,7 +140,9 @@ class GLFWWindow(
 
   def getGlslVersion: String = glGetString(GL_SHADING_LANGUAGE_VERSION)
 
-  def setCursorMode(mode: CursorMode):Unit = glfwSetInputMode(id, GLFW_CURSOR, mode.id)
+  def setCursorMode(mode: CursorMode):Unit = {
+    glfwSetInputMode(id, GLFW_CURSOR, mode.id)
+  }
 
   private def registerCallbacks(): Unit = {
     glfwSetKeyCallback(id, (_, key, _, action, mods) =>
@@ -169,30 +174,36 @@ class GLFWWindow(
 }
 
 object GLFWWindow {
-  def make(context: GLFWContext, width: Int, height: Int, title: String): Resource[IO, GLFWWindow] = for{
+  def make(context: GLFWContext, ec: ExecutionContext, width: Int, height: Int, title: String): Resource[IO, GLFWWindow] = for{
     eventQueue <- Resource.eval(EventQueue.make())
     window <- Resource.make {
-    IO{
-      val id = glfwCreateWindow(width, height, title, 0, 0)
-      if(id==0){
-        throw Exception("unable to create window")
-      }
-      glfwMakeContextCurrent(id)
-      val capabilities = GL.createCapabilities
-      glViewport(0, 0, width, height)
-      val window = GLFWWindow(
-        id,
-        width,
-        height,
-        title,
-        capabilities,
-        eventQueue
-      )
-      window.registerCallbacks()
-      window
-    }.evalOn(context.ec)
-  }{ window =>
-    IO{
+      for{
+        id <- IO{
+          val id = glfwCreateWindow(width, height, title, 0, 0)
+          if(id==0){
+            throw Exception("unable to create window")
+          }
+          id
+        }.evalOn(context.ec)
+        window <- IO{
+          glfwMakeContextCurrent(id)
+          val capabilities = GL.createCapabilities
+          glViewport(0, 0, width, height)
+          val window = GLFWWindow(
+            id,
+            width,
+            height,
+            title,
+            capabilities,
+            eventQueue,
+            ec
+          )
+          window.registerCallbacks()
+          window
+        }.printThread.evalOn(ec)
+      }yield window
+    }{ window =>
+      IO{
       glfwDestroyWindow(window.id)
     }.evalOn(context.ec)
   }
