@@ -41,32 +41,26 @@ case class GameState(
                       camera: Ref[IO,Camera],
                       mouseState: Ref[IO,MouseState],
                       keyboardState: Ref[IO,KeyboardState],
-                      renderPipeline: RenderPipeline,
                     )
 
-enum RenderPipeline {
-  case RayMarching extends RenderPipeline
-  case Mesh extends RenderPipeline
-}
-
+trait Pipeline
 case class RayMarchingPipeline(
                                 vertexArray: VertexArray,
                                 arrayBuffer: Buffer[ArrayBuffer],
                                 shader: Shader,
-                              )
+                              ) extends Pipeline
 case class MeshPipeline(
                          vertexArray: VertexArray,
                          arrayBuffer: Buffer[ArrayBuffer],
                          elementBuffer: Buffer[ElementBuffer],
                          mesh: Mesh,
                          shader: Shader,
-                       )
+                       ) extends Pipeline
 
 case class GameResources(
                      context: GLFWContext,
                      window: GLFWWindow,
-                     rayMarchingPipeline: RayMarchingPipeline,
-                     meshPipeline: MeshPipeline,
+                     pipeline: Pipeline,
                     )
 
 object Test extends IOApp.Simple {
@@ -135,23 +129,25 @@ object Test extends IOApp.Simple {
     shader
   )
 
-  private def resources(renderThreadName:String) = for{
-    mainEc <- RenderThreadPool.make("main")
-    windowEc <- RenderThreadPool.make("window-render-pool")
+  private def resources = for{
+    mainEc <- RenderThreadPool.make("main-thread-pool")
+    meshEc <- RenderThreadPool.make("mesh-render-pool")
+    rayMarchingEc <- RenderThreadPool.make("ray-marching-render-pool")
     context <- GLFWContext.make(3,3,mainEc)
-    window <- GLFWWindow.make(context,windowEc,800,600,"window")
-    rayMarchingPipeline <- rayMarchingPipelineResource(window)
-    meshPipeline <- meshPipelineResource(window)
-  } yield GameResources(context,window,rayMarchingPipeline,meshPipeline)
+    meshWindow <- GLFWWindow.make(context,meshEc,800,600,"window")
+    rayMarchingWindow <- GLFWWindow.make(context,rayMarchingEc,800,600,"window")
+    meshPipeline <- meshPipelineResource(meshWindow)
+    rayMarchingPipeline <- rayMarchingPipelineResource(rayMarchingWindow)
+  } yield (GameResources(context,meshWindow,meshPipeline),GameResources(context,rayMarchingWindow,rayMarchingPipeline))
 
-  private def gameState(pipeline: RenderPipeline) = for{
+  private def gameState = for{
     running <- Ref.of[IO,Boolean](true)
     time<-IO.monotonic
     lastFrameStart <- Ref.of[IO,Duration](time)
     camera <- Ref.of[IO,Camera](Camera(Vector3f(0,0,-300),800f/600f,2.2f,0,0))
     mouseState <- Ref.of[IO,MouseState](MouseState(0,0,0,0,false,Set.empty))
     keyboardState <- Ref.of[IO,KeyboardState](KeyboardState(Set.empty))
-  } yield GameState(running,lastFrameStart,camera,mouseState,keyboardState,pipeline)
+  } yield GameState(running,lastFrameStart,camera,mouseState,keyboardState)
 
   val n = 10
   val sdf: SDF = Union(
@@ -352,62 +348,38 @@ object Test extends IOApp.Simple {
         val pitch=camera.pitch
         window.setTitle(s"x: $x y:$y z: $z yaw: $yaw pitch: $pitch")
       }.evalOn(context.ec)
-      _ <- (state.renderPipeline match {
-        case RayMarching => drawRayMarchingPipeline(camera,resources.rayMarchingPipeline)
-        case RenderPipeline.Mesh => drawMeshPipeline(camera,resources.meshPipeline)
+      _ <- (resources.pipeline match {
+        case pipeline:RayMarchingPipeline => drawRayMarchingPipeline(camera,pipeline)
+        case pipeline:MeshPipeline => drawMeshPipeline(camera,pipeline)
       }).evalOn(window.ec)
     }yield ()
   }
 
-  private def app(renderThreadName: String, pipeline: RenderPipeline): IO[Unit] = {
-    resources(renderThreadName).use{ resources =>
-      val window = resources.window
-      for {
-        _ <- IO{
-          println(
-            s"""
-               |renderer: ${window.getRenderer}
-               |vendor: ${window.getVendor}
-               |version: ${window.getVersion}
-               |glsl version: ${window.getGlslVersion}
-               |x: ${window.x}
-               |y: ${window.y}
-               |width: ${window.width}
-               |height: ${window.height}
-               |""".stripMargin)
-        }.evalOn(window.ec)
-        state <- gameState(pipeline)
-        _ <- loop(state, resources)
-      } yield ()
+  private def app(): IO[Unit] = {
+    resources.use{ resources =>
+      List(resources._1,resources._2).parTraverse {resources =>
+        val window = resources.window
+        for {
+          _ <- IO {
+            println(
+              s"""
+                 |renderer: ${window.getRenderer}
+                 |vendor: ${window.getVendor}
+                 |version: ${window.getVersion}
+                 |glsl version: ${window.getGlslVersion}
+                 |x: ${window.x}
+                 |y: ${window.y}
+                 |width: ${window.width}
+                 |height: ${window.height}
+                 |""".stripMargin)
+          }.evalOn(window.ec)
+          state <- gameState
+          _ <- loop(state, resources)
+        } yield ()
+      }.void
     }
   }
 
-//    override def run: IO[Unit] = executionContexts.use{ (mainEc,rayMarchingEc,meshEc) =>
-//      (for{
-//        context <- GLFWContext.make( 3, 3, mainEc)
-//        rayMarchingWindow <- GLFWWindow.make(context,rayMarchingEc,800,600,"Ray Marching")
-//        meshWindow <- GLFWWindow.make(context,meshEc,800,600,"Mesh")
-//      }yield(context,rayMarchingWindow,meshWindow)).use{ (context,rayMarchingWindow,meshWindow)=>
-//        (rayMarchingWindow,meshWindow).parTupled
-//        for {
-//          _ <- IO {
-//            println(
-//              s"""
-//                 |renderer: ${window.getRenderer}
-//                 |vendor: ${window.getVendor}
-//                 |version: ${window.getVersion}
-//                 |glsl version: ${window.getGlslVersion}
-//                 |x: ${window.x}
-//                 |y: ${window.y}
-//                 |width: ${window.width}
-//                 |height: ${window.height}
-//                 |""".stripMargin)
-//          }.evalOn(resources.context.ec)
-//          state <- gameState(pipeline)
-//          _ <- loop(state, resources)
-//        } yield ()
-//      }
-//    }
-    override def run: IO[Unit] = app("render-thread-2",RenderPipeline.Mesh)
+  override def run: IO[Unit] = app()
 }
 
