@@ -183,8 +183,9 @@ object GLFWWindow {
           if(id==0){
             throw Exception("unable to create window")
           }
+          glfwMakeContextCurrent(0)
           id
-        }.evalOn(context.ec)
+        }.printThread.evalOn(context.ec)
         window <- IO{
           glfwMakeContextCurrent(id)
           val capabilities = GL.createCapabilities

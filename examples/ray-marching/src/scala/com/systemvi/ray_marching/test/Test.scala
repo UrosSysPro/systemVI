@@ -12,7 +12,7 @@ import com.systemvi.ray_marching.opengl.KeyAction.*
 import com.systemvi.ray_marching.opengl.buffer.*
 import com.systemvi.ray_marching.opengl.shader.Shader
 import com.systemvi.ray_marching.opengl.utils.BufferBit.*
-import com.systemvi.ray_marching.opengl.utils.Utils
+import com.systemvi.ray_marching.opengl.utils.{Utils, printThread}
 import com.systemvi.ray_marching.sdf.*
 import com.systemvi.ray_marching.sdf.mesh.{Bounds, MarchingCubes, Mesh, StlExporter, SurfaceNets}
 import com.systemvi.ray_marching.test.RenderPipeline.RayMarching
@@ -139,7 +139,7 @@ object Test extends IOApp.Simple {
     mainEc <- RenderThreadPool.make("main")
     windowEc <- RenderThreadPool.make("window-render-pool")
     context <- GLFWContext.make(3,3,mainEc)
-    window <- GLFWWindow.make(context,mainEc,800,600,"window")
+    window <- GLFWWindow.make(context,windowEc,800,600,"window")
     rayMarchingPipeline <- rayMarchingPipelineResource(window)
     meshPipeline <- meshPipelineResource(window)
   } yield GameResources(context,window,rayMarchingPipeline,meshPipeline)
@@ -185,13 +185,6 @@ object Test extends IOApp.Simple {
           _ <- state.running.set(!shouldClose)
           lastFrameStart <- state.lastFrameStart.get
           startTime <- IO.monotonic
-//          _<-IO{
-//            GLFW.glfwMakeContextCurrent(0)
-//          }.evalOn(context.ec)
-//          _<-IO{
-//            GLFW.glfwMakeContextCurrent(0)
-//            GLFW.glfwMakeContextCurrent(window.id)
-//          }.evalOn(window.ec)
           _ <- input(state, resources).evalOn(window.ec)
           _ <- update(startTime - lastFrameStart, state, resources).evalOn(window.ec)
           _ <- render(startTime - lastFrameStart, state, resources).evalOn(window.ec)
@@ -259,7 +252,7 @@ object Test extends IOApp.Simple {
           mouseState.captured = true
           println("capture")
         }
-      }
+      }.evalOn(context.ec)
       keyboardState <- state.keyboardState.get
       _ <- state.camera.update{camera =>
         val yaw = camera.yaw + mouseState.dx / delta * mouseSensitivity * mouseInvert
@@ -298,7 +291,7 @@ object Test extends IOApp.Simple {
           )
         else
           camera
-      }
+      }.evalOn(context.ec)
       _ <- state.mouseState.update{state => MouseState(
         state.x,
         state.y,
@@ -358,11 +351,11 @@ object Test extends IOApp.Simple {
         val yaw=camera.yaw
         val pitch=camera.pitch
         window.setTitle(s"x: $x y:$y z: $z yaw: $yaw pitch: $pitch")
-      }
-      _ <- state.renderPipeline match {
+      }.evalOn(context.ec)
+      _ <- (state.renderPipeline match {
         case RayMarching => drawRayMarchingPipeline(camera,resources.rayMarchingPipeline)
         case RenderPipeline.Mesh => drawMeshPipeline(camera,resources.meshPipeline)
-      }
+      }).evalOn(window.ec)
     }yield ()
   }
 
