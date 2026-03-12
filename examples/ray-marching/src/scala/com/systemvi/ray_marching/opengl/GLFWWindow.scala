@@ -60,6 +60,13 @@ object EventQueue {
   def make():IO[EventQueue] = Ref.of[IO,List[InputEvent]](List.empty).map(EventQueue(_))
 }
 
+enum CursorMode(val id:Int) {
+  case Normal extends CursorMode(GLFW_CURSOR_NORMAL)
+  case Hidden extends CursorMode(GLFW_CURSOR_HIDDEN)
+  case Disabled extends CursorMode(GLFW_CURSOR_DISABLED)
+  case Captured extends CursorMode(GLFW_CURSOR_CAPTURED)
+}
+
 class GLFWWindow(
                       val id: Long,
                       private var _width:Int,
@@ -129,6 +136,8 @@ class GLFWWindow(
   def getVersion: String = glGetString(GL_VERSION)
 
   def getGlslVersion: String = glGetString(GL_SHADING_LANGUAGE_VERSION)
+
+  def setCursorMode(mode: CursorMode):Unit = glfwSetInputMode(id, GLFW_CURSOR, mode.id)
 
   private def registerCallbacks(): Unit = {
     glfwSetKeyCallback(id, (_, key, _, action, mods) =>

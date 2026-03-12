@@ -11,9 +11,6 @@ import org.lwjgl.opengl.GL15.*
 
 import scala.concurrent.ExecutionContext
 
-sealed trait ArrayBuffer
-sealed trait ElementBuffer
-
 class Buffer[T : BufferTarget](val id: Int) {
   def bind():   Unit = glBindBuffer(summon[BufferTarget[T]].targetId, id)
   def unbind(): Unit = glBindBuffer(summon[BufferTarget[T]].targetId, 0)
@@ -43,6 +40,9 @@ object Buffer:
       glDeleteBuffers(buffer.id)
     }.evalOn(context.ec)
   }
+
+sealed trait ArrayBuffer
+sealed trait ElementBuffer
 
 trait BufferTarget[T]:
   def targetId: Int

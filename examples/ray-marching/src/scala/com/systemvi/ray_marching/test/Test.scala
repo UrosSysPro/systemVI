@@ -7,6 +7,7 @@ import cats.effect.implicits.*
 import com.systemvi.engine
 import com.systemvi.engine.shader.Primitive
 import com.systemvi.ray_marching.opengl.*
+import com.systemvi.ray_marching.opengl.CursorMode.{Captured, Disabled, Normal}
 import com.systemvi.ray_marching.opengl.KeyAction.*
 import com.systemvi.ray_marching.opengl.buffer.*
 import com.systemvi.ray_marching.opengl.shader.Shader
@@ -30,7 +31,7 @@ case class Camera(
                   yaw: Float
                  )
 
-case class MouseState(x: Double, y: Double, dx: Double, dy: Double, captured: Boolean, pressedButtons: Set[MouseButton])
+case class MouseState(x: Double, y: Double, dx: Double, dy: Double, var captured: Boolean, pressedButtons: Set[MouseButton])
 
 case class KeyboardState(pressedKeys: Set[Int])
 
@@ -235,6 +236,13 @@ object Test extends IOApp.Simple {
 
     for{
       mouseState <- state.mouseState.get
+      _<-IO{
+        if(mouseState.pressedButtons.contains(MouseButton.Left) && !mouseState.captured){
+          window.setCursorMode(Disabled)
+          mouseState.captured = true
+          println("capture")
+        }
+      }.evalOn(context.ec)
       keyboardState <- state.keyboardState.get
       _ <- state.camera.update{camera =>
         val yaw = camera.yaw + mouseState.dx / delta * mouseSensitivity * mouseInvert
@@ -250,20 +258,29 @@ object Test extends IOApp.Simple {
         val right = Vector3f(forward).rotateY(-Math.PI.toFloat / 2f)
         val up = Vector3f(0f,-1.0,0f).mul(1f/delta.toFloat*movementSpeed)
 
-        if(keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_W)) position.add(forward)
-        if(keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_S)) position.sub(forward)
-        if(keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_D)) position.add(right)
-        if(keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_A)) position.sub(right)
-        if(keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_SPACE)) position.add(up)
-        if(keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_LEFT_SHIFT)) position.sub(up)
+        if (keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_W)) position.add(forward)
+        if (keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_S)) position.sub(forward)
+        if (keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_D)) position.add(right)
+        if (keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_A)) position.sub(right)
+        if (keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_SPACE)) position.add(up)
+        if (keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_LEFT_SHIFT)) position.sub(up)
 
-        Camera(
-          position,
-          camera.aspect,
-          camera.fi,
-          pitch.toFloat,
-          yaw.toFloat,
-        )
+        if(keyboardState.pressedKeys.contains(GLFW.GLFW_KEY_Q) && mouseState.captured) {
+          window.setCursorMode(CursorMode.Normal)
+          mouseState.captured = false
+          println("release")
+        }
+
+        if mouseState.captured then
+          Camera(
+            position,
+            camera.aspect,
+            camera.fi,
+            pitch.toFloat,
+            yaw.toFloat,
+          )
+        else
+          camera
       }
       _ <- state.mouseState.update{state => MouseState(
         state.x,
@@ -354,7 +371,7 @@ object Test extends IOApp.Simple {
     }
   }
 
-//  override def run: IO[Unit] = app("render-thread-1",RayMarching)
-  override def run: IO[Unit] = app("render-thread-2",RenderPipeline.Mesh)
+    override def run: IO[Unit] = app("render-thread",RenderPipeline.Mesh)
+  //  override def run: IO[Unit] = app("render-thread-2",RenderPipeline.Mesh)
 }
 
