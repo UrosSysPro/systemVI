@@ -63,6 +63,8 @@ case class GameResources(
                      pipeline: Pipeline,
                     )
 
+case class SharedState(running: Ref[IO,Boolean])
+
 object Test extends IOApp.Simple {
   private def executionContexts = for{
     mainEc <- RenderThreadPool.make("main")
@@ -380,6 +382,23 @@ object Test extends IOApp.Simple {
     }
   }
 
-  override def run: IO[Unit] = app()
+  private def newApp = (for{
+    mainEc <- RenderThreadPool.make("main-thread-pool")
+    context <- GLFWContext.make(3,3,mainEc)
+    sharedState <- Resource.eval(for{
+      running <- Ref.of[IO,Boolean](true)
+    } yield SharedState(running))
+  } yield (context,sharedState)).use{ (context,sharedState) =>
+    val app = MeshRendererApp()
+    for{
+      _ <- List(
+        app.run(context,sharedState),
+//        app.run(context,sharedState),
+//        app.run(context,sharedState),
+      ).parSequence
+    } yield ()
+  }
+
+  override def run: IO[Unit] = newApp
 }
 

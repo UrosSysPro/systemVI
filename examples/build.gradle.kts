@@ -139,8 +139,13 @@ val listOfImplementations: DependencyHandlerScope.() -> Unit = {
 
     implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
 
+    //cats
     implementation("org.typelevel:cats-effect_3:3.6-0142603")
     implementation("org.typelevel:cats-core_3:2.12.0")
+
+    //monocle
+    implementation("dev.optics:monocle-core_3:3.3.0")
+    implementation("dev.optics:monocle-macro_3:3.3.0")
 
     implementation("org.lwjgl:lwjgl")
     implementation("org.lwjgl:lwjgl-assimp")
