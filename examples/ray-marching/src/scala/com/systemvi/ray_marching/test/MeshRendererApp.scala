@@ -104,6 +104,7 @@ class MeshRendererApp {
             window.shouldClose()
           }.evalOn(context.ec)
           _ <- sharedState.running.set(!shouldClose)
+          _ <- IO.cede
           _ <- input(frameData)
           _ <- update(frameData)
           _ <- render(frameData).evalOn(window.ec)
