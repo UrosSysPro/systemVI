@@ -15,7 +15,6 @@ import com.systemvi.ray_marching.opengl.utils.BufferBit.*
 import com.systemvi.ray_marching.opengl.utils.{Utils, printThread}
 import com.systemvi.ray_marching.sdf.*
 import com.systemvi.ray_marching.sdf.mesh.{Bounds, MarchingCubes, Mesh, StlExporter, SurfaceNets}
-import com.systemvi.ray_marching.test.RenderPipeline.RayMarching
 import com.systemvi.ray_marching.test.Test.resources
 import org.joml.*
 import org.lwjgl.glfw.GLFW
@@ -392,9 +391,7 @@ object Test extends IOApp.Simple {
     val app = MeshRendererApp()
     for{
       _ <- List(
-        app.run(context,sharedState),
-//        app.run(context,sharedState),
-//        app.run(context,sharedState),
+        app.run(context,sharedState,165),
       ).parSequence
     } yield ()
   }

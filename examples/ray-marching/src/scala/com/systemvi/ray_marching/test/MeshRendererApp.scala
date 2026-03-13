@@ -77,8 +77,8 @@ class MeshRendererApp {
     }
   } yield MeshRendererAppResources(context, window,vertexArray,shader,mesh)
 
-  private def state: IO[MeshRendererAppState] = for{
-    targetFps <- Ref.of[IO,Int](165)
+  private def state(targetFps: Int): IO[MeshRendererAppState] = for{
+    targetFps <- Ref.of[IO,Int](targetFps)
     pressedButtons <- Ref.of[IO,Set[MouseButton]](Set.empty)
     pressedKeys <- Ref.of[IO,Set[Int]](Set.empty)
     mouseData <- Ref.of[IO,MouseData](MouseData(0,0,0,0))
@@ -108,6 +108,7 @@ class MeshRendererApp {
           _ <- update(frameData)
           _ <- render(frameData).evalOn(window.ec)
           _ <- frameData.mainThreadTasks.getAndSet(List.empty).flatMap{tasks => tasks.traverse{_.evalOn(context.ec)}}
+          _ <- IO.cede
           frameEnd <- IO.monotonic
           elapsed = frameEnd - frameStart
           sleepTime = targetFrameTime - elapsed
@@ -150,15 +151,20 @@ class MeshRendererApp {
     val speed = 0.1f
     val mouseInvert = -1f
     for{
-      _ <- mainThreadTasks.update{_:+IO{
-        val stats = frameData.lastFrameStats
-        val fps = Math.min(999,stats.fps)
-        window.setTitle(f"fps: $fps%3d frameTime: ${stats.frameTime.toMillis}%3d.${stats.frameTime.toMicros % 1000}%03d ms jitter: ${stats.jitter.toMillis}%3d.${stats.jitter.toMicros % 1000}%03d ms")
-      }}
       pressedKeys <- frameData.state.inputState.pressedKeys.get
       pressedButtons <- frameData.state.inputState.pressedButtons.get
       mouseData <- frameData.state.inputState.mouseData.getAndUpdate{_.copy(dx=0,dy=0)}
       captured <- frameData.state.inputState.captured.get
+
+      _ <- mainThreadTasks.update{_:+IO{
+        val stats = frameData.lastFrameStats
+        val fps = f"fps: ${Math.min(999,stats.fps)}%3d"
+        val x = f"x: ${mouseData.x}%03f"
+        val y = f"y: ${mouseData.y}%03f"
+        val frameTime = f"frameTime: ${stats.frameTime.toMillis}%3d.${stats.frameTime.toMicros % 1000}%03d ms"
+        val jitter = f"jitter: ${stats.jitter.toMillis}%3d.${stats.jitter.toMicros % 1000}%03d ms"
+        window.setTitle(f"$fps $frameTime $jitter $x $y")
+      }}
 
       _ <- if pressedButtons.contains(MouseButton.Left) && !captured then for{
         _ <- frameData.state.inputState.captured.set(true)
@@ -173,9 +179,9 @@ class MeshRendererApp {
       _ <- frameData.state.camera.update{ camera =>
         val yaw = camera.yaw + mouseData.dx / delta * mouseSensitivity * mouseInvert
         val pitch = Math.clamp(
-          camera.pitch + mouseData.dy / delta * mouseSensitivity * mouseInvert,
           -Math.PI/2,
-          Math.PI/2
+          Math.PI/2,
+          camera.pitch + mouseData.dy / delta * mouseSensitivity * mouseInvert,
         )
         val position = Vector3f(camera.position)
 
@@ -226,9 +232,9 @@ class MeshRendererApp {
     } yield ()
   }
 
-  def run(context: GLFWContext, sharedState: SharedState): IO[Unit] = resources(context).use{ resources=>
+  def run(context: GLFWContext, sharedState: SharedState, targetFps: Int): IO[Unit] = resources(context).use{ resources=>
     for {
-      state <- state
+      state <- state(targetFps)
       _ <- loop(state, sharedState, resources, Duration.Zero, OpenGlStats())
     } yield ()
   }
