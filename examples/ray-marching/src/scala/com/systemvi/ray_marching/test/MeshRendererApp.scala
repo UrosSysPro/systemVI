@@ -6,6 +6,7 @@ import cats.effect.*
 import cats.effect.implicits.*
 import com.systemvi.engine
 import com.systemvi.engine.shader.Primitive
+import com.systemvi.engine.ui.utils.data.Colors
 import com.systemvi.ray_marching.opengl.{InputEvent, *}
 import com.systemvi.ray_marching.opengl.CursorMode.{Captured, Disabled, Normal}
 import com.systemvi.ray_marching.opengl.KeyAction.*
@@ -56,20 +57,41 @@ class MeshRendererApp {
     ec <- RenderThreadPool.make("mesh-render-pool")
     window <- GLFWWindow.make(context,ec,800,600,"Mesh Renderer")
     vertexArray <- VertexArray.make(window)
-    arrayBuffer <- Buffer.make[ArrayBuffer](window)
+    positionArrayBuffer <- Buffer.make[ArrayBuffer](window)
+    additionalDataArrayBuffer <- Buffer.make[ArrayBuffer](window)
     elementBuffer <- Buffer.make[ElementBuffer](window)
-    vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/vertex.glsl")}}
-    fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/fragment.glsl")}}
+    vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/phong/vertex.glsl")}}
+    fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/phong/fragment.glsl")}}
     //    mesh <- Resource.eval(IO{SurfaceNets.sdfToMesh(sdf,Bounds(Vector3f(-200),Vector3f(200)),50)})
-    mesh <- Resource.eval(IO{MarchingCubes.sdfToMesh(sdf,Bounds(Vector3f(-200),Vector3f(200)),50)})
+    mesh <- Resource.eval(IO{MarchingCubes.sdfToMesh(sdf,Bounds(Vector3f(-200),Vector3f(200)),100)})
     shader <- Shader.make(vertexShader, fragmentShader, window)
     _ <- Resource.eval[IO,Unit]{
       IO{
         vertexArray.bind()
-        //setup vertex data
-        arrayBuffer.bind()
-        arrayBuffer.upload(mesh.vertices.toArray)
+        //setup vertex position data
+        positionArrayBuffer.bind()
+        positionArrayBuffer.upload(mesh.vertices.toArray)
         vertexArray.configure(List(VertexAttribute("position",3)))
+        //aditional data
+        additionalDataArrayBuffer.bind()
+        val normals = for(i <- 0 until mesh.vertices.length / 3) yield {
+          val f=mesh.vertices
+          val index = i*3
+          val vertex = Vector3f(f(index+0),f(index+1),f(index+2))
+          val e = 0.01f
+          Vector3f(
+            sdf.getValue(Vector3f(vertex).add(Vector3f(e,0,0))) - sdf.getValue(Vector3f(vertex).add(Vector3f(-e,0,0))),
+            sdf.getValue(Vector3f(vertex).add(Vector3f(0,e,0))) - sdf.getValue(Vector3f(vertex).add(Vector3f(0,-e,0))),
+            sdf.getValue(Vector3f(vertex).add(Vector3f(0,0,e))) - sdf.getValue(Vector3f(vertex).add(Vector3f(0,0,-e))),
+          ).normalize()
+        }
+        val normalVertexData = normals.toArray.flatMap(n=>Array(n.x,n.y,n.z))
+        additionalDataArrayBuffer.upload(normalVertexData)
+        vertexArray.configure2(List(
+          VertexAttribute2(1,"normal",3,0),
+        ))
+        println(mesh.vertices.length)
+        println(normalVertexData.length)
         //setup element data
         elementBuffer.bind()
         elementBuffer.upload(mesh.indices.toArray)
@@ -215,7 +237,13 @@ class MeshRendererApp {
       }.whenA(captured)
     } yield ()
   }
-
+//  uniform vec3 lightPosition;
+//  uniform vec3 lightColor;
+//  uniform vec3 ambientColor;
+//  uniform vec3 diffuseColor;
+//  uniform vec3 specularColor;
+//  uniform float shininess;
+//  uniform vec3 cameraPosition;
   private def render(frameData: FrameData) ={
     val shader = frameData.resources.shader
     val vertexArray = frameData.resources.vertexArray
@@ -224,7 +252,8 @@ class MeshRendererApp {
     for {
       camera <- frameData.state.camera.get
       _ <- IO {
-        Utils.clear(Vector4f(0.4f, 0.1f, 0.1f, 1.0f), ColorBit, DepthBit)
+        Utils.clear(Vector4f(0), ColorBit, DepthBit)
+        glEnable(GL_DEPTH_TEST)
         shader.use()
         shader.setUniform("projection", Matrix4f().identity()
           .perspective(Math.PI.toFloat / 3, camera.aspect, 0.1f, 10000f)
@@ -234,6 +263,13 @@ class MeshRendererApp {
           .rotateY(-camera.yaw)
           .translate(Vector3f(camera.position))
         )
+        shader.setUniform("lightPosition",Vector3f(1000))
+        shader.setUniform("lightColor",Vector3f(1))
+        shader.setUniform("ambientColor",Vector3f(0.2f))
+        shader.setUniform("diffuseColor",Vector3f(Colors.green500.x,Colors.green500.y,Colors.green500.z))
+        shader.setUniform("specularColor",Vector3f(Colors.blue500.x,Colors.blue500.y,Colors.blue500.z))
+        shader.setUniform("shininess",0f)
+        shader.setUniform("cameraPosition",Vector3f(camera.position).mul(-1))
         vertexArray.bind()
         shader.drawElements(Primitive.TRIANGLES, mesh.indices.length)
         window.swapBuffers()

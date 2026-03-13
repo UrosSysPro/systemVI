@@ -20,9 +20,18 @@ case class VertexAttribute(
                             size:Int,
                           )
 
-class VertexArray(val id: Int):
+case class VertexAttribute2(
+                            attributeId: Int,
+                            name: String,
+                            size: Int,
+                            offset: Int,
+                          )
+
+class VertexArray(val id: Int) {
+
   def bind():   Unit = glBindVertexArray(id)
   def unbind(): Unit = glBindVertexArray(0)
+
   def configure(attrs: List[VertexAttribute]): Unit = {
     val vertexSize = attrs.foldLeft(0){(acc,attr)=>acc+attr.size}
     var pointer = 0
@@ -33,6 +42,16 @@ class VertexArray(val id: Int):
       pointer += attrs(i).size
     }
   }
+
+  def configure2(attrs: List[VertexAttribute2]): Unit = {
+    val vertexSize = attrs.foldLeft(0) { (acc, attr) => acc + attr.size }
+    val sizeOfFloat = 4
+    for (attr <- attrs) {
+      glVertexAttribPointer(attr.attributeId, attr.size, GL_FLOAT, false, vertexSize * sizeOfFloat, attr.offset)
+      glEnableVertexAttribArray(attr.attributeId)
+    }
+  }
+}
 
 object VertexArray:
   def make(window: GLFWWindow): Resource[IO, VertexArray] = Resource.make[IO,VertexArray]{
