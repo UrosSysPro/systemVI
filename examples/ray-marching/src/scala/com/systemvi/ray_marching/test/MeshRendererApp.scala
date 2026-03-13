@@ -60,8 +60,10 @@ class MeshRendererApp {
     positionArrayBuffer <- Buffer.make[ArrayBuffer](window)
     additionalDataArrayBuffer <- Buffer.make[ArrayBuffer](window)
     elementBuffer <- Buffer.make[ElementBuffer](window)
-    vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/phong/vertex.glsl")}}
-    fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/phong/fragment.glsl")}}
+//    vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/phong/vertex.glsl")}}
+//    fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/phong/fragment.glsl")}}
+    vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/vertex.glsl")}}
+    fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/fragment.glsl")}}
     //    mesh <- Resource.eval(IO{SurfaceNets.sdfToMesh(sdf,Bounds(Vector3f(-200),Vector3f(200)),50)})
     mesh <- Resource.eval(IO{MarchingCubes.sdfToMesh(sdf,Bounds(Vector3f(-200),Vector3f(200)),100)})
     shader <- Shader.make(vertexShader, fragmentShader, window)
@@ -263,13 +265,13 @@ class MeshRendererApp {
           .rotateY(-camera.yaw)
           .translate(Vector3f(camera.position))
         )
+        shader.setUniform("cameraPosition",Vector3f(camera.position).mul(-1))
         shader.setUniform("lightPosition",Vector3f(1000))
         shader.setUniform("lightColor",Vector3f(1))
-        shader.setUniform("ambientColor",Vector3f(0.2f))
-        shader.setUniform("diffuseColor",Vector3f(Colors.green500.x,Colors.green500.y,Colors.green500.z))
-        shader.setUniform("specularColor",Vector3f(Colors.blue500.x,Colors.blue500.y,Colors.blue500.z))
-        shader.setUniform("shininess",0f)
-        shader.setUniform("cameraPosition",Vector3f(camera.position).mul(-1))
+//        shader.setUniform("ambientColor",Vector3f(0.2f))
+//        shader.setUniform("diffuseColor",Vector3f(Colors.green500.x,Colors.green500.y,Colors.green500.z))
+//        shader.setUniform("specularColor",Vector3f(Colors.blue500.x,Colors.blue500.y,Colors.blue500.z))
+//        shader.setUniform("shininess",0f)
         vertexArray.bind()
         shader.drawElements(Primitive.TRIANGLES, mesh.indices.length)
         window.swapBuffers()
