@@ -103,20 +103,28 @@ class MeshRendererApp {
             window.pollEvents()
             window.shouldClose()
           }.evalOn(context.ec)
-          _ <- sharedState.running.set(!shouldClose)
           _ <- IO.cede
+          _ <- sharedState.running.set(!shouldClose)
           _ <- input(frameData)
           _ <- update(frameData)
           _ <- render(frameData).evalOn(window.ec)
-          _ <- frameData.mainThreadTasks.getAndSet(List.empty).flatMap{tasks => tasks.traverse{_.evalOn(context.ec)}}
+          _ <- IO.cede
+          _ <- frameData.mainThreadTasks.getAndSet(List.empty).flatMap{_.sequence}.evalOn(context.ec)
           _ <- IO.cede
           frameEnd <- IO.monotonic
+          
           elapsed = frameEnd - frameStart
           sleepTime = targetFrameTime - elapsed
           _ <- IO.sleep(sleepTime).whenA(sleepTime > Duration.Zero)
           afterSleep <- IO.monotonic
           actualSleepTime = afterSleep - frameEnd
-          lastFrameStats = OpenGlStats((1000_000f/elapsed.toMicros).toInt, elapsed, actualSleepTime, actualSleepTime-sleepTime)
+          
+          lastFrameStats = OpenGlStats(
+            if elapsed.toMicros > 0 then (1000_000f/elapsed.toMicros).toInt else 0,
+            elapsed,
+            actualSleepTime,
+            actualSleepTime - sleepTime
+          )
           _ <- loop(state, sharedState, resources, frameStart,lastFrameStats)
         yield ()
     }
@@ -148,8 +156,8 @@ class MeshRendererApp {
     val window = frameData.resources.window
     val delta = frameData.delta.toMillis.toFloat / 1000f
 
-    val mouseSensitivity = 0.0001f
-    val speed = 0.1f
+    val mouseSensitivity = 0.5f // rad per second
+    val speed = 200f // units per second
     val mouseInvert = -1f
     for{
       pressedKeys <- frameData.state.inputState.pressedKeys.get
@@ -159,7 +167,7 @@ class MeshRendererApp {
 
       _ <- mainThreadTasks.update{_:+IO{
         val stats = frameData.lastFrameStats
-        val fps = f"fps: ${Math.min(999,stats.fps)}%3d"
+        val fps = f"fps: ${stats.fps}%7d"
         val x = f"x: ${mouseData.x}%03f"
         val y = f"y: ${mouseData.y}%03f"
         val frameTime = f"frameTime: ${stats.frameTime.toMillis}%3d.${stats.frameTime.toMicros % 1000}%03d ms"
@@ -178,17 +186,17 @@ class MeshRendererApp {
       }yield () else IO.unit
 
       _ <- frameData.state.camera.update{ camera =>
-        val yaw = camera.yaw + mouseData.dx / delta * mouseSensitivity * mouseInvert
+        val yaw = camera.yaw + mouseData.dx * delta * mouseSensitivity * mouseInvert
         val pitch = Math.clamp(
           -Math.PI/2,
           Math.PI/2,
-          camera.pitch + mouseData.dy / delta * mouseSensitivity * mouseInvert,
+          camera.pitch + mouseData.dy * delta * mouseSensitivity * mouseInvert,
         )
         val position = Vector3f(camera.position)
 
-        val forward = Vector3f(Math.sin(yaw).toFloat, 0f, Math.cos(yaw).toFloat).mul(1f / delta * speed)
+        val forward = Vector3f(Math.sin(yaw).toFloat, 0f, Math.cos(yaw).toFloat).mul(1f * delta * speed)
         val right = Vector3f(forward).rotateY(-Math.PI.toFloat / 2f)
-        val up = Vector3f(0f,-1.0,0f).mul(1f / delta * speed)
+        val up = Vector3f(0f,-1.0,0f).mul(1f * delta * speed)
 
         if (pressedKeys.contains(GLFW.GLFW_KEY_W)) position.add(forward)
         if (pressedKeys.contains(GLFW.GLFW_KEY_S)) position.sub(forward)
