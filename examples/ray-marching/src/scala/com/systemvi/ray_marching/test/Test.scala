@@ -392,7 +392,7 @@ object Test extends IOApp.Simple {
     for{
       _ <- List(
         app.run(context, sharedState, 165, true),
-//        app.run(context, sharedState, 60),
+//        app.run(context, sharedState, 60,true),
 //        app.run(context, sharedState, 30),
       ).parSequence
     } yield ()

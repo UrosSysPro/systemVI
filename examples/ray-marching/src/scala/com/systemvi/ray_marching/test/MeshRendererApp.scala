@@ -46,18 +46,25 @@ case class FrameData(delta: Duration, state: MeshRendererAppState, sharedState: 
 class MeshRendererApp {
 
   val n = 10
-  val sdf: SDF = Union(
-    (for(i<-0 until n)
-      yield {
-        val angle = Math.PI.toFloat * 2 / n * i
-        val x = Math.cos(angle) * 100f
-        val y = 0f
-        val z = Math.sin(angle) * 100f
-        val r = 25f
-        Sphere(r)
-          .translate(Vector3f(x,y,z))
-      }
-      ).toList *
+  val ballRadius = 25f
+  val circleRadius = 100f
+//  val sdf: SDF = Union(
+//    (for(i<-0 until n)
+//      yield {
+//        val angle = Math.PI.toFloat * 2 / n * i
+//        val x = Math.cos(angle) * circleRadius
+//        val y = 0f
+//        val z = Math.sin(angle) * circleRadius
+//        Sphere(ballRadius)
+//          .translate(Vector3f(x,y,z))
+//      }
+//      ).toList*
+////    1f
+//  )
+  val sdf: SDF = new SmoothUnion(
+    Box(Vector3f(100)).translate(Vector3f(-100,0,0)),
+    Sphere(100).translate(Vector3f(100,0,0)),
+    20f
   )
 
   private def resources(context: GLFWContext) = for {
@@ -72,7 +79,11 @@ class MeshRendererApp {
     vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/vertex.glsl")}}
     fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/fragment.glsl")}}
     //    mesh <- Resource.eval(IO{SurfaceNets.sdfToMesh(sdf,Bounds(Vector3f(-200),Vector3f(200)),50)})
-    mesh <- Resource.eval(IO{MarchingCubes.sdfToMesh(sdf,Bounds(Vector3f(-200),Vector3f(200)),100)})
+    mesh <- Resource.eval(IO{SurfaceNets.sdfToMesh(
+      sdf = sdf,
+      bounds = Bounds(Vector3f(-200),Vector3f(200)),
+      resolution = 100
+    )})
     shader <- Shader.make(vertexShader, fragmentShader, window)
     _ <- Resource.eval[IO,Unit]{
       IO{

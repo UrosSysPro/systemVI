@@ -34,6 +34,13 @@ float intersectionSdf(float d1,float d2){
     return max(d1,d2);
 }
 
+float smoothUnionSdf( float a, float b, float k )
+{
+    k *= 4.0;
+    float h = max(k-abs(a-b),0.0);
+    return min(a, b) - h*h*0.25/k;
+}
+
 //transforms
 vec3 translateSdf(vec3 t,vec3 p){
     return p-t;
