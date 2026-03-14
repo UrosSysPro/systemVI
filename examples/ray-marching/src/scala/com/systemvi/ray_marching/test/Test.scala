@@ -162,7 +162,7 @@ object Test extends IOApp.Simple {
         Sphere(r)
           .translate(Vector3f(x,y,z))
       }
-    ).toList *
+    ).toList
   )
 
   private val targetFPS: Int = 165

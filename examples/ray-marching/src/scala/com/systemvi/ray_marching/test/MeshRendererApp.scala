@@ -47,25 +47,26 @@ class MeshRendererApp {
 
   val n = 10
   val ballRadius = 25f
-  val circleRadius = 100f
-//  val sdf: SDF = Union(
-//    (for(i<-0 until n)
-//      yield {
-//        val angle = Math.PI.toFloat * 2 / n * i
-//        val x = Math.cos(angle) * circleRadius
-//        val y = 0f
-//        val z = Math.sin(angle) * circleRadius
-//        Sphere(ballRadius)
-//          .translate(Vector3f(x,y,z))
-//      }
-//      ).toList*
-////    1f
-//  )
-  val sdf: SDF = new SmoothUnion(
-    Box(Vector3f(100)).translate(Vector3f(-100,0,0)),
-    Sphere(100).translate(Vector3f(100,0,0)),
-    20f
+  val circleRadius = 50f
+  val sdf: SDF = SmoothUnion(
+    (for(i<-0 until n)
+      yield {
+        val angle = Math.PI.toFloat * 2 / n * i
+        val x = Math.cos(angle) * circleRadius
+        val y = 0f
+        val z = Math.sin(angle) * circleRadius
+        Sphere(ballRadius)
+          .translate(Vector3f(x,y,z))
+      }
+      ).toList,
+    2f
   )
+
+//  val sdf: SDF = new SmoothDifference(
+//    Sphere(50).translate(Vector3f(30,0,0)),
+//    Box(Vector3f(100)).translate(Vector3f(-100,0,0)),
+//    5f
+//  )
 
   private def resources(context: GLFWContext) = for {
     ec <- RenderThreadPool.make("mesh-render-pool")

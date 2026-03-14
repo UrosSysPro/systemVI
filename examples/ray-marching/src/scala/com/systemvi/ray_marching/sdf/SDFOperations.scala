@@ -15,7 +15,7 @@ class Union(a:SDF,b:SDF) extends SDF {
 }
 
 object Union {
-  def apply(sdfs: SDF*): SDF = {
+  def apply(sdfs: List[SDF]): SDF = {
     sdfs.drop(1).foldLeft(sdfs.head){(acc,sdf) => new Union(acc,sdf)}
   }
 }
@@ -26,10 +26,22 @@ class Difference(a:SDF,b:SDF) extends SDF {
   override def toGlsl: String = s"differenceSdf(${a.toGlsl},${b.toGlsl})"
 }
 
+object Difference {
+  def apply(sdfs: List[SDF]): SDF = {
+    sdfs.drop(1).foldLeft(sdfs.head){(acc,sdf) => new Difference(acc,sdf)}
+  }
+}
+
 class Intersection(a:SDF,b:SDF) extends SDF {
   override def getValue(point: Vector3f): Float = Math.max(a.getValue(point),b.getValue(point))
 
   override def toGlsl: String = s"intersectionSdf(${a.toGlsl},${b.toGlsl})"
+}
+
+object Intersection {
+  def apply(sdfs: List[SDF]): SDF = {
+    sdfs.drop(1).foldLeft(sdfs.head){(acc,sdf) => new Intersection(acc,sdf)}
+  }
 }
 
 class SmoothUnion(a:SDF, b:SDF, k: Float) extends SDF {
@@ -51,14 +63,26 @@ object SmoothUnion {
   }
 }
 
-//class SmoothDifference(a: SDF, b: SDF, k: Float) extends SDF {
-//  override def getValue(point: Vector3f): Float = -SmoothUnion(a,Negative(b),k).getValue(point)
-//
-//  override def toGlsl: String = s"-smoothUnionSdf(${a.toGlsl},-${b.toGlsl},$k)"
-//}
-//
-//class SmoothIntersection(a: SDF, b: SDF, k: Float) extends SDF {
-//  override def getValue(point: Vector3f): Float = -SmoothUnion(Negative(a),Negative(b),k).getValue(point)
-//
-//  override def toGlsl: String = s"-smoothUnionSdf(-${a.toGlsl},-${b.toGlsl},$k)"
-//}
+class SmoothDifference(a: SDF, b: SDF, k: Float) extends SDF {
+  override def getValue(point: Vector3f): Float = -new SmoothUnion(a, Negative(b), k).getValue(point)
+
+  override def toGlsl: String = s"-smoothUnionSdf(${a.toGlsl},-${b.toGlsl},$k)"
+}
+
+object SmoothDifference {
+  def apply(sdfs: List[SDF], k: Float): SDF = {
+    sdfs.drop(1).foldLeft(sdfs.head){(acc,sdf) => new SmoothDifference(acc,sdf,k)}
+  }
+}
+
+class SmoothIntersection(a: SDF, b: SDF, k: Float) extends SDF {
+  override def getValue(point: Vector3f): Float = -new SmoothUnion(Negative(a), Negative(b),k).getValue(point)
+
+  override def toGlsl: String = s"-smoothUnionSdf(-${a.toGlsl},-${b.toGlsl},$k)"
+}
+
+object SmoothIntersection {
+  def apply(sdfs: List[SDF], k: Float): SDF = {
+    sdfs.drop(1).foldLeft(sdfs.head){(acc,sdf) => new SmoothIntersection(acc,sdf,k)}
+  }
+}
