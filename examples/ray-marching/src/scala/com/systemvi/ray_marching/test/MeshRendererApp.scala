@@ -30,7 +30,14 @@ case class MeshRendererAppState(targetFps: Ref[IO,Int], inputState: InputState, 
 
 case class MeshRendererAppResources(context: GLFWContext, window: GLFWWindow, vertexArray: VertexArray, shader: Shader, mesh: Mesh)
 
-case class OpenGlStats(fps:Int = 0, frameTime: Duration = Duration.Zero, sleepTime: Duration = Duration.Zero, jitter: Duration = Duration.Zero)
+case class OpenGlStats(
+                        fps:Int = 0,
+                        frameTime: Duration = Duration.Zero,
+                        actualFps:Int = 0,
+                        actualFrameTime: Duration = Duration.Zero,
+                        sleepTime: Duration = Duration.Zero,
+                        jitter: Duration = Duration.Zero
+                      )
 
 case class CatsEffectStats()
 
@@ -110,7 +117,7 @@ class MeshRendererApp {
     camera <- Ref.of[IO,Camera](Camera(Vector3f(0,0,-300),800f/600f,2.2,0,0))
   } yield MeshRendererAppState(targetFps,InputState(pressedKeys,pressedButtons,mouseData,captured),camera)
 
-  private def loop(state: MeshRendererAppState, sharedState: SharedState, resources: MeshRendererAppResources, lastFrameStart: Duration, lastFrameStats: OpenGlStats): IO[Unit] = {
+  private def loop(state: MeshRendererAppState, sharedState: SharedState, resources: MeshRendererAppResources, lastFrameStart: Duration, lastFrameStats: OpenGlStats, shouldPollEvents: Boolean): IO[Unit] = {
     val context = resources.context
     val window = resources.window
     sharedState.running.get.flatMap {
@@ -123,10 +130,8 @@ class MeshRendererApp {
           delta = frameStart-lastFrameStart
           mainThreadTasks <- Ref.of[IO,List[IO[Unit]]](List.empty)
           frameData = FrameData(delta,state,sharedState,resources,lastFrameStats,mainThreadTasks)
-          shouldClose <- IO{
-            window.pollEvents()
-            window.shouldClose()
-          }.evalOn(context.ec)
+          _ <- if shouldPollEvents then IO{window.pollEvents()}.evalOn(context.ec) else IO.unit
+          shouldClose <- IO{window.shouldClose()}.evalOn(context.ec)
           _ <- IO.cede
           _ <- sharedState.running.set(!shouldClose)
           _ <- input(frameData)
@@ -139,19 +144,33 @@ class MeshRendererApp {
           
           elapsed = frameEnd - frameStart
           sleepTime = targetFrameTime - elapsed
-          _ <- IO.sleep(sleepTime).whenA(sleepTime > Duration.Zero)
+          _ <- sleep(sleepTime)
           afterSleep <- IO.monotonic
           actualSleepTime = afterSleep - frameEnd
           
           lastFrameStats = OpenGlStats(
-            if elapsed.toMicros > 0 then (1000_000f/elapsed.toMicros).toInt else 0,
+            if elapsed.toMicros > 0 then (1000_000f / elapsed.toMicros).toInt else 0,
             elapsed,
+            if (frameStart - lastFrameStart).toMicros > 0 then (1000_000f / (frameStart - lastFrameStart).toMicros).toInt else 0,
+            frameStart - lastFrameStart,
             actualSleepTime,
             actualSleepTime - sleepTime
           )
-          _ <- loop(state, sharedState, resources, frameStart,lastFrameStats)
+          _ <- loop(state, sharedState, resources, frameStart,lastFrameStats,shouldPollEvents)
         yield ()
     }
+  }
+
+  private def sleep(duration: Duration): IO[Unit] = {
+    def recursiveSleep(sleepStart: Duration, duration: Duration):IO[Unit] = for{
+      time <- IO.monotonic
+      _ <- if time < (sleepStart + duration) then recursiveSleep(sleepStart,duration) else IO.unit
+    } yield ()
+
+    for{
+      sleepStart <- IO.monotonic
+      _ <- recursiveSleep(sleepStart,duration)
+    } yield ()
   }
 
   private def input(frameData: FrameData) = {
@@ -192,11 +211,17 @@ class MeshRendererApp {
       _ <- mainThreadTasks.update{_:+IO{
         val stats = frameData.lastFrameStats
         val fps = f"fps: ${stats.fps}%7d"
+        val frameTime = f"frameTime: ${stats.frameTime.toMillis}%3d.${stats.frameTime.toMicros % 1000}%03d ms"
+
+        val actualFps = f"actual fps: ${stats.actualFps}%7d"
+        val actualFrameTime = f"actual frameTime: ${stats.actualFrameTime.toMillis}%3d.${stats.actualFrameTime.toMicros % 1000}%03d ms"
+
         val x = f"x: ${mouseData.x}%03f"
         val y = f"y: ${mouseData.y}%03f"
-        val frameTime = f"frameTime: ${stats.frameTime.toMillis}%3d.${stats.frameTime.toMicros % 1000}%03d ms"
+
         val jitter = f"jitter: ${stats.jitter.toMillis}%3d.${stats.jitter.toMicros % 1000}%03d ms"
-        window.setTitle(f"$fps $frameTime $jitter $x $y")
+
+        window.setTitle(f"$fps $frameTime $actualFps $actualFrameTime $jitter $x $y")
       }}
 
       _ <- if pressedButtons.contains(MouseButton.Left) && !captured then for{
@@ -279,10 +304,10 @@ class MeshRendererApp {
     } yield ()
   }
 
-  def run(context: GLFWContext, sharedState: SharedState, targetFps: Int): IO[Unit] = resources(context).use{ resources=>
+  def run(context: GLFWContext, sharedState: SharedState, targetFps: Int, shouldPollEvents: Boolean = false): IO[Unit] = resources(context).use{ resources=>
     for {
       state <- state(targetFps)
-      _ <- loop(state, sharedState, resources, Duration.Zero, OpenGlStats())
+      _ <- loop(state, sharedState, resources, Duration.Zero, OpenGlStats(), shouldPollEvents)
     } yield ()
   }
 }

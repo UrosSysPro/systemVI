@@ -391,7 +391,9 @@ object Test extends IOApp.Simple {
     val app = MeshRendererApp()
     for{
       _ <- List(
-        app.run(context,sharedState,165),
+        app.run(context, sharedState, 165, true),
+//        app.run(context, sharedState, 60),
+//        app.run(context, sharedState, 30),
       ).parSequence
     } yield ()
   }

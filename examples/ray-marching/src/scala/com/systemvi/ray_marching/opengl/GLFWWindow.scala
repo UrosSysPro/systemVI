@@ -190,6 +190,9 @@ object GLFWWindow {
           glfwMakeContextCurrent(id)
           val capabilities = GL.createCapabilities
           glViewport(0, 0, width, height)
+          glfwSwapInterval(0)
+//          val videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor())
+//          println(videoMode.refreshRate())
           val window = GLFWWindow(
             id,
             width,
