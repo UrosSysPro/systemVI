@@ -108,11 +108,15 @@ class GLFWWindow(
     glfwSetWindowPos(this.id,x,y)
   }
 
+  def setViewport(x: Int, y: Int, width: Int, height: Int): Unit = {
+    glViewport(x, y, width, height)
+  }
+
   def setSize(width: Int, height: Int): Unit = {
     this._width = width
     this._height = height
     glfwSetWindowSize(this.id, this.width, this.height)
-    glViewport(0, 0, this.width, this.height)
+    setViewport(0, 0, this.width, this.height)
   }
 
   def setTitle(title: String): Unit = {
@@ -191,8 +195,6 @@ object GLFWWindow {
           val capabilities = GL.createCapabilities
           glViewport(0, 0, width, height)
           glfwSwapInterval(0)
-//          val videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor())
-//          println(videoMode.refreshRate())
           val window = GLFWWindow(
             id,
             width,

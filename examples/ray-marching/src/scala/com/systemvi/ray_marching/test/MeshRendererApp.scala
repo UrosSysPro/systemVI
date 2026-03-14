@@ -24,7 +24,7 @@ import scala.concurrent.duration.*
 
 case class MouseData(x:Double, y: Double, dx: Double, dy: Double)
 
-case class InputState(pressedKeys: Ref[IO,Set[Int]], pressedButtons: Ref[IO,Set[MouseButton]], mouseData:Ref[IO,MouseData], captured: Ref[IO,Boolean])
+case class InputState(pressedKeys: Ref[IO,Set[Int]], pressedButtons: Ref[IO,Set[MouseButton]], mouseData:Ref[IO,MouseData], captured: Ref[IO,Boolean], windowResize: Ref[IO,Option[(Int,Int)]])
 
 case class MeshRendererAppState(targetFps: Ref[IO,Int], inputState: InputState, camera: Ref[IO,Camera])
 
@@ -114,8 +114,9 @@ class MeshRendererApp {
     pressedKeys <- Ref.of[IO,Set[Int]](Set.empty)
     mouseData <- Ref.of[IO,MouseData](MouseData(0,0,0,0))
     captured <- Ref.of[IO,Boolean](false)
+    windowResize <- Ref.of[IO,Option[(Int,Int)]](None)
     camera <- Ref.of[IO,Camera](Camera(Vector3f(0,0,-300),800f/600f,2.2,0,0))
-  } yield MeshRendererAppState(targetFps,InputState(pressedKeys,pressedButtons,mouseData,captured),camera)
+  } yield MeshRendererAppState(targetFps,InputState(pressedKeys,pressedButtons,mouseData,captured,windowResize),camera)
 
   private def loop(state: MeshRendererAppState, sharedState: SharedState, resources: MeshRendererAppResources, lastFrameStart: Duration, lastFrameStats: OpenGlStats, shouldPollEvents: Boolean): IO[Unit] = {
     val context = resources.context
@@ -189,6 +190,7 @@ class MeshRendererApp {
           case Release => keys - key
           case _ => keys
         }}
+        case InputEvent.WindowResize(width, height) => inputState.windowResize.set((width,height).some)
         case _ => IO.unit
       }
     }yield ()
@@ -207,6 +209,16 @@ class MeshRendererApp {
       pressedButtons <- frameData.state.inputState.pressedButtons.get
       mouseData <- frameData.state.inputState.mouseData.getAndUpdate{_.copy(dx=0,dy=0)}
       captured <- frameData.state.inputState.captured.get
+      windowResize <- frameData.state.inputState.windowResize.getAndSet(None)
+
+      _ <- windowResize match {
+        case Some((width,height)) => for{
+          _ <- frameData.state.camera.update{_.copy(aspect = width.toFloat/height.toFloat)}
+          _ <- IO{window.setViewport(0,0,width,height)}.evalOn(window.ec)
+          _ <- IO.cede
+        } yield ()
+        case None => IO.unit
+      }
 
       _ <- mainThreadTasks.update{_:+IO{
         val stats = frameData.lastFrameStats
@@ -254,23 +266,15 @@ class MeshRendererApp {
         if (pressedKeys.contains(GLFW.GLFW_KEY_SPACE)) position.add(up)
         if (pressedKeys.contains(GLFW.GLFW_KEY_LEFT_SHIFT)) position.sub(up)
 
-        Camera(
-          position,
-          camera.aspect,
-          camera.fi,
-          pitch.toFloat,
-          yaw.toFloat,
+        camera.copy(
+          position = position,
+          pitch = pitch.toFloat,
+          yaw = yaw.toFloat,
         )
       }.whenA(captured)
     } yield ()
   }
-//  uniform vec3 lightPosition;
-//  uniform vec3 lightColor;
-//  uniform vec3 ambientColor;
-//  uniform vec3 diffuseColor;
-//  uniform vec3 specularColor;
-//  uniform float shininess;
-//  uniform vec3 cameraPosition;
+
   private def render(frameData: FrameData) ={
     val shader = frameData.resources.shader
     val vertexArray = frameData.resources.vertexArray
@@ -293,10 +297,6 @@ class MeshRendererApp {
         shader.setUniform("cameraPosition",Vector3f(camera.position).mul(-1))
         shader.setUniform("lightPosition",Vector3f(1000))
         shader.setUniform("lightColor",Vector3f(1))
-//        shader.setUniform("ambientColor",Vector3f(0.2f))
-//        shader.setUniform("diffuseColor",Vector3f(Colors.green500.x,Colors.green500.y,Colors.green500.z))
-//        shader.setUniform("specularColor",Vector3f(Colors.blue500.x,Colors.blue500.y,Colors.blue500.z))
-//        shader.setUniform("shininess",0f)
         vertexArray.bind()
         shader.drawElements(Primitive.TRIANGLES, mesh.indices.length)
         window.swapBuffers()
