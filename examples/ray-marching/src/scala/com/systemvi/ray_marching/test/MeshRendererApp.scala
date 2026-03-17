@@ -55,16 +55,17 @@ class MeshRendererApp {
     positionArrayBuffer <- Buffer.make[ArrayBuffer](window)
     additionalDataArrayBuffer <- Buffer.make[ArrayBuffer](window)
     elementBuffer <- Buffer.make[ElementBuffer](window)
-    vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/phong/vertex.glsl")}}
-    fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/phong/fragment.glsl")}}
-//    vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/vertex.glsl")}}
-//    fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/fragment.glsl")}}
+//    vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/phong/vertex.glsl")}}
+//    fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/phong/fragment.glsl")}}
+    vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/vertex.glsl")}}
+    fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/fragment.glsl")}}
     //    mesh <- Resource.eval(IO{SurfaceNets.sdfToMesh(sdf,Bounds(Vector3f(-200),Vector3f(200)),50)})
     mesh <- Resource.eval(IO{MarchingCubes.sdfToMesh(
       sdf = sdf,
-      bounds = Bounds(Vector3f(0,0,-300),Vector3f(300,300,300)),
-      resolution = 100
+      bounds = Bounds(Vector3f(-100,-100,-300),Vector3f(300,300,300)),
+      resolution = 50
     )})
+    _ <- Resource.eval(IO{StlExporter().exportToFile(mesh.vertices,mesh.indices,"test.stl")})
     shader <- Shader.make(vertexShader, fragmentShader, window)
     _ <- Resource.eval[IO,Unit]{
       IO{

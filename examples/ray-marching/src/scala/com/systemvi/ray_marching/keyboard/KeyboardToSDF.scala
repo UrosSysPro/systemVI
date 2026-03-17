@@ -1,7 +1,7 @@
 package com.systemvi.ray_marching.keyboard
 
-import com.systemvi.ray_marching.sdf.{Box, SDF, Union}
-import org.joml.Vector3f
+import com.systemvi.ray_marching.sdf.{Box, Difference, SDF, Union}
+import org.joml.{Vector2f, Vector2i, Vector3f}
 
 class KeyboardToSDF(
                      val oneUSize: Float = 19.0f,
@@ -9,6 +9,16 @@ class KeyboardToSDF(
                    ) {
 
   def toSDF(keyboard: Keyboard): SDF = {
+
+    val size = keyboard.gridKeycaps.foldLeft(Vector2f()){(size,row)=>
+      val rowWidth = row.foldLeft(0f){ (acc,keycap) =>
+        acc + oneUSize * keycap.width.value
+      }
+      val maxWidth = size.x
+      val maxHeight = size.y
+
+      Vector2f(Math.max(rowWidth,maxWidth),maxHeight + oneUSize)
+    }
 
     var x: Float = 0
     var y: Float = 0
@@ -25,12 +35,24 @@ class KeyboardToSDF(
         ))
       x += oneUSize*keycap.width.value
       if(columnIndex==row.length-1){
-        x = oneUSize/2
+        x = 0
         y += oneUSize
       }
       switchSdf
     }
 
-    Union(switchSdfs)
+    val topPlatePadding = 10
+
+    val topPlateSdf = Box(Vector3f(
+      size.x / 2 + topPlatePadding,
+      size.y / 2 + topPlatePadding,
+      2
+    ))
+      .translate(Vector3f(size.x/2,size.y/2,0))
+
+    new Difference(
+      Union(switchSdfs),
+      topPlateSdf,
+    )
   }
 }
