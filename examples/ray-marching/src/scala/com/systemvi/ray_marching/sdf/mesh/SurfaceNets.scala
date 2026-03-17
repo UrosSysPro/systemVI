@@ -1,7 +1,27 @@
 package com.systemvi.ray_marching.sdf.mesh
 
+import cats.*
+import cats.implicits.*
+import cats.effect.*
+import cats.effect.implicits.*
+import com.systemvi.engine
+import com.systemvi.engine.shader.Primitive
+import com.systemvi.engine.ui.utils.data.Colors
+import com.systemvi.ray_marching.keyboard.KeyboardToSDF
+import com.systemvi.ray_marching.opengl.{InputEvent, *}
+import com.systemvi.ray_marching.opengl.CursorMode.*
+import com.systemvi.ray_marching.opengl.KeyAction.*
+import com.systemvi.ray_marching.opengl.buffer.*
+import com.systemvi.ray_marching.opengl.shader.Shader
+import com.systemvi.ray_marching.opengl.utils.BufferBit.*
+import com.systemvi.ray_marching.opengl.utils.Utils
+import com.systemvi.ray_marching.sdf.*
+import com.systemvi.ray_marching.sdf.mesh.*
+import org.joml.*
+import org.lwjgl.glfw.GLFW
+import org.lwjgl.opengl.GL11.*
 import com.systemvi.ray_marching.sdf.SDF
-import org.joml.Vector3f
+import org.joml.*
 
 case class Bounds(min: Vector3f, max: Vector3f)
 
@@ -21,6 +41,7 @@ object SurfaceNets {
     (0,2),(1,3),(4,6),(5,7),   // edges along Y
     (0,4),(1,5),(2,6),(3,7)    // edges along Z
   )
+
   private val edge_neighbors: Array[Array[(Int, Int, Int)]] = Array(
     // axis 0 = X-edge  → quad in YZ-plane
     Array((0, 0, 0), (0, -1, 0), (0, -1, -1), (0, 0, -1)),
@@ -156,5 +177,106 @@ object SurfaceNets {
       }
     }
     mesh.copy(vertices = v.toList)
+  }
+
+  private def range(size:Vector3i) = (for{
+    i <- 0 until size.x
+    j <- 0 until size.y
+    k <- 0 until size.z
+  } yield (i,j,k)).toList
+
+  def sdfToMesh2(sdf: SDF, bounds: Bounds, resolution: Vector3i = Vector3i(100,100,100), isoValue: Float = 0f): IO[Mesh2[VertexWithNormal]]={
+    val step = Vector3f(bounds.max).sub(bounds.min).div(resolution.x.toFloat,resolution.y.toFloat,resolution.z.toFloat)
+    for {
+      //generate triangles
+      triangles <- range(resolution).map{ (i,j,k) => IO{
+        val x = bounds.min.x + i * step.x
+        val y = bounds.min.y + j * step.y
+        val z = bounds.min.z + k * step.z
+
+        val value = sdf.getValue(Vector3f(x,y,z))
+        val dirX = sdf.getValue(Vector3f(x,y,z).add(Vector3f(step.x,0,0)))
+        val dirY = sdf.getValue(Vector3f(x,y,z).add(Vector3f(0,step.y,0)))
+        val dirZ = sdf.getValue(Vector3f(x,y,z).add(Vector3f(0,0,step.z)))
+
+        var triangles = List.empty[(VertexWithNormal,VertexWithNormal,VertexWithNormal)]
+
+        //positive dir
+        if(value < 0 && dirX >= 0){
+          triangles :+= (
+            VertexWithNormal(Vector3f(x+step.x/2,y+step.y/2,z+step.z/2),Vector3f(1,0,0)),
+            VertexWithNormal(Vector3f(x+step.x/2,y+step.y/2,z-step.z/2),Vector3f(1,0,0)),
+            VertexWithNormal(Vector3f(x+step.x/2,y-step.y/2,z+step.z/2),Vector3f(1,0,0)),
+          )
+          triangles :+= (
+            VertexWithNormal(Vector3f(x+step.x/2,y+step.y/2,z-step.z/2),Vector3f(1,0,0)),
+            VertexWithNormal(Vector3f(x+step.x/2,y-step.y/2,z+step.z/2),Vector3f(1,0,0)),
+            VertexWithNormal(Vector3f(x+step.x/2,y-step.y/2,z-step.z/2),Vector3f(1,0,0)),
+          )
+        }
+        if(value < 0 && dirY >= 0){
+          triangles :+= (
+            VertexWithNormal(Vector3f(x+step.x/2,y+step.y/2,z+step.z/2),Vector3f(0,1,0)),
+            VertexWithNormal(Vector3f(x+step.x/2,y+step.y/2,z-step.z/2),Vector3f(0,1,0)),
+            VertexWithNormal(Vector3f(x-step.x/2,y+step.y/2,z+step.z/2),Vector3f(0,1,0)),
+          )
+          triangles :+= (
+            VertexWithNormal(Vector3f(x+step.x/2,y+step.y/2,z-step.z/2),Vector3f(0,1,0)),
+            VertexWithNormal(Vector3f(x-step.x/2,y+step.y/2,z+step.z/2),Vector3f(0,1,0)),
+            VertexWithNormal(Vector3f(x-step.x/2,y+step.y/2,z-step.z/2),Vector3f(0,1,0)),
+          )
+        }
+        if(value < 0 && dirZ >= 0){
+          triangles :+= (
+            VertexWithNormal(Vector3f(x+step.x/2,y+step.z/2,z+step.z/2),Vector3f(0,0,1)),
+            VertexWithNormal(Vector3f(x+step.x/2,y-step.z/2,z+step.z/2),Vector3f(0,0,1)),
+            VertexWithNormal(Vector3f(x-step.x/2,y+step.z/2,z+step.z/2),Vector3f(0,0,1)),
+          )
+          triangles :+= (
+            VertexWithNormal(Vector3f(x+step.x/2,y-step.z/2,z+step.z/2),Vector3f(0,0,1)),
+            VertexWithNormal(Vector3f(x-step.x/2,y+step.z/2,z+step.z/2),Vector3f(0,0,1)),
+            VertexWithNormal(Vector3f(x-step.x/2,y-step.z/2,z+step.z/2),Vector3f(0,0,1)),
+          )
+        }
+        //negative dir
+        if(value >= 0 && dirX <= 0){
+          triangles :+= (
+            VertexWithNormal(Vector3f(x+step.x/2,y+step.y/2,z+step.z/2),Vector3f(-1,0,0)),
+            VertexWithNormal(Vector3f(x+step.x/2,y+step.y/2,z-step.z/2),Vector3f(-1,0,0)),
+            VertexWithNormal(Vector3f(x+step.x/2,y-step.y/2,z+step.z/2),Vector3f(-1,0,0)),
+          )
+          triangles :+= (
+            VertexWithNormal(Vector3f(x+step.x/2,y+step.y/2,z-step.z/2),Vector3f(-1,0,0)),
+            VertexWithNormal(Vector3f(x+step.x/2,y-step.y/2,z+step.z/2),Vector3f(-1,0,0)),
+            VertexWithNormal(Vector3f(x+step.x/2,y-step.y/2,z-step.z/2),Vector3f(-1,0,0)),
+          )
+        }
+        if(value >= 0 && dirY <= 0){
+          triangles :+= (
+            VertexWithNormal(Vector3f(x+step.x/2,y+step.y/2,z+step.z/2),Vector3f(0,-1,0)),
+            VertexWithNormal(Vector3f(x+step.x/2,y+step.y/2,z-step.z/2),Vector3f(0,-1,0)),
+            VertexWithNormal(Vector3f(x-step.x/2,y+step.y/2,z+step.z/2),Vector3f(0,-1,0)),
+          )
+          triangles :+= (
+            VertexWithNormal(Vector3f(x+step.x/2,y+step.y/2,z-step.z/2),Vector3f(0,-1,0)),
+            VertexWithNormal(Vector3f(x-step.x/2,y+step.y/2,z+step.z/2),Vector3f(0,-1,0)),
+            VertexWithNormal(Vector3f(x-step.x/2,y+step.y/2,z-step.z/2),Vector3f(0,-1,0)),
+          )
+        }
+        if(value >= 0 && dirZ <= 0){
+          triangles :+= (
+            VertexWithNormal(Vector3f(x+step.x/2,y+step.z/2,z+step.z/2),Vector3f(0,0,-1)),
+            VertexWithNormal(Vector3f(x+step.x/2,y-step.z/2,z+step.z/2),Vector3f(0,0,-1)),
+            VertexWithNormal(Vector3f(x-step.x/2,y+step.z/2,z+step.z/2),Vector3f(0,0,-1)),
+          )
+          triangles :+= (
+            VertexWithNormal(Vector3f(x+step.x/2,y-step.z/2,z+step.z/2),Vector3f(0,0,-1)),
+            VertexWithNormal(Vector3f(x-step.x/2,y+step.z/2,z+step.z/2),Vector3f(0,0,-1)),
+            VertexWithNormal(Vector3f(x-step.x/2,y-step.z/2,z+step.z/2),Vector3f(0,0,-1)),
+          )
+        }
+        triangles
+      }}.parSequence.map(_.flatten)
+    } yield Mesh2[VertexWithNormal](triangles)
   }
 }

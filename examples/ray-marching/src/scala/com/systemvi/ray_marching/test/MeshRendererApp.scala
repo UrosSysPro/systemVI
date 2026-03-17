@@ -16,7 +16,7 @@ import com.systemvi.ray_marching.opengl.shader.Shader
 import com.systemvi.ray_marching.opengl.utils.BufferBit.*
 import com.systemvi.ray_marching.opengl.utils.Utils
 import com.systemvi.ray_marching.sdf.*
-import com.systemvi.ray_marching.sdf.mesh.{Bounds, MarchingCubes, Mesh, StlExporter, SurfaceNets}
+import com.systemvi.ray_marching.sdf.mesh.{Bounds, MarchingCubes, Mesh, StlExporter, SurfaceNets,Mesh2,*}
 import org.joml.*
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.opengl.GL11.*
@@ -29,7 +29,7 @@ case class InputState(pressedKeys: Ref[IO,Set[Int]], pressedButtons: Ref[IO,Set[
 
 case class MeshRendererAppState(targetFps: Ref[IO,Int], inputState: InputState, camera: Ref[IO,Camera])
 
-case class MeshRendererAppResources(context: GLFWContext, window: GLFWWindow, vertexArray: VertexArray, shader: Shader, mesh: Mesh)
+case class MeshRendererAppResources(context: GLFWContext, window: GLFWWindow, vertexArray: VertexArray, shader: Shader, mesh: Mesh2[VertexWithNormal])
 
 case class OpenGlStats(
                         fps:Int = 0,
@@ -53,53 +53,77 @@ class MeshRendererApp {
     window <- GLFWWindow.make(context,ec,800,600,"Mesh Renderer")
     vertexArray <- VertexArray.make(window)
     positionArrayBuffer <- Buffer.make[ArrayBuffer](window)
-    additionalDataArrayBuffer <- Buffer.make[ArrayBuffer](window)
     elementBuffer <- Buffer.make[ElementBuffer](window)
-//    vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/phong/vertex.glsl")}}
-//    fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/phong/fragment.glsl")}}
     vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/vertex.glsl")}}
     fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/fragment.glsl")}}
-    //    mesh <- Resource.eval(IO{SurfaceNets.sdfToMesh(sdf,Bounds(Vector3f(-200),Vector3f(200)),50)})
-    mesh <- Resource.eval(IO{MarchingCubes.sdfToMesh(
+    mesh <- Resource.eval(SurfaceNets.sdfToMesh2(
       sdf = sdf,
-      bounds = Bounds(Vector3f(-100,-100,-300),Vector3f(300,300,300)),
-      resolution = 50
-    )})
-    _ <- Resource.eval(IO{StlExporter().exportToFile(mesh.vertices,mesh.indices,"test.stl")})
+      bounds = Bounds(Vector3f(-50,-50,-20),Vector3f(300,300,20)),
+      resolution = Vector3i(100,100,20),
+    ))
     shader <- Shader.make(vertexShader, fragmentShader, window)
     _ <- Resource.eval[IO,Unit]{
       IO{
         vertexArray.bind()
-        //setup vertex position data
         positionArrayBuffer.bind()
-        positionArrayBuffer.upload(mesh.vertices.toArray)
-        vertexArray.configure(List(VertexAttribute("position",3)))
-        //aditional data
-        additionalDataArrayBuffer.bind()
-        val normals = for(i <- 0 until mesh.vertices.length / 3) yield {
-          val f=mesh.vertices
-          val index = i*3
-          val vertex = Vector3f(f(index+0),f(index+1),f(index+2))
-          val e = 0.01f
-          Vector3f(
-            sdf.getValue(Vector3f(vertex).add(Vector3f(e,0,0))) - sdf.getValue(Vector3f(vertex).add(Vector3f(-e,0,0))),
-            sdf.getValue(Vector3f(vertex).add(Vector3f(0,e,0))) - sdf.getValue(Vector3f(vertex).add(Vector3f(0,-e,0))),
-            sdf.getValue(Vector3f(vertex).add(Vector3f(0,0,e))) - sdf.getValue(Vector3f(vertex).add(Vector3f(0,0,-e))),
-          ).normalize()
-        }
-        val normalVertexData = normals.toArray.flatMap(n=>Array(n.x,n.y,n.z))
-        additionalDataArrayBuffer.upload(normalVertexData)
-        vertexArray.configure2(List(
-          VertexAttribute2(1,"normal",3,0),
-        ))
-        println(mesh.vertices.length)
-        println(normalVertexData.length)
-        //setup element data
-        elementBuffer.bind()
-        elementBuffer.upload(mesh.indices.toArray)
+        positionArrayBuffer.upload(mesh.toArray)
+        vertexArray.configure(List(VertexAttribute("position",3),VertexAttribute("normal",3)))
       }.evalOn(window.ec)
     }
   } yield MeshRendererAppResources(context, window,vertexArray,shader,mesh)
+
+//  private def resources(context: GLFWContext) = for {
+//    ec <- RenderThreadPool.make("mesh-render-pool")
+//    window <- GLFWWindow.make(context,ec,800,600,"Mesh Renderer")
+//    vertexArray <- VertexArray.make(window)
+//    positionArrayBuffer <- Buffer.make[ArrayBuffer](window)
+//    additionalDataArrayBuffer <- Buffer.make[ArrayBuffer](window)
+//    elementBuffer <- Buffer.make[ElementBuffer](window)
+////    vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/phong/vertex.glsl")}}
+////    fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/phong/fragment.glsl")}}
+//    vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/vertex.glsl")}}
+//    fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/fragment.glsl")}}
+//    //    mesh <- Resource.eval(IO{SurfaceNets.sdfToMesh(sdf,Bounds(Vector3f(-200),Vector3f(200)),50)})
+//    mesh <- Resource.eval(IO{MarchingCubes.sdfToMesh(
+//      sdf = sdf,
+//      bounds = Bounds(Vector3f(-100,-100,-300),Vector3f(300,300,300)),
+//      resolution = 50
+//    )})
+//    _ <- Resource.eval(IO{StlExporter().exportToFile(mesh.vertices,mesh.indices,"test.stl")})
+//    shader <- Shader.make(vertexShader, fragmentShader, window)
+//    _ <- Resource.eval[IO,Unit]{
+//      IO{
+//        vertexArray.bind()
+//        //setup vertex position data
+//        positionArrayBuffer.bind()
+//        positionArrayBuffer.upload(mesh.vertices.toArray)
+//        vertexArray.configure(List(VertexAttribute("position",3)))
+//        //aditional data
+//        additionalDataArrayBuffer.bind()
+//        val normals = for(i <- 0 until mesh.vertices.length / 3) yield {
+//          val f=mesh.vertices
+//          val index = i*3
+//          val vertex = Vector3f(f(index+0),f(index+1),f(index+2))
+//          val e = 0.01f
+//          Vector3f(
+//            sdf.getValue(Vector3f(vertex).add(Vector3f(e,0,0))) - sdf.getValue(Vector3f(vertex).add(Vector3f(-e,0,0))),
+//            sdf.getValue(Vector3f(vertex).add(Vector3f(0,e,0))) - sdf.getValue(Vector3f(vertex).add(Vector3f(0,-e,0))),
+//            sdf.getValue(Vector3f(vertex).add(Vector3f(0,0,e))) - sdf.getValue(Vector3f(vertex).add(Vector3f(0,0,-e))),
+//          ).normalize()
+//        }
+//        val normalVertexData = normals.toArray.flatMap(n=>Array(n.x,n.y,n.z))
+//        additionalDataArrayBuffer.upload(normalVertexData)
+//        vertexArray.configure2(List(
+//          VertexAttribute2(1,"normal",3,0),
+//        ))
+//        println(mesh.vertices.length)
+//        println(normalVertexData.length)
+//        //setup element data
+//        elementBuffer.bind()
+//        elementBuffer.upload(mesh.indices.toArray)
+//      }.evalOn(window.ec)
+//    }
+//  } yield MeshRendererAppResources(context, window,vertexArray,shader,mesh)
 
   private def state(targetFps: Int): IO[MeshRendererAppState] = for{
     targetFps <- Ref.of[IO,Int](targetFps)
@@ -291,7 +315,8 @@ class MeshRendererApp {
         shader.setUniform("lightPosition",Vector3f(1000))
         shader.setUniform("lightColor",Vector3f(1))
         vertexArray.bind()
-        shader.drawElements(Primitive.TRIANGLES, mesh.indices.length)
+//        shader.drawElements(Primitive.TRIANGLES, mesh.indices.length)
+        shader.drawArrays(Primitive.TRIANGLES, 0 , mesh.triangles.length * 3)
         window.swapBuffers()
       }
     } yield ()
