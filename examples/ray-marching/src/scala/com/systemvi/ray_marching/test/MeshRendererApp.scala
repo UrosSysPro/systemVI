@@ -46,12 +46,12 @@ case class FrameData(delta: Duration, state: MeshRendererAppState, sharedState: 
 
 class MeshRendererApp {
 
-//  val sdf = KeyboardToSDF().toSDF(TestKeyboards.keyboard60)
-  val sdf = new SmoothUnion(
-    Box(Vector3f(100)).translate(Vector3f(-50)),
-    Sphere(100).translate(Vector3f(+50)),
-    20
-  )
+  val sdf = KeyboardToSDF().toSDF(TestKeyboards.keyboard60)
+//  val sdf = new SmoothUnion(
+//    Box(Vector3f(100)).translate(Vector3f(-50)),
+//    Sphere(100).translate(Vector3f(+50)),
+//    20
+//  )
 
   private def resources(context: GLFWContext) = for {
     ec <- RenderThreadPool.make("mesh-render-pool")
@@ -61,19 +61,21 @@ class MeshRendererApp {
     elementBuffer <- Buffer.make[ElementBuffer](window)
     vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/vertex.glsl")}}
     fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/fragment.glsl")}}
-//    mesh <- Resource.eval(SurfaceNets.sdfToMesh2(
-//      sdf = sdf,
-//      bounds = Bounds(Vector3f(-50,-50,-20),Vector3f(300,300,20)),
-//      resolution = Vector3i(200,200,50),
-//    ))
     mesh <- Resource.eval(SurfaceNets.sdfToMesh2(
       sdf = sdf,
-      bounds = Bounds(Vector3f(-200),Vector3f(200)),
-      resolution = Vector3i(50),
+      bounds = Bounds(Vector3f(-20,-20,-20),Vector3f(300,300,20)),
+      resolution = Vector3i(100,100,10),
       roundIterationSteps = 100,
       smoothNormals = true,
     ))
-    _<-Resource.eval(IO{StlExporter().exportToFile2(mesh,"test.stl")})
+//    mesh <- Resource.eval(SurfaceNets.sdfToMesh2(
+//      sdf = sdf,
+//      bounds = Bounds(Vector3f(-200),Vector3f(200)),
+//      resolution = Vector3i(50),
+//      roundIterationSteps = 100,
+//      smoothNormals = true,
+//    ))
+//    _<-Resource.eval(IO{StlExporter().exportToFile2(mesh,"test.stl")})
     shader <- Shader.make(vertexShader, fragmentShader, window)
     _ <- Resource.eval[IO,Unit]{
       IO{
