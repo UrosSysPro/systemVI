@@ -7,6 +7,7 @@ import cats.effect.implicits.*
 import com.systemvi.engine
 import com.systemvi.engine.shader.Primitive
 import com.systemvi.engine.ui.utils.data.Colors
+import com.systemvi.ray_marching.keyboard.KeyboardToSDF
 import com.systemvi.ray_marching.opengl.{InputEvent, *}
 import com.systemvi.ray_marching.opengl.CursorMode.{Captured, Disabled, Normal}
 import com.systemvi.ray_marching.opengl.KeyAction.*
@@ -45,28 +46,7 @@ case class FrameData(delta: Duration, state: MeshRendererAppState, sharedState: 
 
 class MeshRendererApp {
 
-  val n = 10
-  val ballRadius = 25f
-  val circleRadius = 50f
-  val sdf: SDF = SmoothUnion(
-    (for(i<-0 until n)
-      yield {
-        val angle = Math.PI.toFloat * 2 / n * i
-        val x = Math.cos(angle) * circleRadius
-        val y = 0f
-        val z = Math.sin(angle) * circleRadius
-        Sphere(ballRadius)
-          .translate(Vector3f(x,y,z))
-      }
-      ).toList,
-    2f
-  )
-
-//  val sdf: SDF = new SmoothDifference(
-//    Sphere(50).translate(Vector3f(30,0,0)),
-//    Box(Vector3f(100)).translate(Vector3f(-100,0,0)),
-//    5f
-//  )
+  val sdf = KeyboardToSDF().toSDF(TestKeyboards.keyboard60)
 
   private def resources(context: GLFWContext) = for {
     ec <- RenderThreadPool.make("mesh-render-pool")
@@ -75,14 +55,14 @@ class MeshRendererApp {
     positionArrayBuffer <- Buffer.make[ArrayBuffer](window)
     additionalDataArrayBuffer <- Buffer.make[ArrayBuffer](window)
     elementBuffer <- Buffer.make[ElementBuffer](window)
-//    vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/phong/vertex.glsl")}}
-//    fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/phong/fragment.glsl")}}
-    vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/vertex.glsl")}}
-    fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/fragment.glsl")}}
+    vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/phong/vertex.glsl")}}
+    fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/phong/fragment.glsl")}}
+//    vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/vertex.glsl")}}
+//    fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/fragment.glsl")}}
     //    mesh <- Resource.eval(IO{SurfaceNets.sdfToMesh(sdf,Bounds(Vector3f(-200),Vector3f(200)),50)})
-    mesh <- Resource.eval(IO{SurfaceNets.sdfToMesh(
+    mesh <- Resource.eval(IO{MarchingCubes.sdfToMesh(
       sdf = sdf,
-      bounds = Bounds(Vector3f(-200),Vector3f(200)),
+      bounds = Bounds(Vector3f(0,0,-300),Vector3f(300,300,300)),
       resolution = 100
     )})
     shader <- Shader.make(vertexShader, fragmentShader, window)
