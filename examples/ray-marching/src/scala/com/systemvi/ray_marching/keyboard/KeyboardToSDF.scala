@@ -8,17 +8,27 @@ class KeyboardToSDF(
                      val switchSize: Float = 14.0f
                    ) {
 
+  private def keyboardSize(keyboard: Keyboard) = keyboard.gridKeycaps.foldLeft(Vector2f()){(size,row)=>
+    val rowWidth = row.foldLeft(0f){ (acc,keycap) =>
+      acc + oneUSize * keycap.width.value
+    }
+    val maxWidth = size.x
+    val maxHeight = size.y
+
+    Vector2f(Math.max(rowWidth,maxWidth),maxHeight + oneUSize)
+  }
+
+  private def bottomCase(size: Vector2i) = {
+
+  }
+
+  private def sidePanel(size: Vector2i) = {
+
+  }
+
   def toSDF(keyboard: Keyboard): SDF = {
 
-    val size = keyboard.gridKeycaps.foldLeft(Vector2f()){(size,row)=>
-      val rowWidth = row.foldLeft(0f){ (acc,keycap) =>
-        acc + oneUSize * keycap.width.value
-      }
-      val maxWidth = size.x
-      val maxHeight = size.y
-
-      Vector2f(Math.max(rowWidth,maxWidth),maxHeight + oneUSize)
-    }
+    val size = keyboardSize(keyboard)
 
     var x: Float = 0
     var y: Float = 0
@@ -27,10 +37,10 @@ class KeyboardToSDF(
       (row,rowIndex) <- keyboard.gridKeycaps.zipWithIndex
       (keycap,columnIndex) <- row.zipWithIndex
     } yield {
-      val switchSdf = Box(Vector3f(switchSize/2))
+      val switchSdf = Box(Vector3f(switchSize / 2))
         .translate(Vector3f(
-          x+oneUSize*keycap.width.value/2,
-          y+oneUSize*keycap.height.value/2,
+          x + oneUSize * keycap.width.value/2  - size.x/2,
+          y + oneUSize * keycap.height.value/2 - size.y/2,
           0
         ))
       x += oneUSize*keycap.width.value
@@ -48,7 +58,6 @@ class KeyboardToSDF(
       size.y / 2 + topPlatePadding,
       2
     ))
-      .translate(Vector3f(size.x/2,size.y/2,0))
 
     new Difference(
       Union(switchSdfs),

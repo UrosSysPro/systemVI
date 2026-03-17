@@ -63,7 +63,7 @@ class MeshRendererApp {
     fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/fragment.glsl")}}
     mesh <- Resource.eval(SurfaceNets.sdfToMesh2(
       sdf = sdf,
-      bounds = Bounds(Vector3f(-20,-20,-20),Vector3f(300,300,20)),
+      bounds = Bounds(Vector3f(-150,-100,-50),Vector3f(150,100,50)),
       resolution = Vector3i(100,100,10),
       roundIterationSteps = 100,
       smoothNormals = true,
