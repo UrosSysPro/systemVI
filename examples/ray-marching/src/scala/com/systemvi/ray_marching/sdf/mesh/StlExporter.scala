@@ -1,5 +1,9 @@
 package com.systemvi.ray_marching.sdf.mesh
 
+import cats.*
+import cats.implicits.*
+import cats.effect.*
+import cats.effect.implicits.*
 import java.io.{DataOutputStream, FileOutputStream, BufferedOutputStream}
 import java.nio.{ByteBuffer, ByteOrder}
 
@@ -81,5 +85,55 @@ class StlExporter(stride: Int = 3) {
   /** Pack a 32-bit int as 4 little-endian bytes. */
   private def intToLeBytes(value: Int): Array[Byte] = {
     ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(value).array()
+  }
+
+  def exportToFile2(mesh2: Mesh2[VertexWithNormal], fileName: String): Unit = {
+//    require(elements.length % 3 == 0, "Element buffer length must be a multiple of 3")
+//    require(vertices.length % stride == 0, s"Vertex buffer length must be a multiple of stride ($stride)")
+
+    val triangleCount = mesh2.triangles.length
+
+    val out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(fileName)))
+
+    try {
+      // --- 80-byte ASCII header (content is ignored by most parsers) ---
+      val header = "Binary STL exported by StlExporter".padTo(80, ' ').take(80)
+      out.write(header.getBytes("ASCII"))
+
+      // --- Triangle count (uint32, little-endian) ---
+      out.write(intToLeBytes(triangleCount))
+
+      // --- One record per triangle: normal (3×f32) + 3 vertices (3×3×f32) + attribute (uint16) ---
+      val buf = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN)
+
+      def writeFloat(f: Float): Unit = {
+        buf.clear()
+        buf.putFloat(f)
+        out.write(buf.array())
+      }
+
+      def writeVec3(v: Vec3): Unit = { writeFloat(v.x); writeFloat(v.y); writeFloat(v.z) }
+
+      for (i <- 0 until triangleCount) {
+        val List(p0,p1,p2) = mesh2.triangles(i).toList.map {p=>p.position}
+
+        val v0 = Vec3(p0.x,p0.y,p0.z)
+        val v1 = Vec3(p1.x,p1.y,p1.z)
+        val v2 = Vec3(p2.x,p2.y,p2.z)
+
+        val normal = (v1 - v0).cross(v2 - v0).normalized
+
+        writeVec3(normal)   // face normal
+        writeVec3(v0)       // vertex 1
+        writeVec3(v1)       // vertex 2
+        writeVec3(v2)       // vertex 3
+        out.write(Array[Byte](0, 0)) // attribute byte count (unused)
+      }
+
+    } finally {
+      out.close()
+    }
+
+    println(s"STL written: $fileName ($triangleCount triangles)")
   }
 }

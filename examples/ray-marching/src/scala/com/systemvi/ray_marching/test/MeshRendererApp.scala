@@ -46,7 +46,12 @@ case class FrameData(delta: Duration, state: MeshRendererAppState, sharedState: 
 
 class MeshRendererApp {
 
-  val sdf = KeyboardToSDF().toSDF(TestKeyboards.keyboard60)
+//  val sdf = KeyboardToSDF().toSDF(TestKeyboards.keyboard60)
+  val sdf = new SmoothUnion(
+    Box(Vector3f(100)).translate(Vector3f(-50)),
+    Sphere(100).translate(Vector3f(+50)),
+    20
+  )
 
   private def resources(context: GLFWContext) = for {
     ec <- RenderThreadPool.make("mesh-render-pool")
@@ -56,11 +61,19 @@ class MeshRendererApp {
     elementBuffer <- Buffer.make[ElementBuffer](window)
     vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/vertex.glsl")}}
     fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/fragment.glsl")}}
+//    mesh <- Resource.eval(SurfaceNets.sdfToMesh2(
+//      sdf = sdf,
+//      bounds = Bounds(Vector3f(-50,-50,-20),Vector3f(300,300,20)),
+//      resolution = Vector3i(200,200,50),
+//    ))
     mesh <- Resource.eval(SurfaceNets.sdfToMesh2(
       sdf = sdf,
-      bounds = Bounds(Vector3f(-50,-50,-20),Vector3f(300,300,20)),
-      resolution = Vector3i(100,100,20),
+      bounds = Bounds(Vector3f(-200),Vector3f(200)),
+      resolution = Vector3i(50),
+      roundIterationSteps = 100,
+      smoothNormals = true,
     ))
+    _<-Resource.eval(IO{StlExporter().exportToFile2(mesh,"test.stl")})
     shader <- Shader.make(vertexShader, fragmentShader, window)
     _ <- Resource.eval[IO,Unit]{
       IO{
@@ -71,59 +84,6 @@ class MeshRendererApp {
       }.evalOn(window.ec)
     }
   } yield MeshRendererAppResources(context, window,vertexArray,shader,mesh)
-
-//  private def resources(context: GLFWContext) = for {
-//    ec <- RenderThreadPool.make("mesh-render-pool")
-//    window <- GLFWWindow.make(context,ec,800,600,"Mesh Renderer")
-//    vertexArray <- VertexArray.make(window)
-//    positionArrayBuffer <- Buffer.make[ArrayBuffer](window)
-//    additionalDataArrayBuffer <- Buffer.make[ArrayBuffer](window)
-//    elementBuffer <- Buffer.make[ElementBuffer](window)
-////    vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/phong/vertex.glsl")}}
-////    fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/phong/fragment.glsl")}}
-//    vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/vertex.glsl")}}
-//    fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/fragment.glsl")}}
-//    //    mesh <- Resource.eval(IO{SurfaceNets.sdfToMesh(sdf,Bounds(Vector3f(-200),Vector3f(200)),50)})
-//    mesh <- Resource.eval(IO{MarchingCubes.sdfToMesh(
-//      sdf = sdf,
-//      bounds = Bounds(Vector3f(-100,-100,-300),Vector3f(300,300,300)),
-//      resolution = 50
-//    )})
-//    _ <- Resource.eval(IO{StlExporter().exportToFile(mesh.vertices,mesh.indices,"test.stl")})
-//    shader <- Shader.make(vertexShader, fragmentShader, window)
-//    _ <- Resource.eval[IO,Unit]{
-//      IO{
-//        vertexArray.bind()
-//        //setup vertex position data
-//        positionArrayBuffer.bind()
-//        positionArrayBuffer.upload(mesh.vertices.toArray)
-//        vertexArray.configure(List(VertexAttribute("position",3)))
-//        //aditional data
-//        additionalDataArrayBuffer.bind()
-//        val normals = for(i <- 0 until mesh.vertices.length / 3) yield {
-//          val f=mesh.vertices
-//          val index = i*3
-//          val vertex = Vector3f(f(index+0),f(index+1),f(index+2))
-//          val e = 0.01f
-//          Vector3f(
-//            sdf.getValue(Vector3f(vertex).add(Vector3f(e,0,0))) - sdf.getValue(Vector3f(vertex).add(Vector3f(-e,0,0))),
-//            sdf.getValue(Vector3f(vertex).add(Vector3f(0,e,0))) - sdf.getValue(Vector3f(vertex).add(Vector3f(0,-e,0))),
-//            sdf.getValue(Vector3f(vertex).add(Vector3f(0,0,e))) - sdf.getValue(Vector3f(vertex).add(Vector3f(0,0,-e))),
-//          ).normalize()
-//        }
-//        val normalVertexData = normals.toArray.flatMap(n=>Array(n.x,n.y,n.z))
-//        additionalDataArrayBuffer.upload(normalVertexData)
-//        vertexArray.configure2(List(
-//          VertexAttribute2(1,"normal",3,0),
-//        ))
-//        println(mesh.vertices.length)
-//        println(normalVertexData.length)
-//        //setup element data
-//        elementBuffer.bind()
-//        elementBuffer.upload(mesh.indices.toArray)
-//      }.evalOn(window.ec)
-//    }
-//  } yield MeshRendererAppResources(context, window,vertexArray,shader,mesh)
 
   private def state(targetFps: Int): IO[MeshRendererAppState] = for{
     targetFps <- Ref.of[IO,Int](targetFps)
