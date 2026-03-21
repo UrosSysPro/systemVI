@@ -3,13 +3,18 @@ package com.systemvi.ray_marching.keyboard
 import org.joml.Vector2f
 
 sealed trait Key
+
 case class NormalKey(value: Char) extends Key
+
 enum MacroAction(value:Char) {
   case Press(value:Char) extends MacroAction(value)
   case Release(value:Char) extends MacroAction(value)
 }
+
 case class MacroKey(name: String, keys: List[MacroAction]) extends Key
+
 case class LayerKey(layer: Int) extends Key
+
 case class TapDanceKey(layer: Int) extends Key
 
 enum KeycapSize(val value: Float) {

@@ -288,6 +288,7 @@ object SurfaceNets {
           triangles
         }
       }yield triangles }.parSequence.map(_.flatten)
+
       _ <- if roundIterationSteps > 0 then
         triangles.parTraverse{ (p0,p1,p2) => IO{
           List(p0,p1,p2).foreach{ p =>
