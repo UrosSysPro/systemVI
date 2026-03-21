@@ -46,12 +46,9 @@ case class FrameData(delta: Duration, state: MeshRendererAppState, sharedState: 
 
 class MeshRendererApp {
 
-  val sdf = KeyboardToSDF().toSDF(TestKeyboards.keyboard60)
-//  val sdf = new SmoothUnion(
-//    Box(Vector3f(100)).translate(Vector3f(-50)),
-//    Sphere(100).translate(Vector3f(+50)),
-//    20
-//  )
+  private val keyboard = TestKeyboards.keyboard60
+  private val keyboardToSDF = KeyboardToSDF()
+  private val sdf = keyboardToSDF.toSDF(keyboard)
 
   private def resources(context: GLFWContext) = for {
     ec <- RenderThreadPool.make("mesh-render-pool")
@@ -61,14 +58,19 @@ class MeshRendererApp {
     elementBuffer <- Buffer.make[ElementBuffer](window)
     vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/vertex.glsl")}}
     fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/fragment.glsl")}}
+    keyboardSize = keyboardToSDF.keyboardSize(keyboard)
+    padding = 20f
+    trianglesPerMillimeter = 1f/3f
+    bounds = Bounds(Vector3f(-(keyboardSize.x/2+padding),-(keyboardSize.y/2+padding),-10),Vector3f((keyboardSize.x/2+padding),(keyboardSize.y/2+padding),110))
+    res = Vector3f(bounds.max).sub(bounds.min).mul(trianglesPerMillimeter)
     mesh <- Resource.eval(SurfaceNets.sdfToMesh2(
       sdf = sdf,
-      bounds = Bounds(Vector3f(-200,-150,-10),Vector3f(200,150,110)),
-      resolution = Vector3i(100,100,200),
-      roundIterationSteps = 20,
+      bounds = bounds,
+      resolution = Vector3i(res.x.toInt,res.y.toInt,120),
+      roundIterationSteps = 0,
       smoothNormals = true,
     ))
-    _<-Resource.eval(IO{StlExporter().exportToFile2(mesh,"test.stl")})
+//    _<-Resource.eval(IO{StlExporter().exportToFile2(mesh,"test.stl")})
     shader <- Shader.make(vertexShader, fragmentShader, window)
     _ <- Resource.eval[IO,Unit]{
       IO{

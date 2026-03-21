@@ -9,10 +9,12 @@ class KeyboardToSDF(
                      val switchSize: Float = 14.0f,
                      val sidePanelHeight: Float = 20.0f,
                      val sidePanelWidth: Float = 8.5f,
+                     val topPlateHeight: Float = 4.0f,
+                     val topPlateTabsHeight: Float = 2.0f,
                    ) {
   private val keycapSizeWithPadding = Vector2f(oneUSize+keycapPadding.x ,oneUSize+keycapPadding.y)
 
-  private def keyboardSize(keyboard: Keyboard) = keyboard.gridKeycaps.foldLeft(Vector2f()){(size,row)=>
+  def keyboardSize(keyboard: Keyboard): Vector2f = keyboard.gridKeycaps.foldLeft(Vector2f()){ (size, row)=>
     val rowWidth = row.foldLeft(0f){ (acc,keycap) =>
       acc + keycapSizeWithPadding.x * keycap.width.value
     }
@@ -46,6 +48,13 @@ class KeyboardToSDF(
     Difference(List(cutter,frame))
   }
 
+  private def switchSdf(x:Float,y:Float): SDF = {
+    new Union(
+      Box(halfSize = Vector3f(switchSize).mul(0.5f)),
+      Box(halfSize = Vector3f(switchSize,switchSize+2,switchSize/2).mul(0.5f)).translate(Vector3f(0,0,-switchSize/2).mul(0.5f)),
+    ).translate(Vector3f(x,y,0))
+  }
+
   private def topPlate(keyboard: Keyboard, keypadSize: Vector2f) = {
 
     var x: Float = 0
@@ -55,12 +64,10 @@ class KeyboardToSDF(
       (row,rowIndex) <- keyboard.gridKeycaps.zipWithIndex
       (keycap,columnIndex) <- row.zipWithIndex
     } yield {
-      val switchSdf = Box(Vector3f(switchSize / 2))
-        .translate(Vector3f(
-          x + keycapSizeWithPadding.x * keycap.width.value/2  - keypadSize.x/2,
-          y + keycapSizeWithPadding.y * keycap.height.value/2 - keypadSize.y/2,
-          0
-        ))
+      val switchSdf = this.switchSdf(
+        x + keycapSizeWithPadding.x * keycap.width.value/2  - keypadSize.x/2,
+        y + keycapSizeWithPadding.y * keycap.height.value/2 - keypadSize.y/2,
+      )
       x += keycapSizeWithPadding.x * keycap.width.value
       if(columnIndex==row.length-1){
         x = 0
@@ -74,7 +81,7 @@ class KeyboardToSDF(
     val topPlateSdf = Box(Vector3f(
       keypadSize.x + topPlatePadding*2,
       keypadSize.y + topPlatePadding*2,
-      2
+      topPlateHeight
     ).mul(0.5f))
 
     new Difference(
