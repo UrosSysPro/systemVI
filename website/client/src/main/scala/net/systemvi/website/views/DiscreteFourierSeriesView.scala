@@ -85,71 +85,62 @@ private def setupCanvas():Unit = {
 }
 
 private def loop(timestamp: Double): Unit = {
+  if(!mouse.down){
+    //  val samples = Math.min(200,epicycles.length)
+    val samples = epicycles.length
 
-//  val samples = Math.min(200,epicycles.length)
-  val samples = epicycles.length
+    foregroundContext.translate(canvas.width / 2, canvas.height / 2)
+    val p = fourierPoint(epicycles, t, samples)
+    foregroundContext.fillStyle = "#0e7"
+    foregroundContext.beginPath()
+    foregroundContext.rect(p.x, p.y, 2, 2)
+    foregroundContext.fill()
+    t += 1d / epicycles.length
+    foregroundContext.translate(-canvas.width / 2, -canvas.height / 2)
 
-  foregroundContext.translate(canvas.width / 2, canvas.height / 2)
-  val p = fourierPoint(epicycles,t,samples)
-  foregroundContext.fillStyle="#0e7"
-  foregroundContext.beginPath()
-  foregroundContext.rect(p.x, p.y,2,2)
-  foregroundContext.fill()
-  t+=1d/epicycles.length
-  foregroundContext.translate(-canvas.width / 2, -canvas.height / 2)
+    //clear
+    context.fillStyle = "rgba(51,51,51,1)"
+    context.lineCap = "round"
+    context.rect(0, 0, canvas.width, canvas.height)
+    context.fill()
+    context.translate(canvas.width / 2, canvas.height / 2)
+    var x = 0d
+    var y = 0d
+    context.lineWidth = 1
+    for (e <- epicycles.take(samples)) {
+      context.beginPath()
+      context.arc(x, y, e.amplitude, 0, Math.PI * 2)
+      context.closePath()
+      context.strokeStyle = "#222"
+      context.stroke()
+      val angle = t * e.freq * Math.PI * 2 + e.phase
+      val nx = x + Math.cos(angle) * e.amplitude
+      val ny = y + Math.sin(angle) * e.amplitude
+      context.beginPath()
+      context.moveTo(x, y)
+      context.lineTo(nx, ny)
+      context.strokeStyle = "#ccc"
+      context.stroke()
+      x = nx
+      y = ny
+    }
+    context.translate(-canvas.width / 2, -canvas.height / 2)
 
-  //clear
-  context.fillStyle = "rgba(51,51,51,1)"
-  context.lineCap = "round"
-  context.rect(0,0,canvas.width,canvas.height)
-  context.fill()
-  context.translate(canvas.width / 2, canvas.height / 2)
-  var x = 0d
-  var y = 0d
-  context.lineWidth = 1
-  for(e<-epicycles.take(samples)){
-    context.beginPath()
-    context.arc(x,y,e.amplitude,0,Math.PI*2)
-    context.closePath()
-    context.strokeStyle = "#222"
-    context.stroke()
-    val angle = t * e.freq * Math.PI * 2 + e.phase
-    val nx = x+Math.cos(angle)*e.amplitude
-    val ny = y+Math.sin(angle)*e.amplitude
-    context.beginPath()
-    context.moveTo(x,y)
-    context.lineTo(nx,ny)
-    context.strokeStyle = "#ccc"
-    context.stroke()
-    x=nx
-    y=ny
+    //loop
   }
-  context.translate(-canvas.width / 2, -canvas.height / 2)
-  //draw points
-//  context.strokeStyle = "black"
-//  context.lineWidth = 2
-//  context.lineCap = "round"
-//
-//  for(i<-points.indices.dropRight(1)){
-//    val p1 = points(i)
-//    val p2 = points(i+1)
-//    if(distance(p1,p2)>20){
-//      context.beginPath()
-//      context.rect(p1.x, p1.y,2,2)
-//      context.fill()
-//    }else{
-//      context.beginPath()
-//      context.moveTo(p1.x, p1.y)
-//      context.lineTo(p2.x, p2.y)
-//      context.stroke()
-//    }
-//  }
-//  context.stroke()
-
-//  points = List.empty
-
-  //loop
   dom.window.requestAnimationFrame(loop _)
+}
+
+def drawPoints(): Unit = {
+  foregroundContext.clearRect(0,0,canvasWidth,canvasHeight)
+  foregroundContext.translate(canvasWidth/2,canvasHeight/2)
+  for(p <- points){
+    foregroundContext.beginPath()
+    foregroundContext.rect(p.x,p.y,2,2)
+    foregroundContext.fillStyle = "#e0f"
+    foregroundContext.fill()
+  }
+  foregroundContext.translate(-canvasWidth/2,-canvasHeight/2)
 }
 
 def discreteFourierSeriesView(): HtmlElement =  {
@@ -173,6 +164,8 @@ def discreteFourierSeriesView(): HtmlElement =  {
       height.px(canvasHeight),
       onMouseDown --> {event =>
         mouse.down = true
+        context.clearRect(0, 0, canvas.width, canvas.height)
+        drawPoints()
       },
       onMouseUp --> {event =>
         mouse.down = false
@@ -186,7 +179,7 @@ def discreteFourierSeriesView(): HtmlElement =  {
         val y = event.clientY - canvas.getBoundingClientRect().y - canvasHeight/2
         if(mouse.down){
           lazy val d = distance(points.last,Point(x,y))
-          if(points.nonEmpty && d > 2 && d < 20){
+          if(points.nonEmpty && d > 2 && d < 10){
             val last = points.last
             for(i<-0 until d){
               val a = i.toDouble/d
@@ -195,6 +188,7 @@ def discreteFourierSeriesView(): HtmlElement =  {
           }else{
             points :+= Point(x, y)
           }
+          drawPoints()
         }
       },
       onMountCallback{ mountContext =>
