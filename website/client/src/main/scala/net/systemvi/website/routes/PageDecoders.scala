@@ -62,6 +62,10 @@ object PageDecoders {
     _ <- cursor.get[Json]("DiscreteFourierSeriesPage")
   } yield DiscreteFourierSeriesPage
 
+  given Decoder[HearthPage.type] = cursor => for {
+    _ <- cursor.get[Json]("HearthPage")
+  } yield HearthPage
+
   given Decoder[ThreeDPrintingPage.type] = cursor => for {
     _ <- cursor.get[Json]("ThreeDPrintingPage")
   } yield ThreeDPrintingPage

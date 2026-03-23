@@ -25,6 +25,7 @@ object Router extends Router[Page](
     applicationDetailsRoute,
     configuratorRoute,
     discreteFourierSeriesRoute,
+    hearthRoute,
     threeDPrintingRoute,
     knittingRoute,
     origamiRoute,
@@ -48,6 +49,7 @@ object Router extends Router[Page](
       json.as[ApplicationDetailsPage],
       json.as[ConfiguratorPage.type],
       json.as[DiscreteFourierSeriesPage.type],
+      json.as[HearthPage.type],
       json.as[ThreeDPrintingPage.type],
       json.as[KnittingPage.type],
       json.as[OrigamiPage.type]

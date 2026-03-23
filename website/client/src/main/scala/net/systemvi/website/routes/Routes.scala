@@ -24,6 +24,7 @@ object Routes {
   val engineRoute: Route.Total[EnginePage.type, Unit] = Route.static(EnginePage, root / "engine" / endOfSegments)
   val configuratorRoute: Route.Total[ConfiguratorPage.type, Unit] = Route.static(ConfiguratorPage, root / "configurator" / endOfSegments)
   val discreteFourierSeriesRoute: Route.Total[DiscreteFourierSeriesPage.type, Unit] = Route.static(DiscreteFourierSeriesPage, root / "fourier" / endOfSegments)
+  val hearthRoute: Route.Total[HearthPage.type, Unit] = Route.static(HearthPage, root / "hearth" / endOfSegments)
   val threeDPrintingRoute: Route.Total[ThreeDPrintingPage.type, Unit] = Route.static(ThreeDPrintingPage, root / "3dprinting" / endOfSegments)
   val knittingRoute: Route.Total[KnittingPage.type, Unit] = Route.static(KnittingPage, root / "knitting" / endOfSegments)
   val origamiRoute: Route.Total[OrigamiPage.type, Unit] = Route.static(OrigamiPage, root / "origami" / endOfSegments)
