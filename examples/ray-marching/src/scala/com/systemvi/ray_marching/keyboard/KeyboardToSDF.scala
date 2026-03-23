@@ -11,6 +11,7 @@ class KeyboardToSDF(
                      val sidePanelWidth: Float = 8.5f,
                      val topPlateHeight: Float = 4.0f,
                      val topPlateTabsHeight: Float = 2.0f,
+                     val slotWidth: Float = 10.0f
                    ) {
   private val keycapSizeWithPadding = Vector2f(oneUSize+keycapPadding.x ,oneUSize+keycapPadding.y)
 
@@ -76,11 +77,9 @@ class KeyboardToSDF(
       switchSdf
     }
 
-    val topPlatePadding = 10
-
     val topPlateSdf = Box(Vector3f(
-      keypadSize.x + topPlatePadding*2,
-      keypadSize.y + topPlatePadding*2,
+      keypadSize.x,
+      keypadSize.y,
       topPlateHeight
     ).mul(0.5f))
 

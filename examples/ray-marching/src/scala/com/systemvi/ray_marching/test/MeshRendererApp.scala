@@ -46,7 +46,7 @@ case class FrameData(delta: Duration, state: MeshRendererAppState, sharedState: 
 
 class MeshRendererApp {
 
-  private val keyboard = TestKeyboards.keyboard60
+  private val keyboard = TestKeyboards.keyboard2x3
   private val keyboardToSDF = KeyboardToSDF()
   private val sdf = keyboardToSDF.toSDF(keyboard)
 
@@ -60,7 +60,7 @@ class MeshRendererApp {
     fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/fragment.glsl")}}
     keyboardSize = keyboardToSDF.keyboardSize(keyboard)
     padding = 20f
-    trianglesPerMillimeter = 1f/3f
+    trianglesPerMillimeter = 1f/1f
     bounds = Bounds(Vector3f(-(keyboardSize.x/2+padding),-(keyboardSize.y/2+padding),-10),Vector3f((keyboardSize.x/2+padding),(keyboardSize.y/2+padding),110))
     res = Vector3f(bounds.max).sub(bounds.min).mul(trianglesPerMillimeter)
     mesh <- Resource.eval(SurfaceNets.sdfToMesh2(

@@ -30,4 +30,12 @@ object TestKeyboards {
        |shift|5|0  z|0|0 x|0|0 c|0|0 v|0|0  b|0|0 n|0|0 m|0|0 ,|0|0 .|0|0 /|0|0 shift|6|0
        |ctrl|1|0  win|1|0 alt|1|0 space|7|0 alt|1|0  win|1|0 context|1|0 ctrl|1|0
        |""".stripMargin)
+
+  val keyboard2x3: Keyboard = toKeyboard(
+    s"""
+       |1|0|0 1|0|0 1|0|0
+       |1|0|0 1|0|0 1|0|0
+       |1|0|0 1|4|0
+       |""".stripMargin
+  )
 }
