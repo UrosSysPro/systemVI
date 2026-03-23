@@ -81,9 +81,11 @@ var epicycles = dft(points)
 var t = 0d
 
 private def setupCanvas():Unit = {
+  context.imageSmoothingEnabled = false
   canvas.width = canvasWidth
   canvas.height = canvasHeight
 
+  foregroundContext.imageSmoothingEnabled = false
   foregroundCanvas.width = canvasWidth
   foregroundCanvas.height = canvasHeight
 }
