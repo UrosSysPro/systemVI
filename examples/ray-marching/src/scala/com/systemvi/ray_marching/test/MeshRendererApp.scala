@@ -58,7 +58,7 @@ class MeshRendererApp {
     elementBuffer <- Buffer.make[ElementBuffer](window)
     vertexShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/vertex.glsl")}}
     fragmentShader <- Resource.eval{IO{engine.utils.Utils.readInternal("mesh/pbr/fragment.glsl")}}
-    keyboardSize = keyboardToSDF.keyboardSize(keyboard)
+    keyboardSize = keyboardToSDF.keypadSize(keyboard)
     padding = 20f
     trianglesPerMillimeter = 1f/1f
     bounds = Bounds(Vector3f(-(keyboardSize.x/2+padding),-(keyboardSize.y/2+padding),-10),Vector3f((keyboardSize.x/2+padding),(keyboardSize.y/2+padding),110))

@@ -15,7 +15,7 @@ class KeyboardToSDF(
                    ) {
   private val keycapSizeWithPadding = Vector2f(oneUSize+keycapPadding.x ,oneUSize+keycapPadding.y)
 
-  def keyboardSize(keyboard: Keyboard): Vector2f = keyboard.gridKeycaps.foldLeft(Vector2f()){ (size, row)=>
+  def keypadSize(keyboard: Keyboard): Vector2f = keyboard.gridKeycaps.foldLeft(Vector2f()){ (size, row)=>
     val rowWidth = row.foldLeft(0f){ (acc,keycap) =>
       acc + keycapSizeWithPadding.x * keycap.width.value
     }
@@ -58,6 +58,7 @@ class KeyboardToSDF(
 
   private def topPlate(keyboard: Keyboard, keypadSize: Vector2f) = {
 
+    //    get positions of all switches
     var x: Float = 0
     var y: Float = 0
 
@@ -77,12 +78,47 @@ class KeyboardToSDF(
       switchSdf
     }
 
+//    top plate rectangle
     val topPlateSdf = Box(Vector3f(
       keypadSize.x,
       keypadSize.y,
       topPlateHeight
     ).mul(0.5f))
 
+//    side ears
+//    val sideEarGap = 10f
+//    
+//    val sideEarWidth = sidePanelWidth / 2f
+//    val sideEarHeight = (keypadSize.y - sideEarGap) / 2f
+//    val sideEarDepth = 2f
+//
+//    val sideEarSdf = Box(Vector3f(
+//      sideEarWidth, sideEarHeight, sideEarDepth
+//    ).mul(0.5f))
+//
+//    val bottomEarWidth = (keypadSize.x - sideEarGap * 2f) / 3f
+//    val bottomEarHeight = sidePanelWidth / 2f
+//    val bottomEarDepth = 2f
+//    
+//    val bottomEarSdf = Box(Vector3f(
+//      bottomEarWidth, bottomEarHeight, bottomEarDepth,
+//    ).mul(0.5f))
+//
+//    val sidePanelEars = List(
+////      left
+//      sideEarSdf.translate(Vector3f(-(keypadSize.x+sideEarWidth)/2,keypadSize.y,0).mul(2f)),
+//      sideEarSdf.translate(),
+////      right
+//      sideEarSdf.translate(),
+//      sideEarSdf.translate(),
+//    )
+//    val bottomPanelEars = List(
+//      bottomEarSdf.translate(),
+//      bottomEarSdf.translate(),
+//      bottomEarSdf.translate(),
+//    )
+
+//    final result
     new Difference(
       Union(switchSdfs),
       topPlateSdf,
@@ -90,7 +126,7 @@ class KeyboardToSDF(
   }
 
   def toSDF(keyboard: Keyboard): SDF = {
-    val size = keyboardSize(keyboard)
+    val size = keypadSize(keyboard)
 
     val topPlatePart = topPlate(keyboard,size)
     val bottomCasePart = bottomCase(size)
@@ -101,5 +137,20 @@ class KeyboardToSDF(
       sidePanelPart.translate(Vector3f(0,0,40)),
       topPlatePart.translate(Vector3f(0,0,80)),
     ))
+  }
+
+  def toSDFParts(keyboard: Keyboard): List[SDF] = {
+
+    val keypadSize = this.keypadSize(keyboard)
+
+    val topPlatePart = topPlate(keyboard,keypadSize)
+    val bottomCasePart = bottomCase(keypadSize)
+    val sidePanelPart = sidePanel(keypadSize)
+
+    List(
+      topPlatePart,
+      bottomCasePart,
+      sidePanelPart,
+    )
   }
 }
