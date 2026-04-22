@@ -13,6 +13,7 @@ class KeyboardToSDF(
                      val topPlateTabsHeight: Float = 2.0f,
                      val slotWidth: Float = 10.0f
                    ) {
+
   private val keycapSizeWithPadding = Vector2f(oneUSize+keycapPadding.x ,oneUSize+keycapPadding.y)
 
   def keypadSize(keyboard: Keyboard): Vector2f = keyboard.gridKeycaps.foldLeft(Vector2f()){ (size, row)=>
@@ -44,8 +45,37 @@ class KeyboardToSDF(
   private def sidePanel(keypadSize: Vector2f) = {
     val frameHeight = 20f
     val borderWidth = 4f
-    val frame = Box(Vector3f(keypadSize.x+borderWidth*2,keypadSize.y+borderWidth*2,frameHeight).mul(0.5f))
-    val cutter = Box(Vector3f(keypadSize.x,keypadSize.y,frameHeight*2).mul(0.5f))
+
+    val frame = {
+      Box(Vector3f(
+        keypadSize.x + borderWidth * 2f,
+        keypadSize.y + borderWidth * 2f,
+        frameHeight
+      ).mul(0.5f))
+    }
+
+    val cutter = {
+
+      val keypadBox = Box(Vector3f(
+        keypadSize.x,
+        keypadSize.y,
+        frameHeight * 2
+      ).mul(0.5f))
+
+      val keypadEarsBox = Box(Vector3f(
+        keypadSize.x + sidePanelWidth / 2f,
+        keypadSize.y + sidePanelWidth / 2f,
+        frameHeight
+      ).mul(0.5f))
+        .translate(Vector3f(
+          0, 0, -(frameHeight / 2f - topPlateHeight / 2f)
+        ))
+
+      Union(
+        List(keypadBox, keypadEarsBox)
+      )
+    }
+
     Difference(List(cutter,frame))
   }
 
@@ -57,33 +87,36 @@ class KeyboardToSDF(
   }
 
   private def topPlate(keyboard: Keyboard, keypadSize: Vector2f) = {
-
     //    get positions of all switches
-    var x: Float = 0
-    var y: Float = 0
+    val switchSdfs = {
+      var x: Float = 0
+      var y: Float = 0
 
-    val switchSdfs = for{
-      (row,rowIndex) <- keyboard.gridKeycaps.zipWithIndex
-      (keycap,columnIndex) <- row.zipWithIndex
-    } yield {
-      val switchSdf = this.switchSdf(
-        x + keycapSizeWithPadding.x * keycap.width.value/2  - keypadSize.x/2,
-        y + keycapSizeWithPadding.y * keycap.height.value/2 - keypadSize.y/2,
-      )
-      x += keycapSizeWithPadding.x * keycap.width.value
-      if(columnIndex==row.length-1){
-        x = 0
-        y += keycapSizeWithPadding.y
+      for{
+        (row,rowIndex) <- keyboard.gridKeycaps.zipWithIndex
+        (keycap,columnIndex) <- row.zipWithIndex
+      } yield {
+        val switchSdf = this.switchSdf(
+          x + keycapSizeWithPadding.x * keycap.width.value/2  - keypadSize.x/2,
+          y + keycapSizeWithPadding.y * keycap.height.value/2 - keypadSize.y/2,
+        )
+        x += keycapSizeWithPadding.x * keycap.width.value
+        if(columnIndex==row.length-1){
+          x = 0
+          y += keycapSizeWithPadding.y
+        }
+        switchSdf
       }
-      switchSdf
     }
 
 //    top plate rectangle
-    val topPlateSdf = Box(Vector3f(
-      keypadSize.x,
-      keypadSize.y,
-      topPlateHeight
-    ).mul(0.5f))
+    val topPlateSdf = {
+      Box(Vector3f(
+        keypadSize.x,
+        keypadSize.y,
+        topPlateHeight
+      ).mul(0.5f))
+    }
 
 //    side ears
     val sideEarsSdfs = {

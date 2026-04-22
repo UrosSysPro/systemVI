@@ -33,7 +33,7 @@ object KeyboardToSdfToStlTest extends IOApp.Simple {
         resolution = Vector3i(100),
         isoValue = 0f,
         smoothNormals = false,
-        roundIterationSteps = 0,
+        roundIterationSteps = 10,
       )
 
       exporterStart <- IO.monotonic
