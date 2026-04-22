@@ -214,25 +214,25 @@ object SurfaceNets {
           //positive dir
           if (value < 0 && dirX >= 0) {
             triangles :+= (
-              VertexWithNormal(Vector3f(x + step.x / 2, y + step.y / 2, z + step.z / 2), Vector3f(1, 0, 0)),
               VertexWithNormal(Vector3f(x + step.x / 2, y + step.y / 2, z - step.z / 2), Vector3f(1, 0, 0)),
+              VertexWithNormal(Vector3f(x + step.x / 2, y + step.y / 2, z + step.z / 2), Vector3f(1, 0, 0)),
               VertexWithNormal(Vector3f(x + step.x / 2, y - step.y / 2, z + step.z / 2), Vector3f(1, 0, 0)),
             )
             triangles :+= (
-              VertexWithNormal(Vector3f(x + step.x / 2, y - step.y / 2, z + step.z / 2), Vector3f(1, 0, 0)),
               VertexWithNormal(Vector3f(x + step.x / 2, y + step.y / 2, z - step.z / 2), Vector3f(1, 0, 0)),
+              VertexWithNormal(Vector3f(x + step.x / 2, y - step.y / 2, z + step.z / 2), Vector3f(1, 0, 0)),
               VertexWithNormal(Vector3f(x + step.x / 2, y - step.y / 2, z - step.z / 2), Vector3f(1, 0, 0)),
             )
           }
           if (value < 0 && dirY >= 0) {
             triangles :+= (
-              VertexWithNormal(Vector3f(x + step.x / 2, y + step.y / 2, z + step.z / 2), Vector3f(0, 1, 0)),
               VertexWithNormal(Vector3f(x + step.x / 2, y + step.y / 2, z - step.z / 2), Vector3f(0, 1, 0)),
+              VertexWithNormal(Vector3f(x + step.x / 2, y + step.y / 2, z + step.z / 2), Vector3f(0, 1, 0)),
               VertexWithNormal(Vector3f(x - step.x / 2, y + step.y / 2, z + step.z / 2), Vector3f(0, 1, 0)),
             )
             triangles :+= (
-              VertexWithNormal(Vector3f(x - step.x / 2, y + step.y / 2, z + step.z / 2), Vector3f(0, 1, 0)),
               VertexWithNormal(Vector3f(x + step.x / 2, y + step.y / 2, z - step.z / 2), Vector3f(0, 1, 0)),
+              VertexWithNormal(Vector3f(x - step.x / 2, y + step.y / 2, z + step.z / 2), Vector3f(0, 1, 0)),
               VertexWithNormal(Vector3f(x - step.x / 2, y + step.y / 2, z - step.z / 2), Vector3f(0, 1, 0)),
             )
           }

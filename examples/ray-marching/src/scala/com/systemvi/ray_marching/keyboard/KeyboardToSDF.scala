@@ -11,7 +11,9 @@ class KeyboardToSDF(
                      val sidePanelWidth: Float = 8.5f,
                      val topPlateHeight: Float = 4.0f,
                      val topPlateTabsHeight: Float = 2.0f,
-                     val slotWidth: Float = 10.0f
+                     val slotWidth: Float = 10.0f,
+                     val frameHeight: Float = 20f,
+                     val borderWidth: Float = 4f,
                    ) {
 
   private val keycapSizeWithPadding = Vector2f(oneUSize+keycapPadding.x ,oneUSize+keycapPadding.y)
@@ -26,25 +28,37 @@ class KeyboardToSDF(
     Vector2f(Math.max(rowWidth,maxWidth),maxHeight + keycapSizeWithPadding.y)
   }
 
-  private def bottomCase(keypadSize: Vector2f) = {
-    val sideWidth = 4f
-    val sideHeight = 4f
-    val plateDepth = 2f
+  private def bottomCase(keypadSize: Vector2f): SDF = {
+    val bottomCase = {
+      Box(Vector3f(
+        keypadSize.x+sidePanelWidth/2,
+        keypadSize.y+sidePanelWidth/2,
+        frameHeight/2f,
+      ).mul(0.5f))
+    }
 
-    val plate = Box(Vector3f(keypadSize.x,keypadSize.y,plateDepth).mul(0.5f)).translate(Vector3f(0,0,plateDepth/2))
+    val keypadCutter = {
+      Box(Vector3f(
+        keypadSize.x,
+        keypadSize.y,
+        frameHeight/2f,
+      ).mul(0.5f))
+        .translate(Vector3f(
+          0,0,4
+        ))
+    }
 
-    val left = Box(Vector3f(sideWidth,keypadSize.y,sideHeight).mul(0.5f)).translate(Vector3f(-keypadSize.x/2+sideWidth/2,0,sideHeight/2))
-    val right = Box(Vector3f(sideWidth,keypadSize.y,sideHeight).mul(0.5f)).translate(Vector3f(keypadSize.x/2-sideWidth/2,0,sideHeight/2))
+    val keypadEarMiddleTabs = {
+      Box(Vector3f())
+    }
 
-    val top = Box(Vector3f(keypadSize.x,sideWidth,sideHeight).mul(0.5f)).translate(Vector3f(0,keypadSize.y/2-sideWidth/2,sideHeight/2))
-    val bottom = Box(Vector3f(keypadSize.x,sideWidth,sideHeight).mul(0.5f)).translate(Vector3f(0,-keypadSize.y/2+sideWidth/2,sideHeight/2))
-
-    Union(List(plate,left,right,top,bottom))
+    new Difference(
+      keypadCutter,
+      Union(List(bottomCase, keypadEarMiddleTabs)),
+    )
   }
 
   private def sidePanel(keypadSize: Vector2f) = {
-    val frameHeight = 20f
-    val borderWidth = 4f
 
     val frame = {
       Box(Vector3f(
