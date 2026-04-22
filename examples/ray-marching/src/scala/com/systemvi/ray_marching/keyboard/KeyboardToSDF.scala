@@ -31,9 +31,9 @@ class KeyboardToSDF(
   private def bottomCase(keypadSize: Vector2f): SDF = {
     val bottomCase = {
       Box(Vector3f(
-        keypadSize.x+sidePanelWidth/2,
-        keypadSize.y+sidePanelWidth/2,
-        frameHeight/2f,
+        keypadSize.x + sidePanelWidth / 2,
+        keypadSize.y + sidePanelWidth / 2,
+        frameHeight / 2f,
       ).mul(0.5f))
     }
 
@@ -41,7 +41,7 @@ class KeyboardToSDF(
       Box(Vector3f(
         keypadSize.x,
         keypadSize.y,
-        frameHeight/2f,
+        frameHeight / 2f,
       ).mul(0.5f))
         .translate(Vector3f(
           0,0,4

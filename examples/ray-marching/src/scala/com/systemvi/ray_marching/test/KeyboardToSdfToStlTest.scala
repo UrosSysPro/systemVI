@@ -27,14 +27,22 @@ object KeyboardToSdfToStlTest extends IOApp.Simple {
 //      sdf = sdfParts.head
       mesherStart <- IO.monotonic
 
-      mesh <- SurfaceNets.sdfToMesh2(
+//      mesh <- SurfaceNets.sdfToMesh2(
+//        sdf = sdf,
+//        bounds = Bounds(min = Vector3f(-60f), max = Vector3f(60f)),
+//        resolution = Vector3i(100),
+//        isoValue = 0f,
+//        smoothNormals = false,
+//        roundIterationSteps = 10,
+//      )
+      mesh <- IO(MarchingCubes.sdfToMesh2(
         sdf = sdf,
         bounds = Bounds(min = Vector3f(-60f), max = Vector3f(60f)),
         resolution = Vector3i(100),
         isoValue = 0f,
         smoothNormals = false,
         roundIterationSteps = 10,
-      )
+      ))
 
       exporterStart <- IO.monotonic
       _ <- IO.println(s"mesh generation: ${(exporterStart-mesherStart).toSeconds}")

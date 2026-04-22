@@ -1,6 +1,6 @@
 package com.systemvi.ray_marching.sdf.mesh
 import com.systemvi.ray_marching.sdf.SDF
-import org.joml.Vector3f
+import org.joml.{Vector3f, Vector3i}
 
 /**
  * Marching Cubes meshing algorithm.
@@ -489,5 +489,33 @@ object MarchingCubes {
       }
     }
     normals
+  }
+
+  def sdfToMesh2(
+                  sdf:SDF,
+                  bounds:Bounds,
+                  resolution:Vector3i,
+                  isoValue:Float = 0f,
+                  smoothNormals:Boolean = false,
+                  roundIterationSteps:Int = 10,
+                ): Mesh2[VertexWithNormal] = {
+
+    val mesh = this.sdfToMesh(
+      sdf = sdf,
+      bounds = bounds,
+      resolution = resolution.x,
+      isoValue = isoValue,
+    )
+
+    val triangles = for(i <- 0 until mesh.indices.length / 3) yield {
+      val index = i * 3
+      (
+        VertexWithNormal(position = Vector3f(), normal = Vector3f()),
+        VertexWithNormal(position = Vector3f(), normal = Vector3f()),
+        VertexWithNormal(position = Vector3f(), normal = Vector3f()),
+      )
+    }
+
+    Mesh2[VertexWithNormal](triangles.toList)
   }
 }
