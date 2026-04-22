@@ -86,42 +86,37 @@ class KeyboardToSDF(
     ).mul(0.5f))
 
 //    side ears
-//    val sideEarGap = 10f
-//    
-//    val sideEarWidth = sidePanelWidth / 2f
-//    val sideEarHeight = (keypadSize.y - sideEarGap) / 2f
-//    val sideEarDepth = 2f
-//
-//    val sideEarSdf = Box(Vector3f(
-//      sideEarWidth, sideEarHeight, sideEarDepth
-//    ).mul(0.5f))
-//
-//    val bottomEarWidth = (keypadSize.x - sideEarGap * 2f) / 3f
-//    val bottomEarHeight = sidePanelWidth / 2f
-//    val bottomEarDepth = 2f
-//    
-//    val bottomEarSdf = Box(Vector3f(
-//      bottomEarWidth, bottomEarHeight, bottomEarDepth,
-//    ).mul(0.5f))
-//
-//    val sidePanelEars = List(
-////      left
-//      sideEarSdf.translate(Vector3f(-(keypadSize.x+sideEarWidth)/2,keypadSize.y,0).mul(2f)),
-//      sideEarSdf.translate(),
-////      right
-//      sideEarSdf.translate(),
-//      sideEarSdf.translate(),
-//    )
-//    val bottomPanelEars = List(
-//      bottomEarSdf.translate(),
-//      bottomEarSdf.translate(),
-//      bottomEarSdf.translate(),
-//    )
+    val sideEarsSdfs = {
+      val sideEarGap = 10f
+      val sideEarWidth = sidePanelWidth / 2f
+      val sideEarHeight = topPlateHeight / 2f
+
+      val leftRightEarSdf: Box = Box(Vector3f(sideEarWidth, (keypadSize.y - sideEarGap) / 2f, sideEarHeight).mul(0.5f))
+      val bottomEarSdf: Box = Box(Vector3f((keypadSize.x - sideEarGap * 2f) / 3f, sideEarWidth, sideEarHeight).mul(0.5f))
+
+      val leftRightEarsSdf = for (i <- List(-1, 1); j <- List(-1, 1)) yield {
+        leftRightEarSdf.translate(Vector3f(
+          (keypadSize.x + leftRightEarSdf.halfSize.x * 2f) / 2f * i,
+          (keypadSize.y - leftRightEarSdf.halfSize.y * 2f) / 2f * j,
+          topPlateSdf.halfSize.z - leftRightEarSdf.halfSize.z,
+        ))
+      }
+
+      val bottomEarsSdf = for(i <- List(-1, 0, 1); j <- List(1)) yield {
+        bottomEarSdf.translate(Vector3f(
+          (keypadSize.x - bottomEarSdf.halfSize.x * 2f) / 2f * i,
+          (keypadSize.y + bottomEarSdf.halfSize.y * 2f) / 2f * j,
+          topPlateSdf.halfSize.z - bottomEarSdf.halfSize.z,
+        ))
+      }
+
+      leftRightEarsSdf ++ bottomEarsSdf
+    }
 
 //    final result
     new Difference(
       Union(switchSdfs),
-      topPlateSdf,
+      Union(sideEarsSdfs :+ topPlateSdf),
     )
   }
 

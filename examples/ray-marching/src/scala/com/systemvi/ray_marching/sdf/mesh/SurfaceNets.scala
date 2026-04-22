@@ -219,8 +219,8 @@ object SurfaceNets {
               VertexWithNormal(Vector3f(x + step.x / 2, y - step.y / 2, z + step.z / 2), Vector3f(1, 0, 0)),
             )
             triangles :+= (
-              VertexWithNormal(Vector3f(x + step.x / 2, y + step.y / 2, z - step.z / 2), Vector3f(1, 0, 0)),
               VertexWithNormal(Vector3f(x + step.x / 2, y - step.y / 2, z + step.z / 2), Vector3f(1, 0, 0)),
+              VertexWithNormal(Vector3f(x + step.x / 2, y + step.y / 2, z - step.z / 2), Vector3f(1, 0, 0)),
               VertexWithNormal(Vector3f(x + step.x / 2, y - step.y / 2, z - step.z / 2), Vector3f(1, 0, 0)),
             )
           }
@@ -231,8 +231,8 @@ object SurfaceNets {
               VertexWithNormal(Vector3f(x - step.x / 2, y + step.y / 2, z + step.z / 2), Vector3f(0, 1, 0)),
             )
             triangles :+= (
-              VertexWithNormal(Vector3f(x + step.x / 2, y + step.y / 2, z - step.z / 2), Vector3f(0, 1, 0)),
               VertexWithNormal(Vector3f(x - step.x / 2, y + step.y / 2, z + step.z / 2), Vector3f(0, 1, 0)),
+              VertexWithNormal(Vector3f(x + step.x / 2, y + step.y / 2, z - step.z / 2), Vector3f(0, 1, 0)),
               VertexWithNormal(Vector3f(x - step.x / 2, y + step.y / 2, z - step.z / 2), Vector3f(0, 1, 0)),
             )
           }
@@ -243,8 +243,8 @@ object SurfaceNets {
               VertexWithNormal(Vector3f(x - step.x / 2, y + step.y / 2, z + step.z / 2), Vector3f(0, 0, 1)),
             )
             triangles :+= (
-              VertexWithNormal(Vector3f(x + step.x / 2, y - step.y / 2, z + step.z / 2), Vector3f(0, 0, 1)),
               VertexWithNormal(Vector3f(x - step.x / 2, y + step.y / 2, z + step.z / 2), Vector3f(0, 0, 1)),
+              VertexWithNormal(Vector3f(x + step.x / 2, y - step.y / 2, z + step.z / 2), Vector3f(0, 0, 1)),
               VertexWithNormal(Vector3f(x - step.x / 2, y - step.y / 2, z + step.z / 2), Vector3f(0, 0, 1)),
             )
           }
@@ -256,8 +256,8 @@ object SurfaceNets {
               VertexWithNormal(Vector3f(x + step.x / 2, y - step.y / 2, z + step.z / 2), Vector3f(-1, 0, 0)),
             )
             triangles :+= (
-              VertexWithNormal(Vector3f(x + step.x / 2, y + step.y / 2, z - step.z / 2), Vector3f(-1, 0, 0)),
               VertexWithNormal(Vector3f(x + step.x / 2, y - step.y / 2, z + step.z / 2), Vector3f(-1, 0, 0)),
+              VertexWithNormal(Vector3f(x + step.x / 2, y + step.y / 2, z - step.z / 2), Vector3f(-1, 0, 0)),
               VertexWithNormal(Vector3f(x + step.x / 2, y - step.y / 2, z - step.z / 2), Vector3f(-1, 0, 0)),
             )
           }
@@ -268,8 +268,8 @@ object SurfaceNets {
               VertexWithNormal(Vector3f(x - step.x / 2, y + step.y / 2, z + step.z / 2), Vector3f(0, -1, 0)),
             )
             triangles :+= (
-              VertexWithNormal(Vector3f(x + step.x / 2, y + step.y / 2, z - step.z / 2), Vector3f(0, -1, 0)),
               VertexWithNormal(Vector3f(x - step.x / 2, y + step.y / 2, z + step.z / 2), Vector3f(0, -1, 0)),
+              VertexWithNormal(Vector3f(x + step.x / 2, y + step.y / 2, z - step.z / 2), Vector3f(0, -1, 0)),
               VertexWithNormal(Vector3f(x - step.x / 2, y + step.y / 2, z - step.z / 2), Vector3f(0, -1, 0)),
             )
           }
@@ -280,8 +280,8 @@ object SurfaceNets {
               VertexWithNormal(Vector3f(x - step.x / 2, y + step.y / 2, z + step.z / 2), Vector3f(0, 0, -1)),
             )
             triangles :+= (
-              VertexWithNormal(Vector3f(x + step.x / 2, y - step.y / 2, z + step.z / 2), Vector3f(0, 0, -1)),
               VertexWithNormal(Vector3f(x - step.x / 2, y + step.y / 2, z + step.z / 2), Vector3f(0, 0, -1)),
+              VertexWithNormal(Vector3f(x + step.x / 2, y - step.y / 2, z + step.z / 2), Vector3f(0, 0, -1)),
               VertexWithNormal(Vector3f(x - step.x / 2, y - step.y / 2, z + step.z / 2), Vector3f(0, 0, -1)),
             )
           }

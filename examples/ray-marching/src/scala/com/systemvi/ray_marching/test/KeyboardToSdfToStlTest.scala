@@ -24,6 +24,7 @@ object KeyboardToSdfToStlTest extends IOApp.Simple {
         sdfParts(1).translate(Vector3f(0,0,0)),
         sdfParts(2).translate(Vector3f(0,0,20)),
       ))
+//      sdf = sdfParts.head
       mesherStart <- IO.monotonic
 
       mesh <- SurfaceNets.sdfToMesh2(
@@ -32,7 +33,7 @@ object KeyboardToSdfToStlTest extends IOApp.Simple {
         resolution = Vector3i(100),
         isoValue = 0f,
         smoothNormals = false,
-        roundIterationSteps = 10,
+        roundIterationSteps = 0,
       )
 
       exporterStart <- IO.monotonic
