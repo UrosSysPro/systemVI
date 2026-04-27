@@ -41,3 +41,6 @@ server/target/
 common/.jvm/target
 common/.js/target
 client/public/download/application/configurator/*.jar
+
+google-auth.txt
+google-client-secret.json

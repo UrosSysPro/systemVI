@@ -17,7 +17,7 @@ val splitter = SplitRender[Page, HtmlElement](Router.currentPageSignal)
   .collect[ApplicationDetailsPage]  { page => ApplicationDetailsPageView(page) }
   .collectStatic(ConfiguratorPage)  { ConfiguratorPageView() }
   .collectStatic(DiscreteFourierSeriesPage)  { discreteFourierSeriesView() }
-  .collectStatic(HearthPage)  { Hearth.discreteFourierSeriesView() }
+  .collectStatic(HearthPage)        { Hearth.discreteFourierSeriesView() }
   .collectStatic(ThreeDPrintingPage){ div("coming soon") }
   .collectStatic(KnittingPage)      { div("coming soon") }
   .collectStatic(OrigamiPage)       { div("coming soon") }
