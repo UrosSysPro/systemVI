@@ -9,7 +9,7 @@ ThisBuild / organization := "net.systemvi"
 ThisBuild / version      := "0.6"
 ThisBuild / scalaVersion := "3.3.3"
 
-lazy val root = project.in(file(".")).aggregate(client,server)
+lazy val website = project.in(file(".")).aggregate(client,server)
 
 lazy val common = crossProject(JSPlatform,JVMPlatform)
   .crossType(CrossType.Pure)
