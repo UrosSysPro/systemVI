@@ -11,5 +11,5 @@ import org.http4s.server.Router
 
 def router(using context:AppContext[IO]) = Router(
   "/api" -> cors(api),
-  "/" -> website
+  "/" -> website,
 ).orNotFound

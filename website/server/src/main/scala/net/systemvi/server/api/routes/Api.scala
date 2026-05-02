@@ -6,14 +6,12 @@ import net.systemvi.server.api.controllers.*
 import org.http4s.*
 import org.http4s.circe.*
 import org.http4s.dsl.io.*
+import org.http4s.server.Router
 
-def api(using context:AppContext[IO]) = HttpRoutes.of[IO]{
-  case request @ _ ->  "manufacturers" /: tail =>
-    manufacturerController(request.withPathInfo(tail)).getOrElse(Response.notFound)
-  case request @ _ ->  "switches" /: tail =>
-    switchController(request.withPathInfo(tail)).getOrElse(Response.notFound)
-  case request @ _ ->  "keyboards" /: tail =>
-    keyboardController(request.withPathInfo(tail)).getOrElse(Response.notFound)
-  case request @ _ ->  "applications" /: tail =>
-    applicationController(request.withPathInfo(tail)).getOrElse(Response.notFound)
-}
+def api(using context:AppContext[IO]) = Router(
+  "manufacturers" -> manufacturerController,
+  "switches" -> switchController,
+  "keyboards" -> keyboardController,
+  "applications" -> applicationController,
+  "google/auth" -> GoogleAuthController(context).routes
+)

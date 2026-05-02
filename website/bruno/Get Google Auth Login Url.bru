@@ -1,0 +1,16 @@
+meta {
+  name: Get Google Auth Login Url
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{cats-backend}}/api/google/auth/redirect-url
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
