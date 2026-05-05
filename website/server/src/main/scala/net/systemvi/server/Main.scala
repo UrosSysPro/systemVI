@@ -4,7 +4,6 @@ import cats.*
 import cats.effect.*
 import com.comcast.ip4s.{ipv4, port}
 import net.systemvi.server.api.*
-import net.systemvi.server.api.controllers.*
 import net.systemvi.server.api.routes.*
 import net.systemvi.server.config.Config
 import net.systemvi.server.persistance.contexts.AppContext
@@ -14,7 +13,6 @@ import net.systemvi.server.persistance.seeders.Seeders
 import org.http4s.*
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.implicits.*
-import org.http4s.server.Router
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 def server(using context:AppContext[IO])=EmberServerBuilder
@@ -27,8 +25,13 @@ def server(using context:AppContext[IO])=EmberServerBuilder
 
 object Main extends IOApp{
 
-  val serverApp:IO[ExitCode] = sqlite.use{ xa =>
-    given AppContext[IO] = AppContext.create(xa)
+  def resources = for{
+    xa <- sqlite
+    config <- Resource.eval(Config.instance.load[IO])
+  } yield (xa, config)
+
+  val serverApp:IO[ExitCode] = resources.use{ (xa,config) =>
+    given AppContext[IO] = AppContext.create(xa, config)
     for {
       _ <- server.use(_ => IO.never)
     } yield ExitCode.Success

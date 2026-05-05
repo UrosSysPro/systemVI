@@ -35,7 +35,6 @@ import scala.util.*
  * client_id=client_id
  * */
 
-
 private sealed trait GoogleScope(val value:String)
 private object DriveMetadataReadonly extends GoogleScope("https://www.googleapis.com/auth/drive.metadata.readonly")
 private object CalendarReadonly extends GoogleScope("https://www.googleapis.com/auth/calendar.readonly")
@@ -44,22 +43,24 @@ private sealed trait GoogleAccessType(val value: String)
 private object Online extends GoogleAccessType("online")
 private object Offline extends GoogleAccessType("offline")
 
+private sealed trait ResponseType(val value: String)
+private object Code extends ResponseType("code")
+
 class GoogleAuthController(context: AppContext[IO]) {
 
   private val scheme = Uri.Scheme.https
   private val domain = "accounts.google.com"
   private val path = "o/oauth2/v2/auth"
-
   private val includeGrantedScopes = true
+
   private val responseType = "code"
   private val state = "state_parameter_passthrough_value"
   private val redirectUri = "https://developers.google.com/oauthplayground"
-  private val clientIdIO = Env[IO].get("GOOGLE_CLIENT_ID")
+  private val clientId = context.config.googleAuthConfig.clientId
 
 
   val routes: HttpRoutes[IO] = HttpRoutes.of[IO]{
     case request @ GET -> Root / "redirect" => for{
-      clientId <- clientIdIO
       url <- IO{
         UriTemplate(
           scheme = scheme.some,
@@ -72,7 +73,7 @@ class GoogleAuthController(context: AppContext[IO]) {
             ParamElm("response_type",responseType),
             ParamElm("state",state),
             ParamElm("redirect_uri",redirectUri),
-            ParamElm("client_id",clientId.getOrElse("")),
+            ParamElm("client_id",clientId),
           )
         )
       }
