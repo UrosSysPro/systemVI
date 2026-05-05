@@ -13,5 +13,7 @@ def api(using context:AppContext[IO]) = Router(
   "switches" -> switchController,
   "keyboards" -> keyboardController,
   "applications" -> applicationController,
-  "google/auth" -> GoogleAuthController(context).routes
+  "auth" -> Router(
+    "google" -> GoogleAuthController(context).routes
+  )
 )

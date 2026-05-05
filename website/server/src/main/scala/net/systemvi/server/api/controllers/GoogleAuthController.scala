@@ -23,6 +23,7 @@ import org.http4s.dsl.io.*
 
 import java.util.UUID
 import scala.util.*
+
 /**
  * https://accounts.google.com/o/oauth2/v2/auth?
  * scope=https%3A//www.googleapis.com/auth/drive.metadata.readonly%20https%3A//www.googleapis.com/auth/calendar.readonly&
@@ -34,19 +35,20 @@ import scala.util.*
  * client_id=client_id
  * */
 
+
+private sealed trait GoogleScope(val value:String)
+private object DriveMetadataReadonly extends GoogleScope("https://www.googleapis.com/auth/drive.metadata.readonly")
+private object CalendarReadonly extends GoogleScope("https://www.googleapis.com/auth/calendar.readonly")
+
+private sealed trait GoogleAccessType(val value: String)
+private object Online extends GoogleAccessType("online")
+private object Offline extends GoogleAccessType("offline")
+
 class GoogleAuthController(context: AppContext[IO]) {
 
   private val scheme = Uri.Scheme.https
   private val domain = "accounts.google.com"
   private val path = "o/oauth2/v2/auth"
-
-  private sealed trait GoogleScope(val value:String)
-  private object DriveMetadataReadonly extends GoogleScope("https://www.googleapis.com/auth/drive.metadata.readonly")
-  private object CalendarReadonly extends GoogleScope("https://www.googleapis.com/auth/calendar.readonly")
-
-  private sealed trait GoogleAccessType(val value: String)
-  private object Online extends GoogleAccessType("online")
-  private object Offline extends GoogleAccessType("offline")
 
   private val includeGrantedScopes = true
   private val responseType = "code"
@@ -56,7 +58,7 @@ class GoogleAuthController(context: AppContext[IO]) {
 
 
   val routes: HttpRoutes[IO] = HttpRoutes.of[IO]{
-    case request @ GET -> Root / "redirect-url" => for{
+    case request @ GET -> Root / "redirect" => for{
       clientId <- clientIdIO
       url <- IO{
         UriTemplate(
@@ -75,6 +77,10 @@ class GoogleAuthController(context: AppContext[IO]) {
         )
       }
       response <- Ok(url.toString)
+    } yield response
+
+    case request @ GET -> Root / "callback" => for{
+      response <- Ok("callback")
     } yield response
   }
 }

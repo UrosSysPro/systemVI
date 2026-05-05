@@ -19,8 +19,15 @@ object ServerDependencies {
   val circe: Seq[ModuleID] = Seq(
     "io.circe" %% "circe-core",
     "io.circe" %% "circe-generic",
-    "io.circe" %% "circe-parser"
+    "io.circe" %% "circe-parser",
   ).map(_ % circeVersion)
+
+  val ciris: Seq[ModuleID] = Seq(
+    "is.cir" %% "ciris",
+    "is.cir" %% "ciris-circe",
+    "is.cir" %% "ciris-circe-yaml",
+    "is.cir" %% "ciris-http4s",
+  ).map(_ % cirisVersion)
 
   val sqlite = "org.xerial" % "sqlite-jdbc" % sqliteVersion
 
@@ -37,5 +44,5 @@ object ServerDependencies {
     log4cats,
     logback,
     sqlite
-  ) ++ http4s ++ circe ++ doobie
+  ) ++ http4s ++ circe ++ doobie ++ ciris
 }

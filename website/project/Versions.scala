@@ -7,6 +7,8 @@ object Versions {
 
   val circeVersion = "0.14.13"
 
+  val cirisVersion = "3.14.1"
+
   //val http4sVersion ="1.0.0-M44"
   val http4sVersion = "0.23.30"
 

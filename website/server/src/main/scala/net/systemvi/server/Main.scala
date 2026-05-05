@@ -6,6 +6,7 @@ import com.comcast.ip4s.{ipv4, port}
 import net.systemvi.server.api.*
 import net.systemvi.server.api.controllers.*
 import net.systemvi.server.api.routes.*
+import net.systemvi.server.config.Config
 import net.systemvi.server.persistance.contexts.AppContext
 import net.systemvi.server.persistance.database.*
 import net.systemvi.server.persistance.migrations.Migrations
@@ -42,11 +43,22 @@ object Main extends IOApp{
     _ <- Seeders.seed(xa)
   }yield ExitCode.Success}
 
+  val configApp:IO[ExitCode] = {
+    val logger = Slf4jLogger.getLogger[IO]
+
+    for{
+      config <- Config.instance.load[IO]
+      _ <- logger.info(config.googleAuthConfig.clientId)
+      _ <- logger.info(config.googleAuthConfig.clientSecret.valueShortHash)
+    }yield ExitCode.Success
+  }
+
   override def run(args: List[String]): IO[ExitCode] = {
     args match {
       case _ if args.isEmpty => serverApp
       case _ if args.head == "migrate" => migrationApp
       case _ if args.head == "seed" => seedApp
+      case _ if args.head == "config" => configApp
       case _ => IO.println("wrong input").map(_=>ExitCode.Success)
     }
   }
