@@ -35,53 +35,84 @@ import scala.util.*
  * client_id=client_id
  * */
 
-private sealed trait GoogleScope(val value:String)
-private object DriveMetadataReadonly extends GoogleScope("https://www.googleapis.com/auth/drive.metadata.readonly")
-private object CalendarReadonly extends GoogleScope("https://www.googleapis.com/auth/calendar.readonly")
+object GoogleAuthRedirectLink {
+  private sealed trait GoogleScope(val value: String)
 
-private sealed trait GoogleAccessType(val value: String)
-private object Online extends GoogleAccessType("online")
-private object Offline extends GoogleAccessType("offline")
+  private object DriveMetadataReadonly extends GoogleScope("https://www.googleapis.com/auth/drive.metadata.readonly")
 
-private sealed trait ResponseType(val value: String)
-private object Code extends ResponseType("code")
+  private object CalendarReadonly extends GoogleScope("https://www.googleapis.com/auth/calendar.readonly")
 
-class GoogleAuthController(context: AppContext[IO]) {
+  private sealed trait GoogleAccessType(val value: String)
 
-  private val scheme = Uri.Scheme.https
-  private val domain = "accounts.google.com"
-  private val path = "o/oauth2/v2/auth"
-  private val includeGrantedScopes = true
+  private object Online extends GoogleAccessType("online")
 
-  private val responseType = "code"
-  private val state = "state_parameter_passthrough_value"
-  private val redirectUri = "https://developers.google.com/oauthplayground"
-  private val clientId = context.config.googleAuthConfig.clientId
+  private object Offline extends GoogleAccessType("offline")
+
+  private sealed trait ResponseType(val value: String)
+
+  private object Code extends ResponseType("code")
 
 
-  val routes: HttpRoutes[IO] = HttpRoutes.of[IO]{
-    case request @ GET -> Root / "redirect" => for{
+  def get(context: AppContext[IO]) ={
+
+    val scheme = Uri.Scheme.https
+    val domain = "accounts.google.com"
+    val path = "o/oauth2/v2/auth".split("/").map(PathElm.apply).toList
+
+//    val scope = s"${DriveMetadataReadonly.value} ${CalendarReadonly.value}"
+    val scope = DriveMetadataReadonly.value
+    val accessType = Offline.value
+    val includeGrantedScopes = true
+    val responseType = Code.value
+    val state = "state_parameter_passthrough_value"
+//    val redirectUri = "https://developers.google.com/oauthplayground"
+    val redirectUri = "http://localhost:8080/api/auth/google/callback"
+    val clientId = context.config.googleAuthConfig.clientId
+
+
+    for{
       url <- IO{
         UriTemplate(
           scheme = scheme.some,
           authority = Uri.Authority(host = Uri.RegName(domain)).some,
-          path = List(PathElm(path)),
+          path = path,
           query = List(
-            ParamElm("scope", List(DriveMetadataReadonly.value,CalendarReadonly.value).foldLeft(""){(acc,value)=>acc+value}),
-            ParamElm("access_type",Offline.value),
-            ParamElm("include_granted_scopes",includeGrantedScopes.toString),
-            ParamElm("response_type",responseType),
-            ParamElm("state",state),
-            ParamElm("redirect_uri",redirectUri),
-            ParamElm("client_id",clientId),
+            ParamElm("scope", scope),
+            ParamElm("access_type", accessType),
+            ParamElm("include_granted_scopes", includeGrantedScopes.toString),
+            ParamElm("response_type", responseType),
+            ParamElm("state", state),
+            ParamElm("redirect_uri", redirectUri),
+            ParamElm("client_id", clientId),
           )
         )
       }
+      _ <- context.logger.info(scope)
+    } yield url
+  }
+}
+
+
+class GoogleAuthController(context: AppContext[IO]) {
+  val routes: HttpRoutes[IO] = HttpRoutes.of[IO]{
+
+    case request @ GET -> Root / "redirect" => for{
+      url <- GoogleAuthRedirectLink.get(context)
       response <- Ok(url.toString)
     } yield response
 
-    case request @ GET -> Root / "callback" => for{
-      response <- Ok("callback")
-    } yield response
+    case request @ GET -> Root / "callback" =>{
+      case class GoogleCallbackParams(
+                                     state:String,
+                                     iss:String,
+                                     code:String,
+                                     scope:String,
+                                     )
+      for {
+        params <- request.as[GoogleCallbackParams]
+        _ <- context.logger.info(params.code)
+        response <- Ok("callback")
+      } yield response
+    }
   }
 }
