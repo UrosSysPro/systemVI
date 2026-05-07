@@ -14,7 +14,7 @@ import net.systemvi.server.services.*
 import net.systemvi.common.dtos.*
 import net.systemvi.server.persistance.models.*
 import org.http4s.*
-import org.http4s.UriTemplate.{ParamElm, PathElm}
+import org.http4s.UriTemplate.{ParamElm, PathElm, toUri}
 import org.http4s.circe.*
 import org.http4s.circe.CirceEntityCodec.circeEntityDecoder
 import org.http4s.circe.CirceEntityDecoder.circeEntityDecoder
@@ -42,6 +42,12 @@ object GoogleAuthRedirectLink {
 
   private object CalendarReadonly extends GoogleScope("https://www.googleapis.com/auth/calendar.readonly")
 
+  private object Profile extends GoogleScope("https://www.googleapis.com/auth/userinfo.profile")
+
+  private object Email extends GoogleScope("https://www.googleapis.com/auth/userinfo.email")
+
+  private object OpenID extends GoogleScope("openid")
+
   private sealed trait GoogleAccessType(val value: String)
 
   private object Online extends GoogleAccessType("online")
@@ -59,8 +65,8 @@ object GoogleAuthRedirectLink {
     val domain = "accounts.google.com"
     val path = "o/oauth2/v2/auth".split("/").map(PathElm.apply).toList
 
-//    val scope = s"${DriveMetadataReadonly.value} ${CalendarReadonly.value}"
-    val scope = DriveMetadataReadonly.value
+    val scope = s"${Email.value} ${Profile.value} ${OpenID.value}"
+//    val scope = DriveMetadataReadonly.value
     val accessType = Offline.value
     val includeGrantedScopes = true
     val responseType = Code.value
@@ -98,19 +104,14 @@ class GoogleAuthController(context: AppContext[IO]) {
 
     case request @ GET -> Root / "redirect" => for{
       url <- GoogleAuthRedirectLink.get(context)
-      response <- Ok(url.toString)
+      response <- Ok(url.toUriIfPossible.getOrElse(throw Exception("nis")).show)
     } yield response
 
-    case request @ GET -> Root / "callback" =>{
-      case class GoogleCallbackParams(
-                                     state:String,
-                                     iss:String,
-                                     code:String,
-                                     scope:String,
-                                     )
-      for {
-        params <- request.as[GoogleCallbackParams]
-        _ <- context.logger.info(params.code)
+//    case request @ GET -> Root / "callback" :? state +& iss +& code +& scope =>{
+    case request@GET -> Root / "callback" :? query => {
+      val code = query("code").toList.head
+        for {
+        _ <- context.logger.info(code)
         response <- Ok("callback")
       } yield response
     }
