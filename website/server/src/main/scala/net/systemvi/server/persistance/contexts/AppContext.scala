@@ -14,7 +14,7 @@ case class AppContext[F[_]](
                            )
 
 object AppContext {
-  def create[F[_]: MonadCancelThrow](xa: Transactor[F], config: Config):AppContext[F]= {
+  def create[F[_]: MonadCancelThrow](xa: Transactor[F], config: Config): AppContext[F]= {
     AppContext(
       db = DatabaseContext.create(xa),
       logger = Slf4jLogger.getLogger[IO],

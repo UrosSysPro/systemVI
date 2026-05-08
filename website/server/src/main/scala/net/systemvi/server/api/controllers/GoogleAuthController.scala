@@ -20,6 +20,7 @@ import org.http4s.circe.CirceEntityCodec.circeEntityDecoder
 import org.http4s.circe.CirceEntityDecoder.circeEntityDecoder
 import org.http4s.circe.CirceSensitiveDataEntityDecoder.circeEntityDecoder
 import org.http4s.dsl.io.*
+import org.http4s.ember.client.EmberClientBuilder
 
 import java.util.UUID
 import scala.util.*
@@ -35,7 +36,7 @@ import scala.util.*
  * client_id=client_id
  * */
 
-object GoogleAuthRedirectLink {
+object GoogleAuthLinks {
   private sealed trait GoogleScope(val value: String)
 
   private object DriveMetadataReadonly extends GoogleScope("https://www.googleapis.com/auth/drive.metadata.readonly")
@@ -59,19 +60,19 @@ object GoogleAuthRedirectLink {
   private object Code extends ResponseType("code")
 
 
-  def get(context: AppContext[IO]) ={
+  def getRedirectLink(context: AppContext[IO]) ={
 
     val scheme = Uri.Scheme.https
     val domain = "accounts.google.com"
     val path = "o/oauth2/v2/auth".split("/").map(PathElm.apply).toList
 
     val scope = s"${Email.value} ${Profile.value} ${OpenID.value}"
-//    val scope = DriveMetadataReadonly.value
+    //    val scope = DriveMetadataReadonly.value
     val accessType = Offline.value
     val includeGrantedScopes = true
     val responseType = Code.value
     val state = "state_parameter_passthrough_value"
-//    val redirectUri = "https://developers.google.com/oauthplayground"
+    //    val redirectUri = "https://developers.google.com/oauthplayground"
     val redirectUri = "http://localhost:8080/api/auth/google/callback"
     val clientId = context.config.googleAuthConfig.clientId
 
@@ -96,6 +97,62 @@ object GoogleAuthRedirectLink {
       _ <- context.logger.info(scope)
     } yield url
   }
+
+  def getTokenLink(context: AppContext[IO], code: String): IO[Uri] ={
+    val scheme = Uri.Scheme.https
+    val domain = "oauth2.googleapis.com"
+    val path = List(PathElm("token"))
+
+    val grant_type = "authorization_code"
+    val clientId = context.config.googleAuthConfig.clientId
+    val clientSecret = context.config.googleAuthConfig.clientSecret.value
+    val redirectUri = "http://localhost:8080/api/auth/google/callback"
+
+    for{
+      urlTemplate <- IO{
+        UriTemplate(
+          scheme = scheme.some,
+          authority = Uri.Authority(host = Uri.RegName(domain)).some,
+          path = path,
+          query = List(
+            ParamElm("code", code),
+            ParamElm("grant_type", grant_type),
+            ParamElm("redirect_uri", redirectUri),
+            ParamElm("client_id", clientId),
+            ParamElm("client_secret", clientSecret),
+          )
+        )
+      }
+    } yield urlTemplate.toUriIfPossible.getOrElse(throw Exception("nis"))
+  }
+
+  def getProfileLink(context: AppContext[IO],accessToken:String):IO[Uri] = {
+    val scheme = Uri.Scheme.https
+    val domain = "oauth2.googleapis.com"
+    val path = List(PathElm("token"))
+
+    val grant_type = "authorization_code"
+    val clientId = context.config.googleAuthConfig.clientId
+    val clientSecret = context.config.googleAuthConfig.clientSecret.value
+    val redirectUri = "http://localhost:8080/api/auth/google/callback"
+
+    for{
+      urlTemplate <- IO{
+        UriTemplate(
+          scheme = scheme.some,
+          authority = Uri.Authority(host = Uri.RegName(domain)).some,
+          path = path,
+          query = List(
+            ParamElm("code", code),
+            ParamElm("grant_type", grant_type),
+            ParamElm("redirect_uri", redirectUri),
+            ParamElm("client_id", clientId),
+            ParamElm("client_secret", clientSecret),
+          )
+        )
+      }
+    } yield urlTemplate.toUriIfPossible.getOrElse(throw Exception("nis"))
+  }
 }
 
 
@@ -103,17 +160,48 @@ class GoogleAuthController(context: AppContext[IO]) {
   val routes: HttpRoutes[IO] = HttpRoutes.of[IO]{
 
     case request @ GET -> Root / "redirect" => for{
-      url <- GoogleAuthRedirectLink.get(context)
+      url <- GoogleAuthLinks.getRedirectLink(context)
       response <- Ok(url.toUriIfPossible.getOrElse(throw Exception("nis")).show)
     } yield response
 
-//    case request @ GET -> Root / "callback" :? state +& iss +& code +& scope =>{
     case request@GET -> Root / "callback" :? query => {
+
       val code = query("code").toList.head
+
+      case class GoogleTokenResponse(
+                                    access_token: String,
+                                    expires_in: Int,
+//                                    refresh_token: String,
+//                                    refresh_token_expires_in: String,
+                                    scope: String,
+                                    token_type: String,
+                                    )
+
+      val clientResource = EmberClientBuilder
+        .default[IO]
+        .build
+
+      val result = clientResource.use{client=>
         for {
-        _ <- context.logger.info(code)
-        response <- Ok("callback")
-      } yield response
+          _ <- context.logger.info(code)
+          uri <- GoogleAuthLinks.getTokenLink(context,code)
+          tokenResponse <- client.expect[GoogleTokenResponse](Request[IO](
+            method = Method.POST,
+            uri = uri,
+          ))
+//          profileResponse <- client.expect[GoogleTokenResponse](Request[IO](
+//            method = Method.POST,
+//            uri = uri,
+//          ))
+          _ <- context.logger.info(tokenResponse.access_token)
+          response <- Ok("callback")
+        } yield response
+      }
+      
+      result.attempt.flatMap {
+        case Left(throwable) => Ok(s"fail ${throwable.getMessage}")
+        case Right(result) => Ok("success")
+      }
     }
   }
 }
