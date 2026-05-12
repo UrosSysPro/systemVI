@@ -143,7 +143,7 @@ object GoogleAuthLinks {
           authority = Uri.Authority(host = Uri.RegName(domain)).some,
           path = path,
           query = List(
-            ParamElm("code", code),
+//            ParamElm("code", code),
             ParamElm("grant_type", grant_type),
             ParamElm("redirect_uri", redirectUri),
             ParamElm("client_id", clientId),
