@@ -60,7 +60,7 @@ object GoogleAuthLinks {
   private object Code extends ResponseType("code")
 
 
-  def getRedirectLink(context: AppContext[IO]) ={
+  def getRedirectLink(context: AppContext[IO]): IO[Uri] = {
 
     val scheme = Uri.Scheme.https
     val domain = "accounts.google.com"
@@ -95,10 +95,10 @@ object GoogleAuthLinks {
         )
       }
       _ <- context.logger.info(scope)
-    } yield url
+    } yield url.toUriIfPossible.getOrElse(throw Exception())
   }
 
-  def getTokenLink(context: AppContext[IO], code: String): IO[Uri] ={
+  def getTokenLink(context: AppContext[IO], code: String): IO[Uri] = {
     val scheme = Uri.Scheme.https
     val domain = "oauth2.googleapis.com"
     val path = List(PathElm("token"))
@@ -123,10 +123,10 @@ object GoogleAuthLinks {
           )
         )
       }
-    } yield urlTemplate.toUriIfPossible.getOrElse(throw Exception("nis"))
+    } yield urlTemplate.toUriIfPossible.getOrElse(throw Exception())
   }
 
-  def getProfileLink(context: AppContext[IO],accessToken:String):IO[Uri] = {
+  def getProfileLink(context: AppContext[IO], accessToken: String): IO[Uri] = {
     val scheme = Uri.Scheme.https
     val domain = "oauth2.googleapis.com"
     val path = List(PathElm("token"))
@@ -161,7 +161,7 @@ class GoogleAuthController(context: AppContext[IO]) {
 
     case request @ GET -> Root / "redirect" => for{
       url <- GoogleAuthLinks.getRedirectLink(context)
-      response <- Ok(url.toUriIfPossible.getOrElse(throw Exception("nis")).show)
+      response <- Ok(url.show)
     } yield response
 
     case request@GET -> Root / "callback" :? query => {
@@ -171,11 +171,12 @@ class GoogleAuthController(context: AppContext[IO]) {
       case class GoogleTokenResponse(
                                     access_token: String,
                                     expires_in: Int,
-//                                    refresh_token: String,
-//                                    refresh_token_expires_in: String,
                                     scope: String,
                                     token_type: String,
                                     )
+      case class GoogleUserProfile(
+
+                                  )
 
       val clientResource = EmberClientBuilder
         .default[IO]
@@ -184,16 +185,16 @@ class GoogleAuthController(context: AppContext[IO]) {
       val result = clientResource.use{client=>
         for {
           _ <- context.logger.info(code)
+
           uri <- GoogleAuthLinks.getTokenLink(context,code)
-          tokenResponse <- client.expect[GoogleTokenResponse](Request[IO](
-            method = Method.POST,
-            uri = uri,
-          ))
-//          profileResponse <- client.expect[GoogleTokenResponse](Request[IO](
-//            method = Method.POST,
-//            uri = uri,
-//          ))
+          tokenResponse <- client.expect[GoogleTokenResponse](Request[IO](Method.POST, uri))
+          accessToken = tokenResponse.access_token
+
+//          getUserProfileLink <- GoogleAuthLinks.getProfileLink(context,accessToken)
+//          profileResponse <- client.expect[GoogleUserProfile](Request[IO](Method.POST, getUserProfileLink))
+
           _ <- context.logger.info(tokenResponse.access_token)
+
           response <- Ok("callback")
         } yield response
       }
