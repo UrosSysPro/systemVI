@@ -1,5 +1,6 @@
 import Versions.*
-import sbt.Keys.libraryDependencies
+import sbt.*
+import sbt.Keys.*
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport.*
 
 object ClientDependencies {

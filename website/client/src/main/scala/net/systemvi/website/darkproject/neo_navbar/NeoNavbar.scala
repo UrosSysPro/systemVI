@@ -25,33 +25,33 @@ private def Logo(): HtmlElement = {
   )
 }
 
-private def ContactUs(): HtmlElement = {
-  val hover = Var[Boolean](false)
+private def LogInButton(): HtmlElement = {
   div(
-    display.flex,
-    justifyContent.center,
-    alignItems.center,
-    height.percent(100),
-    paddingRight.rem(1),
+    display.flex, justifyContent.center, alignItems.center, padding.rem(0.5),
+    position.relative,
     button(
-      display.flex,
-      justifyContent.center,
-      alignItems.center,
-      paddingLeft.rem(1),
-      paddingRight.rem(1),
-      paddingTop.rem(0.5f),
-      paddingBottom.rem(0.5f),
-      borderRadius.rem(0.3f),
-      transition("300ms"),
-      onMouseEnter --> { _ => hover.writer.onNext(true) },
-      onMouseLeave --> { _ => hover.writer.onNext(false) },
-      opacity <-- hover.signal.map {
-        if _ then "0.8" else "1"
-      },
-      backgroundColor("#22272d"),
-      color("white"),
-      cursor.pointer,
-      "Contact Us",
+      width.rem(6),
+      height.percent(100),
+      borderRadius.rem(.5),
+      backgroundColor := "gray",
+      "Log in"
+    ),
+    div(
+      position.absolute, top.percent(100), right.percent(0),
+      display.flex, flexDirection.column,
+      height.rem(20),
+      width.rem(20),
+      padding.rem(2),
+      backgroundColor("white"),
+      borderRadius.rem(1),
+      boxShadow("1rem 1rem 1rem rgba(0,0,0,0.5)"),
+      button(
+        width.rem(6),
+        height.rem(3),
+        borderRadius.rem(.5),
+        backgroundColor := "gray",
+        "Google"
+      ),
     )
   )
 }
@@ -207,7 +207,7 @@ def NeoNavbar(): List[Modifier[HtmlElement]] = {
                 Link(name, page)
               }
             ),
-            ContactUs(),
+            LogInButton(),
           )
         }
       )

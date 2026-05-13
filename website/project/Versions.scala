@@ -1,3 +1,6 @@
+import sbt.*
+import sbt.Keys.*
+
 object Versions {
   val catsVersion = "2.13.0"
   val catsEffectVersion = "3.6.3"

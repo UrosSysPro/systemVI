@@ -1,5 +1,6 @@
 import Versions.*
 import sbt.*
+import sbt.Keys.*
 import sbt.Keys.libraryDependencies
 
 object ServerDependencies {

@@ -5,9 +5,10 @@ import TestDependencies.*
 
 import org.scalajs.linker.interface.ModuleSplitStyle
 
-ThisBuild / organization := "net.systemvi"
-ThisBuild / version      := "0.6"
-ThisBuild / scalaVersion := "3.3.3"
+ThisBuild / maintainer    := "karaleicu@gmail.com"
+ThisBuild / organization  := "net.systemvi"
+ThisBuild / version       := "0.7"
+ThisBuild / scalaVersion  := "3.3.3"
 
 lazy val website = project.in(file(".")).aggregate(client,server)
 
