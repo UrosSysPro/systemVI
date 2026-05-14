@@ -2,10 +2,11 @@ import ServerDependencies.*
 import ClientDependencies.*
 import CommonDependencies.*
 import TestDependencies.*
+import CustomTasks.*
 
 import org.scalajs.linker.interface.ModuleSplitStyle
 
-ThisBuild / maintainer    := "karaleicu@gmail.com"
+ThisBuild / parallelExecution := true
 ThisBuild / organization  := "net.systemvi"
 ThisBuild / version       := "0.7"
 ThisBuild / scalaVersion  := "3.3.3"
