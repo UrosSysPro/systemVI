@@ -21,6 +21,7 @@ import org.http4s.circe.CirceEntityDecoder.circeEntityDecoder
 import org.http4s.circe.CirceSensitiveDataEntityDecoder.circeEntityDecoder
 import org.http4s.dsl.io.*
 import org.http4s.ember.client.EmberClientBuilder
+import org.http4s.headers.Location
 
 import java.util.UUID
 import scala.util.*
@@ -161,7 +162,7 @@ class GoogleAuthController(context: AppContext[IO]) {
 
     case request @ GET -> Root / "redirect" => for{
       url <- GoogleAuthLinks.getRedirectLink(context)
-      response <- Ok(url.show)
+      response <- Found(Location(url))
     } yield response
 
     case request@GET -> Root / "callback" :? query => {

@@ -45,7 +45,8 @@ private def LogInButton(): HtmlElement = {
       backgroundColor("white"),
       borderRadius.rem(1),
       boxShadow("1rem 1rem 1rem rgba(0,0,0,0.5)"),
-      button(
+      a(
+        href(s"${Constants.serverUrl}/auth/google/redirect"),
         width.rem(6),
         height.rem(3),
         borderRadius.rem(.5),

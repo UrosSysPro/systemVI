@@ -2,7 +2,6 @@ import ServerDependencies.*
 import ClientDependencies.*
 import CommonDependencies.*
 import TestDependencies.*
-import CustomTasks.*
 
 import org.scalajs.linker.interface.ModuleSplitStyle
 
