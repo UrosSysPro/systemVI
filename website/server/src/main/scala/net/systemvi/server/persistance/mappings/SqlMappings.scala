@@ -22,4 +22,8 @@ object SqlMappings {
   given Read[EntityImage] = Read[(UUID,String,Int)].map(EntityImage.apply)
   
   given Read[EntitySpecification] = Read[(UUID,String,String,Int)].map(EntitySpecification.apply)
+  
+  given Read[GoogleAccount] = Read[(String,String,Boolean,Option[String],Option[String],Option[String],Option[String],Option[String])].map(GoogleAccount.apply)
+  
+  given Read[User] = Read[(UUID,String,String,String)].map(User.apply)
 }

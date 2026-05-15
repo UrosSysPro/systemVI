@@ -12,27 +12,25 @@ import org.http4s.circe.CirceEntityDecoder.*
 import org.http4s.ember.client.*
 import org.http4s.headers.Authorization
 
-
-trait GoogleApiService[F[_]] {
-
-  case class GoogleTokenResponse(
-                                  access_token: String,
-                                  expires_in: Int,
-                                  scope: String,
-                                  token_type: String,
-                                )
-
-  case class GoogleUserProfile(
-                                sub: String,           // unique user ID
-                                email: String,
-                                email_verified: Boolean,
-                                name: Option[String],
-                                picture: Option[String],
-                                given_name: Option[String],
-                                family_name: Option[String],
-                                locale: Option[String]
+case class GoogleTokenResponse(
+                                access_token: String,
+                                expires_in: Int,
+                                scope: String,
+                                token_type: String,
                               )
 
+case class GoogleUserProfile(
+                              sub: String,           // unique user ID
+                              email: String,
+                              email_verified: Boolean,
+                              name: Option[String],
+                              picture: Option[String],
+                              given_name: Option[String],
+                              family_name: Option[String],
+                              locale: Option[String]
+                            )
+
+trait GoogleApiService[F[_]] {
   def getAccessToken(context: AppContext[F], code: String): F[GoogleTokenResponse]
   def getUserProfile(context: AppContext[F], accessToken: String): F[GoogleUserProfile]
 }

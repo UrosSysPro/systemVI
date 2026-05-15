@@ -18,6 +18,8 @@ object Migrations {
     _ <- EntitySpecificationMigration.createTable(xa)
     _ <- FilamentMigration.createTable(xa)
     _ <- ApplicationMigration.createTable(xa)
+    _ <- GoogleAccountMigration[F](xa).up
+    _ <- UserMigration[F](xa).up
   }yield()
 
   def dropAll[F[_]: MonadCancelThrow: Sync: Async](xa:Transactor[F]): F[Unit] = for{
@@ -28,5 +30,7 @@ object Migrations {
     _ <- EntitySpecificationMigration.dropTable(xa)
     _ <- FilamentMigration.dropTable(xa)
     _ <- ApplicationMigration.dropTable(xa)
+    _ <- GoogleAccountMigration[F](xa).down
+    _ <- UserMigration[F](xa).down
   }yield()
 }
