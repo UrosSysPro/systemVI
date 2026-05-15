@@ -1,7 +1,9 @@
 package net.systemvi.server
 
 import cats.*
+import cats.implicits.*
 import cats.effect.*
+import cats.effect.implicits.*
 import com.comcast.ip4s.{ipv4, port}
 import net.systemvi.server.api.*
 import net.systemvi.server.api.routes.*
@@ -15,7 +17,7 @@ import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.implicits.*
 import org.typelevel.log4cats.slf4j.Slf4jLogger
 
-def server(using context:AppContext[IO])=EmberServerBuilder
+def server(using context:AppContext[IO]) = EmberServerBuilder
   .default[IO]
   .withHost(ipv4"0.0.0.0")
   .withPort(port"8080")
@@ -25,25 +27,20 @@ def server(using context:AppContext[IO])=EmberServerBuilder
 
 object Main extends IOApp{
 
-  def resources = for{
-    xa <- sqlite
-    config <- Resource.eval(Config.instance.load[IO])
-  } yield (xa, config)
-
-  val serverApp:IO[ExitCode] = resources.use{ (xa,config) =>
-    given AppContext[IO] = AppContext.create(xa, config)
+  val serverApp:IO[ExitCode] = AppContext.create[IO].use { context =>
+    given AppContext[IO] = context
     for {
       _ <- server.use(_ => IO.never)
     } yield ExitCode.Success
   }
 
-  val migrationApp:IO[ExitCode] = sqlite.use { xa => for {
-    _ <- Migrations.dropAll(xa)
-    _ <- Migrations.migrate(xa)
+  val migrationApp:IO[ExitCode] = AppContext.create[IO].use { context => for {
+    _ <- Migrations.dropAll(context.xa)
+    _ <- Migrations.migrate(context.xa)
   } yield ExitCode.Success }
 
-  val seedApp:IO[ExitCode] = sqlite.use{xa=> for{
-    _ <- Seeders.seed(xa)
+  val seedApp:IO[ExitCode] = AppContext.create[IO].use{ context => for{
+    _ <- Seeders.seed(context.xa)
   }yield ExitCode.Success}
 
   val configApp:IO[ExitCode] = {
@@ -62,7 +59,7 @@ object Main extends IOApp{
       case _ if args.head == "migrate" => migrationApp
       case _ if args.head == "seed" => seedApp
       case _ if args.head == "config" => configApp
-      case _ => IO.println("wrong input").map(_=>ExitCode.Success)
+      case _ => IO.println("wrong input").map(_ => ExitCode.Success)
     }
   }
 }

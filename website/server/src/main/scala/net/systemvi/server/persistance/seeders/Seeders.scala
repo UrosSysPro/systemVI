@@ -7,7 +7,7 @@ import cats.implicits.*
 import doobie.util.transactor.Transactor
 
 object Seeders {
-  def seed(xa:Transactor[IO]): IO[Unit] = for{
+  def seed[F[_]: MonadCancelThrow](xa:Transactor[F]): F[Unit] = for{
     _ <- KeyboardSeeders.seed(xa)
     _ <- ApplicationSeeders.seed(xa)
   } yield ()

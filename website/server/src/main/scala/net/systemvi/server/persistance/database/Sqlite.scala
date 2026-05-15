@@ -10,9 +10,9 @@ import doobie.generic.auto.*
 import doobie.h2.*
 import doobie.hikari.*
 
-val sqlite:Resource[IO,Transactor[IO]] = for{
-  ec <- ExecutionContexts.fixedThreadPool[IO](32)
-  xa <- HikariTransactor.newHikariTransactor[IO](
+def sqlite[F[_]: Async: MonadCancelThrow]:Resource[F,Transactor[F]] = for{
+  ec <- ExecutionContexts.fixedThreadPool[F](32)
+  xa <- HikariTransactor.newHikariTransactor[F](
     "org.sqlite.JDBC",
     "jdbc:sqlite:test.db",
     "",

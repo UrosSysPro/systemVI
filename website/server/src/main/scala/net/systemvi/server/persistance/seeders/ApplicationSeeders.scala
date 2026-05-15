@@ -9,7 +9,7 @@ import net.systemvi.server.persistance.contexts.*
 import java.util.UUID
 
 object ApplicationSeeders {
-  def seed(xa:Transactor[IO]): IO[Unit] = {
+  def seed[F[_]:MonadCancelThrow](xa:Transactor[F]): F[Unit] = {
     val images = EntityImageContext.create(xa)
     val applications = ApplicationContext.create(xa)
 

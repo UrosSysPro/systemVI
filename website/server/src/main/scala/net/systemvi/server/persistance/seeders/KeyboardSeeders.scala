@@ -14,7 +14,7 @@ import net.systemvi.server.persistance.contexts.{ManufacturerContext, *}
 import java.util.UUID
 
 object KeyboardSeeders {
-  def seed(xa:Transactor[IO]): IO[Unit] = {
+  def seed[F[_]:MonadCancelThrow](xa:Transactor[F]): F[Unit] = {
     val manufacturers = ManufacturerContext.create(xa)
     val switches = SwitchContext.create(xa)
     val keyboards = KeyboardContext.create(xa)
