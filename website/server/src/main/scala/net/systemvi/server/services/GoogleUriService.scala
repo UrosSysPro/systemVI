@@ -6,6 +6,7 @@ import cats.implicits.*
 import cats.effect.*
 import cats.effect.implicits.*
 import org.http4s.*
+import org.http4s.implicits.*
 import org.http4s.UriTemplate.*
 
 trait GoogleUriService[F[_]] {
@@ -101,31 +102,7 @@ object GoogleUriService {
     }
 
     override def getUserProfileUri(context: AppContext[F]): F[Uri] = {
-      val scheme = Uri.Scheme.https
-      val domain = "oauth2.googleapis.com"
-      val path = List(PathElm("token"))
-
-      val grant_type = "authorization_code"
-      val clientId = context.config.googleAuthConfig.clientId
-      val clientSecret = context.config.googleAuthConfig.clientSecret.value
-      val redirectUri = "http://localhost:8080/api/auth/google/callback"
-
-      for{
-        urlTemplate <- Async[F].delay{
-          UriTemplate(
-            scheme = scheme.some,
-            authority = Uri.Authority(host = Uri.RegName(domain)).some,
-            path = path,
-            query = List(
-              //            ParamElm("code", code),
-              ParamElm("grant_type", grant_type),
-              ParamElm("redirect_uri", redirectUri),
-              ParamElm("client_id", clientId),
-              ParamElm("client_secret", clientSecret),
-            )
-          )
-        }
-      } yield urlTemplate.toUriIfPossible.getOrElse(throw Exception("nis"))
+      Async[F].delay{ uri"https://openidconnect.googleapis.com/v1/userinfo" }
     }
   }
 }
