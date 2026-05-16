@@ -11,6 +11,8 @@ case class DatabaseContext[F[_]](
                             entitySpecifications: EntitySpecificationContext[F],
                             filaments: FilamentContext[F],
                             applications: ApplicationContext[F],
+                            users: UserContext[F],
+                            googleAccounts: GoogleAccountContext[F],
                           )
 
 
@@ -24,6 +26,8 @@ object DatabaseContext {
       EntitySpecificationContext.create(xa),
       FilamentContext.create(xa),
       ApplicationContext.create(xa),
+      UserContext.create(xa),
+      GoogleAccountContext.create(xa),
     )
   }
 }

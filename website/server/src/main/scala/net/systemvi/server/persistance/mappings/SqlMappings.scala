@@ -25,5 +25,5 @@ object SqlMappings {
   
   given Read[GoogleAccount] = Read[(String,String,Boolean,Option[String],Option[String],Option[String],Option[String],Option[String])].map(GoogleAccount.apply)
   
-  given Read[User] = Read[(UUID,String,String,String)].map(User.apply)
+  given Read[User] = Read[(UUID,String,String,Option[String])].map(User.apply)
 }

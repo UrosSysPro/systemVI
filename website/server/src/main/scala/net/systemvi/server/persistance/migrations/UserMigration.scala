@@ -16,7 +16,7 @@ class UserMigration[F[_]: MonadCancelThrow](xa: Transactor[F]) extends Migration
         uuid UUID primary key,
         email varchar(255) not null,
         name varchar(255),
-        picture varchar(255)
+        picture varchar(255) null
       );
     """.update.run.transact(xa)
   }

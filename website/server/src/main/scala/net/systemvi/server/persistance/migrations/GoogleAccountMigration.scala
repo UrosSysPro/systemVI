@@ -17,11 +17,11 @@ class GoogleAccountMigration[F[_]: MonadCancelThrow](xa: Transactor[F]) extends 
         sub varchar(255) primary key ,
         email varchar(255) not null ,
         email_verified Boolean not null ,
-        name varchar(255),
-        picture varchar(255),
-        given_name varchar(255),
-        family_name varchar(255),
-        locale varchar(255)
+        name varchar(255) null,
+        picture varchar(255) null,
+        given_name varchar(255) null,
+        family_name varchar(255) null,
+        locale varchar(255) null
       );
     """.update.run.transact(xa)
   }

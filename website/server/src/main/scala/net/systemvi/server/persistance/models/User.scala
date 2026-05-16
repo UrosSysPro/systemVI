@@ -6,5 +6,5 @@ case class User (
                   uuid: UUID,
                   email: String,
                   name: String,
-                  picture: String,
+                  picture: Option[String],
                 )

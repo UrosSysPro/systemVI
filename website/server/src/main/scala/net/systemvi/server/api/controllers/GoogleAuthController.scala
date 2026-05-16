@@ -29,7 +29,12 @@ def googleAuthController(using context: AppContext[IO]) = {
       val result = for {
         tokenResponse <- googleApiService.getAccessToken(context, code)
         userProfile <- googleApiService.getUserProfile(context, tokenResponse.access_token)
-        response <- Ok(userProfile.asJson.noSpaces)
+        googleAccountInDb <- context.db.googleAccounts.get(userProfile.sub)
+        googleAcc <- googleAccountInDb match {
+          case Some(acc) => IO{acc}
+          case None => context.db.googleAccounts.add(userProfile)
+        }
+        response <- Ok(googleAcc.asJson.noSpaces)
       } yield response
 
       result.attempt.flatMap {

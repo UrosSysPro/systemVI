@@ -37,11 +37,11 @@ object GoogleAccountContext {
               ${googleUserProfile.sub},
               ${googleUserProfile.email},
               ${googleUserProfile.email_verified},
-              ${googleUserProfile.name.getOrElse(null)},
-              ${googleUserProfile.picture.getOrElse(null)},
-              ${googleUserProfile.given_name.getOrElse(null)},
-              ${googleUserProfile.family_name.getOrElse(null)},
-              ${googleUserProfile.locale.getOrElse(null)}
+              ${googleUserProfile.name},
+              ${googleUserProfile.picture},
+              ${googleUserProfile.given_name},
+              ${googleUserProfile.family_name},
+              ${googleUserProfile.locale}
             );
       """.update.run.transact(xa)
       } yield account
