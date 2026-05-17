@@ -29,6 +29,8 @@ object Routes {
   val knittingRoute: Route.Total[KnittingPage.type, Unit] = Route.static(KnittingPage, root / "knitting" / endOfSegments)
   val origamiRoute: Route.Total[OrigamiPage.type, Unit] = Route.static(OrigamiPage, root / "origami" / endOfSegments)
 
+  val userProfileRoute: Route.Total[UserProfilePage.type, Unit] = Route.static(UserProfilePage, root / "user-profile" / endOfSegments)
+
   val notFoundRoute: Route.Total[NotFoundPage.type, Unit] = Route.static(NotFoundPage, root)
 
   val keyboardRoute: Route.Total[KeyboardPage, UUID] = Route[KeyboardPage, UUID](

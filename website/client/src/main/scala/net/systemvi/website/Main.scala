@@ -21,6 +21,7 @@ val splitter = SplitRender[Page, HtmlElement](Router.currentPageSignal)
   .collectStatic(ThreeDPrintingPage){ div("coming soon") }
   .collectStatic(KnittingPage)      { div("coming soon") }
   .collectStatic(OrigamiPage)       { div("coming soon") }
+  .collectStatic(UserProfilePage)   { UserProfilePageView() }
   .collectStatic(NotFoundPage)      { div("page not found") }
 
 val app: Div = div(

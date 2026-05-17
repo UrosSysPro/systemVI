@@ -29,6 +29,7 @@ object Router extends Router[Page](
     threeDPrintingRoute,
     knittingRoute,
     origamiRoute,
+    userProfileRoute,
     notFoundRoute,
   ),
   getPageTitle = page => page.title,
@@ -52,7 +53,8 @@ object Router extends Router[Page](
       json.as[HearthPage.type],
       json.as[ThreeDPrintingPage.type],
       json.as[KnittingPage.type],
-      json.as[OrigamiPage.type]
+      json.as[OrigamiPage.type],
+      json.as[UserProfilePage.type]
     ).flatMap{
         case Right(page) => List(page)
         case Left(_) => List.empty

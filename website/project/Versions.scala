@@ -8,6 +8,9 @@ object Versions {
   val log4catsVersion = "2.7.1"
   val logBackVersion = "1.5.21"
 
+  val jwtHttp4sVersion = "1.2.0"
+  val jwtScalaVersion = "9.3.0"
+
   val circeVersion = "0.14.13"
 
   val cirisVersion = "3.14.1"

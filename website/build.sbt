@@ -39,7 +39,7 @@ lazy val server = project.in(file("server"))
     Compile / run / fork := true,
     Compile / run / connectInput := true,
     dockerBaseImage := "eclipse-temurin:25",
-    serverDependencies
+    libraryDependencies ++= serverDependencies
   )
   .dependsOn(common.jvm)
 

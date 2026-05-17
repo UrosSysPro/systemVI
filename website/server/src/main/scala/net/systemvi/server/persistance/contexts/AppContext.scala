@@ -21,7 +21,9 @@ case class AppContext[F[_]](
                              config: Config,
                              httpClient: Client[F],
                              googleUriService: GoogleUriService[F],
-                             googleApiService: GoogleApiService[F]
+                             googleApiService: GoogleApiService[F],
+                             jwtAuthService: JwtAuthService[F],
+                             jwtAuthUriService: JwtAuthUriService[F],
                            )
 
 object AppContext {
@@ -40,6 +42,8 @@ object AppContext {
       httpClient = httpClient,
       googleUriService = googleUriService,
       googleApiService = googleApiService,
+      jwtAuthService = JwtAuthService.create,
+      jwtAuthUriService = JwtAuthUriService.create,
     )
   }
 }

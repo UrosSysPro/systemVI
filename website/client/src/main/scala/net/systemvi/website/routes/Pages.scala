@@ -30,5 +30,7 @@ object Pages {
 
   case object HearthPage extends Page("Discrete Fourier Series")
 
+  case object UserProfilePage extends Page("User Profile Page")
+
   case object NotFoundPage extends Page("404")
 }
