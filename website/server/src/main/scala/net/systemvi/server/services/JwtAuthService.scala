@@ -13,7 +13,7 @@ trait JwtAuthService[F[_]] {
 }
 
 object JwtAuthService {
-  def create[F[_]: Async] = new JwtAuthService[F] {
+  def create[F[_]: Async]: JwtAuthService[F] = new JwtAuthService[F] {
     
   }
 }

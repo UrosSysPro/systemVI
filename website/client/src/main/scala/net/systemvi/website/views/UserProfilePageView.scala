@@ -6,8 +6,12 @@ import org.scalajs.dom
 import io.circe.scalajs.given
 import io.circe.generic.auto.*
 import io.circe.generic.*
+import net.systemvi.website.services.UserService
 
 
 def UserProfilePageView():HtmlElement = {
-  div("hello")
+  val user = UserService.whoAmI
+  div(
+    text <-- user.map(user => s"${user}")
+  )
 }
