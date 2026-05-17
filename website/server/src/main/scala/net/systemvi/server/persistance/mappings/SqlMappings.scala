@@ -23,7 +23,7 @@ object SqlMappings {
   
   given Read[EntitySpecification] = Read[(UUID,String,String,Int)].map(EntitySpecification.apply)
   
-  given Read[GoogleAccount] = Read[(String,String,Boolean,Option[String],Option[String],Option[String],Option[String],Option[String])].map(GoogleAccount.apply)
+  given Read[GoogleAccount] = Read[(String,UUID,String,Boolean,Option[String],Option[String],Option[String],Option[String],Option[String])].map(GoogleAccount.apply)
   
   given Read[User] = Read[(UUID,String,String,Option[String])].map(User.apply)
 }

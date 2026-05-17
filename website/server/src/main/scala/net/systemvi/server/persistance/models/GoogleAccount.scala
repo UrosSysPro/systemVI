@@ -1,7 +1,10 @@
 package net.systemvi.server.persistance.models
 
+import java.util.UUID
+
 case class GoogleAccount(
                           sub: String,
+                          userUUID: UUID,
                           email: String,
                           email_verified: Boolean,
                           name: Option[String],

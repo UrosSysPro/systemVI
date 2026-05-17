@@ -7,10 +7,12 @@ import io.circe.*
 import io.circe.generic.auto.*
 import io.circe.syntax.*
 import net.systemvi.server.persistance.contexts.*
+import net.systemvi.server.persistance.models.*
 import org.http4s.*
 import org.http4s.dsl.io.*
 import org.http4s.headers.Location
 
+import java.util.UUID
 import scala.util.*
 
 def googleAuthController(using context: AppContext[IO]) = {
@@ -32,7 +34,18 @@ def googleAuthController(using context: AppContext[IO]) = {
         googleAccountInDb <- context.db.googleAccounts.get(userProfile.sub)
         googleAcc <- googleAccountInDb match {
           case Some(acc) => IO{acc}
-          case None => context.db.googleAccounts.add(userProfile)
+          case None =>{
+            val user = User(
+              UUID.randomUUID(),
+              name = userProfile.name.getOrElse(""),
+              email = userProfile.email,
+              picture = userProfile.picture,
+            )
+            for{
+              _<-context.db.users.add(user)
+              account<-context.db.googleAccounts.add(userProfile,user)
+            }yield (account)
+          }
         }
         response <- Ok(googleAcc.asJson.noSpaces)
       } yield response

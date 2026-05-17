@@ -28,10 +28,10 @@ object UserContext {
       sql"""
         insert into Users(uuid, email, name, picture)
         values (
-          ${user.uuid.toString},
+          ${user.uuid},
           ${user.email},
           ${user.name},
-          ${user.picture},
+          ${user.picture}
         );
       """.update.run.transact(xa)
 

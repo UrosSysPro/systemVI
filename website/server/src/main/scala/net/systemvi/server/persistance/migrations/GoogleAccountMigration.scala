@@ -15,6 +15,7 @@ class GoogleAccountMigration[F[_]: MonadCancelThrow](xa: Transactor[F]) extends 
     sql"""
       create table if not exists GoogleAccounts(
         sub varchar(255) primary key ,
+        userUUID UUID not null,
         email varchar(255) not null ,
         email_verified Boolean not null ,
         name varchar(255) null,
