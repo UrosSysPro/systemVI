@@ -18,7 +18,7 @@ import net.systemvi.server.persistance.contexts.AppContext
 import net.systemvi.server.persistance.models.*
 
 def userController(using context: AppContext[IO]) = AuthedRoutes.of[User, IO]{
-  case GET -> Root / "/" as user => for{
+  case GET -> Root as user => for{
     response <- Ok(user.asJson)
   } yield response
 }

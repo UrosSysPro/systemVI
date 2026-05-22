@@ -64,10 +64,18 @@ def googleAuthController(using context: AppContext[IO]) = {
         key = context.config.jwtAuthConfig.secret
         algo = JwtAlgorithm.HS256
         token = JwtCirce.encode(claim,key,algo)
+        cookie = ResponseCookie(
+          name = "access_token",
+          content = token,
+          expires = HttpDate.unsafeFromInstant(Instant.now.plusSeconds(7 * 24 * 60 * 60)).some,
+          httpOnly = true,
+          secure = true,
+          path = "/".some
+        )
         uri <- context.jwtAuthUriService.getUserProfilePageUrl(context)
         response <- Found(
           Location(uri)
-        ).map(_.addCookie(ResponseCookie("access_token",token)))
+        ).map(_.addCookie(cookie))
       } yield response
 
       result.attempt.flatMap {

@@ -16,33 +16,24 @@ import org.http4s.implicits.*
 import org.http4s.server.AuthMiddleware
 import pdi.jwt.*
 
-class JwtAuthMiddleware[F[_]: Async] {
-  def apply(using context:AppContext[F]): AuthMiddleware[F, User] = {
-    val jwtAuth = JwtAuth.hmac(context.config.jwtAuthConfig.secret,JwtAlgorithm.HS256)
+def jwtAuth[F[_]: Async](using context: AppContext[F]): AuthMiddleware[F,User] = {
+  val jwtAuth = JwtAuth.hmac(context.config.jwtAuthConfig.secret.toCharArray, JwtAlgorithm.HS256)
 
-    val authenticate: JwtToken => JwtClaim => F[Option[User]] =
-      (token: JwtToken) =>
-        (claim: JwtClaim) => decode[User](claim.content) match {
-          case Right(user) => Async[F].delay {
-            user.some
-          }
-          case Left(_) => Async[F].delay {
-            None
-          }
+  val authenticate: JwtToken => JwtClaim => F[Option[User]] =
+    (token: JwtToken) =>
+      (claim: JwtClaim) => decode[User](claim.content) match {
+        case Right(user) => Async[F].delay {
+          user.some
         }
+        case Left(_) => Async[F].delay {
+          None
+        }
+      }
 
-    val tokenExtractor: Request[F] => Option[String] =
-      request =>
-        request.cookies
-          .find(_.name == "access_token")
-          .map(_.content)
+  val middleware = dev.profunktor.auth.JwtAuthMiddleware[F, User](
+    jwtAuth = jwtAuth,
+    authenticate = authenticate,
+  )
 
-    val middleware = dev.profunktor.auth.JwtAuthMiddleware[F,User](
-      jwtAuth = jwtAuth,
-      authenticate = authenticate,
-//      tokenExtractor
-    )
-
-    middleware
-  }
+  middleware
 }
