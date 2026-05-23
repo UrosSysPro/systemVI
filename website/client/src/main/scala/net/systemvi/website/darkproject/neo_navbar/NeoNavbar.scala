@@ -26,6 +26,8 @@ private def Logo(): HtmlElement = {
 }
 
 private def LogInButton(): HtmlElement = {
+  val showLogInPopUp = Var(false)
+
   div(
     display.flex, justifyContent.center, alignItems.center, padding.rem(0.5),
     position.relative,
@@ -36,9 +38,11 @@ private def LogInButton(): HtmlElement = {
       backgroundColor := "gray",
       "Log in"
     ),
+    onClick --> {_=> showLogInPopUp.update(!_)},
     div(
+      display <-- showLogInPopUp.signal.map(if _ then "flex" else "none"),
       position.absolute, top.percent(100), right.percent(0),
-      display.flex, flexDirection.column,
+      flexDirection.column,
       height.rem(20),
       width.rem(20),
       padding.rem(2),
