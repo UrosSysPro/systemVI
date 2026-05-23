@@ -1,0 +1,27 @@
+name: Deploy Production
+
+on:
+  push:
+    tags:
+      - 'vp*'
+
+jobs:
+  deploy:
+    runs-on: rpi-pi
+
+    steps:
+      - name: Pull latest code
+        run: |
+          cd /home/lil-nas/projects/SystemVI
+          git pull
+
+      - name: Build Docker image with sbt
+        run: |
+          cd /home/lil-nas/projects/SystemVI
+          sbt dockerPublishLocal
+
+      - name: Restart with Docker Compose
+        run: |
+          cd /home/lil-nas/projects/SystemVI
+          docker compose down
+          docker compose up -d
