@@ -17,13 +17,13 @@ def api(using context:AppContext[IO]) = {
 
   val auth = jwtAuth[IO]
   val copy = copyCookieToHeader[IO]
-  val userRoutes: HttpRoutes[IO] = auth(userController)
+
   Router(
     "manufacturers" -> manufacturerController,
     "switches" -> switchController,
     "keyboards" -> keyboardController,
     "applications" -> applicationController,
-    "user" -> copy(userRoutes),
+    "user" -> copy(auth(userController)),
     "auth" -> Router(
       "google" -> googleAuthController
     ),

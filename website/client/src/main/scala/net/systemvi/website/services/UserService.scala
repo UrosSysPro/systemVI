@@ -1,19 +1,25 @@
 package net.systemvi.website.services
 
+import cats.*
+import cats.implicits.*
 import com.raquo.laminar.api.L.{*, given}
 import org.scalajs.dom
-import net.systemvi.website.utils.Constants
 import org.scalajs.dom.{HttpMethod, RequestCredentials, RequestInit,Headers}
+import io.circe.*
+import io.circe.syntax.*
+import io.circe.scalajs.*
+import io.circe.generic.auto.*
 
-import scala.scalajs.js
 
+import net.systemvi.common.dtos.*
+import net.systemvi.website.utils.Constants
 
 object UserService {
   import scala.concurrent.ExecutionContext
 
   given ExecutionContext = ExecutionContext.global
 
-  def whoAmI: EventStream[js.Any] ={
+  def whoAmI: EventStream[UserDto] ={
     val headers = Headers()
     val init = new RequestInit {}
     init.headers = headers
@@ -24,6 +30,7 @@ object UserService {
       dom.fetch(s"${Constants.serverUrl}/user", init)
         .toFuture
         .flatMap(_.json().toFuture)
+        .map(decodeJs[UserDto](_).getOrElse(throw Exception()))
     )
   }
 }
