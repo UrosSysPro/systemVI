@@ -16,8 +16,8 @@ jobs:
           echo $PATH
           which bun
           which sbt
-          which docker
-          which git
+#          which docker
+#          which git
 
       - name: Pull latest code
         run: |
