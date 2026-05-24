@@ -13,6 +13,7 @@ jobs:
       - name: who am i
         run: |
           whoami
+          echo $PATH
           which bun
           which sbt
           which docker
