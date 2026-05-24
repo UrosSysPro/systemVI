@@ -22,5 +22,5 @@ object GoogleAuthConfig {
 
   given ConfigDecoder[String,GoogleAuthConfig] = circeConfigDecoder("GoogleAuthConfigDecoder")
 
-  def instance: ConfigValue[Effect, GoogleAuthConfig] = file(Paths.get("../google-client-secret.json")).as[GoogleAuthConfig]
+  def instance: ConfigValue[Effect, GoogleAuthConfig] = file(Paths.get("config/google-client-secret.json")).as[GoogleAuthConfig]
 }

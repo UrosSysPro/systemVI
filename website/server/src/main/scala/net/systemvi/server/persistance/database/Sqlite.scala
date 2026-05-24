@@ -14,7 +14,7 @@ def sqlite[F[_]: Async: MonadCancelThrow]:Resource[F,Transactor[F]] = for{
   ec <- ExecutionContexts.fixedThreadPool[F](32)
   xa <- HikariTransactor.newHikariTransactor[F](
     "org.sqlite.JDBC",
-    "jdbc:sqlite:test.db",
+    "jdbc:sqlite:db/test.db",
     "",
     "",
     ec

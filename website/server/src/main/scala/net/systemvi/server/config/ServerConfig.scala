@@ -25,5 +25,5 @@ object ServerConfig {
 
   given ConfigDecoder[String,ServerConfig] = circeConfigDecoder("ServerConfigDecoder")
 
-  def instance: ConfigValue[Effect, ServerConfig] = file(Paths.get("../server.json")).as[ServerConfig]
+  def instance: ConfigValue[Effect, ServerConfig] = file(Paths.get("config/server.json")).as[ServerConfig]
 }

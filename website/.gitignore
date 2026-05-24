@@ -45,3 +45,4 @@ client/public/download/application/configurator/*.jar
 google-auth.txt
 google-client-secret.json
 server.json
+jwt-auth.json

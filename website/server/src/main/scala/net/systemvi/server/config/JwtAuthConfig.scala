@@ -18,5 +18,5 @@ object JwtAuthConfig {
 
   given ConfigDecoder[String,JwtAuthConfig] = circeConfigDecoder("JwtAuthConfigDecoder")
 
-  def instance: ConfigValue[Effect, JwtAuthConfig] = file(Paths.get("../jwt-auth.json")).as[JwtAuthConfig]
+  def instance: ConfigValue[Effect, JwtAuthConfig] = file(Paths.get("config/jwt-auth.json")).as[JwtAuthConfig]
 }

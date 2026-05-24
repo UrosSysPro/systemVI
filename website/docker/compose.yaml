@@ -1,0 +1,15 @@
+services:
+  systemvi-website:
+    image: server:0.7
+    container_name: systemvi-website
+
+    restart: unless-stopped
+    privileged: false
+
+    ports:
+      - 8080:8080
+
+    volumes:
+      - ./config:/config
+      - ./public:/config
+      - ./db:/db
