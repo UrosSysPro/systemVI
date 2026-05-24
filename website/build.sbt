@@ -2,7 +2,7 @@ import ServerDependencies.*
 import ClientDependencies.*
 import CommonDependencies.*
 import TestDependencies.*
-
+import com.typesafe.sbt.packager.docker.DockerPermissionStrategy
 import org.scalajs.linker.interface.ModuleSplitStyle
 
 ThisBuild / parallelExecution := true
@@ -39,7 +39,10 @@ lazy val server = project.in(file("server"))
     Compile / run / fork := true,
     Compile / run / connectInput := true,
     dockerBaseImage := "eclipse-temurin:25",
-    libraryDependencies ++= serverDependencies
+    Docker / daemonUser := "ubuntu",
+    Docker / daemonUserUid := Some("1000"),
+    Docker / daemonGroupGid := Some("1000"),
+    libraryDependencies ++= serverDependencies,
   )
   .dependsOn(common.jvm)
 
