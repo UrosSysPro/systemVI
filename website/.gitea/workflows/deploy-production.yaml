@@ -15,13 +15,24 @@ jobs:
           cd /home/lil-nas/projects/SystemVI
           git pull
 
-      - name: Build Docker image with sbt
+      - name: Build Laminar
         run: |
-          cd /home/lil-nas/projects/SystemVI
-          sbt dockerPublishLocal
+          cd /home/lil-nas/projects/SystemVI/website/client
+          env PATH=$PATH bun build
+
+      - name: Build http4s docker
+        run: |
+          cd /home/lil-nas/projects/SystemVI/website
+          sudo env PATH=$PATH sbt server/Docker/publishLocal
+
+      - name: Copy config and assets
+        run: |
+          cd /home/lil-nas/projects/SystemVI/website
+          cp -r client/dist docker/public
+          cp -r server/config/* docker/config
 
       - name: Restart with Docker Compose
         run: |
-          cd /home/lil-nas/projects/SystemVI
+          cd /home/lil-nas/projects/SystemVI/website/docker
           docker compose down
           docker compose up -d
