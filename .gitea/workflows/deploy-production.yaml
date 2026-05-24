@@ -15,7 +15,8 @@ jobs:
           whoami
           which bun
           which sbt
-          which sudo
+          which docker
+          which git
 
       - name: Pull latest code
         run: |
