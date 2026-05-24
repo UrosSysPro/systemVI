@@ -10,6 +10,13 @@ jobs:
     runs-on: rpi-pi
 
     steps:
+      - name: who am i
+        run: |
+          whoami
+          which bun
+          which sbt
+          which sudo
+
       - name: Pull latest code
         run: |
           cd /home/lil-nas/projects/SystemVI
