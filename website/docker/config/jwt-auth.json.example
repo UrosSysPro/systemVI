@@ -1,0 +1,3 @@
+{
+  "secret": "<hmac encryption secret for generating jwt token>"
+}

@@ -10,6 +10,6 @@ services:
       - 8080:8080
 
     volumes:
-      - ./config:/config
-      - ./public:/config
-      - ./db:/db
+      - ./config:/opt/docker/config
+      - ./public:/opt/docker/public
+      - ./db:/opt/docker/db
