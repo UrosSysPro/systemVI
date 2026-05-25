@@ -16,11 +16,9 @@ jobs:
     steps:
       - name: who am i
         run: |
-          whoami
           which bun
           which sbt
           which docker
-          which git
 
       - name: Pull latest code
         run: |
