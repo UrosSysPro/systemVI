@@ -23,6 +23,9 @@ jobs:
       - name: shell
         run: source /home/lil-nas/.zshrc
 
+      - name: home
+        run: export HOME=/home/lil-nas
+
       - name: path
         run: echo $PATH
 
@@ -37,6 +40,9 @@ jobs:
 
       - name: find bun
         run: which bun
+
+      - name: find java
+        run: which java
 
       - name: find git
         run: which git
