@@ -5,9 +5,9 @@ on:
     tags:
       - 'vp*'
 
-defaults:
-  run:
-    shell: /usr/bin/zsh --login {0}
+#defaults:
+#  run:
+#    shell: /usr/bin/zsh --login {0}
 
 jobs:
   deploy:
@@ -16,9 +16,7 @@ jobs:
     steps:
       - name: who am i
         run: |
-          which bun
-          which sbt
-          which docker
+          whoami
 
       - name: Pull latest code
         run: |
