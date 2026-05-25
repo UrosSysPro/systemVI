@@ -5,6 +5,10 @@ on:
     tags:
       - 'vp*'
 
+defaults:
+  run:
+    shell: zsh --login {0}
+
 jobs:
   deploy:
     runs-on: rpi-pi
@@ -26,7 +30,8 @@ jobs:
       - name: Build Laminar
         run: |
           cd /home/lil-nas/projects/SystemVI/website/client
-          env PATH=$PATH bun build
+          bun install
+          bun run build
 
       - name: Build http4s docker
         run: |
@@ -42,5 +47,5 @@ jobs:
       - name: Restart with Docker Compose
         run: |
           cd /home/lil-nas/projects/SystemVI/website/docker
-          docker compose down
-          docker compose up -d
+          sudo docker compose down
+          sudo docker compose up -d
