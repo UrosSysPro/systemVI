@@ -7,7 +7,7 @@ on:
 
 defaults:
   run:
-    shell: suid - lil-nas -c "source /home/lil-nas/.zshrc && sh {0}"
+    shell: /usr/bin/zsh --login {0}
 
 jobs:
   deploy:
