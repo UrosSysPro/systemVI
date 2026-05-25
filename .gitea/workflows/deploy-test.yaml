@@ -26,6 +26,9 @@ jobs:
       - name: shell
         run: echo $0
 
+      - name: shell
+        run: source /home/lil-nas/.zshrc
+
       - name: find docker
         run: which docker
 
