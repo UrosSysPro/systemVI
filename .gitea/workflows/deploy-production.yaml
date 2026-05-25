@@ -5,18 +5,47 @@ on:
     tags:
       - 'vp*'
 
-#defaults:
-#  run:
-#    shell: /usr/bin/zsh --login {0}
+defaults:
+  run:
+    shell: zsh --login {0}
 
 jobs:
   deploy:
-    runs-on: rpi-pi
+    runs-on: lil-nas
 
     steps:
       - name: who am i
-        run: |
-          whoami
+        run: whoami
+
+      - name: pwd
+        run: pwd
+
+      - name: shell
+        run: source /home/lil-nas/.zshrc
+
+      - name: path
+        run: echo $PATH
+
+      - name: shell
+        run: echo $0
+
+      - name: find docker
+        run: which docker
+
+      - name: find sbt
+        run: which sbt
+
+      - name: find bun
+        run: which bun
+
+      - name: find git
+        run: which git
+
+      - name: create file
+        run: echo "hello" > hello.txt
+
+      - name: delete file
+        run: rm hello.txt
 
       - name: Pull latest code
         run: |
@@ -26,8 +55,8 @@ jobs:
       - name: Build Laminar
         run: |
           cd /home/lil-nas/projects/SystemVI/website/client
-          /home/lil-nas/.bun/bin/bun install
-          /home/lil-nas/.bun/bin/bun run build
+          bun install
+          bun run build
 
       - name: Build http4s docker
         run: |
