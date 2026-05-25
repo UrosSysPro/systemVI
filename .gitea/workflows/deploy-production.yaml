@@ -25,7 +25,7 @@ jobs:
       - name: Pull latest code
         run: |
           cd /home/lil-nas/projects/SystemVI
-          git pull
+          sh - lil-nas -c "git pull"
 
       - name: Build Laminar
         run: |
