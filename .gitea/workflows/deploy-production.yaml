@@ -18,10 +18,6 @@ jobs:
         run: |
           whoami
 
-      - name: who am i
-        run: |
-          source /home/lil-nas/.zshrc
-
       - name: Pull latest code
         run: |
           cd /home/lil-nas/projects/SystemVI
