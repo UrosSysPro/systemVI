@@ -5,9 +5,9 @@ on:
     tags:
       - 'env-test*'
 
-#defaults:
-#  run:
-#    shell: /usr/bin/zsh --login {0}
+defaults:
+  run:
+    shell: zsh --login {0}
 
 jobs:
   deploy:
