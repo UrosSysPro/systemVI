@@ -18,6 +18,10 @@ jobs:
         run: |
           whoami
 
+      - name: who am i
+        run: |
+          source /home/lil-nas/.zshrc
+
       - name: Pull latest code
         run: |
           cd /home/lil-nas/projects/SystemVI
@@ -26,8 +30,8 @@ jobs:
       - name: Build Laminar
         run: |
           cd /home/lil-nas/projects/SystemVI/website/client
-          bun install
-          bun run build
+          /home/lil-nas/.bun/bin/bun install
+          /home/lil-nas/.bun/bin/bun run build
 
       - name: Build http4s docker
         run: |
