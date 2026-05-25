@@ -1,0 +1,45 @@
+name: env test
+
+on:
+  push:
+    tags:
+      - 'env-test*'
+
+#defaults:
+#  run:
+#    shell: /usr/bin/zsh --login {0}
+
+jobs:
+  deploy:
+    runs-on: rpi-pi
+
+    steps:
+      - name: who am i
+        run: whoami
+
+      - name: pwd
+        run: pwd
+
+      - name: path
+        run: echo $PATH
+
+      - name: shell
+        run: echo $0
+
+      - name: find docker
+        run: which docker
+
+      - name: find sbt
+        run: which sbt
+
+      - name: find bun
+        run: which bun
+
+      - name: find git
+        run: which git
+
+      - name: create file
+        run: echo "hello" > hello.txt
+
+      - name: delete file
+        run: rm hello.txt
