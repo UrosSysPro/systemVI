@@ -7,7 +7,7 @@ on:
 
 defaults:
   run:
-    shell: zsh --login {0}
+    shell: sh {0}
 
 jobs:
   deploy:
