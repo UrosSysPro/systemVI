@@ -7,7 +7,7 @@ on:
 
 defaults:
   run:
-    shell: sh {0}
+    shell: su - lil-nas -c "{0}"
 
 jobs:
   deploy:
