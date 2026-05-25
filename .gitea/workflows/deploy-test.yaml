@@ -11,7 +11,7 @@ defaults:
 
 jobs:
   deploy:
-    runs-on: rpi-pi
+    runs-on: lil-nas
 
     steps:
       - name: who am i
@@ -20,14 +20,14 @@ jobs:
       - name: pwd
         run: pwd
 
+      - name: shell
+        run: source /home/lil-nas/.zshrc
+
       - name: path
         run: echo $PATH
 
       - name: shell
         run: echo $0
-
-      - name: shell
-        run: source /home/lil-nas/.zshrc
 
       - name: find docker
         run: which docker
