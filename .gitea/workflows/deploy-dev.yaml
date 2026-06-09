@@ -1,0 +1,82 @@
+name: Deploy Dev
+
+on:
+  push:
+    tags:
+      - 'vd*'
+
+defaults:
+  run:
+    shell: zsh --login {0}
+
+jobs:
+  deploy:
+    runs-on: dellxps
+
+    steps:
+      - name: who am i
+        run: whoami
+
+      - name: pwd
+        run: pwd
+
+      - name: shell
+        run: source /home/lil-nas/.zshrc
+
+      - name: home
+        run: export HOME=/home/lil-nas
+
+      - name: path
+        run: echo $PATH
+
+      - name: shell
+        run: echo $0
+
+      - name: find docker
+        run: which docker
+
+      - name: find sbt
+        run: which sbt
+
+      - name: find bun
+        run: which bun
+
+      - name: find java
+        run: which java
+
+      - name: find git
+        run: which git
+
+      - name: create file
+        run: echo "hello" > hello.txt
+
+      - name: delete file
+        run: rm hello.txt
+
+      - name: Pull latest code
+        run: |
+          cd /home/lil-nas/projects/SystemVI
+          git pull
+
+      - name: Build Laminar
+        run: |
+          cd /home/lil-nas/projects/SystemVI/website/client
+          bun install
+          bun run build
+
+      - name: Build http4s docker
+        run: |
+          cd /home/lil-nas/projects/SystemVI/website
+          sudo env PATH=$PATH sbt server/Docker/publishLocal
+
+      - name: Copy config and assets
+        run: |
+          cd /home/lil-nas/projects/SystemVI/website
+          cp -r client/dist docker/public
+          cp -r server/config/* docker/config
+
+      - name: Restart with Docker Compose
+        run: |
+          cd /home/lil-nas/projects/SystemVI/website/docker
+          sudo docker compose down
+          sudo docker compose up -d
