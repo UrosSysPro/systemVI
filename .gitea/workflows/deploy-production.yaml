@@ -15,6 +15,7 @@ jobs:
 
     steps:
       - name: who am i
+<<<<<<< HEAD
         run: whoami
 
       - name: pwd
@@ -52,6 +53,15 @@ jobs:
 
       - name: delete file
         run: rm hello.txt
+=======
+        run: |
+          whoami
+          echo $PATH
+          which bun
+          which sbt
+          which docker
+          which git
+>>>>>>> 07c33934 (nis)
 
       - name: Pull latest code
         run: |
