@@ -4,7 +4,8 @@ import cats.*
 import cats.implicits.*
 import cats.effect.*
 import cats.effect.implicits.*
-import com.comcast.ip4s.{ipv4, port}
+import com.comcast.ip4s.{Host, Port}
+import fs2.io.net.Network
 import net.systemvi.server.api.*
 import net.systemvi.server.api.routes.*
 import net.systemvi.server.config.Config
@@ -19,8 +20,8 @@ import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 def server(using context:AppContext[IO]) = EmberServerBuilder
   .default[IO]
-  .withHost(ipv4"0.0.0.0")
-  .withPort(port"8080")
+  .withHost(context.config.server.host)
+  .withPort(context.config.server.port)
   .withLogger(Slf4jLogger.getLogger[IO])
   .withHttpApp(router)
   .build

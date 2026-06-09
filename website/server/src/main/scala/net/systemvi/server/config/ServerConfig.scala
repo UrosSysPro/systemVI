@@ -1,6 +1,7 @@
 package net.systemvi.server.config
 
 import cats.effect.IO
+import com.comcast.ip4s.{ipv4, port, Host, Port}
 import io.circe.*
 import ciris.*
 import ciris.circe.circeConfigDecoder
@@ -8,8 +9,8 @@ import ciris.circe.circeConfigDecoder
 import java.nio.file.Paths
 
 case class ServerConfig(
-                             host: String,
-                             port: String,
+                             host: Host,
+                             port: Port,
                              serverUrl: String,
                              clientUrl: String,
                            )
@@ -21,7 +22,12 @@ object ServerConfig {
     port <- cursor.get[String]("port")
     serverUrl <- cursor.get[String]("serverUrl")
     clientUrl <- cursor.get[String]("clientUrl")
-  } yield ServerConfig(host,port,serverUrl,clientUrl) }
+  } yield ServerConfig(
+    Host.fromString(host).getOrElse(throw Exception()),
+    Port.fromString(port).getOrElse(throw Exception()),
+    serverUrl,
+    clientUrl
+  ) }
 
   given ConfigDecoder[String,ServerConfig] = circeConfigDecoder("ServerConfigDecoder")
 
