@@ -65,7 +65,7 @@ object GoogleUriService {
               ParamElm("include_granted_scopes", includeGrantedScopes.toString),
               ParamElm("response_type", responseType),
               ParamElm("state", state),
-              ParamElm("redirect_uri", redirectUri),
+              ParamElm("redirect_uri", redirectUri.show),
               ParamElm("client_id", clientId),
             )
           )
@@ -92,7 +92,7 @@ object GoogleUriService {
             query = List(
               ParamElm("code", code),
               ParamElm("grant_type", grant_type),
-              ParamElm("redirect_uri", redirectUri),
+              ParamElm("redirect_uri", redirectUri.show),
               ParamElm("client_id", clientId),
               ParamElm("client_secret", clientSecret),
             )
