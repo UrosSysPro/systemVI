@@ -49,7 +49,7 @@ object GoogleUriService {
       val includeGrantedScopes = true
       val responseType = Code.value
       val state = "state_parameter_passthrough_value"
-      val redirectUri = context.config.server.serverUrl / "api/auth/google/callback"
+      val redirectUri = context.config.server.serverUrl / "api" / "auth" / "google" / "callback"
       val clientId = context.config.googleAuthConfig.clientId
 
 
@@ -65,7 +65,7 @@ object GoogleUriService {
               ParamElm("include_granted_scopes", includeGrantedScopes.toString),
               ParamElm("response_type", responseType),
               ParamElm("state", state),
-              ParamElm("redirect_uri", redirectUri.show),
+              ParamElm("redirect_uri", redirectUri.renderString),
               ParamElm("client_id", clientId),
             )
           )
@@ -81,7 +81,7 @@ object GoogleUriService {
       val grant_type = "authorization_code"
       val clientId = context.config.googleAuthConfig.clientId
       val clientSecret = context.config.googleAuthConfig.clientSecret.value
-      val redirectUri = context.config.server.serverUrl / "api/auth/google/callback"
+      val redirectUri = context.config.server.serverUrl / "api" / "auth" / "google" / "callback"
 
       for{
         urlTemplate <- Async[F].delay{

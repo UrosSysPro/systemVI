@@ -17,9 +17,10 @@ trait JwtAuthUriService[F[_]] {
 object JwtAuthUriService {
   def create[F[_]: Async]: JwtAuthUriService[F] = (context: AppContext[F]) => {
     val host = context.config.server.clientUrl.host.getOrElse{throw Exception()}
+    val port = context.config.server.clientUrl.port
     Async[F].delay {
       UriTemplate(
-        authority = Some(Uri.Authority(host = host)),
+        authority = Some(Uri.Authority(host = host,port = port)),
         scheme = Some(Uri.Scheme.http),
         path = List(PathElm("user-profile"))
       ).toUriIfPossible.getOrElse(throw Exception())
