@@ -7,7 +7,6 @@ import cats.effect.implicits.*
 
 object Main extends IOApp.Simple {
   override def run: IO[Unit] = {
-  
     IO.println("hello")
   }
 }
