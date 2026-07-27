@@ -42,14 +42,14 @@ private def CardComponent(card: Card): HtmlElement = {
 
 def CatanCardsPageView: HtmlElement = {
   val icons = List(
-    "public/images/catan/brick96x96.png",
-    "public/images/catan/sheep100x100.png",
-    "public/images/catan/stone100x100.png",
-    "public/images/catan/wheat100x100.png",
-    "public/images/catan/wood96x96.png",
-    "public/images/catan/knight.png",
-    "public/images/catan/plusOne.png",
-    "public/images/catan/collect.png",
+    "images/catan/brick96x96.png",
+    "images/catan/sheep100x100.png",
+    "images/catan/stone100x100.png",
+    "images/catan/wheat100x100.png",
+    "images/catan/wood96x96.png",
+    "images/catan/knight.png",
+    "images/catan/plusOne.png",
+    "images/catan/collect.png",
   )
 
   val backgrounds = List.fill(icons.length){""}
