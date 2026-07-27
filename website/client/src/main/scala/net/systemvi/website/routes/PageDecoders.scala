@@ -79,6 +79,10 @@ object PageDecoders {
   } yield KnittingPage
 
   given Decoder[UserProfilePage.type] = cursor => for {
-    _ <- cursor.get[Json]("UserProfile")
+    _ <- cursor.get[Json]("UserProfilePage")
   } yield UserProfilePage
+
+  given Decoder[CatanCardsPage.type] = cursor => for {
+    _ <- cursor.get[Json]("CatanCardsPage")
+  } yield CatanCardsPage
 }

@@ -31,6 +31,8 @@ object Routes {
 
   val userProfileRoute: Route.Total[UserProfilePage.type, Unit] = Route.static(UserProfilePage, root / "user-profile" / endOfSegments)
 
+  val catanCardsRoute: Route.Total[CatanCardsPage.type, Unit] = Route.static(CatanCardsPage, root / "catan-cards" / endOfSegments)
+
   val notFoundRoute: Route.Total[NotFoundPage.type, Unit] = Route.static(NotFoundPage, root)
 
   val keyboardRoute: Route.Total[KeyboardPage, UUID] = Route[KeyboardPage, UUID](

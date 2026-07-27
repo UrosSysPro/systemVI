@@ -32,5 +32,7 @@ object Pages {
 
   case object UserProfilePage extends Page("User Profile Page")
 
+  case object CatanCardsPage extends Page("Catan Cards Page")
+
   case object NotFoundPage extends Page("404")
 }
