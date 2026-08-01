@@ -2,6 +2,16 @@ package net.systemvi.website.views
 
 import com.raquo.laminar.api.L.{*, given}
 import org.scalajs.dom.*
+import org.scalajs.dom
+
+import scalajs.*
+import scalajs.js.*
+import io.circe.*
+import io.circe.generic.auto.*
+import io.circe.scalajs.*
+
+import scala.scalajs.js.JSConverters.JSRichIterableOnce
+
 
 case class Card(icon: String, background: String, color: String, name: String)
 
@@ -23,7 +33,10 @@ private def CardComponent(card: Card): HtmlElement = {
 
   div(
     width.rem(10), height.rem(16),
-    boxShadow("0 0 10px 0px black"),
+//    boxShadow("0 0 10px 0px black"),
+    borderRadius.rem(1),
+    border("0.25rem solid #222"),
+    overflow.hidden,
     background("white"),
     backgroundClip.borderBox,
     display.flex, flexDirection.column,
@@ -83,11 +96,53 @@ def CatanCardsPageView: HtmlElement = {
       names(i),
     )
 
+  val resources = cards.take(5)
+  val utility = cards.slice(5, 8)
+  console.log(resources.asJsAny,utility.asJsAny)
+
+  val gridGap = 0.25f
+
   div(
-    display.flex, justifyContent.center, alignItems.center, gap.rem(3),
-    height.vh(100),
-    cards.map{ card =>
-      CardComponent(card)
-    }
+    display.flex,
+    flexDirection.column,
+    alignItems.center,
+    gap.rem(gridGap),
+    padding.rem(gridGap),
+    resources.map{ card =>
+      div(
+        display.flex,
+        flexDirection.column,
+        gap.rem(gridGap),
+        List.range(0,5).map{_=>
+          div(
+            display.flex,
+            flexDirection.row,
+            gap.rem(gridGap),
+            List.range(0, 6).map { _ =>
+              CardComponent(card)
+            }
+          )
+        }
+      )
+    },
+
+    utility.zipWithIndex.map{ (card,i) =>
+      div(
+        display.flex,
+        flexDirection.column,
+        gap.rem(gridGap),
+        List.range(0, if i==0 then 3 else 2).map{_=>
+          div(
+            display.flex,
+            flexDirection.row,
+            gap.rem(gridGap),
+            List.range(0, 6).map { _ =>
+              CardComponent(card)
+            }
+          )
+        }
+      )
+    },
+
   )
 }
