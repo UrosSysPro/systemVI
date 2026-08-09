@@ -13,7 +13,7 @@ import net.systemvi.website.darkproject.neo_navbar.*
 import net.systemvi.website.darkproject.footer.*
 import org.scalajs.dom
 
-val printingCostPerHour = 0
+val printingCostPerHour = 100
 
 case class HardwareItem(name: String, price: Int)
 
@@ -229,7 +229,10 @@ def ThreeDPrintingCalculator() = {
       PrintedComponent(PrintedItem(purple, playerShipBox),1),
     )
   )
-  val game = seaferersGame56Players
+
+  val games = List(baseGame, baseGame56Players, seaferersGame56Players)
+
+  val game = games(2)
 
   div(
     display.flex, flexDirection.column, alignItems.center, paddingTop.rem(6),
