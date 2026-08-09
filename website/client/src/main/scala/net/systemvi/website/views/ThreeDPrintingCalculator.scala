@@ -13,7 +13,7 @@ import net.systemvi.website.darkproject.neo_navbar.*
 import net.systemvi.website.darkproject.footer.*
 import org.scalajs.dom
 
-val printingCostPerHour = 50
+val printingCostPerHour = 0
 
 case class HardwareItem(name: String, price: Int)
 
@@ -127,13 +127,117 @@ def ThreeDPrintingCalculator() = {
     )
   )
 
+  val baseGame56Players = ThreeDPrintedProduct(
+    List(
+      // Tiles
+      PrintedComponent(PrintedItem(darkGreen, wood),    6),
+      PrintedComponent(PrintedItem(yellow, wheat),      6),
+      PrintedComponent(PrintedItem(lightGreen, sheep),  6),
+      PrintedComponent(PrintedItem(gray, stone),        5),
+      PrintedComponent(PrintedItem(orange, brick),      5),
+      PrintedComponent(PrintedItem(brown, desert),      2),
+      PrintedComponent(PrintedItem(blue, water),        11),
+      PrintedComponent(PrintedItem(blue, waterBay),     11),
+
+      // Frames
+      PrintedComponent(PrintedItem(black, frame), 52),
+
+      HardwareComponent(magnet, 312),
+
+      // Tile accessories
+      PrintedComponent(PrintedItem(gray, bayShip),11),
+      PrintedComponent(PrintedItem(brown, bayTrade),11),
+
+      // Players
+      PrintedComponent(PrintedItem(orange, playerBox),1),
+      PrintedComponent(PrintedItem(orange, playerPeices),1),
+
+      PrintedComponent(PrintedItem(blue, playerBox),1),
+      PrintedComponent(PrintedItem(blue, playerPeices),1),
+
+      PrintedComponent(PrintedItem(lightGreen, playerBox),1),
+      PrintedComponent(PrintedItem(lightGreen, playerPeices),1),
+
+      PrintedComponent(PrintedItem(white, playerBox),1),
+      PrintedComponent(PrintedItem(white, playerPeices),1),
+
+      PrintedComponent(PrintedItem(darkGreen, playerBox),1),
+      PrintedComponent(PrintedItem(darkGreen, playerPeices),1),
+
+      PrintedComponent(PrintedItem(purple, playerBox),1),
+      PrintedComponent(PrintedItem(purple, playerPeices),1),
+    )
+  )
+
+  val seaferersGame56Players = ThreeDPrintedProduct(
+    List(
+      // Tiles
+      PrintedComponent(PrintedItem(darkGreen, wood),    7),
+      PrintedComponent(PrintedItem(yellow, wheat),      7),
+      PrintedComponent(PrintedItem(lightGreen, sheep),  7),
+      PrintedComponent(PrintedItem(gray, stone),        7),
+      PrintedComponent(PrintedItem(orange, brick),      7),
+      PrintedComponent(PrintedItem(brown, desert),      4),
+      PrintedComponent(PrintedItem(purple, gold),       4),
+      PrintedComponent(PrintedItem(blue, water),        15),
+      PrintedComponent(PrintedItem(blue, waterBay),     15),
+
+      // Frames
+      PrintedComponent(PrintedItem(black, frame),       73),
+
+      HardwareComponent(magnet,                         430),
+
+      // Tile accessories
+      PrintedComponent(PrintedItem(gray, bayShip),      15),
+      PrintedComponent(PrintedItem(brown, bayTrade),    15),
+
+      // Players
+      PrintedComponent(PrintedItem(orange, playerBox),  1),
+      PrintedComponent(PrintedItem(orange, playerPeices),1),
+
+      PrintedComponent(PrintedItem(blue, playerBox),1),
+      PrintedComponent(PrintedItem(blue, playerPeices),1),
+
+      PrintedComponent(PrintedItem(lightGreen, playerBox),1),
+      PrintedComponent(PrintedItem(lightGreen, playerPeices),1),
+
+      PrintedComponent(PrintedItem(white, playerBox),1),
+      PrintedComponent(PrintedItem(white, playerPeices),1),
+
+      PrintedComponent(PrintedItem(darkGreen, playerBox),1),
+      PrintedComponent(PrintedItem(darkGreen, playerPeices),1),
+
+      PrintedComponent(PrintedItem(purple, playerBox),1),
+      PrintedComponent(PrintedItem(purple, playerPeices),1),
+
+      PrintedComponent(PrintedItem(orange, playerShipPeices),  1),
+      PrintedComponent(PrintedItem(orange, playerShipBox),1),
+
+      PrintedComponent(PrintedItem(blue, playerShipPeices),  1),
+      PrintedComponent(PrintedItem(blue, playerShipBox),1),
+
+      PrintedComponent(PrintedItem(lightGreen,playerShipPeices),  1),
+      PrintedComponent(PrintedItem(lightGreen,playerShipBox),1),
+
+      PrintedComponent(PrintedItem(white, playerShipPeices),  1),
+      PrintedComponent(PrintedItem(white, playerShipBox),1),
+
+      PrintedComponent(PrintedItem(darkGreen, playerShipPeices),  1),
+      PrintedComponent(PrintedItem(darkGreen, playerShipBox),1),
+
+      PrintedComponent(PrintedItem(purple, playerShipPeices),  1),
+      PrintedComponent(PrintedItem(purple, playerShipBox),1),
+    )
+  )
+  val game = seaferersGame56Players
+
   div(
     display.flex, flexDirection.column, alignItems.center, paddingTop.rem(6),
     div(
       display.flex, flexDirection.column, justifyContent.start, width.percent(100), maxWidth.px(1450),
       NeoNavbar(),
 
-      baseGame.components.map{
+      game.components.map{
         case component: HardwareComponent =>
           div(
             display.flex, flexDirection.row, gap.rem(3),
@@ -165,7 +269,7 @@ def ThreeDPrintingCalculator() = {
           )
       },
 
-      div(s"total price ${baseGame.totalPrice()}"),
+      div(s"total price ${game.totalPrice()}"),
 
       Footer(),
     )
