@@ -13,6 +13,8 @@ import net.systemvi.website.darkproject.neo_navbar.*
 import net.systemvi.website.darkproject.footer.*
 import org.scalajs.dom
 
+val printingCostPerHour = 50
+
 case class HardwareItem(name: String, price: Int)
 
 case class Filament(name: String, pricePerKg: Int)
@@ -21,22 +23,21 @@ case class Model(name: String, massInGrams: Int, printTime: Int)
 
 case class PrintedItem(filament: Filament, model: Model)
 
-sealed trait ThreeDPrintedProductComponent
-case class HardwareComponent(item: HardwareItem, count: Int) extends ThreeDPrintedProductComponent
-case class PrintedComponent(item: PrintedItem, count: Int ) extends ThreeDPrintedProductComponent
+sealed trait ThreeDPrintedProductComponent{
+  def price: Int
+}
+case class HardwareComponent(item: HardwareItem, count: Int) extends ThreeDPrintedProductComponent{
+  override def price: Int = item.price * count
+}
+case class PrintedComponent(item: PrintedItem, count: Int ) extends ThreeDPrintedProductComponent{
+  override def price: Int =
+    (item.filament.pricePerKg.toFloat * (item.model.massInGrams.toFloat/1000) * count +
+    item.model.printTime.toFloat/60 * printingCostPerHour * count).toInt
+}
 
 case class ThreeDPrintedProduct(components: List[ThreeDPrintedProductComponent]){
   def totalPrice(): Int = {
-    val total: Float = this.components.foldLeft(0f){ (acc, component) =>
-      val componentPrice = component match{
-        case HardwareComponent(HardwareItem(name,price),count) =>
-          price * count
-        case PrintedComponent(PrintedItem(Filament(name,pricePerKg),Model(modelName, massInGrams, printingTimePerHour)),count) =>
-          // pricePerKg.toFloat * (massInGrams.toFloat/1000) * count + printTime.toFloat/60 * printingTimePerHour
-          0
-      }
-      acc + componentPrice
-    }
+    val total: Float = this.components.foldLeft(0f)(_+_.price)
     total.toInt
   }
 }
@@ -90,8 +91,6 @@ def ThreeDPrintingCalculator() = {
   // Holder
   val tileHolder =      Model("Tile Holder", 120, 180)
 
-  val printingTimePerHour = 100
-
   val baseGame = ThreeDPrintedProduct(
     List(
       // Tiles
@@ -135,24 +134,33 @@ def ThreeDPrintingCalculator() = {
       NeoNavbar(),
 
       baseGame.components.map{
-        case HardwareComponent(HardwareItem(name,price),count) =>
+        case component: HardwareComponent =>
           div(
             display.flex, flexDirection.row, gap.rem(3),
             div(
-              name
+              width.rem(40),
+              component.item.name
             ),
             div(
-              price * count
+              component.price
             )
           )
-        case PrintedComponent(PrintedItem(Filament(name,pricePerKg),Model(modelName, massInGrams, printTime)),count) =>
+        case component: PrintedComponent =>
           div(
             display.flex, flexDirection.row, gap.rem(3),
             div(
-              s"$modelName $name",
+              width.rem(40),
+              display.flex, flexDirection.row, gap.rem(3),
+              div(
+                width.rem(20),
+                s"${component.item.model.name}",
+              ),
+              div(
+                s"${component.item.filament.name}"
+              ),
             ),
             div(
-              pricePerKg.toFloat * (massInGrams.toFloat/1000) * count + printTime.toFloat/60 * printingTimePerHour
+              s"${component.price}"
             ),
           )
       },
