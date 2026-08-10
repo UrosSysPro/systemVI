@@ -16,6 +16,10 @@ object Pages {
 
   case object ThreeDPrintingPage extends Page("3D Printing")
 
+  case object ThreeDPrintedProductsPage extends Page("3D Printed Products")
+
+  case class ThreeDPrintedProductDetailsPage(threeDPrintedProductUUID: UUID) extends Page("3D Printed Product Details")
+
   case object KnittingPage extends Page("Knitting")
 
   case object OrigamiPage extends Page("Origami")

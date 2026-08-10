@@ -9,6 +9,7 @@ import urldsl.vocabulary.{FromString, Printer}
 import net.systemvi.website.routes.Pages.*
 import java.util.UUID
 import scala.util.*
+import net.systemvi.website.views.details.ThreeDPrintedProductDetailsPageView
 
 object PageDecoders {
   //  Encode and decode UUID in url
@@ -69,6 +70,15 @@ object PageDecoders {
   given Decoder[ThreeDPrintingPage.type] = cursor => for {
     _ <- cursor.get[Json]("ThreeDPrintingPage")
   } yield ThreeDPrintingPage
+
+  given Decoder[ThreeDPrintedProductsPage.type] = cursor => for {
+    _ <- cursor.get[Json]("ThreeDPrintedProductsPage")
+  } yield ThreeDPrintedProductsPage
+
+  // given Decoder[ThreeDPrintedProductDetailsPage] = cursor => for {
+  //   node <- cursor.get[Json]("ThreeDPrintedProductDetailsPage")
+  //   uuid <- node.field
+  // } yield ThreeDPrintedProductDetailsPage
 
   given Decoder[OrigamiPage.type] = cursor => for {
     _ <- cursor.get[Json]("OrigamiPage")
