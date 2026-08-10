@@ -75,10 +75,10 @@ object PageDecoders {
     _ <- cursor.get[Json]("ThreeDPrintedProductsPage")
   } yield ThreeDPrintedProductsPage
 
-  // given Decoder[ThreeDPrintedProductDetailsPage] = cursor => for {
-  //   node <- cursor.get[Json]("ThreeDPrintedProductDetailsPage")
-  //   uuid <- node.field
-  // } yield ThreeDPrintedProductDetailsPage
+  given Decoder[ThreeDPrintedProductDetailsPage] = cursor => for {
+    child <- cursor.get[Json]("ThreeDPrintedProductDetailsPage")
+    uuid <- child.hcursor.get[UUID]("threeDPrintedProductUUID")
+  } yield ThreeDPrintedProductDetailsPage(uuid)
 
   given Decoder[OrigamiPage.type] = cursor => for {
     _ <- cursor.get[Json]("OrigamiPage")

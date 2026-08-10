@@ -18,16 +18,20 @@ import net.systemvi.website.routes.Pages.*
 import net.systemvi.website.routes.PageDecoders.given
 
 object Routes {
-  val homeRoute: Route.Total[HomePage.type, Unit] = Route.static(HomePage, root / endOfSegments)
-  val keyboardsRoute: Route.Total[KeyboardsPage.type, Unit] = Route.static(KeyboardsPage, root / "keyboards" / endOfSegments)
-  val gamesRoute: Route.Total[GamesPage.type, Unit] = Route.static(GamesPage, root / "games" / endOfSegments)
-  val engineRoute: Route.Total[EnginePage.type, Unit] = Route.static(EnginePage, root / "engine" / endOfSegments)
-  val configuratorRoute: Route.Total[ConfiguratorPage.type, Unit] = Route.static(ConfiguratorPage, root / "configurator" / endOfSegments)
-  val discreteFourierSeriesRoute: Route.Total[DiscreteFourierSeriesPage.type, Unit] = Route.static(DiscreteFourierSeriesPage, root / "fourier" / endOfSegments)
-  val hearthRoute: Route.Total[HearthPage.type, Unit] = Route.static(HearthPage, root / "hearth" / endOfSegments)
-  val threeDPrintingRoute: Route.Total[ThreeDPrintingPage.type, Unit] = Route.static(ThreeDPrintingPage, root / "3dprinting" / endOfSegments)
-  val knittingRoute: Route.Total[KnittingPage.type, Unit] = Route.static(KnittingPage, root / "knitting" / endOfSegments)
-  val origamiRoute: Route.Total[OrigamiPage.type, Unit] = Route.static(OrigamiPage, root / "origami" / endOfSegments)
+  val homeRoute: Route.Total[HomePage.type, Unit]                                           = Route.static(HomePage, root / endOfSegments)
+
+  val keyboardsRoute: Route.Total[KeyboardsPage.type, Unit]                                 = Route.static(KeyboardsPage, root / "keyboards" / endOfSegments)
+  val gamesRoute: Route.Total[GamesPage.type, Unit]                                         = Route.static(GamesPage, root / "games" / endOfSegments)
+  val engineRoute: Route.Total[EnginePage.type, Unit]                                       = Route.static(EnginePage, root / "engine" / endOfSegments)
+  val configuratorRoute: Route.Total[ConfiguratorPage.type, Unit]                           = Route.static(ConfiguratorPage, root / "configurator" / endOfSegments)
+  val discreteFourierSeriesRoute: Route.Total[DiscreteFourierSeriesPage.type, Unit]         = Route.static(DiscreteFourierSeriesPage, root / "fourier" / endOfSegments)
+  val hearthRoute: Route.Total[HearthPage.type, Unit]                                       = Route.static(HearthPage, root / "hearth" / endOfSegments)
+
+  val threeDPrintingRoute: Route.Total[ThreeDPrintingPage.type, Unit]                       = Route.static(ThreeDPrintingPage, root / "3dprinting" / endOfSegments)
+  val threeDPrintedProductsRoute: Route.Total[ThreeDPrintedProductsPage.type, Unit]         = Route.static(ThreeDPrintedProductsPage, root / "3d-printed-products" / endOfSegments)
+
+  val knittingRoute: Route.Total[KnittingPage.type, Unit]                                   = Route.static(KnittingPage, root / "knitting" / endOfSegments)
+  val origamiRoute: Route.Total[OrigamiPage.type, Unit]                                     = Route.static(OrigamiPage, root / "origami" / endOfSegments)
 
   val userProfileRoute: Route.Total[UserProfilePage.type, Unit] = Route.static(UserProfilePage, root / "user-profile" / endOfSegments)
 
@@ -45,5 +49,11 @@ object Routes {
     encode = (page: ApplicationDetailsPage) => page.applicationUUID,
     decode = (appId: UUID) => ApplicationDetailsPage(appId),
     pattern = root / "application-details" / segment[UUID] / endOfSegments
+  )
+
+  val threeDPrintedProductDetailsRoute: Route.Total[ThreeDPrintedProductDetailsPage, UUID]  = Route[ThreeDPrintedProductDetailsPage,UUID](
+    encode = (page: ThreeDPrintedProductDetailsPage) => page.threeDPrintedProductUUID,
+    decode = (uuid: UUID) => ThreeDPrintedProductDetailsPage(uuid),
+    pattern = root / "3d-printed-product-details" / segment[UUID] / endOfSegments
   )
 }

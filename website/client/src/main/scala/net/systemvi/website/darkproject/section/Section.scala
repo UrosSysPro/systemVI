@@ -3,7 +3,7 @@ package net.systemvi.website.darkproject.section
 import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.website.routes.Pages.*
 
-case class SectionItem(name:String,image:String,page:Page)
+case class SectionItem(name: String, image: String, page: Page)
 
 def Section(title: String, items: List[SectionItem], viewAllPage: Page = null):Element=div(
   className:="w-full flex flex-col items-start justify-start px-4 py-3",

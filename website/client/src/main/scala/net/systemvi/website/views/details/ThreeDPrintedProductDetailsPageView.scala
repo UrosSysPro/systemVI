@@ -24,6 +24,6 @@ import scala.concurrent.ExecutionContext
 
 given ExecutionContext = ExecutionContext.global
 
-def ThreeDPrintedProductDetailsPageView(): HtmlElement = {
+def ThreeDPrintedProductDetailsPageView(page: ThreeDPrintedProductDetailsPage): HtmlElement = {
   div("hello")
 }
