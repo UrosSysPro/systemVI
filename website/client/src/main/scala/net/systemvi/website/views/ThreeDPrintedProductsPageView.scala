@@ -21,9 +21,34 @@ import net.systemvi.website.routes.Pages.*
 import net.systemvi.website.utils.Constants
 import org.scalajs.dom
 import scala.concurrent.ExecutionContext
+import net.systemvi.website.services.ThreeDPrintedProductService
 
 given ExecutionContext = ExecutionContext.global
 
-def ThreeDPrintedProductsPageView(): HtmlElement = {
-  div("hello")
+object ThreeDPrintedProductsPageView{
+  def component(): HtmlElement = {
+    val products = ThreeDPrintedProductService.getAll().startWith(List.empty)
+    div(
+      display.flex, flexDirection.column, alignItems.center, paddingTop.rem(6),
+      div(
+        display.flex, flexDirection.column, justifyContent.start, width.percent(100), maxWidth.px(1450),
+        NeoNavbar(),
+        BigTitle("3D Printing",""),
+        // Section(
+        //   title = "",
+        //   items = List(1,2,3).map{ product =>
+        //     SectionItem(
+        //       name = s"Product ${product}",
+        //       "",
+        //       page = ThreeDPrintedProductDetailsPage(UUID.randomUUID())
+        //     )
+        //   },
+        //   viewAllPage = HomePage
+
+        // ),
+        Footer(),
+      )
+    )
+  }
+
 }
