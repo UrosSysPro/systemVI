@@ -8,7 +8,11 @@ jobs:
     runs-on: rpi-pi
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        run: |
+          git clone --depth 1 --branch "${GITHUB_REF_NAME}" \
+            "https://x-access-token:${GITHUB_TOKEN}@${GITHUB_SERVER_URL#https://}/${GITHUB_REPOSITORY}.git" repo
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Print sbt version
         run: sbt --version
