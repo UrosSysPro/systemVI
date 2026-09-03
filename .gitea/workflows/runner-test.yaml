@@ -1,0 +1,17 @@
+name: Print SBT and Bun Versions
+
+on:
+  workflow_dispatch:
+
+jobs:
+  print-versions:
+    runs-on: rpi-pi
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Print sbt version
+        run: sbt --version
+
+      - name: Print bun version
+        run: bun --version
