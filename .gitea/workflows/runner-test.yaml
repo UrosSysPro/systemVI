@@ -6,16 +6,27 @@ on:
 jobs:
   print-versions:
     runs-on: rpi-pi
+    container:
+        image: node:20-bookworm
     steps:
-      - name: Checkout code
-        run: |
-          git clone --depth 1 --branch "${GITHUB_REF_NAME}" \
-            "https://x-access-token:${GITHUB_TOKEN}@${GITHUB_SERVER_URL#https://}/${GITHUB_REPOSITORY}.git" repo
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check out code
+        uses: actions/checkout@v4
 
-      - name: Print sbt version
-        run: sbt --version
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17' # Change to 11 or 21 depending on your project
+          cache: 'sbt'       # Automatically caches ~/.sbt and ~/.ivy2/cache
+
+      - name: Setup sbt
+        uses: sbt/setup-sbt@v1
+
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v2
 
       - name: Print bun version
         run: bun --version
+
+      - name: Print sbt version
+        run: sbt --version
