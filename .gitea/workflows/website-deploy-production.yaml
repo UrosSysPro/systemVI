@@ -1,0 +1,36 @@
+name: Website - Deploy Production
+
+on:
+  workflow_dispatch:
+
+jobs:
+  print-versions:
+    runs-on: rpi-pi
+    container:
+        image: node:20-bookworm
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'sbt'
+
+      - name: Setup sbt
+        uses: sbt/setup-sbt@v1
+
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Log in to Gitea Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: https://gitea.karaleic.com
+          username: ${{ gitea.actor }}
+          password: ${{ secrets.GITEA_TOKEN }}
+
+      - name: Build docker
+        run: sbt docker/publish
