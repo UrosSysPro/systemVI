@@ -46,6 +46,19 @@ lazy val server = project.in(file("server"))
   )
   .dependsOn(common.jvm)
 
+lazy val mainMenuServer = project.in(file("main_menu/server"))
+  .enablePlugins(JavaAppPackaging)
+  .settings(
+    Compile / run / fork := true,
+    Compile / run / connectInput := true,
+    dockerBaseImage := "eclipse-temurin:25",
+    Docker / daemonUser := "ubuntu",
+    Docker / daemonUserUid := Some("1000"),
+    Docker / daemonGroupGid := Some("1000"),
+    libraryDependencies ++= serverDependencies,
+  )
+  .dependsOn(common.jvm)
+
 //tests
 
 lazy val testSqlite = project.in(file("tests/sqlite"))
