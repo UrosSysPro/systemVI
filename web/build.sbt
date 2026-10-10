@@ -10,7 +10,7 @@ ThisBuild / organization  := "net.systemvi"
 ThisBuild / version       := "0.7"
 ThisBuild / scalaVersion  := "3.3.3"
 
-lazy val web = project.in(file(".")).aggregate(websiteClient,websiteServer)
+lazy val web = project.in(file(".")).aggregate(websiteClient,websiteServer,mainMenuServer)
 
 lazy val websiteCommon = crossProject(JSPlatform,JVMPlatform)
   .crossType(CrossType.Pure)
@@ -46,6 +46,27 @@ lazy val websiteServer = project.in(file("website/server"))
   )
   .dependsOn(websiteCommon.jvm)
 
+lazy val mainMenuCommon = crossProject(JSPlatform,JVMPlatform)
+  .crossType(CrossType.Pure)
+  .withoutSuffixFor(JVMPlatform)
+  .in(file("main_menu/common"))
+  .settings(
+    commonDependencies
+  )
+
+lazy val mainMenuClient = project.in(file("main_menu/client"))
+  .enablePlugins(ScalaJSPlugin)
+  .settings(
+    scalaJSUseMainModuleInitializer := true,
+    scalaJSLinkerConfig ~= {
+      _.withModuleKind(ModuleKind.ESModule)
+        .withModuleSplitStyle(
+          ModuleSplitStyle.SmallModulesFor(List("main_menu")))
+    },
+    clientDependencies
+  )
+  .dependsOn(mainMenuCommon.js)
+
 lazy val mainMenuServer = project.in(file("main_menu/server"))
   .enablePlugins(JavaAppPackaging)
   .settings(
@@ -56,4 +77,6 @@ lazy val mainMenuServer = project.in(file("main_menu/server"))
     Docker / daemonUserUid := Some("1000"),
     Docker / daemonGroupGid := Some("1000"),
     libraryDependencies ++= serverDependencies,
+    libraryDependencies ++= serverTestDependencies,
   )
+  .dependsOn(mainMenuCommon.jvm)

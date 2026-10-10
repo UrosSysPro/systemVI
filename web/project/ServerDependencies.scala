@@ -45,6 +45,12 @@ object ServerDependencies {
     "org.tpolecat" %% "doobie-specs2"    ,          // Specs2 support for typechecking statements.
   ).map(_ % doobieVersion)
 
+  val munitCatsEffect = "org.typelevel" %% "munit-cats-effect" % munitCatsEffectVersion % Test
+
+  val serverTestDependencies = Seq(
+    munitCatsEffect,
+  )
+
   val serverDependencies = Seq(
     cats,
     catsEffect,

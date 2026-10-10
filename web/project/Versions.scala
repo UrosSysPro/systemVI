@@ -20,4 +20,6 @@ object Versions {
 
   val doobieVersion = "1.0.0-RC8"
   val sqliteVersion = "3.53.1.0"
+
+  val munitCatsEffectVersion = "2.0.0"
 }
