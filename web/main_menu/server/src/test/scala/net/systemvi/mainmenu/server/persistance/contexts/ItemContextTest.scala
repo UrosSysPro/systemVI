@@ -67,6 +67,22 @@ class ItemContextTest extends CatsEffectSuite {
     }
   }
 
+  test("getByCategory returns only the items of that category") {
+    val categoryA = UUID.randomUUID()
+    val categoryB = UUID.randomUUID()
+    val margherita = sampleItem("Margherita").copy(categoryId = Some(categoryA))
+    val pepperoni = sampleItem("Pepperoni").copy(categoryId = Some(categoryA))
+    val marinara = sampleItem("Marinara").copy(categoryId = Some(categoryB))
+    withItems { items =>
+      for {
+        _ <- items.add(margherita)
+        _ <- items.add(pepperoni)
+        _ <- items.add(marinara)
+        result <- items.getByCategory(categoryA)
+      } yield assertEquals(result.toSet, Set(margherita, pepperoni))
+    }
+  }
+
   test("update replaces every field of an existing item") {
     val item = sampleItem()
     val updated = item.copy(

@@ -8,17 +8,24 @@ import java.util.UUID
 
 class CategoryTreeTest extends FunSuite {
 
+  private val restaurantId = UUID.randomUUID()
   private val drinksId = UUID.randomUUID()
   private val alcoholicId = UUID.randomUUID()
   private val wineId = UUID.randomUUID()
 
-  private val drinks = Category(drinksId, "Drinks", Some("Everything you can drink"), "drinks.png", None)
-  private val alcoholic =
-    Category(alcoholicId, "Alcoholic Drinks", Some("Beer, wine and cocktails"), "alcoholic.png", Some(drinksId))
-  private val wine = Category(wineId, "Wine", None, "wine.png", Some(alcoholicId))
-  private val nonAlcoholic =
-    Category(UUID.randomUUID(), "Non-Alcoholic Drinks", None, "soft.png", Some(drinksId))
-  private val mainCourse = Category(UUID.randomUUID(), "Main Course", None, "main.png", None)
+  private def category(
+    uuid: UUID,
+    name: String,
+    description: Option[String],
+    imageUrl: String,
+    parentId: Option[UUID],
+  ): Category = Category(uuid, name, description, imageUrl, parentId, Some(restaurantId))
+
+  private val drinks = category(drinksId, "Drinks", Some("Everything you can drink"), "drinks.png", None)
+  private val alcoholic = category(alcoholicId, "Alcoholic Drinks", Some("Beer, wine and cocktails"), "alcoholic.png", Some(drinksId))
+  private val wine = category(wineId, "Wine", None, "wine.png", Some(alcoholicId))
+  private val nonAlcoholic = category(UUID.randomUUID(), "Non-Alcoholic Drinks", None, "soft.png", Some(drinksId))
+  private val mainCourse = category(UUID.randomUUID(), "Main Course", None, "main.png", None)
 
   private val categories = List(drinks, alcoholic, wine, nonAlcoholic, mainCourse)
 
@@ -35,7 +42,7 @@ class CategoryTreeTest extends FunSuite {
     assertEquals(alcoholicDto.children.head.children, Nil)
   }
 
-  test("every dto carries its parentId and children") {
+  test("every dto carries its parentId, restaurantId and children") {
     val drinksDto = CategoryTree.forest(categories).head
     val expected = CategoryDto(
       drinksId,
@@ -43,10 +50,11 @@ class CategoryTreeTest extends FunSuite {
       Some("Everything you can drink"),
       "drinks.png",
       None,
+      Some(restaurantId),
       List(
-        CategoryDto(alcoholicId, "Alcoholic Drinks", Some("Beer, wine and cocktails"), "alcoholic.png", Some(drinksId),
-          List(CategoryDto(wineId, "Wine", None, "wine.png", Some(alcoholicId), Nil))),
-        CategoryDto(nonAlcoholic.uuid, "Non-Alcoholic Drinks", None, "soft.png", Some(drinksId), Nil),
+        CategoryDto(alcoholicId, "Alcoholic Drinks", Some("Beer, wine and cocktails"), "alcoholic.png", Some(drinksId), Some(restaurantId),
+          List(CategoryDto(wineId, "Wine", None, "wine.png", Some(alcoholicId), Some(restaurantId), Nil))),
+        CategoryDto(nonAlcoholic.uuid, "Non-Alcoholic Drinks", None, "soft.png", Some(drinksId), Some(restaurantId), Nil),
       ),
     )
     assertEquals(drinksDto, expected)

@@ -13,6 +13,7 @@ trait CategoryContext[F[_]] {
   def add(category: Category): F[Int]
   def get(uuid: UUID): F[Option[Category]]
   def getAll(): F[List[Category]]
+  def getByRestaurant(restaurantId: UUID): F[List[Category]]
   def update(category: Category): F[Int]
   def delete(uuid: UUID): F[Int]
 }
@@ -21,24 +22,33 @@ object CategoryContext {
   def create[F[_]: MonadCancelThrow](xa: Transactor[F]): CategoryContext[F] = new CategoryContext[F] {
     override def add(category: Category): F[Int] =
       sql"""
-        insert into Categories(uuid, name, description, imageUrl, parentId)
+        insert into Categories(uuid, name, description, imageUrl, parentId, restaurantId)
         values (
           ${category.uuid},
           ${category.name},
           ${category.description},
           ${category.imageUrl},
-          ${category.parentId}
+          ${category.parentId},
+          ${category.restaurantId}
         );
       """.update.run.transact(xa)
 
     override def get(uuid: UUID): F[Option[Category]] =
       sql"""
-        select * from Categories where uuid = ${uuid.toString}
+        select uuid, name, description, imageUrl, parentId, restaurantId
+        from Categories where uuid = ${uuid.toString}
       """.query[Category].option.transact(xa)
 
     override def getAll(): F[List[Category]] =
       sql"""
-        select * from Categories
+        select uuid, name, description, imageUrl, parentId, restaurantId
+        from Categories
+      """.query[Category].to[List].transact(xa)
+
+    override def getByRestaurant(restaurantId: UUID): F[List[Category]] =
+      sql"""
+        select uuid, name, description, imageUrl, parentId, restaurantId
+        from Categories where restaurantId = ${restaurantId.toString}
       """.query[Category].to[List].transact(xa)
 
     override def update(category: Category): F[Int] =
@@ -47,7 +57,8 @@ object CategoryContext {
           name = ${category.name},
           description = ${category.description},
           imageUrl = ${category.imageUrl},
-          parentId = ${category.parentId}
+          parentId = ${category.parentId},
+          restaurantId = ${category.restaurantId}
         where uuid = ${category.uuid};
       """.update.run.transact(xa)
 

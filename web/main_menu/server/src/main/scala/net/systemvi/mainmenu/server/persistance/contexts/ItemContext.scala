@@ -13,6 +13,7 @@ trait ItemContext[F[_]] {
   def add(item: Item): F[Int]
   def get(uuid: UUID): F[Option[Item]]
   def getAll(): F[List[Item]]
+  def getByCategory(categoryId: UUID): F[List[Item]]
   def update(item: Item): F[Int]
   def delete(uuid: UUID): F[Int]
 }
@@ -42,6 +43,12 @@ object ItemContext {
       sql"""
         select uuid, name, imageUrl, description, price, categoryId
         from Items
+      """.query[Item].to[List].transact(xa)
+
+    override def getByCategory(categoryId: UUID): F[List[Item]] =
+      sql"""
+        select uuid, name, imageUrl, description, price, categoryId
+        from Items where categoryId = ${categoryId.toString}
       """.query[Item].to[List].transact(xa)
 
     override def update(item: Item): F[Int] =

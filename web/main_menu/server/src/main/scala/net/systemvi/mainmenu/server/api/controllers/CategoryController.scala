@@ -35,11 +35,11 @@ def categoryController(using context: AppContext[IO]): HttpRoutes[IO] = {
       } yield response
 
     case request @ POST -> Root =>
-      case class CreateCategoryDto(name: String, description: Option[String], imageUrl: String, parentId: Option[UUID])
+      case class CreateCategoryDto(name: String, description: Option[String], imageUrl: String, parentId: Option[UUID], restaurantId: Option[UUID])
       given Decoder[CreateCategoryDto] = deriveDecoder
       val write = for {
         dto <- request.as[CreateCategoryDto]
-        saved <- service.create(dto.name, dto.description, dto.imageUrl, dto.parentId)
+        saved <- service.create(dto.name, dto.description, dto.imageUrl, dto.parentId, dto.restaurantId)
         response <- Ok(saved.toString)
       } yield response
 
@@ -52,11 +52,11 @@ def categoryController(using context: AppContext[IO]): HttpRoutes[IO] = {
       } yield response
 
     case request @ PUT -> Root / UUIDVar(id) =>
-      case class UpdateCategoryDto(name: String, description: Option[String], imageUrl: String, parentId: Option[UUID])
+      case class UpdateCategoryDto(name: String, description: Option[String], imageUrl: String, parentId: Option[UUID], restaurantId: Option[UUID])
       given Decoder[UpdateCategoryDto] = deriveDecoder
       val write = for {
         dto <- request.as[UpdateCategoryDto]
-        updated <- service.update(id, dto.name, dto.description, dto.imageUrl, dto.parentId)
+        updated <- service.update(id, dto.name, dto.description, dto.imageUrl, dto.parentId, dto.restaurantId)
         response <- if (updated > 0) Ok(updated.toString) else NotFound()
       } yield response
 

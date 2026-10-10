@@ -11,6 +11,7 @@ trait ItemService[F[_]] {
   def create(name: String, imageUrl: String, description: Option[String], price: BigDecimal, categoryId: Option[UUID]): F[Int]
   def get(uuid: UUID): F[Option[Item]]
   def getAll(): F[List[Item]]
+  def getByCategory(categoryId: UUID): F[List[Item]]
   def update(uuid: UUID, name: String, imageUrl: String, description: Option[String], price: BigDecimal, categoryId: Option[UUID]): F[Int]
   def delete(uuid: UUID): F[Int]
 }
@@ -25,6 +26,9 @@ object ItemService {
 
     override def getAll(): F[List[Item]] =
       items.getAll()
+
+    override def getByCategory(categoryId: UUID): F[List[Item]] =
+      items.getByCategory(categoryId)
 
     override def update(uuid: UUID, name: String, imageUrl: String, description: Option[String], price: BigDecimal, categoryId: Option[UUID]): F[Int] =
       items.update(Item(uuid, name, imageUrl, description, price, categoryId))

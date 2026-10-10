@@ -10,6 +10,8 @@ object ServerDependencies {
   val log4cats  = "org.typelevel" %% "log4cats-slf4j" % log4catsVersion
   val logback = "ch.qos.logback" % "logback-classic" % logBackVersion
 
+  val declineEffect = "com.monovore" %% "decline-effect" % declineEffectVersion
+
   val http4s = Seq(
     "org.http4s" %% "http4s-dsl",
     "org.http4s" %% "http4s-ember-server",
@@ -57,6 +59,7 @@ object ServerDependencies {
     log4cats,
     logback,
     sqlite,
+    declineEffect,
     jwtHttp4s,
     jwtScala,
     jwtCirce,

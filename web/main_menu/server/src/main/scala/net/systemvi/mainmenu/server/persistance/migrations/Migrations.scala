@@ -15,5 +15,9 @@ object Migrations {
     __02_create_items_table[F](xa),
     __03_create_categories_table[F](xa),
     __04_alter_items_add_categoryId_column[F](xa),
+    __05_create_restaurants_table[F](xa),
+    __06_create_restaurant_tables_table[F](xa),
+    __07_alter_categories_add_restaurantId_column[F](xa),
+    __08_drop_menus_table[F](xa),
   )
 }

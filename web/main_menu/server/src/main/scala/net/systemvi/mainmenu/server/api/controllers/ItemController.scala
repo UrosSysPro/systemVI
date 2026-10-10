@@ -28,6 +28,12 @@ def itemController(using context: AppContext[IO]): HttpRoutes[IO] = {
         response <- Ok(items.map(toDto).asJson)
       } yield response
 
+    case GET -> Root / "category" / UUIDVar(categoryId) =>
+      for {
+        items <- service.getByCategory(categoryId)
+        response <- Ok(items.map(toDto).asJson)
+      } yield response
+
     case GET -> Root / UUIDVar(id) =>
       for {
         item <- service.get(id)

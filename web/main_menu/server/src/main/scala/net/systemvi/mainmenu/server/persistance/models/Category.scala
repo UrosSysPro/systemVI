@@ -8,4 +8,5 @@ case class Category(
   description: Option[String],
   imageUrl: String,
   parentId: Option[UUID],
+  restaurantId: Option[UUID],
 )

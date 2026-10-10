@@ -11,6 +11,7 @@ case class CategoryDto(
   description: Option[String],
   imageUrl: String,
   parentId: Option[UUID],
+  restaurantId: Option[UUID],
   children: List[CategoryDto],
 )
 
@@ -25,6 +26,7 @@ object CategoryDto {
         "description" -> category.description.asJson,
         "imageUrl" -> category.imageUrl.asJson,
         "parentId" -> category.parentId.asJson,
+        "restaurantId" -> category.restaurantId.asJson,
         "children" -> Json.fromValues(category.children.map(apply)),
       )
   }
@@ -37,7 +39,8 @@ object CategoryDto {
         description <- cursor.get[Option[String]]("description")
         imageUrl <- cursor.get[String]("imageUrl")
         parentId <- cursor.get[Option[UUID]]("parentId")
+        restaurantId <- cursor.get[Option[UUID]]("restaurantId")
         children <- cursor.get[List[CategoryDto]]("children")
-      } yield CategoryDto(uuid, name, description, imageUrl, parentId, children)
+      } yield CategoryDto(uuid, name, description, imageUrl, parentId, restaurantId, children)
   }
 }

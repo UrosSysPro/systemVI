@@ -30,6 +30,7 @@ object CategoryTree {
       category.description,
       category.imageUrl,
       category.parentId,
+      category.restaurantId,
       children.getOrElse(Some(category.uuid), Nil).map(toDto(children)).sortBy(_.name),
     )
 }
