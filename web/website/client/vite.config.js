@@ -5,8 +5,8 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [
       scalaJSPlugin({
-          cwd:"..",
-          projectID:"client"
+          cwd:"../..",
+          projectID:"websiteClient"
       }),
       tailwindcss(),
   ],

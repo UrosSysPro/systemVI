@@ -7,7 +7,7 @@ import cats.effect.implicits.*
 import io.circe.*
 import io.circe.generic.auto.*
 import io.circe.syntax.*
-import net.systemvi.common.dtos.*
+import net.systemvi.website.common.dtos.{ManufacturerDto, SwitchDto, SwitchTypeDto}
 import net.systemvi.website.server.services.*
 import net.systemvi.website.server.persistance.contexts.AppContext
 import net.systemvi.website.server.persistance.models.{Manufacturer, SwitchType}

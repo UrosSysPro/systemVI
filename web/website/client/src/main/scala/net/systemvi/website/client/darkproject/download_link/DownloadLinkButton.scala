@@ -2,8 +2,8 @@ package net.systemvi.website.client.darkproject.download_link
 
 import com.raquo.laminar.api.L.{*, given}
 import org.scalajs.dom
-import net.systemvi.common.model.DownloadLink
 import net.systemvi.website.client.darkproject.Theme
+import net.systemvi.website.common.model.DownloadLink
 
 def DownloadLinkButton (links:List[DownloadLink]):HtmlElement={
   val selected=Var(0)

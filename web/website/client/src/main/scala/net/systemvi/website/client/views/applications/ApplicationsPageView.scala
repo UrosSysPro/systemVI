@@ -1,7 +1,6 @@
 package net.systemvi.website.client.views.applications
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.common.dtos.ApplicationDto
 import net.systemvi.website.*
 import cats.*
 import cats.implicits.*
@@ -19,6 +18,7 @@ import net.systemvi.website.client.darkproject.slider.ImageSlider
 import net.systemvi.website.client.routes.Pages.*
 import net.systemvi.website.client.views.*
 import net.systemvi.website.client.views.applications.*
+import net.systemvi.website.common.dtos.ApplicationDto
 import org.scalajs.dom
 
 def ApplicationsPageView(

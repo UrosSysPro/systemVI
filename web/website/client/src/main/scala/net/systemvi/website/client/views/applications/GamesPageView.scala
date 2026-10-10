@@ -1,7 +1,6 @@
 package net.systemvi.website.client.views.applications
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.common.dtos.ApplicationDto
 import cats.*
 import cats.implicits.*
 import io.circe.scalajs.*
@@ -9,6 +8,7 @@ import io.circe.generic.*
 import io.circe.generic.auto.*
 import net.systemvi.website.client.*
 import net.systemvi.website.client.utils.Constants
+import net.systemvi.website.common.dtos.ApplicationDto
 import org.scalajs.dom
 
 import scala.concurrent.ExecutionContext

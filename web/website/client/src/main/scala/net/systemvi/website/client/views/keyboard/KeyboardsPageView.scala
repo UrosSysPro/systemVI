@@ -1,7 +1,6 @@
 package net.systemvi.website.client.views.keyboard
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.common.dtos.KeyboardDto
 import io.circe.scalajs.*
 import io.circe.scalajs.EncoderJsOps.*
 import io.circe.generic.*
@@ -12,6 +11,7 @@ import net.systemvi.website.client.darkproject.neo_navbar.NeoNavbar
 import net.systemvi.website.client.darkproject.section.{Section, SectionItem}
 import net.systemvi.website.client.utils.Constants
 import net.systemvi.website.client.routes.Pages.*
+import net.systemvi.website.common.dtos.KeyboardDto
 import org.scalajs.dom
 
 import scala.scalajs.LinkingInfo.*

@@ -1,7 +1,7 @@
 package net.systemvi.website.client.darkproject.product_info
 
-import net.systemvi.common.dtos.*
-import net.systemvi.common.model.{Application, Game, Keyboard, ProductSpec}
+import net.systemvi.website.common.dtos.{ApplicationDto, KeyboardDto}
+import net.systemvi.website.common.model.{Application, Game, Keyboard, ProductSpec}
 
 given Conversion[KeyboardDto,ProductInfoParams] = k => ProductInfoParams(
   k.images.map(i=>i.imageUrl),

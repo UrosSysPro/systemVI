@@ -1,7 +1,6 @@
 package net.systemvi.website.client.views.threeDPrinting
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.common.dtos.*
 import cats.*
 import cats.implicits.*
 import io.circe.scalajs.*

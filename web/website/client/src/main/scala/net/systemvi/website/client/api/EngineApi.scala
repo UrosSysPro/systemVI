@@ -1,6 +1,6 @@
 package net.systemvi.website.client.api
 
-import net.systemvi.common.model.*
+import net.systemvi.website.common.model.{Engine, EngineDemo}
 
 private val defaultEngine=Engine(
   id=1,

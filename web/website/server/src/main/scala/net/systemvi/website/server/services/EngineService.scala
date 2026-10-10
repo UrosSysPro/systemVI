@@ -1,6 +1,6 @@
 package net.systemvi.website.server.services
 
-import net.systemvi.common.model.{Engine, EngineDemo}
+import net.systemvi.website.common.model.{Engine, EngineDemo}
 
 
 private val defaultEngine=Engine(

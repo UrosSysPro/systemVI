@@ -8,7 +8,7 @@ import io.circe.generic.auto.*
 import io.circe.syntax.*
 import fs2.*
 import net.systemvi.website.server.services.*
-import net.systemvi.common.dtos.*
+import net.systemvi.website.common.dtos.{ApplicationCategoryDto, ApplicationDto, EntityImageDto}
 import net.systemvi.website.server.persistance.models.*
 import net.systemvi.website.server.persistance.contexts.AppContext
 import net.systemvi.website.server.persistance.models.{ApplicationCategory, Game, Manufacturer, TechDemo, Tool}

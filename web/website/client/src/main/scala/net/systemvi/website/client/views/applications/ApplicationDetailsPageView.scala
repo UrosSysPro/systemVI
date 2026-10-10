@@ -7,7 +7,6 @@ import io.circe.generic.*
 import io.circe.generic.auto.*
 import io.circe.scalajs.*
 import io.circe.scalajs.EncoderJsOps.*
-import net.systemvi.common.dtos.ApplicationDto
 import net.systemvi.website.*
 import net.systemvi.website.client.darkproject.big_title.BigTitle
 import net.systemvi.website.client.darkproject.bill_of_materials.BillOfMaterials
@@ -19,6 +18,7 @@ import net.systemvi.website.client.darkproject.slider.ImageSlider
 import net.systemvi.website.client.utils.Constants
 import net.systemvi.website.client.darkproject.product_info.given
 import net.systemvi.website.client.routes.Pages.*
+import net.systemvi.website.common.dtos.ApplicationDto
 import org.scalajs.dom
 
 import scala.concurrent.ExecutionContext

@@ -8,7 +8,7 @@ import io.circe.*
 import io.circe.generic.auto.*
 import io.circe.syntax.*
 import net.systemvi.website.server.persistance.models.*
-import net.systemvi.common.dtos.*
+import net.systemvi.website.common.dtos.{EntityImageDto, EntitySpecificationDto, FilamentDto, FilamentPolymerDto, KeyboardDto, KeyboardProfileDto, ManufacturerDto, SwitchDto, SwitchTypeDto}
 import net.systemvi.website.server.services.*
 import net.systemvi.website.server.persistance.contexts.AppContext
 import net.systemvi.website.server.persistance.models.{FilamentPolymer, KeyboardProfile, SwitchType}

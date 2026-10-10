@@ -3,7 +3,6 @@ package net.systemvi.website.client.views.keyboard
 import com.raquo.laminar.api.L.{*, given}
 import io.circe.generic.auto.*
 import io.circe.scalajs.decodeJs
-import net.systemvi.common.dtos.*
 import net.systemvi.website.client.darkproject.bento_box.{BentoBox, BentoBoxItem, BentoBoxRect, BentoBoxSize}
 import net.systemvi.website.client.darkproject.big_title.BigTitle
 import net.systemvi.website.client.darkproject.bill_of_materials.BillOfMaterials
@@ -12,10 +11,10 @@ import net.systemvi.website.client.darkproject.footer.Footer
 import net.systemvi.website.client.darkproject.neo_navbar.NeoNavbar
 import net.systemvi.website.client.darkproject.product_info.ProductInfo
 import net.systemvi.website.client.darkproject.product_info.given
-
 import net.systemvi.website.client.darkproject.slider.ImageSlider
 import net.systemvi.website.client.utils.Constants
 import net.systemvi.website.client.routes.Pages.*
+import net.systemvi.website.common.dtos.KeyboardDto
 import org.scalajs.dom
 
 sealed trait ScreenSize(val width:Int)

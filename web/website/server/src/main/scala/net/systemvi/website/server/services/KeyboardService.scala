@@ -1,6 +1,6 @@
 package net.systemvi.website.server.services
 
-import net.systemvi.common.model.{Engine, EngineDemo, Game, Keyboard, ProductSpec}
+import net.systemvi.website.common.model.{Engine, EngineDemo, Game, Keyboard, ProductSpec}
 
 private val keyboards=List[Keyboard](
   Keyboard(

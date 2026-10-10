@@ -7,7 +7,6 @@ import cats.implicits.*
 import io.circe.*
 import io.circe.generic.auto.*
 import io.circe.parser.*
-import net.systemvi.common.dtos.ApplicationDto
 import net.systemvi.website.client.darkproject.bento_box.{BentoBox, BentoBoxItem, BentoBoxRect, BentoBoxSize}
 import net.systemvi.website.client.darkproject.big_title.BigTitle
 import net.systemvi.website.client.darkproject.footer.Footer
@@ -15,6 +14,7 @@ import net.systemvi.website.client.darkproject.neo_navbar.NeoNavbar
 import net.systemvi.website.client.darkproject.product_info.ProductInfo
 import net.systemvi.website.client.darkproject.slider.ImageSlider
 import net.systemvi.website.client.utils.Constants
+import net.systemvi.website.common.dtos.ApplicationDto
 
 def BentoCard(title:String): HtmlElement = {
   div(

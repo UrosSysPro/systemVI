@@ -2,18 +2,15 @@ package net.systemvi.website.client.services
 
 import cats.*
 import cats.implicits.*
-import net.systemvi.common.dtos.*
 import com.raquo.laminar.api.L.{*, given}
 import org.scalajs.dom
-import org.scalajs.dom.{HttpMethod, RequestCredentials, RequestInit, Headers}
+import org.scalajs.dom.{Headers, HttpMethod, RequestCredentials, RequestInit}
 import io.circe.*
 import io.circe.syntax.*
 import io.circe.scalajs.*
 import io.circe.generic.auto.*
-
-
-import net.systemvi.common.dtos.*
 import net.systemvi.website.client.utils.Constants
+import net.systemvi.website.common.dtos.UserDto
 
 object UserService {
 

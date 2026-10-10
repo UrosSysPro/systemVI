@@ -1,11 +1,11 @@
 package net.systemvi.website.client.darkproject.product_info
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.common.model.{Application, DownloadLink, Game, Keyboard, ProductSpec}
 import net.systemvi.website.client.darkproject.Theme
 import net.systemvi.website.client.darkproject.download_link.DownloadLinkButton
 import net.systemvi.website.client.darkproject.expandable_specs.UnderlinedRow
 import net.systemvi.website.client.styles.CSSProps.*
+import net.systemvi.website.common.model.{Application, DownloadLink, Game, Keyboard, ProductSpec}
 import org.scalajs.dom
 
 case class ProductInfoParams(

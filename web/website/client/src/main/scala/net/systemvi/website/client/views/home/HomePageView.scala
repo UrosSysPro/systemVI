@@ -3,7 +3,6 @@ package net.systemvi.website.client.views.home
 import com.raquo.laminar.api.L.{*, given}
 import io.circe.scalajs.*
 import io.circe.generic.auto.*
-import net.systemvi.common.dtos.*
 import net.systemvi.website.*
 import net.systemvi.website.client.api.{EngineApi, GameApi}
 import net.systemvi.website.client.darkproject.footer.Footer
@@ -13,6 +12,7 @@ import net.systemvi.website.client.darkproject.slider.ImageSlider
 import net.systemvi.website.client.utils.Constants
 import org.scalajs.dom
 import net.systemvi.website.client.routes.Pages.*
+import net.systemvi.website.common.dtos.{ApplicationDto, KeyboardDto}
 
 def HomePageView():HtmlElement = {
   val keyboards = Var[List[KeyboardDto]](List.empty)

@@ -1,6 +1,6 @@
 package net.systemvi.website.client.api
 
-import net.systemvi.common.model.{Application, DownloadLink}
+import net.systemvi.website.common.model.{Application, DownloadLink}
 
 private val applications=List(
   Application(

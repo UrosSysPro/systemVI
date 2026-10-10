@@ -7,7 +7,6 @@ import io.circe.generic.*
 import io.circe.generic.auto.*
 import io.circe.scalajs.*
 import io.circe.scalajs.EncoderJsOps.*
-import net.systemvi.common.dtos.*
 import net.systemvi.website.*
 import net.systemvi.website.client.darkproject.big_title.BigTitle
 import net.systemvi.website.client.darkproject.footer.Footer

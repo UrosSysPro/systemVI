@@ -1,6 +1,6 @@
 package net.systemvi.website.server.services
 
-import net.systemvi.common.model.{Game, ProductSpec}
+import net.systemvi.website.common.model.{Game, ProductSpec}
 
 private val games=List[Game](
   Game(1,"Atari Break Out","break_out",List(
