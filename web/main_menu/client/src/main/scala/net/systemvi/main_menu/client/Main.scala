@@ -4,11 +4,13 @@ import com.raquo.laminar.api.L.{*, given}
 import com.raquo.waypoint.SplitRender
 import net.systemvi.main_menu.client.routes.Pages.*
 import net.systemvi.main_menu.client.routes.Router
-import net.systemvi.main_menu.client.views.{CategoryMenuPageView, RestaurantMenuPageView, RestaurantsPageView, SubcategoryMenuPageView}
+import net.systemvi.main_menu.client.views.{CategoryMenuPageView, LoginPageView, RestaurantMenuPageView, RestaurantsPageView, SubcategoryMenuPageView, WelcomePageView}
 import net.systemvi.main_menu.client.views.admin.{AdminCategoriesPageView, AdminCategoryPageView, AdminDashboardPageView, AdminTablesPageView}
 import org.scalajs.dom
 
 val splitter = SplitRender[Page, HtmlElement](Router.currentPageSignal)
+  .collectStatic(LoginPage)        { LoginPageView() }
+  .collectStatic(WelcomePage)      { WelcomePageView() }
   .collectStatic(RestaurantsPage)  { RestaurantsPageView() }
   .collect[RestaurantMenuPage]     { page => RestaurantMenuPageView(page.restaurantId) }
   .collect[CategoryMenuPage]       { page => CategoryMenuPageView(page.restaurantId, page.categoryId) }

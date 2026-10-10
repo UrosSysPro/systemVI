@@ -7,6 +7,11 @@ import net.systemvi.mainmenu.server.persistance.models.Item
 import net.systemvi.mainmenu.server.persistance.models.Category
 import net.systemvi.mainmenu.server.persistance.models.Restaurant
 import net.systemvi.mainmenu.server.persistance.models.RestaurantTable
+import net.systemvi.mainmenu.server.persistance.models.Role
+import net.systemvi.mainmenu.server.persistance.models.AuthIdentity
+import net.systemvi.mainmenu.server.persistance.models.AuthProvider
+import net.systemvi.mainmenu.server.persistance.models.User
+import net.systemvi.mainmenu.server.persistance.models.UserStatus
 
 import java.util.UUID
 
@@ -21,4 +26,19 @@ object SqlMappings {
   given Read[Restaurant] = Read[(UUID, String, Option[String], String, String)].map(Restaurant.apply)
 
   given Read[RestaurantTable] = Read[(UUID, String, String, UUID)].map(RestaurantTable.apply)
+
+  // Enum-like domain types are stored as their integer id, so a single column
+  // maps back to the matching case object.
+  given Read[Role] = Read[Int].map(Role.unsafeFromId)
+  given Write[Role] = Write[Int].contramap(_.id)
+
+  given Read[UserStatus] = Read[Int].map(UserStatus.unsafeFromId)
+  given Write[UserStatus] = Write[Int].contramap(_.id)
+
+  given Read[AuthProvider] = Read[Int].map(AuthProvider.unsafeFromId)
+  given Write[AuthProvider] = Write[Int].contramap(_.id)
+
+  given Read[AuthIdentity] = Read[(UUID, UUID, AuthProvider, String, Option[String])].map(AuthIdentity.apply)
+
+  given Read[User] = Read[(UUID, Role, UserStatus, Option[String], Option[String])].map(User.apply)
 }

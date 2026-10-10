@@ -9,6 +9,8 @@ import scala.util.*
 
 object Router extends Router[Page](
   routes = List(
+    loginRoute,
+    welcomeRoute,
     restaurantsRoute,
     restaurantMenuRoute,
     categoryMenuRoute,
@@ -21,6 +23,8 @@ object Router extends Router[Page](
   ),
   getPageTitle = page => page.title,
   serializePage = (page: Page) => page match {
+    case LoginPage => "login"
+    case WelcomePage => "welcome"
     case RestaurantsPage => "restaurants"
     case RestaurantMenuPage(restaurantId) => s"restaurant|$restaurantId"
     case CategoryMenuPage(restaurantId, categoryId) => s"category|$restaurantId|$categoryId"
@@ -47,6 +51,10 @@ object Router extends Router[Page](
         AdminCategoriesPage(UUID.fromString(restaurantId))
       case "admin-category" :: restaurantId :: categoryId :: Nil =>
         AdminCategoryPage(UUID.fromString(restaurantId), UUID.fromString(categoryId))
+      case "login" :: Nil =>
+        LoginPage
+      case "welcome" :: Nil =>
+        WelcomePage
       case "restaurants" :: Nil =>
         RestaurantsPage
       case _ =>

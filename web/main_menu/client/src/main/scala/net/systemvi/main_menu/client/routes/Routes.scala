@@ -7,6 +7,10 @@ import PageDecoders.given
 import java.util.UUID
 
 object Routes {
+  val loginRoute = Route.static(LoginPage, root / "login" / endOfSegments)
+
+  val welcomeRoute = Route.static(WelcomePage, root / "welcome" / endOfSegments)
+
   val restaurantsRoute = Route.static(RestaurantsPage, root / endOfSegments)
 
   val restaurantMenuRoute = Route[RestaurantMenuPage, UUID](

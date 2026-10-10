@@ -5,6 +5,10 @@ import java.util.UUID
 object Pages {
   sealed abstract class Page(val title: String)
 
+  case object LoginPage extends Page("Sign in")
+
+  case object WelcomePage extends Page("Welcome")
+
   case object RestaurantsPage extends Page("Restaurants")
 
   case class RestaurantMenuPage(restaurantId: UUID) extends Page("Menu")

@@ -1,0 +1,3 @@
+{
+  "secret": "<random hmac secret used to sign and verify session tokens>"
+}

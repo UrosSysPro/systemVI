@@ -1,21 +1,18 @@
 package net.systemvi.mainmenu.server.api.routes
 
 import cats.effect.*
-import com.comcast.ip4s.{Host, Port}
 import doobie.*
 import io.circe.Decoder
 import io.circe.generic.semiauto.deriveDecoder
 import munit.CatsEffectSuite
 import net.systemvi.mainmenu.common.dto.{CategoryDto, ItemDto, RestaurantTableDto}
-import net.systemvi.mainmenu.server.TestDatabase
-import net.systemvi.mainmenu.server.config.{Config, ServerConfig}
+import net.systemvi.mainmenu.server.{TestAppContext, TestDatabase}
 import net.systemvi.mainmenu.server.persistance.contexts.*
 import net.systemvi.mainmenu.server.persistance.models.{Category, Item, Restaurant, RestaurantTable}
 import org.http4s.*
 import org.http4s.circe.*
 import org.http4s.circe.CirceEntityCodec.circeEntityDecoder
 import org.http4s.implicits.*
-import org.typelevel.log4cats.slf4j.Slf4jLogger
 
 import java.util.UUID
 
@@ -23,18 +20,9 @@ class ApiRoutesTest extends CatsEffectSuite {
 
   given Decoder[ItemDto] = deriveDecoder
 
-  private val config = Config(
-    ServerConfig(
-      Host.fromString("0.0.0.0").get,
-      Port.fromString("8081").get,
-      Uri.unsafeFromString("http://localhost:8081"),
-      Uri.unsafeFromString("http://localhost:5174"),
-    )
-  )
-
   private def withApi[A](f: (Transactor[IO], HttpRoutes[IO]) => IO[A]): IO[A] =
     TestDatabase.transactor.use { xa =>
-      given AppContext[IO] = AppContext(xa, DatabaseContext.create(xa), Slf4jLogger.getLogger[IO], config)
+      given AppContext[IO] = TestAppContext.create(xa)
       f(xa, api)
     }
 

@@ -8,6 +8,9 @@ case class DatabaseContext[F[_]](
   categories: CategoryContext[F],
   restaurants: RestaurantContext[F],
   restaurantTables: RestaurantTableContext[F],
+  roles: RoleContext[F],
+  authIdentities: AuthIdentityContext[F],
+  users: UserContext[F],
 )
 
 object DatabaseContext {
@@ -17,5 +20,8 @@ object DatabaseContext {
       CategoryContext.create(xa),
       RestaurantContext.create(xa),
       RestaurantTableContext.create(xa),
+      RoleContext.create(xa),
+      AuthIdentityContext.create(xa),
+      UserContext.create(xa),
     )
 }
