@@ -10,17 +10,17 @@ ThisBuild / organization  := "net.systemvi"
 ThisBuild / version       := "0.7"
 ThisBuild / scalaVersion  := "3.3.3"
 
-lazy val website = project.in(file(".")).aggregate(client,server)
+lazy val web = project.in(file(".")).aggregate(websiteClient,websiteServer)
 
-lazy val common = crossProject(JSPlatform,JVMPlatform)
+lazy val websiteCommon = crossProject(JSPlatform,JVMPlatform)
   .crossType(CrossType.Pure)
   .withoutSuffixFor(JVMPlatform)
-  .in(file("common"))
+  .in(file("website/common"))
   .settings(
     commonDependencies
   )
 
-lazy val client = project.in(file("client"))
+lazy val websiteClient = project.in(file("website/client"))
   .enablePlugins(ScalaJSPlugin)
   .settings(
     scalaJSUseMainModuleInitializer := true,
@@ -31,9 +31,9 @@ lazy val client = project.in(file("client"))
     },
     clientDependencies
   )
-  .dependsOn(common.js)
+  .dependsOn(websiteCommon.js)
 
-lazy val server = project.in(file("server"))
+lazy val websiteServer = project.in(file("website/server"))
   .enablePlugins(JavaAppPackaging)
   .settings(
     Compile / run / fork := true,
@@ -44,7 +44,7 @@ lazy val server = project.in(file("server"))
     Docker / daemonGroupGid := Some("1000"),
     libraryDependencies ++= serverDependencies,
   )
-  .dependsOn(common.jvm)
+  .dependsOn(websiteCommon.jvm)
 
 lazy val mainMenuServer = project.in(file("main_menu/server"))
   .enablePlugins(JavaAppPackaging)
@@ -57,14 +57,3 @@ lazy val mainMenuServer = project.in(file("main_menu/server"))
     Docker / daemonGroupGid := Some("1000"),
     libraryDependencies ++= serverDependencies,
   )
-  .dependsOn(common.jvm)
-
-//tests
-
-lazy val testSqlite = project.in(file("tests/sqlite"))
-  .settings(
-    Compile / run / fork := true,
-    Compile / run / connectInput := true,
-    testDependencies
-  )
-  .dependsOn(common.jvm)

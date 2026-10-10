@@ -1,0 +1,52 @@
+package net.systemvi.website.server.persistance.contexts
+
+import cats.*
+import cats.implicits.*
+import cats.effect.*
+import cats.effect.implicits.*
+import doobie.*
+import doobie.implicits.*
+import net.systemvi.website.server.services.*
+import net.systemvi.website.server.persistance.database.*
+import net.systemvi.website.server.config.Config
+import net.systemvi.website.server.persistance.database.sqlite
+import net.systemvi.website.server.services.{GoogleApiService, GoogleUriService, JwtAuthService, JwtAuthUriService}
+import org.http4s.client.*
+import org.http4s.ember.client.*
+import org.typelevel.log4cats.*
+import org.typelevel.log4cats.slf4j.*
+
+case class AppContext[F[_]](
+                             xa: Transactor[F],
+                             db: DatabaseContext[F],
+                             logger: Logger[F],
+                             config: Config,
+                             httpClient: Client[F],
+                             googleUriService: GoogleUriService[F],
+                             googleApiService: GoogleApiService[F],
+                             jwtAuthService: JwtAuthService[F],
+                             jwtAuthUriService: JwtAuthUriService[F],
+                           )
+
+object AppContext {
+  def create[F[_]: MonadCancelThrow: Async: Sync]: Resource[F, AppContext[F]] = {
+    for{
+      xa <- sqlite[F]
+      httpClient <- EmberClientBuilder.default[F].build
+      googleApiService <- Resource.eval[F,GoogleApiService[F]](Async[F].delay{GoogleApiService.make[F]})
+      googleUriService <- Resource.eval[F,GoogleUriService[F]](Async[F].delay{GoogleUriService.make[F]})
+      config <- Resource.eval(Config.instance.load[F])
+    } yield AppContext(
+      xa = xa,
+      db = DatabaseContext.create(xa),
+      logger = Slf4jLogger.getLogger[F],
+      config = config,
+      httpClient = httpClient,
+      googleUriService = googleUriService,
+      googleApiService = googleApiService,
+      jwtAuthService = JwtAuthService.create,
+      jwtAuthUriService = JwtAuthUriService.create,
+    )
+  }
+}
+

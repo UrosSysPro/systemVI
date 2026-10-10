@@ -1,0 +1,12 @@
+package net.systemvi.website.server.persistance.models
+
+import java.util.UUID
+
+case class Keyboard(
+  uuid: UUID,
+  switchUUID: UUID,
+  profileId: Int,
+  filamentUUID: UUID,
+  name: String,
+  codeName: String,
+)
