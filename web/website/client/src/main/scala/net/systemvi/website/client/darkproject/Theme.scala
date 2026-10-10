@@ -1,4 +1,4 @@
-package net.systemvi.website.darkproject
+package net.systemvi.website.client.darkproject
 
 import com.raquo.laminar.api.L.{*, given}
 import com.raquo.laminar.receivers.ChildOptionReceiver.<--

@@ -1,4 +1,4 @@
-package net.systemvi.website.darkproject.expandable_specs
+package net.systemvi.website.client.darkproject.expandable_specs
 
 import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.common.model.{Keyboard, ProductSpec}

@@ -1,11 +1,11 @@
-package net.systemvi.website.darkproject.neo_navbar
+package net.systemvi.website.client.darkproject.neo_navbar
 
 import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.website.*
-import net.systemvi.website.styles.CSSProps.*
-import net.systemvi.website.routes.Pages.*
-import net.systemvi.website.routes.Router
-import net.systemvi.website.utils.Constants
+import net.systemvi.website.client.routes.Router
+import net.systemvi.website.client.routes.Pages.*
+import net.systemvi.website.client.styles.CSSProps.*
+import net.systemvi.website.client.utils.Constants
 import org.scalajs.dom
 
 private def Logo(): HtmlElement = {

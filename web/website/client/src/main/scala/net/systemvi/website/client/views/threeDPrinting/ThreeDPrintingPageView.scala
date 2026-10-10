@@ -1,8 +1,10 @@
-package net.systemvi.website.views
+package net.systemvi.website.client.views.threeDPrinting
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.website.darkproject.Imports.*
-import net.systemvi.website.routes.Pages.*
+import net.systemvi.website.client.darkproject.big_title.BigTitle
+import net.systemvi.website.client.darkproject.footer.Footer
+import net.systemvi.website.client.darkproject.neo_navbar.NeoNavbar
+
 import java.util.UUID
 
 object ThreeDPrintingPageView{

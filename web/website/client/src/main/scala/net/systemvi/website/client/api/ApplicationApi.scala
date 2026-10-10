@@ -1,4 +1,4 @@
-package net.systemvi.website.api
+package net.systemvi.website.client.api
 
 import net.systemvi.common.model.{Application, DownloadLink}
 

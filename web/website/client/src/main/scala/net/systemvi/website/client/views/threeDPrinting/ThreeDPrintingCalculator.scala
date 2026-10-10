@@ -1,4 +1,4 @@
-package net.systemvi.website.views
+package net.systemvi.website.client.views.threeDPrinting
 
 import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.common.dtos.*
@@ -8,9 +8,8 @@ import io.circe.scalajs.*
 import io.circe.generic.*
 import io.circe.generic.auto.*
 import net.systemvi.website.*
-import net.systemvi.website.utils.*
-import net.systemvi.website.darkproject.neo_navbar.*
-import net.systemvi.website.darkproject.footer.*
+import net.systemvi.website.client.darkproject.footer.Footer
+import net.systemvi.website.client.darkproject.neo_navbar.NeoNavbar
 import org.scalajs.dom
 
 val printingCostPerHour = 100

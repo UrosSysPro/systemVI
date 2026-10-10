@@ -1,10 +1,11 @@
-package net.systemvi.website.services
+package net.systemvi.website.client.services
 
 import cats.*
 import cats.implicits.*
+import net.systemvi.common.dtos.*
 import com.raquo.laminar.api.L.{*, given}
 import org.scalajs.dom
-import org.scalajs.dom.{HttpMethod, RequestCredentials, RequestInit,Headers}
+import org.scalajs.dom.{HttpMethod, RequestCredentials, RequestInit, Headers}
 import io.circe.*
 import io.circe.syntax.*
 import io.circe.scalajs.*
@@ -12,14 +13,15 @@ import io.circe.generic.auto.*
 
 
 import net.systemvi.common.dtos.*
-import net.systemvi.website.utils.Constants
+import net.systemvi.website.client.utils.Constants
 
 object UserService {
+
   import scala.concurrent.ExecutionContext
 
   given ExecutionContext = ExecutionContext.global
 
-  def whoAmI: EventStream[UserDto] ={
+  def whoAmI: EventStream[UserDto] = {
     val headers = Headers()
     val init = new RequestInit {}
     init.headers = headers

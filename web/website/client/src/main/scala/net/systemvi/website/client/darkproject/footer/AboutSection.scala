@@ -1,4 +1,4 @@
-package net.systemvi.website.darkproject.footer
+package net.systemvi.website.client.darkproject.footer
 
 import com.raquo.laminar.api.L.{*, given}
 

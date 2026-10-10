@@ -1,11 +1,18 @@
-package net.systemvi.website
+package net.systemvi.website.client
 
 import com.raquo.laminar.api.L.{*, given}
 import com.raquo.waypoint.SplitRender
-import net.systemvi.website.routes.Pages.*
-import net.systemvi.website.routes.Router
-import net.systemvi.website.views.*
-import net.systemvi.website.views.details.*
+import net.systemvi.website.client.routes.*
+import net.systemvi.website.client.routes.Pages.*
+import net.systemvi.website.client.routes.Router
+import net.systemvi.website.client.views.applications.{ApplicationDetailsPageView, ConfiguratorPageView, GamesPageView}
+import net.systemvi.website.client.views.catan.CatanCardsPageView
+import net.systemvi.website.client.views.engine.EnginePageView
+import net.systemvi.website.client.views.fourier.{Hearth, discreteFourierSeriesView}
+import net.systemvi.website.client.views.home.HomePageView
+import net.systemvi.website.client.views.keyboard.{KeyboardPageView, KeyboardsPageView}
+import net.systemvi.website.client.views.profile.UserProfilePageView
+import net.systemvi.website.client.views.threeDPrinting.{ThreeDPrintedProductDetailsPageView, ThreeDPrintedProductsPageView, ThreeDPrintingPageView}
 import org.scalajs.dom
 
 val splitter = SplitRender[Page, HtmlElement](Router.currentPageSignal)

@@ -1,4 +1,4 @@
-package net.systemvi.website.routes
+package net.systemvi.website.client.routes
 
 import cats.*
 import cats.implicits.*
@@ -6,10 +6,10 @@ import io.circe.*
 import net.systemvi.website.*
 import urldsl.errors.DummyError
 import urldsl.vocabulary.{FromString, Printer}
-import net.systemvi.website.routes.Pages.*
+import Pages.*
+import net.systemvi.website.client.views.threeDPrinting.ThreeDPrintedProductDetailsPageView
 import java.util.UUID
 import scala.util.*
-import net.systemvi.website.views.details.ThreeDPrintedProductDetailsPageView
 
 object PageDecoders {
   //  Encode and decode UUID in url

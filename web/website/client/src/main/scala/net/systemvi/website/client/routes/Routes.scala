@@ -1,4 +1,4 @@
-package net.systemvi.website.routes
+package net.systemvi.website.client.routes
 
 import cats.*
 import cats.implicits.*
@@ -14,8 +14,8 @@ import urldsl.vocabulary.{FromString, Printer}
 import urldsl.vocabulary.Segment.simpleSegment
 import java.util.UUID
 import scala.util.*
-import net.systemvi.website.routes.Pages.*
-import net.systemvi.website.routes.PageDecoders.given
+import Pages.*
+import PageDecoders.given
 
 object Routes {
   val homeRoute: Route.Total[HomePage.type, Unit]                                           = Route.static(HomePage, root / endOfSegments)

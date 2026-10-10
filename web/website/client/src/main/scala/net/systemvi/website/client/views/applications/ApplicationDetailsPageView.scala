@@ -1,4 +1,4 @@
-package net.systemvi.website.views.details
+package net.systemvi.website.client.views.applications
 
 import cats.*
 import cats.implicits.*
@@ -9,17 +9,18 @@ import io.circe.scalajs.*
 import io.circe.scalajs.EncoderJsOps.*
 import net.systemvi.common.dtos.ApplicationDto
 import net.systemvi.website.*
-import net.systemvi.website.darkproject.big_title.*
-import net.systemvi.website.darkproject.bill_of_materials.*
-import net.systemvi.website.darkproject.expandable_specs.*
-import net.systemvi.website.darkproject.footer.*
-import net.systemvi.website.darkproject.neo_navbar.*
-import net.systemvi.website.darkproject.product_info.*
-import net.systemvi.website.darkproject.product_info.given
-import net.systemvi.website.darkproject.slider.*
-import net.systemvi.website.routes.Pages.*
-import net.systemvi.website.utils.Constants
+import net.systemvi.website.client.darkproject.big_title.BigTitle
+import net.systemvi.website.client.darkproject.bill_of_materials.BillOfMaterials
+import net.systemvi.website.client.darkproject.expandable_specs.ExpandableSpecs
+import net.systemvi.website.client.darkproject.footer.Footer
+import net.systemvi.website.client.darkproject.neo_navbar.NeoNavbar
+import net.systemvi.website.client.darkproject.product_info.ProductInfo
+import net.systemvi.website.client.darkproject.slider.ImageSlider
+import net.systemvi.website.client.utils.Constants
+import net.systemvi.website.client.darkproject.product_info.given
+import net.systemvi.website.client.routes.Pages.*
 import org.scalajs.dom
+
 import scala.concurrent.ExecutionContext
 
 given ExecutionContext = ExecutionContext.global

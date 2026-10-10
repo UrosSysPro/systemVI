@@ -1,4 +1,4 @@
-package net.systemvi.website.services
+package net.systemvi.website.client.services
 
 import cats.*
 import cats.implicits.*

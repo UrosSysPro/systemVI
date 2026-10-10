@@ -1,4 +1,4 @@
-package net.systemvi.website.utils
+package net.systemvi.website.client.utils
 
 import scala.scalajs.LinkingInfo.*
 

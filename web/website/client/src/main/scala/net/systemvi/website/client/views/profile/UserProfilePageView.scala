@@ -1,4 +1,4 @@
-package net.systemvi.website.views
+package net.systemvi.website.client.views.profile
 
 import cats.*
 import cats.implicits.*
@@ -7,10 +7,10 @@ import org.scalajs.dom
 import io.circe.scalajs.given
 import io.circe.generic.auto.*
 import io.circe.generic.*
-import net.systemvi.website.services.UserService
-import net.systemvi.website.darkproject.neo_navbar.*
-import net.systemvi.website.darkproject.footer.*
-import net.systemvi.website.styles.CSSProps.*
+import net.systemvi.website.client.darkproject.footer.Footer
+import net.systemvi.website.client.darkproject.neo_navbar.NeoNavbar
+import net.systemvi.website.client.services.UserService
+import net.systemvi.website.client.styles.CSSProps.referrerPolicy
 
 
 def UserProfilePageView():HtmlElement = {

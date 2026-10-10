@@ -1,4 +1,4 @@
-package net.systemvi.website.styles
+package net.systemvi.website.client.styles
 
 import com.raquo.laminar.api.L.{*, given}
 import com.raquo.laminar.codecs

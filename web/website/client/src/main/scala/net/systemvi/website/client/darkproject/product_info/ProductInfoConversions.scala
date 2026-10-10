@@ -1,4 +1,4 @@
-package net.systemvi.website.darkproject.product_info
+package net.systemvi.website.client.darkproject.product_info
 
 import net.systemvi.common.dtos.*
 import net.systemvi.common.model.{Application, Game, Keyboard, ProductSpec}

@@ -1,8 +1,9 @@
-package net.systemvi.website.darkproject.section
+package net.systemvi.website.client.darkproject.section
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.website.routes.Pages.*
-import net.systemvi.website.routes.Router
+import net.systemvi.website.client.routes.Router
+import net.systemvi.website.client.routes.Pages.*
+
 
 def SectionTitle(text:String,viewAllPage:Page=null):HtmlElement=div(
   display.flex,

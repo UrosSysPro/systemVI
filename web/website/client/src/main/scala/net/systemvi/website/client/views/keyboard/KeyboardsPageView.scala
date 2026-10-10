@@ -1,18 +1,19 @@
-package net.systemvi.website.views
+package net.systemvi.website.client.views.keyboard
 
 import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.common.dtos.KeyboardDto
-import net.systemvi.website.darkproject.big_title.*
-import net.systemvi.website.darkproject.footer.*
-import net.systemvi.website.darkproject.neo_navbar.*
-import net.systemvi.website.darkproject.section.*
 import io.circe.scalajs.*
 import io.circe.scalajs.EncoderJsOps.*
 import io.circe.generic.*
 import io.circe.generic.auto.*
-import net.systemvi.website.routes.Pages.*
-import net.systemvi.website.utils.Constants
+import net.systemvi.website.client.darkproject.big_title.BigTitle
+import net.systemvi.website.client.darkproject.footer.Footer
+import net.systemvi.website.client.darkproject.neo_navbar.NeoNavbar
+import net.systemvi.website.client.darkproject.section.{Section, SectionItem}
+import net.systemvi.website.client.utils.Constants
+import net.systemvi.website.client.routes.Pages.*
 import org.scalajs.dom
+
 import scala.scalajs.LinkingInfo.*
 
 def KeyboardsPageView(): HtmlElement = {

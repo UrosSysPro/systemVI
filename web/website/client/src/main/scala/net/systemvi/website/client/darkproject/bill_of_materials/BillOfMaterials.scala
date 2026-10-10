@@ -1,7 +1,7 @@
-package net.systemvi.website.darkproject.bill_of_materials
+package net.systemvi.website.client.darkproject.bill_of_materials
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.website.styles.CSSProps.*
+import net.systemvi.website.client.styles.CSSProps.hiddenScrollbar
 
 def BillOfMaterials():HtmlElement ={
   div(

@@ -1,4 +1,4 @@
-package net.systemvi.website.views
+package net.systemvi.website.client.views.fourier
 
 object Hearth {
 

@@ -1,4 +1,4 @@
-package net.systemvi.website.darkproject.section
+package net.systemvi.website.client.darkproject.section
 
 import com.raquo.laminar.api.L.{*, given}
 import org.scalajs.dom

@@ -1,4 +1,4 @@
-package net.systemvi.website.routes
+package net.systemvi.website.client.routes
 
 import cats.*
 import cats.implicits.*
@@ -8,9 +8,9 @@ import io.circe.generic.auto.*
 import io.circe.parser.*
 import io.circe.syntax.*
 import net.systemvi.website.*
-import net.systemvi.website.routes.Pages.*
-import net.systemvi.website.routes.Routes.*
-import net.systemvi.website.routes.PageDecoders.given
+import Pages.*
+import Routes.*
+import PageDecoders.given
 import java.util.UUID
 import scala.util.*
 import org.scalajs.dom

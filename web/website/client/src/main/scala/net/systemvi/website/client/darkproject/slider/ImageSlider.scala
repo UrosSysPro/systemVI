@@ -1,9 +1,9 @@
-package net.systemvi.website.darkproject.slider
+package net.systemvi.website.client.darkproject.slider
 
 import com.raquo.laminar.api.L.{*, given}
 import com.raquo.laminar.modifiers.EventListener
-import net.systemvi.website.styles.CSSProps.*
-import net.systemvi.website.darkproject.Theme
+import net.systemvi.website.client.darkproject.Theme
+import net.systemvi.website.client.styles.CSSProps.{backdropFilter, objectFit}
 import org.scalajs.dom.MouseEvent
 
 private enum Side {

@@ -1,4 +1,4 @@
-package net.systemvi.website.views
+package net.systemvi.website.client.views.threeDPrinting
 
 import cats.*
 import cats.implicits.*
@@ -9,23 +9,20 @@ import io.circe.scalajs.*
 import io.circe.scalajs.EncoderJsOps.*
 import net.systemvi.common.dtos.*
 import net.systemvi.website.*
-import net.systemvi.website.darkproject.big_title.*
-import net.systemvi.website.darkproject.bill_of_materials.*
-import net.systemvi.website.darkproject.expandable_specs.*
-import net.systemvi.website.darkproject.footer.*
-import net.systemvi.website.darkproject.neo_navbar.*
-import net.systemvi.website.darkproject.product_info.*
-import net.systemvi.website.darkproject.product_info.given
-import net.systemvi.website.darkproject.slider.*
-import net.systemvi.website.routes.Pages.*
-import net.systemvi.website.utils.Constants
+import net.systemvi.website.client.darkproject.big_title.BigTitle
+import net.systemvi.website.client.darkproject.footer.Footer
+import net.systemvi.website.client.darkproject.neo_navbar.NeoNavbar
+import net.systemvi.website.client.services.ThreeDPrintedProductService
+import net.systemvi.website.client.utils.Constants
+import net.systemvi.website.client.darkproject.product_info.given
 import org.scalajs.dom
-import scala.concurrent.ExecutionContext
-import net.systemvi.website.services.ThreeDPrintedProductService
 
-given ExecutionContext = ExecutionContext.global
+import scala.concurrent.ExecutionContext
+
 
 object ThreeDPrintedProductsPageView{
+  given ExecutionContext = ExecutionContext.global
+
   def component(): HtmlElement = {
     val products = ThreeDPrintedProductService.getAll().startWith(List.empty)
     div(

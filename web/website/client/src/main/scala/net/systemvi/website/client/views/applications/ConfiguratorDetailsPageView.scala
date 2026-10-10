@@ -1,19 +1,20 @@
-package net.systemvi.website.views.details
+package net.systemvi.website.client.views.applications
 
 import com.raquo.laminar.api.L.{*, given}
-import net.systemvi.website.darkproject.big_title.*
-import net.systemvi.website.darkproject.footer.*
-import net.systemvi.website.darkproject.neo_navbar.*
-import net.systemvi.website.darkproject.bento_box.*
-import net.systemvi.website.darkproject.product_info.{ *, given }
-import net.systemvi.website.darkproject.slider.*
-import net.systemvi.website.utils.Constants
+import net.systemvi.website.client.darkproject.product_info.{*, given}
 import cats.*
 import cats.implicits.*
 import io.circe.*
 import io.circe.generic.auto.*
 import io.circe.parser.*
 import net.systemvi.common.dtos.ApplicationDto
+import net.systemvi.website.client.darkproject.bento_box.{BentoBox, BentoBoxItem, BentoBoxRect, BentoBoxSize}
+import net.systemvi.website.client.darkproject.big_title.BigTitle
+import net.systemvi.website.client.darkproject.footer.Footer
+import net.systemvi.website.client.darkproject.neo_navbar.NeoNavbar
+import net.systemvi.website.client.darkproject.product_info.ProductInfo
+import net.systemvi.website.client.darkproject.slider.ImageSlider
+import net.systemvi.website.client.utils.Constants
 
 def BentoCard(title:String): HtmlElement = {
   div(

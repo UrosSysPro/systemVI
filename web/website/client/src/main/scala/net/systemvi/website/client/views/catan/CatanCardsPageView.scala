@@ -1,4 +1,4 @@
-package net.systemvi.website.views
+package net.systemvi.website.client.views.catan
 
 import com.raquo.laminar.api.L.{*, given}
 import org.scalajs.dom.*

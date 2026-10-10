@@ -1,4 +1,4 @@
-package net.systemvi.website.views
+package net.systemvi.website.client.views.applications
 
 import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.common.dtos.ApplicationDto
@@ -7,15 +7,16 @@ import cats.implicits.*
 import io.circe.scalajs.*
 import io.circe.generic.*
 import io.circe.generic.auto.*
-import net.systemvi.website.*
-import net.systemvi.website.utils.Constants
+import net.systemvi.website.client.*
+import net.systemvi.website.client.utils.Constants
 import org.scalajs.dom
 
 import scala.concurrent.ExecutionContext
 
-given ExecutionContext = ExecutionContext.global
 
 def GamesPageView(): HtmlElement = {
+  given ExecutionContext = ExecutionContext.global
+
   val gamesVar = EventStream.fromFuture(
     dom.fetch(s"${Constants.serverUrl}/applications/games")
       .toFuture

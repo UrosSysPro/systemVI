@@ -1,4 +1,4 @@
-package net.systemvi.website.routes
+package net.systemvi.website.client.routes
 
 import java.util.UUID
 
