@@ -68,7 +68,7 @@ lazy val mainMenuClient = project.in(file("main_menu/client"))
   .dependsOn(mainMenuCommon.js)
 
 lazy val mainMenuServer = project.in(file("main_menu/server"))
-  .enablePlugins(JavaAppPackaging)
+  .enablePlugins(JavaAppPackaging, DockerPlugin)
   .settings(
     Compile / run / fork := true,
     Compile / run / connectInput := true,
@@ -76,6 +76,10 @@ lazy val mainMenuServer = project.in(file("main_menu/server"))
     Docker / daemonUser := "ubuntu",
     Docker / daemonUserUid := Some("1000"),
     Docker / daemonGroupGid := Some("1000"),
+    // Image published to the Gitea container registry as
+    // `gitea.karaleic.com/uros/main-menu-server`.
+    Docker / dockerRepository := Some("gitea.karaleic.com/uros"),
+    Docker / packageName := "main-menu-server",
     libraryDependencies ++= serverDependencies,
     libraryDependencies ++= serverTestDependencies,
   )
