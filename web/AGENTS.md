@@ -31,7 +31,12 @@ Laminar + Airstream + Waypoint + circe + Scala.js, bundled by Vite + Tailwind (c
 4. **Match existing patterns** (layering, naming, DTO style, view style) rather than
    introducing new ones. Keep changes surgical.
 
-## Environment notes (Windows)
+## Environment notes
+
+This project is developed on two machines. Read the subsection for the one you are
+on; ignore the other.
+
+### Windows 11 (msys2)
 
 - Shell is PowerShell. `&&` is not supported — use `;`. Avoid `$` in terminal commands
   (they get rejected); use literal paths.
@@ -40,9 +45,22 @@ Laminar + Airstream + Waypoint + circe + Scala.js, bundled by Vite + Tailwind (c
   relative to that, e.g. `git -C C:\Users\uros\Projects\SystemVI ls-files -- "web/**/*.db"`.
   Use `--no-pager` for read-only git.
 
+### Arch Linux
+
+- Shell is bash. `&&` and `$VAR` work normally.
+- `git` **is** on `PATH`. The git repo root is the **parent** of `web/`
+  (`/home/uros/Projects/SystemVI`), so pathspecs are relative to that, e.g.
+  `git -C /home/uros/Projects/SystemVI ls-files -- "web/**/*.db"`. Use `--no-pager` for
+  read-only git.
+- Toolchain: `sbt` via coursier (`~/.local/share/coursier/bin/sbt`), Java 21 (GraalVM,
+  via sdkman; the Docker images use `eclipse-temurin:25`), Node 24, both `bun` and `npm`.
+- The committed client lockfile is `bun.lock`, so prefer `bun install` here.
+
 ## Key commands
 
-```powershell
+These work in both shells; the only per-OS differences are the ones noted above.
+
+```sh
 # from web/
 
 # server: compile, test, run
@@ -61,7 +79,7 @@ sbt "mainMenuServer/run config"          # print loaded config
 sbt mainMenuClient/compile
 sbt mainMenuClient/fastLinkJS            # links to main_menu/client/target/.../mainmenuclient-fastopt/main.js
 # dev server:
-cd main_menu/client; npm install; npm run dev   # http://localhost:5174
+cd main_menu/client; npm install; npm run dev   # http://localhost:5174 (Arch: bun install; bun run dev)
 ```
 
 `migrate --force` deletes `main_menu/server/db/main_menu.db` before opening a

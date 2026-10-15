@@ -31,6 +31,30 @@ object Routes {
     pattern = root / "restaurant" / segment[UUID] / "category" / segment[UUID] / "subcategory" / segment[UUID] / endOfSegments,
   )
 
+  val itemRoute = Route[ItemPage, (UUID, UUID)](
+    encode = page => (page.restaurantId, page.itemId),
+    decode = args => ItemPage(args._1, args._2),
+    pattern = root / "restaurant" / segment[UUID] / "item" / segment[UUID] / endOfSegments,
+  )
+
+  val tableMenuRoute = Route[TableMenuPage, (UUID, UUID)](
+    encode = page => (page.restaurantId, page.tableId),
+    decode = args => TableMenuPage(args._1, args._2),
+    pattern = root / "restaurant" / segment[UUID] / "table" / segment[UUID] / endOfSegments,
+  )
+
+  val tableItemRoute = Route[TableItemPage, (UUID, UUID, UUID)](
+    encode = page => (page.restaurantId, page.tableId, page.itemId),
+    decode = args => TableItemPage(args._1, args._2, args._3),
+    pattern = root / "restaurant" / segment[UUID] / "table" / segment[UUID] / "item" / segment[UUID] / endOfSegments,
+  )
+
+  val adminRootRoute = Route[AdminDashboardPage, UUID](
+    encode = page => page.restaurantId,
+    decode = restaurantId => AdminDashboardPage(restaurantId),
+    pattern = root / "admin" / "restaurant" / segment[UUID] / endOfSegments,
+  )
+
   val adminDashboardRoute = Route[AdminDashboardPage, UUID](
     encode = page => page.restaurantId,
     decode = restaurantId => AdminDashboardPage(restaurantId),

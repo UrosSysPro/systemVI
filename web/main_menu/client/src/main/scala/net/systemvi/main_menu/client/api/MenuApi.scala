@@ -4,7 +4,7 @@ import com.raquo.laminar.api.L.*
 import io.circe.Decoder
 import io.circe.generic.semiauto.deriveDecoder
 import io.circe.parser.decode
-import net.systemvi.mainmenu.common.dto.{CategoryDto, ItemDto, RestaurantDto}
+import net.systemvi.mainmenu.common.dto.{CategoryDto, ItemDto, RestaurantDto, RestaurantTableDto}
 import net.systemvi.main_menu.client.utils.Constants
 import org.scalajs.dom
 
@@ -29,6 +29,16 @@ object MenuApi {
 
   def itemsForCategory(categoryId: UUID): EventStream[List[ItemDto]] =
     fetchJson[List[ItemDto]](s"${Constants.serverUrl}/items/category/$categoryId")
+
+  /** Every item, grouped by category on the table menu's single page. */
+  def items: EventStream[List[ItemDto]] =
+    fetchJson[List[ItemDto]](s"${Constants.serverUrl}/items")
+
+  def item(itemId: UUID): EventStream[Option[ItemDto]] =
+    fetchJsonOption[ItemDto](s"${Constants.serverUrl}/items/$itemId")
+
+  def restaurantTable(tableId: UUID): EventStream[Option[RestaurantTableDto]] =
+    fetchJsonOption[RestaurantTableDto](s"${Constants.serverUrl}/restaurant-tables/$tableId")
 
   private def fetchJson[A](url: String)(using decoder: Decoder[A]): EventStream[A] =
     EventStream.fromFuture(

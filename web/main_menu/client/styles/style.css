@@ -1,5 +1,43 @@
-@import 'tailwindcss';
+/*
+ * Global baseline only. Every component is styled with Laminar style props
+ * (see src/main/scala/net/systemvi/main_menu/client/styles/CSSProps.scala), so
+ * this file holds just the reset that replaced Tailwind's preflight when the
+ * framework was dropped.
+ */
 
-* {
-    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure {
+  margin: 0;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
 }

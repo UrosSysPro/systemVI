@@ -17,6 +17,12 @@ object Pages {
 
   case class SubcategoryMenuPage(restaurantId: UUID, categoryId: UUID, subcategoryId: UUID) extends Page("Category")
 
+  case class ItemPage(restaurantId: UUID, itemId: UUID) extends Page("Item")
+
+  case class TableMenuPage(restaurantId: UUID, tableId: UUID) extends Page("Menu")
+
+  case class TableItemPage(restaurantId: UUID, tableId: UUID, itemId: UUID) extends Page("Item")
+
   case class AdminDashboardPage(restaurantId: UUID) extends Page("Dashboard")
 
   case class AdminTablesPage(restaurantId: UUID) extends Page("Tables")

@@ -3,7 +3,8 @@ package net.systemvi.main_menu.client.views
 import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.mainmenu.common.dto.CategoryDto
 import net.systemvi.main_menu.client.api.MenuApi
-import net.systemvi.main_menu.client.components.{itemCard, linkRow, listColumn, pageColumn, pageShell}
+import net.systemvi.main_menu.client.components.item.ItemCard
+import net.systemvi.main_menu.client.components.{linkRow, listColumn, pageColumn, pageShell}
 import net.systemvi.main_menu.client.routes.Pages.*
 
 import java.util.UUID
@@ -45,7 +46,7 @@ private def categoryMenu(restaurantId: UUID, parentCategoryId: UUID, categoryId:
             flexDirection.column,
             gap.rem(0.5),
             h2(fontSize.rem(1.25), fontWeight.bold, color("#22272d"), "Items"),
-            listColumn(list.map(itemCard)),
+            listColumn(list.map(item => ItemCard(item, ItemPage(restaurantId, item.uuid)))),
           )
       }),
     ))

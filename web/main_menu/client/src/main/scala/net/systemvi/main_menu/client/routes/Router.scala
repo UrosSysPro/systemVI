@@ -15,6 +15,9 @@ object Router extends Router[Page](
     restaurantMenuRoute,
     categoryMenuRoute,
     subcategoryMenuRoute,
+    itemRoute,
+    tableMenuRoute,
+    tableItemRoute,
     adminDashboardRoute,
     adminTablesRoute,
     adminCategoriesRoute,
@@ -29,6 +32,9 @@ object Router extends Router[Page](
     case RestaurantMenuPage(restaurantId) => s"restaurant|$restaurantId"
     case CategoryMenuPage(restaurantId, categoryId) => s"category|$restaurantId|$categoryId"
     case SubcategoryMenuPage(restaurantId, categoryId, subcategoryId) => s"subcategory|$restaurantId|$categoryId|$subcategoryId"
+    case ItemPage(restaurantId, itemId) => s"item|$restaurantId|$itemId"
+    case TableMenuPage(restaurantId, tableId) => s"table|$restaurantId|$tableId"
+    case TableItemPage(restaurantId, tableId, itemId) => s"table-item|$restaurantId|$tableId|$itemId"
     case AdminDashboardPage(restaurantId) => s"admin-dashboard|$restaurantId"
     case AdminTablesPage(restaurantId) => s"admin-tables|$restaurantId"
     case AdminCategoriesPage(restaurantId) => s"admin-categories|$restaurantId"
@@ -43,6 +49,12 @@ object Router extends Router[Page](
         CategoryMenuPage(UUID.fromString(restaurantId), UUID.fromString(categoryId))
       case "subcategory" :: restaurantId :: categoryId :: subcategoryId :: Nil =>
         SubcategoryMenuPage(UUID.fromString(restaurantId), UUID.fromString(categoryId), UUID.fromString(subcategoryId))
+      case "item" :: restaurantId :: itemId :: Nil =>
+        ItemPage(UUID.fromString(restaurantId), UUID.fromString(itemId))
+      case "table" :: restaurantId :: tableId :: Nil =>
+        TableMenuPage(UUID.fromString(restaurantId), UUID.fromString(tableId))
+      case "table-item" :: restaurantId :: tableId :: itemId :: Nil =>
+        TableItemPage(UUID.fromString(restaurantId), UUID.fromString(tableId), UUID.fromString(itemId))
       case "admin-dashboard" :: restaurantId :: Nil =>
         AdminDashboardPage(UUID.fromString(restaurantId))
       case "admin-tables" :: restaurantId :: Nil =>
