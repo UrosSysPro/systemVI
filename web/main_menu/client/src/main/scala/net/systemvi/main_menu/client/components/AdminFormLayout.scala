@@ -5,6 +5,10 @@ import com.raquo.laminar.codecs
 import net.systemvi.main_menu.client.routes.Pages.*
 import net.systemvi.main_menu.client.routes.Router
 import net.systemvi.main_menu.client.styles.CSSProps.*
+import org.scalajs.dom
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.scalajs.js.Thenable.Implicits.*
 
 /**
  * Shared scaffolding for the standalone admin create/update pages.
@@ -129,4 +133,86 @@ object FormPage {
   /** Placeholder shown while the record being edited is still loading. */
   def loading(message: String = "Loading…"): HtmlElement =
     div(color("#6b7280"), message)
+
+  /**
+   * Image picker for a form.
+   *
+   * The file is uploaded as soon as it is chosen and the bytes go straight to
+   * the server's blob store, so this works on the create page too: `upload`
+   * receives the id the server just handed back. `preview` is a signal of the
+   * current image URL, refreshed after an upload so the picture on screen is
+   * the one that was just stored rather than a cached older one.
+   */
+  def imageUpload(
+    preview: Signal[String],
+    upload: Array[Byte] => scala.concurrent.Future[Unit],
+    onUploaded: () => Unit = () => (),
+  ): HtmlElement = {
+    val busy = Var(false)
+    val failure = Var(Option.empty[String])
+
+    def handleFile(file: dom.File): Unit = {
+      busy.set(true)
+      failure.set(None)
+      file.arrayBuffer().toFuture
+        .map(buffer => new scala.scalajs.js.typedarray.Int8Array(buffer).toArray)
+        .flatMap(bytes => upload(bytes))
+        .onComplete { result =>
+          busy.set(false)
+          result.fold(
+            error => failure.set(Some(error.getMessage)),
+            _ => onUploaded(),
+          )
+        }
+    }
+
+    div(
+      flexRow,
+      alignItems.center,
+      gap.rem(1),
+      img(
+        src <-- preview,
+        alt := "Current image",
+        width.px(96),
+        height.px(96),
+        aspect := "1 / 1",
+        objectFit := "cover",
+        borderRadius.rem(0.5),
+        backgroundColor("#f0f1f3",
+        ),
+        border("1px solid #e8e8ea"),
+      ),
+      div(
+        flexColumn,
+        gap.rem(0.25),
+        input(
+          typ := "file",
+          accept := "image/*",
+          onInput.mapToFiles --> { files =>
+            files.headOption.foreach(handleFile)
+          },
+        ),
+        span(
+          fontSize.rem(0.8),
+          color <-- failure.signal.map(_.fold("#6b7280")(_ => "#a12626")),
+          child.text <-- failure.signal.map(_.getOrElse("Pick an image to upload. It is stored as soon as you choose it.")),
+        ),
+        span(
+          display <-- busy.signal.map(if _ then "block" else "none"),
+          fontSize.rem(0.8),
+          color("#2e8b57"),
+          "Uploading…",
+        ),
+      ),
+    )
+  }
+
+  /**
+   * The URL to put in an entity's `imageUrl` field after storing a blob.
+   *
+   * The `?v=` suffix is a cache buster: without it a browser that already loaded
+   * `/image/item/{id}` would keep showing the previous picture after a re-upload.
+   */
+  def uploadedImageUrl(kind: String, id: java.util.UUID): String =
+    s"${net.systemvi.main_menu.client.utils.Constants.serverUrl}/image/$kind/$id?v=${System.currentTimeMillis()}"
 }

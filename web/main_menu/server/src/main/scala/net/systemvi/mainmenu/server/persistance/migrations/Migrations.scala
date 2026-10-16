@@ -22,5 +22,6 @@ object Migrations {
     __09_create_roles_table[F](xa),
     __10_create_auth_identities_table[F](xa),
     __11_create_users_table[F](xa),
+    __12_alter_categories_and_items_add_imageBlob_column[F](xa),
   )
 }

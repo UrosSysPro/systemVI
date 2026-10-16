@@ -73,5 +73,25 @@ def categoryController(using context: AppContext[IO]): HttpRoutes[IO] = {
         deleted <- service.delete(id)
         response <- if (deleted > 0) Ok(deleted.toString) else NotFound()
       } yield response
+
+    // Raw image bytes in the body; served back out by /image/category/{id}.
+    case request @ PUT -> Root / UUIDVar(id) / "image" =>
+      val write = for {
+        bytes <- readImageBody(request)
+        response <- bytes match {
+          case Left(message) => BadRequest(message)
+          case Right(image) =>
+            context.db.categories.updateImage(id, image).flatMap {
+              case updated if updated > 0 => Ok("image stored")
+              case _                      => NotFound()
+            }
+        }
+      } yield response
+
+      write.attempt.flatMap {
+        case Right(response) => IO.pure(response)
+        case Left(error) =>
+          logger.error(error)(s"Failed to store category image $id") *> InternalServerError(error.getMessage)
+      }
   }
 }

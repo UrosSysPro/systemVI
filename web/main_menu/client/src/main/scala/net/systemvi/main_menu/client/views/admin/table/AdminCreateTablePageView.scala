@@ -13,20 +13,24 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 /** Create a table for a restaurant. */
 def AdminCreateTablePageView(restaurantId: UUID): HtmlElement =
-  tableForm(
-    restaurantId = restaurantId,
-    title = "New table",
-    initialName = "",
-    initialImageUrl = "",
-    submitLabel = "Create table",
-    save = (name, imageUrl) => AdminApi.createRestaurantTable(restaurantId, name, imageUrl),
+  adminLayout(
+    restaurantId,
+    AdminTablesPage(restaurantId),
+    tableForm(
+      restaurantId = restaurantId,
+      title = "New table",
+      initialName = "",
+      initialImageUrl = "",
+      submitLabel = "Create table",
+      save = (name, imageUrl) => AdminApi.createRestaurantTable(restaurantId, name, imageUrl),
+    ),
   )
 
 /**
  * Shared body of the create and edit table pages.
  *
- * Both pages are separate components with their own routes; this keeps their
- * field layout identical without merging them.
+ * Returns only the form content: each page wraps it in its own [[adminLayout]].
+ * Putting the layout in here would nest a second side nav inside the first.
  */
 private[table] def tableForm(
   restaurantId: UUID,
@@ -53,25 +57,21 @@ private[table] def tableForm(
     }
   }
 
-  adminLayout(
-    restaurantId,
-    AdminTablesPage(restaurantId),
-    div(
-      flexColumn,
-      gap.rem(1),
-      width.percent(100),
-      maxWidth.px(640),
-      linkRow("Back to tables", AdminTablesPage(restaurantId)),
-      pageTitle(title),
-      errorBanner(error.signal),
-      section("Table", List(
-        field("Name", textInput("e.g. Table 1", name)),
-        field("Image URL", textInput("https://…", imageUrl), Some("Optional")),
-      )),
-      actions(List(
-        submitButton(submitLabel, busy.signal, onClick --> { _ => submit() }),
-        cancelButton("Cancel", Router.navigateTo(AdminTablesPage(restaurantId))),
-      )),
-    )
+  div(
+    flexColumn,
+    gap.rem(1),
+    width.percent(100),
+    maxWidth.px(640),
+    linkRow("Back to tables", AdminTablesPage(restaurantId)),
+    pageTitle(title),
+    errorBanner(error.signal),
+    section("Table", List(
+      field("Name", textInput("e.g. Table 1", name)),
+      field("Image URL", textInput("https://…", imageUrl), Some("Optional")),
+    )),
+    actions(List(
+      submitButton(submitLabel, busy.signal, onClick --> { _ => submit() }),
+      cancelButton("Cancel", Router.navigateTo(AdminTablesPage(restaurantId))),
+    )),
   )
 }

@@ -19,9 +19,18 @@ object SqlMappings {
   given Read[UUID] = Read[String].map(UUID.fromString)
   given Write[UUID] = Write[String].contramap(_.toString)
 
-  given Read[Item] = Read[(UUID, String, String, Option[String], BigDecimal, Option[UUID])].map(Item.apply)
+  // `imageBlob` is deliberately absent from these tuples: it has its own
+  // column and is read only by the dedicated blob methods on the contexts, so
+  // a listing can never accidentally drag image bytes along.
+  given Read[Item] =
+    Read[(UUID, String, String, Option[String], BigDecimal, Option[UUID])].map { case (uuid, name, imageUrl, description, price, categoryId) =>
+      Item(uuid, name, imageUrl, description, price, categoryId)
+    }
 
-  given Read[Category] = Read[(UUID, String, Option[String], String, Option[UUID], Option[UUID])].map(Category.apply)
+  given Read[Category] =
+    Read[(UUID, String, Option[String], String, Option[UUID], Option[UUID])].map { case (uuid, name, description, imageUrl, parentId, restaurantId) =>
+      Category(uuid, name, description, imageUrl, parentId, restaurantId)
+    }
 
   given Read[Restaurant] = Read[(UUID, String, Option[String], String, String)].map(Restaurant.apply)
 

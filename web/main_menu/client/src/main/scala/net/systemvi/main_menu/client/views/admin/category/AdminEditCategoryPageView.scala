@@ -31,6 +31,12 @@ def AdminEditCategoryPageView(restaurantId: UUID, categoryId: UUID): HtmlElement
       case None         => AdminCategoriesPage(restaurantId)
     }
 
+  /** Uploads straight against the category being edited. */
+  def uploadImage(bytes: Array[Byte]): scala.concurrent.Future[Unit] =
+    AdminApi.uploadCategoryImage(categoryId, bytes).map { _ =>
+      imageUrl.set(uploadedImageUrl("category", categoryId))
+    }
+
   def submit(parentId: Option[UUID]): Unit = {
     busy.set(true)
     error.set(None)
@@ -72,7 +78,7 @@ def AdminEditCategoryPageView(restaurantId: UUID, categoryId: UUID): HtmlElement
             section("Category", List(
               field("Name", textInput("e.g. Starters", name)),
               field("Description", textInputArea("Optional", description), Some("Optional")),
-              field("Image URL", textInput("https://…", imageUrl), Some("Optional")),
+              field("Image", imageUpload(imageUrl.signal, uploadImage), Some("Optional")),
             )),
             actions(List(
               submitButton("Save changes", busy.signal, onClick --> { _ => submit(current.parentId) }),

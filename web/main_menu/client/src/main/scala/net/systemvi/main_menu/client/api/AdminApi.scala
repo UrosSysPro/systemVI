@@ -12,6 +12,7 @@ import org.scalajs.dom.{Headers, HttpMethod, RequestInit}
 
 import java.util.UUID
 import scala.concurrent.{ExecutionContext, Future}
+import scala.scalajs.js
 import scala.scalajs.js.Thenable.Implicits.*
 
 /** Write operations (create/update/delete) plus admin-only reads. */
@@ -61,8 +62,61 @@ object AdminApi {
   def deleteItem(id: UUID): Future[Unit] =
     send(HttpMethod.DELETE, s"${Constants.serverUrl}/items/$id", None)
 
+  /**
+   * Uploads image bytes for a category or item. The server stores them as a blob
+   * and the client renders them through the matching `/image/...` proxy route.
+   */
+  def uploadCategoryImage(id: UUID, bytes: Array[Byte]): Future[Unit] =
+    sendBytes(HttpMethod.PUT, s"${Constants.serverUrl}/category/$id/image", bytes)
+
+  def uploadItemImage(id: UUID, bytes: Array[Byte]): Future[Unit] =
+    sendBytes(HttpMethod.PUT, s"${Constants.serverUrl}/items/$id/image", bytes)
+
+  /**
+   * Finds a just-created item's id by name.
+   *
+   * The create endpoint answers with a plain-text id, and the client needs the
+   * full record to attach an image, so this re-reads the category's items and
+   * takes the newest match. Only used right after a create, when a duplicate
+   * name is unlikely.
+   */
+  def latestItemId(categoryId: UUID, name: String): Future[Option[UUID]] =
+    fetchList[net.systemvi.mainmenu.common.dto.ItemDto](s"${Constants.serverUrl}/items/category/$categoryId", itemDecoder)
+      .map(items => items.filter(_.name == name).lastOption.map(_.uuid))
+
+  /** Finds a just-created category's id by name; see [[latestItemId]]. */
+  def latestCategoryId(restaurantId: UUID, name: String): Future[Option[UUID]] =
+    fetchList[net.systemvi.mainmenu.common.dto.CategoryDto](s"${Constants.serverUrl}/restaurants/$restaurantId/categories", categoryDecoder)
+      .map(categories => categories.filter(_.name == name).lastOption.map(_.uuid))
+
+  private given itemDecoder: io.circe.Decoder[net.systemvi.mainmenu.common.dto.ItemDto] =
+    io.circe.generic.semiauto.deriveDecoder
+
+  private given categoryDecoder: io.circe.Decoder[net.systemvi.mainmenu.common.dto.CategoryDto] =
+    net.systemvi.mainmenu.common.dto.CategoryDto.decoder
+
+  private def fetchList[A](url: String, decoder: io.circe.Decoder[A]): Future[List[A]] =
+    given io.circe.Decoder[List[A]] = io.circe.Decoder.decodeList[A](using decoder)
+    dom.fetch(url).toFuture
+      .flatMap(_.text().toFuture)
+      .map(body => decode[List[A]](body).fold(error => throw error, identity))
+
   private def send(method: HttpMethod, url: String, body: Option[String]): Future[Unit] =
     dom.fetch(url, requestInit(method, body)).toFuture.map { response =>
+      if response.ok then () else throw new RuntimeException(s"$method $url failed with status ${response.status}")
+    }
+
+  /** Sends a raw body (an image), not JSON. */
+  private def sendBytes(method: HttpMethod, url: String, bytes: Array[Byte]): Future[Unit] =
+    val typed = new scala.scalajs.js.typedarray.Int8Array(bytes.length)
+    var index = 0
+    while index < bytes.length do
+      typed(index) = bytes(index)
+      index += 1
+    val init = new RequestInit {}
+    init.method = method
+    init.body = new dom.Blob(js.Array(typed.asInstanceOf[dom.BlobPart]))
+    dom.fetch(url, init).toFuture.map { response =>
       if response.ok then () else throw new RuntimeException(s"$method $url failed with status ${response.status}")
     }
 

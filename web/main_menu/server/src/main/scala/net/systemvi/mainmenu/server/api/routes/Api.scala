@@ -16,6 +16,7 @@ def api(using context: AppContext[IO]): HttpRoutes[IO] = {
     "category" -> categoryController,
     "restaurants" -> restaurantController,
     "restaurant-tables" -> restaurantTableController,
+    "image" -> imageController,
     "auth" -> Router(
       "google" -> googleAuthController,
     ),

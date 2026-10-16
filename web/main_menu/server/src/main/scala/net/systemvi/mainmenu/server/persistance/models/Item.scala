@@ -9,4 +9,6 @@ case class Item(
   description: Option[String],
   price: BigDecimal,
   categoryId: Option[UUID],
+  /** The uploaded image, if any. See [[Category.imageBlob]] for why it is not mapped. */
+  imageBlob: Option[Array[Byte]] = None,
 )

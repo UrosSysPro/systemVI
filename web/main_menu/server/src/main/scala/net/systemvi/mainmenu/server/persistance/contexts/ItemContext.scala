@@ -2,6 +2,7 @@ package net.systemvi.mainmenu.server.persistance.contexts
 
 import cats.*
 import cats.effect.*
+import cats.syntax.functor.*
 import doobie.*
 import doobie.implicits.*
 import net.systemvi.mainmenu.server.persistance.models.Item
@@ -16,6 +17,10 @@ trait ItemContext[F[_]] {
   def getByCategory(categoryId: UUID): F[List[Item]]
   def update(item: Item): F[Int]
   def delete(uuid: UUID): F[Int]
+  /** The stored image bytes, or `None` when the item has no uploaded image. */
+  def getImage(uuid: UUID): F[Option[Array[Byte]]]
+  /** Stores the image bytes, replacing any previous upload. */
+  def updateImage(uuid: UUID, bytes: Array[Byte]): F[Int]
 }
 
 object ItemContext {
@@ -65,6 +70,17 @@ object ItemContext {
     override def delete(uuid: UUID): F[Int] =
       sql"""
         delete from Items where uuid = ${uuid.toString}
+      """.update.run.transact(xa)
+
+    // The blob is read and written on its own so listings never carry image bytes.
+    override def getImage(uuid: UUID): F[Option[Array[Byte]]] =
+      sql"""
+        select imageBlob from Items where uuid = ${uuid.toString}
+      """.query[Option[Array[Byte]]].option.transact(xa).map(_.flatten)
+
+    override def updateImage(uuid: UUID, bytes: Array[Byte]): F[Int] =
+      sql"""
+        update Items set imageBlob = $bytes where uuid = ${uuid.toString}
       """.update.run.transact(xa)
   }
 }

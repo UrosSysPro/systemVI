@@ -32,6 +32,9 @@ private def categoryForm(restaurantId: UUID, parentId: UUID, title: String): Htm
   val imageUrl = Var("")
   val busy = Var(false)
   val error = Var(Option.empty[String])
+  /* Set when uploading creates the category, so a later submit updates it
+     instead of creating a second one. */
+  val createdId = Var(Option.empty[UUID])
 
   def submit(): Unit = {
     busy.set(true)
@@ -47,6 +50,29 @@ private def categoryForm(restaurantId: UUID, parentId: UUID, title: String): Htm
       }
   }
 
+  /**
+   * Picking a file stores the bytes immediately and writes the proxy URL into
+   * the form. A category that does not exist yet is created first, so the image
+   * can be attached to it right away.
+   */
+  def uploadImage(bytes: Array[Byte]): scala.concurrent.Future[Unit] =
+    val existing = createdId.now()
+    val target = existing match {
+      case Some(id) => scala.concurrent.Future.successful(Some(id))
+      case None =>
+        AdminApi
+          .createCategory(restaurantId, name.now().trim, optionalText(description.now()), "", Some(parentId))
+          .flatMap(_ => AdminApi.latestCategoryId(restaurantId, name.now().trim))
+    }
+
+    target.flatMap {
+      case Some(id) =>
+        createdId.set(Some(id))
+        AdminApi.uploadCategoryImage(id, bytes).map(_ => imageUrl.set(uploadedImageUrl("category", id)))
+      case None =>
+        scala.concurrent.Future.failed(new RuntimeException("Saved the category but could not find its id to attach the image."))
+    }
+
   adminLayout(
     restaurantId,
     AdminCategoriesPage(restaurantId),
@@ -61,7 +87,7 @@ private def categoryForm(restaurantId: UUID, parentId: UUID, title: String): Htm
       section("Category", List(
         field("Name", textInput("e.g. Starters", name)),
         field("Description", textInputArea("Optional", description), Some("Optional")),
-        field("Image URL", textInput("https://…", imageUrl), Some("Optional")),
+        field("Image", imageUpload(imageUrl.signal, uploadImage), Some("Optional")),
       )),
       actions(List(
         submitButton("Create category", busy.signal, onClick --> { _ => submit() }),
