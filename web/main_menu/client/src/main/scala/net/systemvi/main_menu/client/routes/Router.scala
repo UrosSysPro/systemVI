@@ -18,10 +18,17 @@ object Router extends Router[Page](
     itemRoute,
     tableMenuRoute,
     tableItemRoute,
+    adminRootRoute,
     adminDashboardRoute,
     adminTablesRoute,
     adminCategoriesRoute,
     adminCategoryRoute,
+    adminCreateCategoryRoute,
+    adminEditCategoryRoute,
+    adminCreateItemRoute,
+    adminEditItemRoute,
+    adminCreateTableRoute,
+    adminEditTableRoute,
     notFoundRoute,
   ),
   getPageTitle = page => page.title,
@@ -39,6 +46,12 @@ object Router extends Router[Page](
     case AdminTablesPage(restaurantId) => s"admin-tables|$restaurantId"
     case AdminCategoriesPage(restaurantId) => s"admin-categories|$restaurantId"
     case AdminCategoryPage(restaurantId, categoryId) => s"admin-category|$restaurantId|$categoryId"
+    case AdminCreateCategoryPage(restaurantId, parentId) => s"admin-category-new|$restaurantId|$parentId"
+    case AdminEditCategoryPage(restaurantId, categoryId) => s"admin-category-edit|$restaurantId|$categoryId"
+    case AdminCreateItemPage(restaurantId, categoryId) => s"admin-item-new|$restaurantId|$categoryId"
+    case AdminEditItemPage(restaurantId, categoryId, itemId) => s"admin-item-edit|$restaurantId|$categoryId|$itemId"
+    case AdminCreateTablePage(restaurantId) => s"admin-table-new|$restaurantId"
+    case AdminEditTablePage(restaurantId, tableId) => s"admin-table-edit|$restaurantId|$tableId"
     case NotFoundPage => "not-found"
   },
   deserializePage = (value: String) =>
@@ -63,6 +76,18 @@ object Router extends Router[Page](
         AdminCategoriesPage(UUID.fromString(restaurantId))
       case "admin-category" :: restaurantId :: categoryId :: Nil =>
         AdminCategoryPage(UUID.fromString(restaurantId), UUID.fromString(categoryId))
+      case "admin-category-new" :: restaurantId :: parentId :: Nil =>
+        AdminCreateCategoryPage(UUID.fromString(restaurantId), UUID.fromString(parentId))
+      case "admin-category-edit" :: restaurantId :: categoryId :: Nil =>
+        AdminEditCategoryPage(UUID.fromString(restaurantId), UUID.fromString(categoryId))
+      case "admin-item-new" :: restaurantId :: categoryId :: Nil =>
+        AdminCreateItemPage(UUID.fromString(restaurantId), UUID.fromString(categoryId))
+      case "admin-item-edit" :: restaurantId :: categoryId :: itemId :: Nil =>
+        AdminEditItemPage(UUID.fromString(restaurantId), UUID.fromString(categoryId), UUID.fromString(itemId))
+      case "admin-table-new" :: restaurantId :: Nil =>
+        AdminCreateTablePage(UUID.fromString(restaurantId))
+      case "admin-table-edit" :: restaurantId :: tableId :: Nil =>
+        AdminEditTablePage(UUID.fromString(restaurantId), UUID.fromString(tableId))
       case "login" :: Nil =>
         LoginPage
       case "welcome" :: Nil =>

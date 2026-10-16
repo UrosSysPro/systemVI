@@ -2,7 +2,8 @@ package net.systemvi.main_menu.client.views
 
 import com.raquo.laminar.api.L.{*, given}
 import net.systemvi.main_menu.client.api.MenuApi
-import net.systemvi.main_menu.client.components.{linkRow, listColumn, pageColumn, pageShell, pageTitle}
+import net.systemvi.main_menu.client.components.category.CategoryCard
+import net.systemvi.main_menu.client.components.{listColumn, pageColumn, pageShell, pageTitle}
 import net.systemvi.main_menu.client.routes.Pages.*
 
 import java.util.UUID
@@ -16,7 +17,7 @@ def RestaurantMenuPageView(restaurantId: UUID): HtmlElement = {
       pageTitle("Menu"),
       div(child <-- categories.map {
         case Nil => div("No categories yet.")
-        case list => listColumn(list.map(category => linkRow(category.name, CategoryMenuPage(restaurantId, category.uuid))))
+        case list => listColumn(list.map(category => CategoryCard(category, CategoryMenuPage(restaurantId, category.uuid))))
       }),
     ))
   ))

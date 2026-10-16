@@ -29,6 +29,9 @@ object CSSProps {
   /** `user-select`. */
   val userSelect: StyleProp[String] = styleProp[String]("user-select")
 
+  /** `grid-template-columns` — see also [[grid]]. */
+  val gridTemplateColumns: StyleProp[String] = styleProp[String]("grid-template-columns")
+
   /** `-webkit-line-clamp` — reach for [[clampLines]] instead. */
   private val lineClamp: StyleProp[String] = styleProp[String]("-webkit-line-clamp")
 
@@ -44,6 +47,14 @@ object CSSProps {
   /** Vertical flex container. */
   val flexColumn: Modifier[HtmlElement] =
     List[Modifier[HtmlElement]](display.flex, flexDirection.column)
+
+  /** Responsive grid of cards, e.g. `grid("repeat(auto-fill, minmax(320px, 1fr))")`. */
+  def grid(columns: String, gapRem: Double = 0.75): Modifier[HtmlElement] =
+    List[Modifier[HtmlElement]](
+      display.grid,
+      gridTemplateColumns := columns,
+      gap.rem(gapRem),
+    )
 
   /** White card surface: hairline border on a rounded corner. */
   val cardSurface: Modifier[HtmlElement] =

@@ -31,5 +31,17 @@ object Pages {
 
   case class AdminCategoryPage(restaurantId: UUID, categoryId: UUID) extends Page("Category")
 
+  case class AdminCreateCategoryPage(restaurantId: UUID, parentId: UUID) extends Page("New category")
+
+  case class AdminEditCategoryPage(restaurantId: UUID, categoryId: UUID) extends Page("Edit category")
+
+  case class AdminCreateItemPage(restaurantId: UUID, categoryId: UUID) extends Page("New item")
+
+  case class AdminEditItemPage(restaurantId: UUID, categoryId: UUID, itemId: UUID) extends Page("Edit item")
+
+  case class AdminCreateTablePage(restaurantId: UUID) extends Page("New table")
+
+  case class AdminEditTablePage(restaurantId: UUID, tableId: UUID) extends Page("Edit table")
+
   case object NotFoundPage extends Page("404")
 }

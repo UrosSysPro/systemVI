@@ -79,5 +79,43 @@ object Routes {
     pattern = root / "admin" / "restaurant" / segment[UUID] / "categories" / segment[UUID] / endOfSegments,
   )
 
+  // Create routes carry the parent so the new record knows where it belongs;
+  // a top-level category is parented by the category page it was created from.
+  val adminCreateCategoryRoute = Route[AdminCreateCategoryPage, (UUID, UUID)](
+    encode = page => (page.restaurantId, page.parentId),
+    decode = args => AdminCreateCategoryPage(args._1, args._2),
+    pattern = root / "admin" / "restaurant" / segment[UUID] / "category" / "new" / "under" / segment[UUID] / endOfSegments,
+  )
+
+  val adminEditCategoryRoute = Route[AdminEditCategoryPage, (UUID, UUID)](
+    encode = page => (page.restaurantId, page.categoryId),
+    decode = args => AdminEditCategoryPage(args._1, args._2),
+    pattern = root / "admin" / "restaurant" / segment[UUID] / "category" / segment[UUID] / "edit" / endOfSegments,
+  )
+
+  val adminCreateItemRoute = Route[AdminCreateItemPage, (UUID, UUID)](
+    encode = page => (page.restaurantId, page.categoryId),
+    decode = args => AdminCreateItemPage(args._1, args._2),
+    pattern = root / "admin" / "restaurant" / segment[UUID] / "category" / segment[UUID] / "item" / "new" / endOfSegments,
+  )
+
+  val adminEditItemRoute = Route[AdminEditItemPage, (UUID, UUID, UUID)](
+    encode = page => (page.restaurantId, page.categoryId, page.itemId),
+    decode = args => AdminEditItemPage(args._1, args._2, args._3),
+    pattern = root / "admin" / "restaurant" / segment[UUID] / "category" / segment[UUID] / "item" / segment[UUID] / "edit" / endOfSegments,
+  )
+
+  val adminCreateTableRoute = Route[AdminCreateTablePage, UUID](
+    encode = page => page.restaurantId,
+    decode = restaurantId => AdminCreateTablePage(restaurantId),
+    pattern = root / "admin" / "restaurant" / segment[UUID] / "table" / "new" / endOfSegments,
+  )
+
+  val adminEditTableRoute = Route[AdminEditTablePage, (UUID, UUID)](
+    encode = page => (page.restaurantId, page.tableId),
+    decode = args => AdminEditTablePage(args._1, args._2),
+    pattern = root / "admin" / "restaurant" / segment[UUID] / "table" / segment[UUID] / "edit" / endOfSegments,
+  )
+
   val notFoundRoute = Route.static(NotFoundPage, root / "404" / endOfSegments)
 }
