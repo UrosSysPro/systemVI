@@ -30,6 +30,11 @@ Laminar + Airstream + Waypoint + circe + Scala.js, bundled by Vite + Tailwind (c
    change, add a new `__NN_...` migration.
 4. **Match existing patterns** (layering, naming, DTO style, view style) rather than
    introducing new ones. Keep changes surgical.
+5. **Docker image builds are human-executed.** When a Docker build or publish is
+   needed, print the exact sbt command (e.g.
+   `sbt mainMenuServer/docker:publishLocal`) and stop. Wait for the user to run it and
+   confirm whether it worked. Do not run `docker:publishLocal`/`docker:publish`
+   yourself, and do not try to work around Docker daemon or socket permission errors.
 
 ## Environment notes
 

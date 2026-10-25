@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Local DeepSeek Harness plugins/tools (host-side, not part of the app)
+.dsh/
+
 # Editor directories and files
 .vscode/*
 target/*
