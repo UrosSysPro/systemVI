@@ -63,7 +63,7 @@ lazy val mainMenuClient = project.in(file("main_menu/client"))
         .withModuleSplitStyle(
           ModuleSplitStyle.SmallModulesFor(List("main_menu")))
     },
-    clientDependencies
+    clientDependencies,
   )
   .dependsOn(mainMenuCommon.js)
 
