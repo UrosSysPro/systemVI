@@ -22,10 +22,18 @@ Only the 15.6 mm upper switch housing and the stem sit above the plate.
 Layouts are described in keyboard units (1u = 19.05 mm) and converted to
 millimetres here.  All dimensions are millimetres; one Blender unit is one
 millimetre on STL export.
+
+``PlateParams.led_facing`` selects the switch orientation.  ``"north"`` keeps
+the default footprint; ``"south"`` rotates every key's cutouts by 180 degrees
+around the switch centre, so the LED ends up south, the pins north and the
+hotswap pocket on the opposite side.  The two states are physically the same
+switch, flipped.
 """
 
+import argparse
 import math
 import os
+import sys
 from dataclasses import dataclass
 
 import bmesh
@@ -37,7 +45,7 @@ from mathutils import Matrix, Vector
 # --------------------------------------------------------------------------
 
 PITCH = 19.05          # 1u
-PLATE_MARGIN = 5.0     # material from the outermost key cell to the plate edge
+PLATE_MARGIN = 5.0     # default value for each of the four plate margins
 
 # --------------------------------------------------------------------------
 # MX switch (5 pin), seen from the switch centre; +y points "north"
@@ -76,7 +84,11 @@ SOCKET_POCKET_DEPTH = 3.0
 LED_POCKET = 5.2                 # 5.0 mm package plus clearance
 LED_POCKET_DEPTH = 1.7
 LED_LIGHT_HOLE_DIAMETER = 3.6    # lets the LED shine through the plate
-LED_OFFSET = (0.0, 5.08)         # north of the switch centre
+LED_OFFSET_Y = 5.08              # north of the switch centre
+LED_OFFSET = (0.0, LED_OFFSET_Y)  # south facing is the 180 degree switch flip
+
+LED_FACING_NORTH = "north"       # switch in its default orientation
+LED_FACING_SOUTH = "south"       # whole switch footprint rotated 180 degrees
 
 # --------------------------------------------------------------------------
 # Derived thickness
@@ -91,6 +103,41 @@ EPS = 0.5                        # cutters overshoot the plate faces
 # --------------------------------------------------------------------------
 # Layout helpers
 # --------------------------------------------------------------------------
+
+
+@dataclass
+class PlateParams:
+    """Per-keyboard top plate parameters.
+
+    Every margin defaults to ``PLATE_MARGIN`` (5 mm), so the generated plate is
+    unchanged unless a value is overridden.  ``led_facing`` is either
+    ``"north"`` or ``"south"``: south rotates the *entire* switch footprint
+    (pins, legs, hotswap pocket, LED pocket and light hole) by 180 degrees
+    around the switch centre, which is what flipping the switch does.
+    """
+
+    margin_left: float = PLATE_MARGIN
+    margin_right: float = PLATE_MARGIN
+    margin_top: float = PLATE_MARGIN
+    margin_bottom: float = PLATE_MARGIN
+    led_facing: str = LED_FACING_NORTH
+
+    def __post_init__(self):
+        for name in ("margin_left", "margin_right", "margin_top", "margin_bottom"):
+            if getattr(self, name) < 0.0:
+                raise ValueError(f"{name} must not be negative")
+
+    def facing_angle(self):
+        """Z rotation applied to every key: 0 for north, pi for south."""
+
+        if self.led_facing == LED_FACING_NORTH:
+            return 0.0
+        if self.led_facing == LED_FACING_SOUTH:
+            return math.pi
+        raise ValueError(
+            f"led_facing must be {LED_FACING_NORTH!r} or {LED_FACING_SOUTH!r}, "
+            f"got {self.led_facing!r}"
+        )
 
 
 @dataclass
@@ -161,16 +208,29 @@ def keys_from_units(points, pitch=PITCH):
     return keys
 
 
-def layout_bounds(keys, margin=PLATE_MARGIN):
-    """Bounding rectangle (x_min, x_max, y_min, y_max) of all key cells."""
+def layout_bounds(keys, params=None):
+    """Bounding rectangle (x_min, x_max, y_min, y_max) of all key cells.
+
+    ``params`` carries the four independent margins: left/right along X and
+    top/bottom along Y (top is +Y, the function row side).
+    """
 
     if not keys:
         raise ValueError("layout has no keys")
+    params = params or PlateParams()
 
-    x_min = min(k.x - k.width * PITCH / 2.0 for k in keys) - margin
-    x_max = max(k.x + k.width * PITCH / 2.0 for k in keys) + margin
-    y_min = min(k.y - k.height * PITCH / 2.0 for k in keys) - margin
-    y_max = max(k.y + k.height * PITCH / 2.0 for k in keys) + margin
+    x_min = (
+        min(k.x - k.width * PITCH / 2.0 for k in keys) - params.margin_left
+    )
+    x_max = (
+        max(k.x + k.width * PITCH / 2.0 for k in keys) + params.margin_right
+    )
+    y_min = (
+        min(k.y - k.height * PITCH / 2.0 for k in keys) - params.margin_bottom
+    )
+    y_max = (
+        max(k.y + k.height * PITCH / 2.0 for k in keys) + params.margin_top
+    )
     return x_min, x_max, y_min, y_max
 
 
@@ -405,21 +465,29 @@ def _hole_cutter(placed, thickness):
 # --------------------------------------------------------------------------
 
 
-def build_top_plate(keys, name="top_plate", margin=PLATE_MARGIN):
+def build_top_plate(keys, name="top_plate", params=None):
     """Create the top plate object for ``keys``, centred on the origin.
 
-    The plate bottom sits on z = 0 and its top on z = PLATE_THICKNESS, so the
-    exported STL drops straight onto the printer bed.
+    ``params`` is a :class:`PlateParams` with the four margins and the LED
+    facing; when omitted the defaults (5 mm margins, north facing LED) are
+    used.  South facing adds 180 degrees to every key rotation, so the whole
+    switch footprint is flipped, not only the LED.  The plate bottom sits on
+    z = 0 and its top on z = PLATE_THICKNESS, so the exported STL drops
+    straight onto the printer bed.
     """
 
+    params = params or PlateParams()
+    facing = params.facing_angle()
     thickness = PLATE_THICKNESS
-    x_min, x_max, y_min, y_max = layout_bounds(keys, margin)
+    x_min, x_max, y_min, y_max = layout_bounds(keys, params)
     width = x_max - x_min
     depth = y_max - y_min
     centre_x = (x_min + x_max) / 2.0
     centre_y = (y_min + y_max) / 2.0
 
-    placed = [(k.x - centre_x, k.y - centre_y, k.rotation) for k in keys]
+    placed = [
+        (k.x - centre_x, k.y - centre_y, k.rotation + facing) for k in keys
+    ]
 
     bm = bmesh.new()
     _add_box(bm, (0.0, 0.0, thickness / 2.0), (width, depth, thickness))
@@ -492,11 +560,11 @@ def export_stl(obj, path):
     print(f"Exported {path} ({os.path.getsize(path)} bytes)")
 
 
-def generate_top_plate(keys, name, output_path, margin=PLATE_MARGIN):
+def generate_top_plate(keys, name, output_path, params=None):
     """Reset the scene, build the top plate and export it as STL."""
 
     reset_scene()
-    plate = build_top_plate(keys, name=name, margin=margin)
+    plate = build_top_plate(keys, name=name, params=params)
     dimensions = tuple(round(value, 2) for value in plate.dimensions)
     print(
         f"{name}: {len(keys)} keys, plate "
@@ -504,3 +572,125 @@ def generate_top_plate(keys, name, output_path, margin=PLATE_MARGIN):
     )
     export_stl(plate, output_path)
     return plate
+
+
+# --------------------------------------------------------------------------
+# Command line
+# --------------------------------------------------------------------------
+
+
+def script_arguments(argv=None):
+    """Return the script's own arguments.
+
+    Blender consumes everything up to ``--``; anything after it is meant for
+    the ``--python`` script.  ``argv`` can be passed explicitly for testing.
+    """
+
+    if argv is not None:
+        return list(argv)
+
+    raw = sys.argv
+    if "--" in raw:
+        return raw[raw.index("--") + 1 :]
+    return []
+
+
+def plate_argument_parser(description=None):
+    """Argparse parser with the shared top plate options."""
+
+    parser = argparse.ArgumentParser(description=description)
+    parser.add_argument(
+        "--led-facing",
+        choices=(LED_FACING_NORTH, LED_FACING_SOUTH),
+        default=LED_FACING_NORTH,
+        help="switch orientation, south flips the whole switch footprint "
+        "(default: %(default)s)",
+    )
+
+    padding = parser.add_argument_group(
+        "padding (mm)",
+        "The four sides default to PLATE_MARGIN (5 mm).  Later settings win: "
+        "--all, then --horizontal/--vertical, then the individual sides.",
+    )
+    padding.add_argument(
+        "--all",
+        "--padding-all",
+        dest="padding_all",
+        type=float,
+        metavar="MM",
+        help="set all four sides",
+    )
+    padding.add_argument(
+        "--horizontal",
+        "--padding-horizontal",
+        dest="padding_horizontal",
+        type=float,
+        metavar="MM",
+        help="set left and right",
+    )
+    padding.add_argument(
+        "--vertical",
+        "--padding-vertical",
+        dest="padding_vertical",
+        type=float,
+        metavar="MM",
+        help="set top and bottom",
+    )
+    padding.add_argument(
+        "--padding-left", dest="padding_left", type=float, metavar="MM"
+    )
+    padding.add_argument(
+        "--padding-right", dest="padding_right", type=float, metavar="MM"
+    )
+    padding.add_argument(
+        "--padding-top", dest="padding_top", type=float, metavar="MM"
+    )
+    padding.add_argument(
+        "--padding-bottom", dest="padding_bottom", type=float, metavar="MM"
+    )
+
+    parser.add_argument(
+        "--output",
+        metavar="PATH",
+        help="STL output path (default: next to the keyboard script)",
+    )
+    return parser
+
+
+def params_from_args(args):
+    """Build a :class:`PlateParams` from parsed CLI arguments."""
+
+    base = PLATE_MARGIN if args.padding_all is None else args.padding_all
+    left = right = top = bottom = base
+
+    if args.padding_horizontal is not None:
+        left = right = args.padding_horizontal
+    if args.padding_vertical is not None:
+        top = bottom = args.padding_vertical
+
+    if args.padding_left is not None:
+        left = args.padding_left
+    if args.padding_right is not None:
+        right = args.padding_right
+    if args.padding_top is not None:
+        top = args.padding_top
+    if args.padding_bottom is not None:
+        bottom = args.padding_bottom
+
+    try:
+        return PlateParams(
+            margin_left=left,
+            margin_right=right,
+            margin_top=top,
+            margin_bottom=bottom,
+            led_facing=args.led_facing,
+        )
+    except ValueError as exc:
+        raise SystemExit(f"error: {exc}") from exc
+
+
+def parse_plate_args(argv=None, description=None):
+    """Parse the script arguments (everything after Blender's ``--``)."""
+
+    parser = plate_argument_parser(description)
+    return parser.parse_args(script_arguments(argv))

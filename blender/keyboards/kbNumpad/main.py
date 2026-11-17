@@ -9,6 +9,10 @@ centre of their 2u footprint, exactly like the 1u keys.
 
 Run headlessly with:
     blender --background --python keyboards/kbNumpad/main.py
+
+Options go after Blender's ``--`` separator:
+    blender --background --python keyboards/kbNumpad/main.py -- \
+        --led-facing south --horizontal 8 --vertical 4 --output out.stl
 """
 
 import os
@@ -50,9 +54,13 @@ NUMPAD_KEYS = [
 ]
 
 
-def main():
+def main(argv=None):
+    args = kb.parse_plate_args(argv, description="kbNumpad top plate (17 keys)")
+    params = kb.params_from_args(args)
+    output_path = args.output or OUTPUT_PATH
+
     keys = kb.keys_from_units(NUMPAD_KEYS)
-    kb.generate_top_plate(keys, "kbNumpad_top_plate", OUTPUT_PATH)
+    kb.generate_top_plate(keys, "kbNumpad_top_plate", output_path, params=params)
     return 0
 
 

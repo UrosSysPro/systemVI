@@ -6,6 +6,10 @@ to this file.
 
 Run headlessly with:
     blender --background --python keyboards/kb75/main.py
+
+Options go after Blender's ``--`` separator:
+    blender --background --python keyboards/kb75/main.py -- \
+        --led-facing south --horizontal 8 --vertical 4 --output out.stl
 """
 
 import os
@@ -37,9 +41,13 @@ LAYOUT_ROWS = [
 ]
 
 
-def main():
+def main(argv=None):
+    args = kb.parse_plate_args(argv, description="kb75 top plate (80 keys)")
+    params = kb.params_from_args(args)
+    output_path = args.output or OUTPUT_PATH
+
     keys = kb.keys_from_rows(LAYOUT_ROWS)
-    kb.generate_top_plate(keys, "kb75_top_plate", OUTPUT_PATH)
+    kb.generate_top_plate(keys, "kb75_top_plate", output_path, params=params)
     return 0
 
 
