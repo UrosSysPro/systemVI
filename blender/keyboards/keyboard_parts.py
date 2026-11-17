@@ -145,23 +145,15 @@ class Key:
     """A key position on the plate.
 
     ``x``/``y`` are the switch centre in millimetres.  ``width``/``height``
-    describe the key cap footprint in keyboard units and are only used to
+    describe the key cap footprint in millimetres and are only used to
     compute the plate outline; the switch cutout itself is always 1u.
     """
 
     x: float
     y: float
-    width: float = 1.0
-    height: float = 1.0
+    width: float = PITCH
+    height: float = PITCH
     rotation: float = 0.0     # radians, for future rotated keys
-
-    @property
-    def unit_x(self):
-        return self.x / PITCH
-
-    @property
-    def unit_y(self):
-        return self.y / PITCH
 
 
 def keys_from_rows(rows, pitch=PITCH):
@@ -181,7 +173,14 @@ def keys_from_rows(rows, pitch=PITCH):
                 x += pitch
                 continue
             width = float(entry)
-            keys.append(Key(x + width * pitch / 2.0, y, width=width))
+            keys.append(
+                Key(
+                    x + width * pitch / 2.0,
+                    y,
+                    width=width * pitch,
+                    height=pitch,
+                )
+            )
             x += width * pitch
         y -= pitch
     return keys
@@ -203,7 +202,13 @@ def keys_from_units(points, pitch=PITCH):
         height = float(point[3]) if len(point) > 3 else 1.0
         rotation = math.radians(point[4]) if len(point) > 4 else 0.0
         keys.append(
-            Key(x * pitch, y * pitch, width=width, height=height, rotation=rotation)
+            Key(
+                x * pitch,
+                y * pitch,
+                width=width * pitch,
+                height=height * pitch,
+                rotation=rotation,
+            )
         )
     return keys
 
@@ -219,18 +224,10 @@ def layout_bounds(keys, params=None):
         raise ValueError("layout has no keys")
     params = params or PlateParams()
 
-    x_min = (
-        min(k.x - k.width * PITCH / 2.0 for k in keys) - params.margin_left
-    )
-    x_max = (
-        max(k.x + k.width * PITCH / 2.0 for k in keys) + params.margin_right
-    )
-    y_min = (
-        min(k.y - k.height * PITCH / 2.0 for k in keys) - params.margin_bottom
-    )
-    y_max = (
-        max(k.y + k.height * PITCH / 2.0 for k in keys) + params.margin_top
-    )
+    x_min = min(k.x - k.width / 2.0 for k in keys) - params.margin_left
+    x_max = max(k.x + k.width / 2.0 for k in keys) + params.margin_right
+    y_min = min(k.y - k.height / 2.0 for k in keys) - params.margin_bottom
+    y_max = max(k.y + k.height / 2.0 for k in keys) + params.margin_top
     return x_min, x_max, y_min, y_max
 
 
@@ -492,7 +489,6 @@ def build_top_plate(keys, name="top_plate", params=None):
     bm = bmesh.new()
     _add_box(bm, (0.0, 0.0, thickness / 2.0), (width, depth, thickness))
     plate = _mesh_object(name, bm)
-    plate.data.name = name
 
     cutters = [
         _switch_pocket_cutter(placed, thickness),
@@ -652,7 +648,8 @@ def plate_argument_parser(description=None):
     parser.add_argument(
         "--output",
         metavar="PATH",
-        help="STL output path (default: next to the keyboard script)",
+        help="base STL path; case and cover get _case/_cover suffixes "
+        "(default: next to the keyboard script)",
     )
     return parser
 
@@ -694,3 +691,18 @@ def parse_plate_args(argv=None, description=None):
 
     parser = plate_argument_parser(description)
     return parser.parse_args(script_arguments(argv))
+
+
+def output_paths(base_path, plate_default, case_default, cover_default):
+    """Resolve the three part paths for one keyboard.
+
+    ``--output`` (``base_path``) names the top plate STL; the case and cover
+    reuse its stem with ``_case`` and ``_cover`` suffixes, so generating
+    variants with different paddings/facings never overwrites another variant.
+    """
+
+    if base_path is None:
+        return plate_default, case_default, cover_default
+
+    stem, extension = os.path.splitext(base_path)
+    return base_path, f"{stem}_case{extension}", f"{stem}_cover{extension}"

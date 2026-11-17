@@ -1,8 +1,9 @@
-"""kb75 top plate: a 75% style keyboard, 80 keys, 16u x 6u.
+"""kb75: a 75% style keyboard, 80 keys, 16u x 6u.
 
-Builds the thick top plate (switch, RGB LED and hotswap socket cutouts are
-provided by keyboards/keyboard_parts.py) and writes kb75_top_plate.stl next
-to this file.
+Generates the three printed parts and writes them next to this file:
+kb75_top_plate.stl, kb75_case.stl and kb75_cover.stl.  The plate cutouts come
+from keyboards/keyboard_parts.py, the case and lid from
+keyboards/keyboard_case.py.
 
 Run headlessly with:
     blender --background --python keyboards/kb75/main.py
@@ -10,6 +11,9 @@ Run headlessly with:
 Options go after Blender's ``--`` separator:
     blender --background --python keyboards/kb75/main.py -- \
         --led-facing south --horizontal 8 --vertical 4 --output out.stl
+
+``--output`` names the top plate; the case and cover reuse its stem with
+_case and _cover suffixes.
 """
 
 import os
@@ -19,9 +23,12 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 KEYBOARDS_DIR = os.path.dirname(SCRIPT_DIR)
 sys.path.insert(0, KEYBOARDS_DIR)
 
+import keyboard_case as kc
 import keyboard_parts as kb
 
-OUTPUT_PATH = os.path.join(SCRIPT_DIR, "kb75_top_plate.stl")
+PLATE_PATH = os.path.join(SCRIPT_DIR, "kb75_top_plate.stl")
+CASE_PATH = os.path.join(SCRIPT_DIR, "kb75_case.stl")
+COVER_PATH = os.path.join(SCRIPT_DIR, "kb75_cover.stl")
 
 # 75% layout: 16 keyboard units wide, six rows.
 # A row is a list of key widths in units; None inserts a 1u gap.
@@ -42,12 +49,18 @@ LAYOUT_ROWS = [
 
 
 def main(argv=None):
-    args = kb.parse_plate_args(argv, description="kb75 top plate (80 keys)")
+    args = kb.parse_plate_args(
+        argv, description="kb75 (80 keys): top plate, case and cover"
+    )
     params = kb.params_from_args(args)
-    output_path = args.output or OUTPUT_PATH
+    plate_path, case_path, cover_path = kb.output_paths(
+        args.output, PLATE_PATH, CASE_PATH, COVER_PATH
+    )
 
     keys = kb.keys_from_rows(LAYOUT_ROWS)
-    kb.generate_top_plate(keys, "kb75_top_plate", output_path, params=params)
+    kb.generate_top_plate(keys, "kb75_top_plate", plate_path, params=params)
+    kc.generate_case(keys, "kb75_case", case_path, params=params)
+    kc.generate_cover(keys, "kb75_cover", cover_path, params=params)
     return 0
 
 
