@@ -59,8 +59,21 @@ def main(argv=None):
 
     keys = kb.keys_from_rows(LAYOUT_ROWS)
     kb.generate_top_plate(keys, "kb75_top_plate", plate_path, params=params)
-    kc.generate_case(keys, "kb75_case", case_path, params=params)
-    kc.generate_cover(keys, "kb75_cover", cover_path, params=params)
+    kc.generate_case(
+        keys,
+        "kb75_case",
+        case_path,
+        params=params,
+        compartment_height=args.compartment_height,
+        compartment_ramp=args.compartment_ramp,
+    )
+    kc.generate_cover(
+        keys,
+        "kb75_cover",
+        cover_path,
+        params=params,
+        compartment_height=args.compartment_height,
+    )
     return 0
 
 

@@ -72,8 +72,21 @@ def main(argv=None):
 
     keys = kb.keys_from_units(NUMPAD_KEYS)
     kb.generate_top_plate(keys, "kbNumpad_top_plate", plate_path, params=params)
-    kc.generate_case(keys, "kbNumpad_case", case_path, params=params)
-    kc.generate_cover(keys, "kbNumpad_cover", cover_path, params=params)
+    kc.generate_case(
+        keys,
+        "kbNumpad_case",
+        case_path,
+        params=params,
+        compartment_height=args.compartment_height,
+        compartment_ramp=args.compartment_ramp,
+    )
+    kc.generate_cover(
+        keys,
+        "kbNumpad_cover",
+        cover_path,
+        params=params,
+        compartment_height=args.compartment_height,
+    )
     return 0
 
 

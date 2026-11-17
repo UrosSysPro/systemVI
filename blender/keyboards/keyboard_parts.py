@@ -646,6 +646,21 @@ def plate_argument_parser(description=None):
     )
 
     parser.add_argument(
+        "--compartment-height",
+        type=float,
+        metavar="MM",
+        help="raised top compartment height; must be at least the case height "
+        "(default: the case rim height, i.e. not raised)",
+    )
+    parser.add_argument(
+        "--compartment-ramp",
+        type=float,
+        metavar="MM",
+        help="horizontal run of the slanted case edge up to the raised "
+        "compartment (default: keyboard_case.COMPARTMENT_RAMP)",
+    )
+
+    parser.add_argument(
         "--output",
         metavar="PATH",
         help="base STL path; case and cover get _case/_cover suffixes "
