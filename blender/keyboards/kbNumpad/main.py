@@ -84,6 +84,7 @@ def main(argv=None):
         compartment_ramp=args.compartment_ramp,
         wall=args.wall,
         compartment_depth=args.compartment_depth,
+        split_plate=args.split_plate,
     )
     generate.generate_keyboard(spec)
     return 0

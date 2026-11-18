@@ -50,6 +50,27 @@ build/<name>_case.stl
 build/<name>_cover.stl
 ```
 
+## Split top plate
+
+The top plate has geometry on both sides, so it can be exported as two
+horizontal halves with one flat side each:
+
+```sh
+blender --background --python-exit-code 1 --python keyboards/kb60/main.py -- --split-plate
+```
+
+This replaces the normal top plate with:
+
+```text
+build/<name>_top_plate_top_half.stl
+build/<name>_top_plate_bottom_half.stl
+```
+
+The cut is through the middle of the 1.5 mm switch/socket web at z = 3.75 mm.
+The top half has the switch pockets; the bottom half has the hotswap and LED
+pockets. Both halves must pass mesh validation before either is exported. The
+case and cover are still generated normally.
+
 Generate the custom stabilizer slider with:
 
 ```sh

@@ -168,7 +168,8 @@ blender --background --python-exit-code 1 --python keyboards/kb60/main.py -- \
 | `--compartment-depth MM` | Internal north/south depth of the bay (default 17.5 mm). |
 | `--wall MM` | Case outer wall thickness (default 7 mm). |
 | `--compartment-ramp MM` | Horizontal run of the raised-compartment slope; 0 gives a vertical step. |
-| `--output PATH` | Top-plate path; case/cover reuse the stem with `_case`/`_cover`. |
+| `--split-plate` | Export the top plate as two horizontal halves instead of one STL; case and cover are unchanged. |
+| `--output PATH` | Base STL path; case/cover reuse the stem with `_case`/`_cover`; split mode adds `_top_half`/`_bottom_half`. |
 
 Padding precedence is `--all`, then `--horizontal`/`--vertical`, then the
 individual sides.
@@ -194,6 +195,18 @@ Examples: `build/kb75_top_plate.stl`, `build/kb100_case.stl`,
 
 writes `build/kb60_south.stl`, `build/kb60_south_case.stl` and
 `build/kb60_south_cover.stl`.
+
+With `--split-plate`, the normal top plate is replaced by:
+
+```text
+build/<name>_top_plate_top_half.stl
+build/<name>_top_plate_bottom_half.stl
+```
+
+The split is through the middle of the 1.5 mm switch/socket web at z = 3.75 mm.
+The top half contains the switch pockets; the bottom half contains the
+hotswap/LED pockets. Both halves are validated strictly before export. The case
+and cover are still exported unchanged.
 
 The standalone stabilizer generator writes:
 
@@ -431,6 +444,9 @@ spec = generate.KeyboardSpec(
     params=params,
     compartment_height=args.compartment_height,
     compartment_ramp=args.compartment_ramp,
+    wall=args.wall,
+    compartment_depth=args.compartment_depth,
+    split_plate=args.split_plate,
 )
 generate.generate_keyboard(spec)
 ```
@@ -439,7 +455,8 @@ generate.generate_keyboard(spec)
 
 - `blender --background --python-exit-code 1 --python keyboards/<name>/main.py`
   exits 0.
-- Three STLs are created under `build/`.
+- Default mode creates three STLs under `build/`; split mode creates the two
+  plate halves plus the case and cover.
 - Every part passes strict mesh validation (manifold, no zero-area faces).
 - Dimensions are plausible and the parts align.
 - North and south variants both generate if the layout is intended to support

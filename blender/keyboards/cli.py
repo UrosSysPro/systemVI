@@ -112,10 +112,17 @@ def argument_parser(description=None):
     )
 
     parser.add_argument(
+        "--split-plate",
+        action="store_true",
+        help="export the top plate as separate top and bottom halves instead "
+        "of one STL; case and cover are unchanged",
+    )
+    parser.add_argument(
         "--output",
         metavar="PATH",
         help="base STL path; case and cover get _case/_cover suffixes "
-        "(default: build/<name>_top_plate.stl next to the repository)",
+        "(default: build/<name>_top_plate.stl next to the repository); "
+        "split mode writes _top_half/_bottom_half instead",
     )
     return parser
 

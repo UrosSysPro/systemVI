@@ -12,6 +12,7 @@ same layout, hardware and mesh modules.
 from __future__ import annotations
 
 import math
+import os
 from dataclasses import dataclass, field
 
 import case
@@ -35,6 +36,18 @@ class KeyboardSpec:
     compartment_ramp: float | None = None
     wall: float | None = None
     compartment_depth: float | None = None
+    split_plate: bool = False
+
+
+def _plate_split_paths(plate_path):
+    """Derive the two split-plate paths from the normal plate path."""
+
+    stem, extension = os.path.splitext(plate_path)
+    extension = extension or ".stl"
+    return (
+        f"{stem}_top_half{extension}",
+        f"{stem}_bottom_half{extension}",
+    )
 
 
 def _print_dimensions(label, obj):
@@ -72,6 +85,12 @@ def generate_keyboard(spec):
         name=f"{spec.name}_top_plate",
         params=spec.params,
     )
+    split_halves = None
+    if spec.split_plate:
+        split_halves = plate.split_top_plate(
+            top_plate,
+            name=f"{spec.name}_top_plate",
+        )
     case_obj = case.build_case(
         spec.keys,
         name=f"{spec.name}_case",
@@ -90,11 +109,21 @@ def generate_keyboard(spec):
         compartment_depth=spec.compartment_depth,
     )
 
-    _print_dimensions(f"{spec.name}: plate", top_plate)
+    if split_halves is None:
+        _print_dimensions(f"{spec.name}: plate", top_plate)
+    else:
+        top_half, bottom_half = split_halves
+        _print_dimensions(f"{spec.name}: top half", top_half)
+        _print_dimensions(f"{spec.name}: bottom half", bottom_half)
     _print_dimensions(f"{spec.name}: case", case_obj)
     _print_dimensions(f"{spec.name}: cover", cover_obj)
 
-    export.export_stl(top_plate, spec.plate_path)
+    if split_halves is None:
+        export.export_stl(top_plate, spec.plate_path)
+    else:
+        top_path, bottom_path = _plate_split_paths(spec.plate_path)
+        export.export_stl(split_halves[0], top_path)
+        export.export_stl(split_halves[1], bottom_path)
     export.export_stl(case_obj, spec.case_path)
     export.export_stl(cover_obj, spec.cover_path)
 
