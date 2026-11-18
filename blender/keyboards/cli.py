@@ -43,7 +43,7 @@ def argument_parser(description=None):
 
     padding = parser.add_argument_group(
         "padding (mm)",
-        "The four sides default to PLATE_MARGIN (5 mm).  Later settings win: "
+        "The four sides default to PLATE_MARGIN (2 mm).  Later settings win: "
         "--all, then --horizontal/--vertical, then the individual sides.",
     )
     padding.add_argument(
@@ -88,7 +88,20 @@ def argument_parser(description=None):
         type=float,
         metavar="MM",
         help="raised top compartment height; must be at least the case rim "
-        "height (default: the case rim, i.e. not raised)",
+        "height (default: 27.5 mm, raised)",
+    )
+    parser.add_argument(
+        "--compartment-depth",
+        type=float,
+        metavar="MM",
+        help="internal north/south depth of the electronics bay "
+        "(default: 17.5 mm)",
+    )
+    parser.add_argument(
+        "--wall",
+        type=float,
+        metavar="MM",
+        help="case outer wall thickness (default: 7 mm)",
     )
     parser.add_argument(
         "--compartment-ramp",

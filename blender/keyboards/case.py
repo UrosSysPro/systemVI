@@ -5,10 +5,10 @@ and rounded corners.  The top plate drops into a pocket that the case wall
 wraps on the left, right and bottom (south) sides.  On the top (north) side the
 case extends into an electronics bay for the controller and batteries.
 
-``DEFAULT_COMPARTMENT_HEIGHT`` sets the top of that bay (default: the case
-rim, i.e. not raised).  When it is higher than the case rim, the case's outer
-edges are slanted over ``COMPARTMENT_RAMP`` from the rim height up to the
-compartment height.
+``DEFAULT_COMPARTMENT_HEIGHT`` sets the top of that bay.  The default is a
+raised 27.5 mm compartment; the case rim remains at 15 mm.  When the compartment
+is higher than the rim, the case's outer edges are slanted over
+``COMPARTMENT_RAMP`` from the rim height up to the compartment height.
 
 This module builds the case only.  The separate cover lives in
 :mod:`cover`; both share :func:`case_metrics` so they always fit the same bay.
@@ -31,14 +31,14 @@ import mesh
 # Case dimensions
 # --------------------------------------------------------------------------
 
-WALL = 4.0                 # outer wall thickness
+WALL = 7.0                 # outer wall thickness
 FLOOR = 3.0                # case floor thickness
 CHAMFER = 1.5              # 45 degree chamfer on the top and bottom rims
 CORNER_RADIUS = 7.0        # rounded corner radius in plan view
 CORNER_SEGMENTS = 8        # segments per rounded corner
 
 PLATE_CLEARANCE = 0.25     # per side, plate pocket vs top plate
-COMPARTMENT_DEPTH = 40.0   # internal north/south depth of the bay
+COMPARTMENT_DEPTH = 17.5   # internal north/south depth of the bay
 
 LID_THICKNESS = 2.5        # cover top thickness
 LID_LEDGE = 1.5            # shelf around the bay the cover rests on
@@ -70,7 +70,7 @@ USB_PORT_FROM_LEFT = 12.0  # slot centre from the bay's inner west wall
 PLATE_TOP = FLOOR + hardware.PLATE_THICKNESS
 CASE_HEIGHT = PLATE_TOP + LID_THICKNESS
 
-DEFAULT_COMPARTMENT_HEIGHT = CASE_HEIGHT
+DEFAULT_COMPARTMENT_HEIGHT = 27.5  # raised bay height
 COMPARTMENT_HEIGHT = DEFAULT_COMPARTMENT_HEIGHT  # compatibility name
 COMPARTMENT_RAMP = 20.0    # horizontal run of the slanted edge
 COVER_WALL = 2.5           # cover front wall thickness
@@ -98,7 +98,13 @@ class CaseMetrics:
     usb_center: tuple
 
 
-def case_metrics(keys, params=None, compartment_height=None):
+def case_metrics(
+    keys,
+    params=None,
+    compartment_height=None,
+    wall=None,
+    compartment_depth=None,
+):
     """Compute every dimension of the case for one keyboard layout."""
 
     height = (
@@ -110,6 +116,15 @@ def case_metrics(keys, params=None, compartment_height=None):
         raise ValueError(
             "compartment_height must be at least CASE_HEIGHT "
             f"({CASE_HEIGHT} mm), got {height} mm"
+        )
+
+    wall = WALL if wall is None else wall
+    bay_depth = COMPARTMENT_DEPTH if compartment_depth is None else compartment_depth
+    if not math.isfinite(wall) or wall <= 0.0:
+        raise ValueError(f"wall must be a positive number, got {wall}")
+    if not math.isfinite(bay_depth) or bay_depth <= 0.0:
+        raise ValueError(
+            f"compartment_depth must be a positive number, got {bay_depth}"
         )
 
     params = params or layout.PlateParams()
@@ -126,16 +141,16 @@ def case_metrics(keys, params=None, compartment_height=None):
         half_d + PLATE_CLEARANCE,
     )
 
-    west = pocket.x0 - WALL
-    east = pocket.x1 + WALL
-    south = pocket.y0 - WALL
+    west = pocket.x0 - wall
+    east = pocket.x1 + wall
+    south = pocket.y0 - wall
 
     # The bay starts at the plate pocket's north edge, so the plate is wrapped
     # by the case on three sides only; the cover's front wall closes the bay
     # against the top row of keys.
     bay_south = pocket.y1
-    bay_north = bay_south + COMPARTMENT_DEPTH
-    north = bay_north + WALL
+    bay_north = bay_south + bay_depth
+    north = bay_north + wall
 
     opening = layout.Rect(pocket.x0, pocket.x1, bay_south, bay_north)
     cavity = layout.Rect(
@@ -432,6 +447,8 @@ def build_case(
     name="case",
     compartment_height=None,
     compartment_ramp=None,
+    wall=None,
+    compartment_depth=None,
 ):
     """Build the case; the plate pocket is centred like the top plate."""
 
@@ -440,7 +457,13 @@ def build_case(
         raise ValueError(
             f"compartment_ramp must be a non-negative number, got {ramp}"
         )
-    metrics = case_metrics(keys, params, compartment_height=compartment_height)
+    metrics = case_metrics(
+        keys,
+        params,
+        compartment_height=compartment_height,
+        wall=wall,
+        compartment_depth=compartment_depth,
+    )
 
     bm = bmesh.new()
     _add_case_shell(bm, metrics)

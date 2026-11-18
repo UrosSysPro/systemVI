@@ -19,6 +19,8 @@ def build_cover(
     params=None,
     name="cover",
     compartment_height=None,
+    wall=None,
+    compartment_depth=None,
 ):
     """Build the cover with an L-shaped side profile.
 
@@ -29,7 +31,11 @@ def build_cover(
     """
 
     metrics = case.case_metrics(
-        keys, params, compartment_height=compartment_height
+        keys,
+        params,
+        compartment_height=compartment_height,
+        wall=wall,
+        compartment_depth=compartment_depth,
     )
     x0, x1 = metrics.cover.x0, metrics.cover.x1
     y0, y1 = metrics.cover.y0, metrics.cover.y1

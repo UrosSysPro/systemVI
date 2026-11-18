@@ -82,6 +82,8 @@ def main(argv=None):
         params=params,
         compartment_height=args.compartment_height,
         compartment_ramp=args.compartment_ramp,
+        wall=args.wall,
+        compartment_depth=args.compartment_depth,
     )
     generate.generate_keyboard(spec)
     return 0

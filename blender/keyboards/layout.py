@@ -15,7 +15,7 @@ import math
 from dataclasses import dataclass
 
 PITCH = 19.05                 # 1u
-PLATE_MARGIN = 5.0            # default value for each of the four margins
+PLATE_MARGIN = 2.0            # default value for each of the four margins
 
 LED_FACING_NORTH = "north"    # switch in its default orientation
 LED_FACING_SOUTH = "south"    # whole switch footprint rotated 180 degrees

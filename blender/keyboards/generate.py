@@ -33,6 +33,8 @@ class KeyboardSpec:
     params: layout.PlateParams = field(default_factory=layout.PlateParams)
     compartment_height: float | None = None
     compartment_ramp: float | None = None
+    wall: float | None = None
+    compartment_depth: float | None = None
 
 
 def _print_dimensions(label, obj):
@@ -59,6 +61,8 @@ def generate_keyboard(spec):
         spec.keys,
         spec.params,
         compartment_height=spec.compartment_height,
+        wall=spec.wall,
+        compartment_depth=spec.compartment_depth,
     )
 
     export.reset_scene()
@@ -74,12 +78,16 @@ def generate_keyboard(spec):
         params=spec.params,
         compartment_height=spec.compartment_height,
         compartment_ramp=spec.compartment_ramp,
+        wall=spec.wall,
+        compartment_depth=spec.compartment_depth,
     )
     cover_obj = cover.build_cover(
         spec.keys,
         name=f"{spec.name}_cover",
         params=spec.params,
         compartment_height=spec.compartment_height,
+        wall=spec.wall,
+        compartment_depth=spec.compartment_depth,
     )
 
     _print_dimensions(f"{spec.name}: plate", top_plate)
