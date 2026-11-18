@@ -77,6 +77,9 @@ STEM_CROSS_WIDTH = 1.1
 STAB_MIN_WIDTH = 2.0 * layout.PITCH
 STAB_SMALL_OFFSET = 11.93    # Cherry 2u/2.25u/2.75u spacing is 23.86 mm
 
+STAB_HORIZONTAL = "horizontal"
+STAB_VERTICAL = "vertical"
+
 # --------------------------------------------------------------------------
 # Spacing and wire specifications
 # --------------------------------------------------------------------------
@@ -94,6 +97,20 @@ class WireSpec:
     length: float
 
 
+def stabilizer_orientation(key_width, key_height):
+    """Return the stabilizer axis for a key, or None.
+
+    Wide keys use a horizontal stabilizer.  A 1u-wide, 2u-tall key such as a
+    numpad + or Enter uses the same part rotated 90 degrees.
+    """
+
+    if key_width >= 2.0 * layout.PITCH and key_width >= key_height:
+        return STAB_HORIZONTAL
+    if key_height >= 2.0 * layout.PITCH:
+        return STAB_VERTICAL
+    return None
+
+
 def wire_offset(key_width):
     """Return the stabilizer centre offset from the switch centre, or None."""
 
@@ -105,10 +122,12 @@ def wire_offset(key_width):
     return (units - 1.0) * layout.PITCH / 2.0
 
 
-def is_stabilized(key_width):
-    """Whether a keycap of ``key_width`` millimetres needs stabilizers."""
+def is_stabilized(key_width, key_height=None):
+    """Whether a key of the given size needs stabilizers."""
 
-    return wire_offset(key_width) is not None
+    if key_height is None:
+        return wire_offset(key_width) is not None
+    return stabilizer_orientation(key_width, key_height) is not None
 
 
 def wire_spec(key_width):
@@ -168,23 +187,33 @@ def _transform(points, x, y, angle):
 def plate_cutters(placed, thickness):
     """Return the plate cutters for all stabilized keys.
 
-    ``placed`` entries are ``(x, y, rotation, width)`` in plate coordinates.
+    ``placed`` entries are ``(x, y, rotation, width, height)`` in plate
+    coordinates.  Wide keys use a horizontal stabilizer; tall 1u keys use the
+    same geometry rotated 90 degrees so the wire runs east into the margin.
     Two cutter objects are returned: all square post holes and all wire
     channels.  They are subtracted separately because they overlap.
     """
 
     holes = []
     channels = []
-    for x, y, rotation, width in placed:
-        offset = wire_offset(width)
-        if offset is None:
+    for x, y, rotation, width, height in placed:
+        orientation = stabilizer_orientation(width, height)
+        if orientation is None:
             continue
 
-        for sign in (-1.0, 1.0):
-            dx, dy = _rotate((sign * offset, 0.0), rotation)
-            holes.append((x + dx, y + dy, rotation))
+        dimension = width if orientation == STAB_HORIZONTAL else height
+        offset = wire_offset(dimension)
+        local_rotation = rotation
+        if orientation == STAB_VERTICAL:
+            local_rotation -= math.pi / 2.0
 
-        channels.append(_transform(_channel_profile(offset), x, y, rotation))
+        for sign in (-1.0, 1.0):
+            dx, dy = _rotate((sign * offset, 0.0), local_rotation)
+            holes.append((x + dx, y + dy, local_rotation))
+
+        channels.append(
+            _transform(_channel_profile(offset), x, y, local_rotation)
+        )
 
     if not holes:
         return []

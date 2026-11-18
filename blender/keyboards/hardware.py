@@ -48,8 +48,10 @@ MX_LEG_HOLE_DIAMETER = 2.0
 # Hotswap socket (Gateron / Kailh type), one per switch
 # --------------------------------------------------------------------------
 
-SOCKET_POCKET_LENGTH = 12.0      # X
-SOCKET_POCKET_WIDTH = 9.0        # Y
+SOCKET_POCKET_LENGTH = 12.0      # X, known-good body envelope
+SOCKET_POCKET_WIDTH = 9.0        # Y, known-good body envelope
+SOCKET_CONTACT_SIZE = 2.0        # protruding metal contact tab
+SOCKET_CONTACT_EMBED = 0.2       # overlap into the body pocket
 SOCKET_POCKET_DEPTH = 3.0
 
 # --------------------------------------------------------------------------
@@ -70,9 +72,9 @@ WEB_THICKNESS = 1.5              # solid floor between switch and socket/LED
 PLATE_THICKNESS = MX_POCKET_DEPTH + WEB_THICKNESS + SOCKET_POCKET_DEPTH
 EPS = 0.5                        # cutters overshoot the plate faces
 
-# The hotswap body pocket is a separate clearance from the contact holes and
-# stays centred on the original footprint.  Only the two contact holes are
-# mirrored on X to match the physical pads.
+# The hotswap body pocket is the proven 12 x 9 mm envelope.  Only the higher
+# pin gets a side extension for the protruding metal tab; the lower pin already
+# clears the original pocket.
 _SOCKET_MID_OFFSET = (-0.635, -3.81)
 
 
@@ -138,19 +140,38 @@ def switch_pocket_cutter(placed, thickness):
     return mesh.mesh_object("switch_pockets", bm)
 
 
-def socket_pocket_cutter(placed):
-    """One cutter mesh containing every hotswap-socket pocket."""
+def socket_pocket_cutters(placed):
+    """Body pocket plus one tab extension on the higher pin's side."""
 
-    bm = bmesh.new()
+    body_bm = bmesh.new()
     for x, y, rotation in placed:
         ox, oy = _rotate(_SOCKET_MID_OFFSET, rotation)
         mesh.add_box(
-            bm,
+            body_bm,
             (x + ox, y + oy, (SOCKET_POCKET_DEPTH - EPS) / 2.0),
             (SOCKET_POCKET_LENGTH, SOCKET_POCKET_WIDTH, SOCKET_POCKET_DEPTH + EPS),
             rotation,
         )
-    return mesh.mesh_object("socket_pockets", bm)
+    body = mesh.mesh_object("socket_pockets", body_bm)
+
+    half_length = SOCKET_POCKET_LENGTH / 2.0
+    tab_width = SOCKET_CONTACT_SIZE + SOCKET_CONTACT_EMBED
+    tab_centre = half_length + (SOCKET_CONTACT_SIZE - SOCKET_CONTACT_EMBED) / 2.0
+    tab_x = _SOCKET_MID_OFFSET[0] + tab_centre
+    tab_y = MX_PIN_POSITIONS[0][1]
+
+    tab_bm = bmesh.new()
+    for x, y, rotation in placed:
+        ox, oy = _rotate((tab_x, tab_y), rotation)
+        mesh.add_box(
+            tab_bm,
+            (x + ox, y + oy, (SOCKET_POCKET_DEPTH - EPS) / 2.0),
+            (tab_width, SOCKET_CONTACT_SIZE, SOCKET_POCKET_DEPTH + EPS),
+            rotation,
+        )
+    tab = mesh.mesh_object("socket_tab", tab_bm)
+
+    return [body, tab]
 
 
 def led_pocket_cutter(placed):

@@ -6,9 +6,11 @@ into the top plate automatically by the keyboard generators.
 
 The script also prints the wire length and bend data for standard wide-key
 widths.  The wire is a flat U with two 90 degree bends; the straight span is
-``2 * offset`` and each horizontal leg is ``SPAN_OFFSET_Y`` long.  Each slider
-bottom has a solid floor with a slanted hole that feeds the wire into the
-internal capture slot.
+``2 * offset`` and each horizontal leg is ``SPAN_OFFSET_Y`` long.  Vertical
+1x2u keys use the same 2u wire rotated 90 degrees, and the same slider rotated
+90 degrees clockwise so its wire slot opens east.  Each slider bottom has a
+solid floor with a slanted hole that feeds the wire into the internal capture
+slot.
 
 Generates:
     build/stabilizer_slider.stl
@@ -74,6 +76,10 @@ def main(argv=None):
         f"{NAME}: {dimensions[0]} x {dimensions[1]} x {dimensions[2]} mm"
     )
     print("Print two sliders per stabilized key.")
+    print(
+        "For vertical 1x2u keys, rotate each slider 90 degrees clockwise "
+        "so the wire slot opens east."
+    )
     print(
         f"Wire: {stabilizer.WIRE_DIAMETER:.1f} mm solid copper, "
         f"bend radius {stabilizer.WIRE_BEND_RADIUS:.1f} mm, "

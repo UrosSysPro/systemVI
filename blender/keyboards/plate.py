@@ -45,6 +45,7 @@ def build_top_plate(keys, name="top_plate", params=None):
             key.y - bounds.centre_y,
             key.rotation + facing,
             key.width,
+            key.height,
         )
         for key in keys
     ]
@@ -57,12 +58,14 @@ def build_top_plate(keys, name="top_plate", params=None):
     )
     plate = mesh.mesh_object(name, bm)
 
+    socket_body, socket_tab = hardware.socket_pocket_cutters(placed)
     cutters = [
         hardware.switch_pocket_cutter(placed, thickness),
-        hardware.socket_pocket_cutter(placed),
+        socket_body,
         hardware.led_pocket_cutter(placed),
         hardware.led_light_hole_cutter(placed, thickness),
         hardware.hole_cutter(placed, thickness),
+        socket_tab,
     ]
     cutters.extend(stabilizer.plate_cutters(stabilizer_placed, thickness))
     for cutter in cutters:

@@ -44,8 +44,27 @@ LID_THICKNESS = 2.5        # cover top thickness
 LID_LEDGE = 1.5            # shelf around the bay the cover rests on
 LID_CLEARANCE = 0.2        # per side, cover vs bay opening
 
-USB_PORT_WIDTH = 9.2       # USB-C connector plus body clearance
+USB_PORT_WIDTH = 9.2       # USB-C plug opening
 USB_PORT_HEIGHT = 3.4
+USB_PORT_RADIUS = 1.0      # rounded rectangle corner radius
+USB_RING_WIDTH = 1.5       # flat seat ring around the port
+USB_BEVEL = 2.0            # 45 degree bevel depth and size difference
+USB_RECESS_WIDTH = (
+    USB_PORT_WIDTH + 2.0 * USB_RING_WIDTH + 2.0 * USB_BEVEL
+)
+USB_RECESS_HEIGHT = (
+    USB_PORT_HEIGHT + 2.0 * USB_RING_WIDTH + 2.0 * USB_BEVEL
+)
+USB_RECESS_RADIUS = USB_PORT_RADIUS + USB_RING_WIDTH + USB_BEVEL
+USB_BEVEL_INNER_WIDTH = USB_PORT_WIDTH + 2.0 * USB_RING_WIDTH
+USB_BEVEL_INNER_HEIGHT = USB_PORT_HEIGHT + 2.0 * USB_RING_WIDTH
+USB_BEVEL_INNER_RADIUS = USB_PORT_RADIUS + USB_RING_WIDTH
+USB_RECESS_DEPTH = USB_BEVEL
+USB_PLATFORM_WIDTH = USB_RECESS_WIDTH
+USB_PLATFORM_DEPTH = 6.0   # inward shelf depth for glue
+USB_PLATFORM_THICKNESS = 2.5
+USB_PLATFORM_EMBED = 0.5   # overlap into the inner wall for a clean union
+USB_PLATFORM_TOP_OVERLAP = 0.2  # shaved flush by the through opening cutter
 USB_PORT_FROM_LEFT = 12.0  # slot centre from the bay's inner west wall
 
 PLATE_TOP = FLOOR + hardware.PLATE_THICKNESS
@@ -201,6 +220,23 @@ def _add_loft(bm, rings):
             bm.faces.new((lower[i], lower[j], upper[j], upper[i]))
 
 
+def _add_loft_y(bm, rings):
+    """Close equal-length X/Z rings (``(y, points)``) into a solid."""
+
+    vertex_rings = []
+    for y, points in rings:
+        vertex_rings.append([bm.verts.new((x, y, z)) for x, z in points])
+
+    bm.faces.new(tuple(vertex_rings[0]))
+    bm.faces.new(tuple(reversed(vertex_rings[-1])))
+
+    count = len(vertex_rings[0])
+    for lower, upper in zip(vertex_rings, vertex_rings[1:]):
+        for i in range(count):
+            j = (i + 1) % count
+            bm.faces.new((lower[i], lower[j], upper[j], upper[i]))
+
+
 def _add_case_shell(bm, metrics):
     """Outer solid: rounded rectangle with 45 degree top and bottom chamfers."""
 
@@ -311,20 +347,78 @@ def _compartment_ramp_cutter(metrics, ramp):
     return mesh.mesh_object("compartment_ramp", bm)
 
 
+def _usb_profile(x, z, width, height, radius):
+    return _rounded_rect_points(
+        x, z, width / 2.0, height / 2.0, radius, CORNER_SEGMENTS
+    )
+
+
 def _usb_port_cutter(metrics):
+    """Rounded through-opening for the USB-C plug."""
+
     x, z = metrics.usb_center
-    rect = layout.Rect(
-        x - USB_PORT_WIDTH / 2.0,
-        x + USB_PORT_WIDTH / 2.0,
+    profile = _usb_profile(
+        x, z, USB_PORT_WIDTH, USB_PORT_HEIGHT, USB_PORT_RADIUS
+    )
+    bm = bmesh.new()
+    mesh.add_prism_y(
+        bm,
+        profile,
         metrics.bay_cavity.y1 - USB_CUTTER_OVERLAP,
         metrics.north + USB_CUTTER_OVERLAP,
     )
-    return _box_cutter(
-        "usb_port",
-        rect,
-        z - USB_PORT_HEIGHT / 2.0,
-        z + USB_PORT_HEIGHT / 2.0,
+    return mesh.mesh_object("usb_port", bm)
+
+
+def _usb_bevel_cutter(metrics):
+    """Beveled entrance and flat seat ring around the USB-C port.
+
+    The bevel runs from the larger outer opening to the ring at depth.  The
+    through cutter then removes the smaller port, leaving the flat ring as the
+    bottom of the recess.
+    """
+
+    x, z = metrics.usb_center
+    outer = _usb_profile(
+        x, z, USB_RECESS_WIDTH, USB_RECESS_HEIGHT, USB_RECESS_RADIUS
     )
+    ring = _usb_profile(
+        x,
+        z,
+        USB_BEVEL_INNER_WIDTH,
+        USB_BEVEL_INNER_HEIGHT,
+        USB_BEVEL_INNER_RADIUS,
+    )
+    rings = (
+        (metrics.north + USB_CUTTER_OVERLAP, outer),
+        (metrics.north, outer),
+        (metrics.north - USB_RECESS_DEPTH, ring),
+    )
+    bm = bmesh.new()
+    _add_loft_y(bm, rings)
+    return mesh.mesh_object("usb_bevel", bm)
+
+
+def _usb_platform(metrics):
+    """Shelf inside the bay, under the USB opening, for gluing the connector."""
+
+    x, z = metrics.usb_center
+    z_top = z - USB_PORT_HEIGHT / 2.0 + USB_PLATFORM_TOP_OVERLAP
+    z_bottom = z_top - USB_PLATFORM_THICKNESS
+    y0 = metrics.bay_cavity.y1 - USB_PLATFORM_DEPTH
+    y1 = metrics.bay_cavity.y1 + USB_PLATFORM_EMBED
+
+    bm = bmesh.new()
+    mesh.add_box(
+        bm,
+        (x, (y0 + y1) / 2.0, (z_bottom + z_top) / 2.0),
+        (
+            USB_PLATFORM_WIDTH,
+            y1 - y0,
+            z_top - z_bottom,
+        ),
+    )
+    return mesh.mesh_object("usb_platform", bm)
 
 
 # --------------------------------------------------------------------------
@@ -356,12 +450,17 @@ def build_case(
         _plate_pocket_cutter(metrics),
         _bay_cavity_cutter(metrics),
         _bay_opening_cutter(metrics),
-        _usb_port_cutter(metrics),
     ]
     if metrics.height > CASE_HEIGHT:
         cutters.insert(0, _compartment_ramp_cutter(metrics, ramp))
 
     for cutter in cutters:
+        mesh.difference(case, cutter)
+
+    platform = _usb_platform(metrics)
+    mesh.union(case, platform)
+
+    for cutter in (_usb_port_cutter(metrics), _usb_bevel_cutter(metrics)):
         mesh.difference(case, cutter)
 
     mesh.check_mesh(name, case, strict=True)
