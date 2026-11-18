@@ -25,8 +25,8 @@ import mesh
 # --------------------------------------------------------------------------
 
 MX_POCKET = 14.0                 # switch pocket band at the plate surface
-MX_POCKET_CLIP_X = 15.0          # clip relief below the band, X direction
-MX_POCKET_CLIP_Y = 14.0          # clip relief below the band, Y direction
+MX_POCKET_CLIP_X = 14.0          # clip relief below the band, X direction
+MX_POCKET_CLIP_Y = 15.0          # clip relief below the band, Y direction
 CLIP_RELIEF_DEPTH = 1.0          # 14x14 band depth before the clips expand
 MX_POCKET_DEPTH = 5.0            # encloses the whole lower switch housing
 MX_CENTER_POST_DIAMETER = 4.2    # centre post is 4.0 mm

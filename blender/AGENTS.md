@@ -242,7 +242,8 @@ does for its main block, navigation cluster and numpad.
 
 - Stepped 5-pin MX pocket.
 - `14 x 14 mm` band at the surface.
-- `15 x 14 mm` clip relief 1 mm below the surface.
+- `14 x 15 mm` clip relief 1 mm below the surface; the switch clips are on the
+  north and south edges, so the extra clearance is in Y.
 - Pocket depth 5 mm.
 - 4.2 mm centre-post hole, two 3.2 mm pin holes and two 2.0 mm leg holes through
   the plate floor.
