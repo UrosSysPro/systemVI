@@ -52,6 +52,32 @@ def add_cylinder(bm, centre_xy, radius, z_min, z_max, segments=CYLINDER_SEGMENTS
         bm.faces.new((bottom[i], bottom[j], top[j], top[i]))
 
 
+def add_cylinder_between(bm, start, end, radius, segments=CYLINDER_SEGMENTS):
+    """Append a closed cylinder between two 3D points."""
+
+    start = Vector(start)
+    end = Vector(end)
+    direction = end - start
+    length = direction.length
+    if length <= 0.0:
+        return
+
+    ret = bmesh.ops.create_cone(
+        bm,
+        cap_ends=True,
+        cap_tris=False,
+        segments=segments,
+        radius1=radius,
+        radius2=radius,
+        depth=length,
+    )
+    matrix = (
+        Matrix.Translation((start + end) / 2.0)
+        @ direction.to_track_quat("Z", "Y").to_matrix().to_4x4()
+    )
+    bmesh.ops.transform(bm, matrix=matrix, verts=ret["verts"])
+
+
 def add_prism_x(bm, profile_yz, x0, x1):
     """Extrude a closed Y/Z profile along X into a solid."""
 
@@ -62,6 +88,36 @@ def add_prism_x(bm, profile_yz, x0, x1):
     bm.faces.new(tuple(reversed(ring1)))
 
     count = len(profile_yz)
+    for i in range(count):
+        j = (i + 1) % count
+        bm.faces.new((ring0[i], ring0[j], ring1[j], ring1[i]))
+
+
+def add_prism_y(bm, profile_xz, y0, y1):
+    """Extrude a closed X/Z profile along Y into a solid."""
+
+    ring0 = [bm.verts.new((x, y0, z)) for x, z in profile_xz]
+    ring1 = [bm.verts.new((x, y1, z)) for x, z in profile_xz]
+
+    bm.faces.new(tuple(ring0))
+    bm.faces.new(tuple(reversed(ring1)))
+
+    count = len(profile_xz)
+    for i in range(count):
+        j = (i + 1) % count
+        bm.faces.new((ring0[i], ring0[j], ring1[j], ring1[i]))
+
+
+def add_prism_z(bm, profile_xy, z0, z1):
+    """Extrude a closed X/Y profile along Z into a solid."""
+
+    ring0 = [bm.verts.new((x, y, z0)) for x, y in profile_xy]
+    ring1 = [bm.verts.new((x, y, z1)) for x, y in profile_xy]
+
+    bm.faces.new(tuple(ring0))
+    bm.faces.new(tuple(reversed(ring1)))
+
+    count = len(profile_xy)
     for i in range(count):
         j = (i + 1) % count
         bm.faces.new((ring0[i], ring0[j], ring1[j], ring1[i]))
@@ -114,6 +170,20 @@ def difference(target, cutter):
     cutter_mesh = cutter.data
     bpy.data.objects.remove(cutter, do_unlink=True)
     bpy.data.meshes.remove(cutter_mesh)
+
+
+def union(target, other):
+    """Union ``other`` into ``target`` and delete ``other``."""
+
+    modifier = target.modifiers.new("union", "BOOLEAN")
+    modifier.operation = "UNION"
+    modifier.solver = "EXACT"
+    modifier.object = other
+    apply_modifiers(target)
+
+    other_mesh = other.data
+    bpy.data.objects.remove(other, do_unlink=True)
+    bpy.data.meshes.remove(other_mesh)
 
 
 @dataclass(frozen=True)

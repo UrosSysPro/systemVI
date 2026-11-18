@@ -30,9 +30,12 @@ MX_POCKET_CLIP_Y = 14.0          # clip relief below the band, Y direction
 CLIP_RELIEF_DEPTH = 1.0          # 14x14 band depth before the clips expand
 MX_POCKET_DEPTH = 5.0            # encloses the whole lower switch housing
 MX_CENTER_POST_DIAMETER = 4.2    # centre post is 4.0 mm
-MX_PIN_POSITIONS = (             # the two metal pins
-    (-3.81, -2.54),
-    (2.54, -5.08),
+# Hotswap socket footprint, seen from the plate bottom.  The two contact
+# holes are mirrored on X relative to the switch's top-view pin layout; the
+# X values are swapped here so the socket pattern matches the physical pads.
+MX_PIN_POSITIONS = (             # the two hotswap contact holes
+    (3.81, -2.54),
+    (-2.54, -5.08),
 )
 MX_PIN_HOLE_DIAMETER = 3.2       # fits the round hotswap socket contacts
 MX_LEG_POSITIONS = (             # the two extra plastic legs of a 5 pin switch
@@ -67,10 +70,10 @@ WEB_THICKNESS = 1.5              # solid floor between switch and socket/LED
 PLATE_THICKNESS = MX_POCKET_DEPTH + WEB_THICKNESS + SOCKET_POCKET_DEPTH
 EPS = 0.5                        # cutters overshoot the plate faces
 
-_SOCKET_MID_OFFSET = (
-    (MX_PIN_POSITIONS[0][0] + MX_PIN_POSITIONS[1][0]) / 2.0,
-    (MX_PIN_POSITIONS[0][1] + MX_PIN_POSITIONS[1][1]) / 2.0,
-)
+# The hotswap body pocket is a separate clearance from the contact holes and
+# stays centred on the original footprint.  Only the two contact holes are
+# mirrored on X to match the physical pads.
+_SOCKET_MID_OFFSET = (-0.635, -3.81)
 
 
 def _rotate(offset, angle):

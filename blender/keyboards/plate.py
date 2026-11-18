@@ -14,6 +14,7 @@ import bmesh
 import hardware
 import layout
 import mesh
+import stabilizer
 
 
 def build_top_plate(keys, name="top_plate", params=None):
@@ -38,6 +39,15 @@ def build_top_plate(keys, name="top_plate", params=None):
         )
         for key in keys
     ]
+    stabilizer_placed = [
+        (
+            key.x - bounds.centre_x,
+            key.y - bounds.centre_y,
+            key.rotation + facing,
+            key.width,
+        )
+        for key in keys
+    ]
 
     bm = bmesh.new()
     mesh.add_box(
@@ -54,6 +64,7 @@ def build_top_plate(keys, name="top_plate", params=None):
         hardware.led_light_hole_cutter(placed, thickness),
         hardware.hole_cutter(placed, thickness),
     ]
+    cutters.extend(stabilizer.plate_cutters(stabilizer_placed, thickness))
     for cutter in cutters:
         mesh.difference(plate, cutter)
 
