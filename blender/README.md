@@ -87,7 +87,8 @@ development rules.
 ## Screenshots
 
 See [Screenshots and generation commands](SCREENSHOTS.md) for one image per
-keyboard and the exact commands used to generate and render them.
+keyboard and the exact commands used to generate and render them. The rendered
+previews are copied into the `screenshots/` directory for the documentation.
 
 ## Repository layout
 
@@ -109,4 +110,6 @@ keyboards/
   render_preview.py
 ```
 
-Generated STLs and preview PNGs are build artifacts. Do not commit them.
+Generated STLs and working previews under `build/` are build artifacts. The
+preview copies under `screenshots/` are documentation images used by the
+screenshot page.

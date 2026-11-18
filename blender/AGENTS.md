@@ -37,8 +37,9 @@ the keyboard suite.
 3. **One entry point per keyboard layout.** Each keyboard lives in
    `keyboards/<name>/main.py`. Shared logic belongs in the modules directly under
    `keyboards/`, not in a layout directory.
-4. **Build output is not source.** STLs and preview renders are generated
-   artifacts. Write STLs only under `build/` and never commit them.
+4. **Build output is not source.** STLs and working previews are generated
+   artifacts. Write STLs only under `build/`; keep documentation copies in
+   `screenshots/`.
 5. **Reproducible.** The same script and Blender version must produce the same
    model. Do not add randomness unless it is explicitly seeded.
 6. **Millimetres.** One Blender unit equals one millimetre in the exported STL.
@@ -52,6 +53,9 @@ the keyboard suite.
 ```text
 blender/
 ├── AGENTS.md
+├── README.md
+├── SCREENSHOTS.md
+├── screenshots/                 # documentation preview images
 ├── .gitignore
 ├── build/                       # generated STLs/PNGs, never source
 ├── cube/                        # legacy standalone example
@@ -197,9 +201,9 @@ The standalone stabilizer generator writes:
 build/stabilizer_slider.stl
 ```
 
-Preview renders write `build/<keyboard>_preview.png`.
-
-All generated STLs and previews are build artifacts. Do not commit them.
+Preview renders write `build/<keyboard>_preview.png`. Generated STLs and working
+previews under `build/` are build artifacts; documentation copies live in
+`screenshots/`.
 
 ## Layout model
 
@@ -492,8 +496,9 @@ blender --background --python-exit-code 1 --python keyboards/stabilizers/main.py
   printer bed size before printing.
 - **Compatibility shims:** do not add features to `keyboard_parts.py` or
   `keyboard_case.py`.
-- **Build PNGs:** STLs are ignored by `*.stl`, but preview PNGs under `build/`
-  are still generated artifacts and should not be committed.
+- **Build PNGs:** STLs and working previews under `build/` are generated
+  artifacts. Documentation previews in `screenshots/` are intentionally kept
+  for README/SCREENSHOTS.
 
 ## Future Corne and Dactyl
 
@@ -511,8 +516,9 @@ blender --background --python-exit-code 1 --python keyboards/stabilizers/main.py
 
 - `.gitignore` ignores `*.stl`, `*.STL`, `.dsh/`; `keyboards/.gitignore` ignores
   `__pycache__/`.
-- Commit sources: `AGENTS.md`, `.gitignore`, shared modules, layout `main.py`
-  files, preview and stabilizer scripts.
-- Never commit generated STLs, preview PNGs, Blender backups (`*.blend1`) or
-  `__pycache__`.
+- Commit sources: `AGENTS.md`, `README.md`, `SCREENSHOTS.md`, `.gitignore`,
+  shared modules, layout `main.py` files, preview and stabilizer scripts, and the
+  documentation previews in `screenshots/`.
+- Never commit generated STLs, working previews under `build/`, Blender backups
+  (`*.blend1`) or `__pycache__`.
 - Keep generated files under `build/` so source directories stay clean.

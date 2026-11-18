@@ -12,6 +12,14 @@ These renders use the current defaults:
 Each section lists the command that generates the STLs and the command that
 renders the preview image. Run all commands from the repository root.
 
+The images shown on this page live in `screenshots/`. The render commands write
+to `build/`; copy the four PNGs afterwards:
+
+```powershell
+New-Item -ItemType Directory -Force screenshots
+Copy-Item build\kbNumpad_preview.png, build\kb60_preview.png, build\kb75_preview.png, build\kb100_preview.png screenshots\
+```
+
 ## Generate all four keyboards
 
 ```sh
@@ -32,7 +40,7 @@ blender --background --python-exit-code 1 --python keyboards/render_preview.py -
 
 ## Numpad — 17 keys
 
-![Numpad preview](build/kbNumpad_preview.png)
+![Numpad preview](screenshots/kbNumpad_preview.png)
 
 Generate:
 
@@ -60,7 +68,7 @@ cover 80.3 × 17.3 × 15.0 mm.
 
 ## 60% — ANSI 61 keys
 
-![60% preview](build/kb60_preview.png)
+![60% preview](screenshots/kb60_preview.png)
 
 Generate:
 
@@ -88,7 +96,7 @@ cover 289.85 × 17.3 × 15.0 mm.
 
 ## 75% — 83 keys
 
-![75% preview](build/kb75_preview.png)
+![75% preview](screenshots/kb75_preview.png)
 
 Generate:
 
@@ -116,7 +124,7 @@ cover 308.9 × 17.3 × 15.0 mm.
 
 ## 100% — ANSI 104 keys
 
-![100% preview](build/kb100_preview.png)
+![100% preview](screenshots/kb100_preview.png)
 
 Generate:
 
@@ -178,5 +186,6 @@ build/kb60_south_case.stl
 build/kb60_south_cover.stl
 ```
 
-Screenshots and STLs in `build/` are generated artifacts; they are not source
-files.
+Screenshots in `screenshots/` are documentation copies; the render commands
+write to `build/`. STLs and the working previews in `build/` are generated
+artifacts.
