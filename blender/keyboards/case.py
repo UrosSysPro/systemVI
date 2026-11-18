@@ -282,6 +282,68 @@ def _add_case_shell(bm, metrics):
     _add_loft(bm, rings)
 
 
+def _bevel_lower_rim(case, metrics):
+    """Chamfer the rim exposed by a raised-compartment cut.
+
+    The shell is built with its top chamfer at ``metrics.height``.  The ramp
+    cutter then removes the southern part down to ``CASE_HEIGHT``, so that
+    new top rim has square edges.  Bevel only the outer rim edges at that
+    height, after all cuts, leaving the raised compartment and the internal
+    pockets untouched.
+    """
+
+    if metrics.height <= CASE_HEIGHT:
+        return
+
+    centre_x = (metrics.west + metrics.east) / 2.0
+    centre_y = (metrics.south + metrics.north) / 2.0
+    half_w = (metrics.east - metrics.west) / 2.0
+    half_d = (metrics.north - metrics.south) / 2.0
+    radius = CORNER_RADIUS
+    outer_tolerance = 0.01
+
+    def on_outer_plan(vertex):
+        qx = abs(vertex.co.x - centre_x) - (half_w - radius)
+        qy = abs(vertex.co.y - centre_y) - (half_d - radius)
+        outside = (
+            math.hypot(max(qx, 0.0), max(qy, 0.0))
+            + min(max(qx, qy), 0.0)
+            - radius
+        )
+        return abs(outside) <= outer_tolerance
+
+    bm = bmesh.new()
+    bm.from_mesh(case.data)
+
+    rim_edges = []
+    for edge in bm.edges:
+        if len(edge.link_faces) != 2:
+            continue
+        if any(abs(vertex.co.z - CASE_HEIGHT) > 1e-4 for vertex in edge.verts):
+            continue
+        if not all(on_outer_plan(vertex) for vertex in edge.verts):
+            continue
+        if not any(abs(face.normal.z) < 0.1 for face in edge.link_faces):
+            continue
+        rim_edges.append(edge)
+
+    if rim_edges:
+        bmesh.ops.bevel(
+            bm,
+            geom=rim_edges,
+            offset=CHAMFER,
+            offset_type="OFFSET",
+            segments=1,
+            profile=0.5,
+            affect="EDGES",
+            clamp_overlap=True,
+        )
+
+    bm.to_mesh(case.data)
+    bm.free()
+    case.data.update()
+
+
 # --------------------------------------------------------------------------
 # Cutters
 # --------------------------------------------------------------------------
@@ -485,6 +547,8 @@ def build_case(
 
     for cutter in (_usb_port_cutter(metrics), _usb_bevel_cutter(metrics)):
         mesh.difference(case, cutter)
+
+    _bevel_lower_rim(case, metrics)
 
     mesh.check_mesh(name, case, strict=True)
     return case

@@ -343,6 +343,13 @@ Key dimensions:
 - default compartment/cover top 27.5 mm; rim 15 mm; plate top 12.5 mm,
 - cover front wall 2.5 mm thick and 15 mm tall.
 
+When the compartment is raised, the outer shell gets its normal chamfer at the
+raised height, then the ramp cutter lowers the key-side section to the 15 mm rim.
+That newly exposed lower rim is chamfered **after** all cuts in
+`_bevel_lower_rim`, so the key-side rim keeps the same 1.5 mm top bevel as the
+raised compartment. This is a targeted outer-rim edge bevel, not a global bevel
+of the case.
+
 ### USB-C opening
 
 The USB-C cutout is on the north wall, 12 mm from the bay's inner west wall:
