@@ -1,3 +1,4 @@
 # Generated 3D models (build artifacts)
 *.stl
 *.STL
+.dsh/

@@ -1,16 +1,19 @@
-"""kb75: a 75% style keyboard, 80 keys, 16u x 6u.
+"""kb75: a 75% style keyboard, 83 keys, 16u x 6u.
 
-Generates the three printed parts and writes them next to this file:
-kb75_top_plate.stl, kb75_case.stl and kb75_cover.stl.  The plate cutouts come
-from keyboards/keyboard_parts.py, the case and lid from
-keyboards/keyboard_case.py.
+Generates the three printed parts into the repository ``build/`` directory:
+
+    build/kb75_top_plate.stl
+    build/kb75_case.stl
+    build/kb75_cover.stl
+
+The plate cutouts, case and cover come from the shared keyboard modules.
 
 Run headlessly with:
     blender --background --python keyboards/kb75/main.py
 
 Options go after Blender's ``--`` separator:
     blender --background --python keyboards/kb75/main.py -- \
-        --led-facing south --horizontal 8 --vertical 4 --output out.stl
+        --led-facing south --horizontal 8 --vertical 4 --output build/out.stl
 
 ``--output`` names the top plate; the case and cover reuse its stem with
 _case and _cover suffixes.
@@ -21,14 +24,14 @@ import sys
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 KEYBOARDS_DIR = os.path.dirname(SCRIPT_DIR)
+PROJECT_DIR = os.path.dirname(KEYBOARDS_DIR)
 sys.path.insert(0, KEYBOARDS_DIR)
 
-import keyboard_case as kc
-import keyboard_parts as kb
+import cli
+import generate
+import layout
 
-PLATE_PATH = os.path.join(SCRIPT_DIR, "kb75_top_plate.stl")
-CASE_PATH = os.path.join(SCRIPT_DIR, "kb75_case.stl")
-COVER_PATH = os.path.join(SCRIPT_DIR, "kb75_cover.stl")
+NAME = "kb75"
 
 # 75% layout: 16 keyboard units wide, six rows.
 # A row is a list of key widths in units; None inserts a 1u gap.
@@ -47,33 +50,29 @@ LAYOUT_ROWS = [
     [1.25, 1.25, 1.25, 6.0, 1.25, 1.0, 1.0, 1.0, 1.0, 1.0],
 ]
 
+KEYS = layout.keys_from_rows(LAYOUT_ROWS)
+
 
 def main(argv=None):
-    args = kb.parse_plate_args(
-        argv, description="kb75 (80 keys): top plate, case and cover"
+    args = cli.parse_args(
+        argv, description=f"kb75 ({len(KEYS)} keys): top plate, case and cover"
     )
-    params = kb.params_from_args(args)
-    plate_path, case_path, cover_path = kb.output_paths(
-        args.output, PLATE_PATH, CASE_PATH, COVER_PATH
+    params = cli.params_from_args(args)
+    plate_path, case_path, cover_path = cli.output_paths(
+        args.output, *cli.default_paths(PROJECT_DIR, NAME)
     )
 
-    keys = kb.keys_from_rows(LAYOUT_ROWS)
-    kb.generate_top_plate(keys, "kb75_top_plate", plate_path, params=params)
-    kc.generate_case(
-        keys,
-        "kb75_case",
-        case_path,
+    spec = generate.KeyboardSpec(
+        name=NAME,
+        keys=KEYS,
+        plate_path=plate_path,
+        case_path=case_path,
+        cover_path=cover_path,
         params=params,
         compartment_height=args.compartment_height,
         compartment_ramp=args.compartment_ramp,
     )
-    kc.generate_cover(
-        keys,
-        "kb75_cover",
-        cover_path,
-        params=params,
-        compartment_height=args.compartment_height,
-    )
+    generate.generate_keyboard(spec)
     return 0
 
 

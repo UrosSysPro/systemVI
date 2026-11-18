@@ -1,0 +1,168 @@
+"""Low-level mesh construction, boolean and validation helpers.
+
+Everything in this module is independent of keyboard layouts.  It wraps the
+``bmesh`` and depsgraph operations that are otherwise easy to get wrong in a
+headless Blender run.
+"""
+
+from __future__ import annotations
+
+import math
+import sys
+from dataclasses import dataclass
+
+import bmesh
+import bpy
+from mathutils import Matrix, Vector
+
+CYLINDER_SEGMENTS = 24
+ZERO_AREA_EPSILON = 1e-9
+
+
+def add_box(bm, centre, size, rotation=0.0):
+    """Append an axis-aligned (then Z rotated) box to ``bm``."""
+
+    ret = bmesh.ops.create_cube(bm, size=1.0)
+    verts = ret["verts"]
+    matrix = (
+        Matrix.Translation(Vector(centre))
+        @ Matrix.Rotation(rotation, 4, "Z")
+        @ Matrix.Diagonal(Vector((size[0], size[1], size[2], 1.0)))
+    )
+    bmesh.ops.transform(bm, matrix=matrix, verts=verts)
+
+
+def add_cylinder(bm, centre_xy, radius, z_min, z_max, segments=CYLINDER_SEGMENTS):
+    """Append a closed vertical cylinder to ``bm``."""
+
+    cx, cy = centre_xy
+    bottom = []
+    top = []
+    for i in range(segments):
+        angle = 2.0 * math.pi * i / segments
+        x = cx + radius * math.cos(angle)
+        y = cy + radius * math.sin(angle)
+        bottom.append(bm.verts.new((x, y, z_min)))
+        top.append(bm.verts.new((x, y, z_max)))
+
+    bm.faces.new(tuple(reversed(bottom)))
+    bm.faces.new(tuple(top))
+    for i in range(segments):
+        j = (i + 1) % segments
+        bm.faces.new((bottom[i], bottom[j], top[j], top[i]))
+
+
+def add_prism_x(bm, profile_yz, x0, x1):
+    """Extrude a closed Y/Z profile along X into a solid."""
+
+    ring0 = [bm.verts.new((x0, y, z)) for y, z in profile_yz]
+    ring1 = [bm.verts.new((x1, y, z)) for y, z in profile_yz]
+
+    bm.faces.new(tuple(ring0))
+    bm.faces.new(tuple(reversed(ring1)))
+
+    count = len(profile_yz)
+    for i in range(count):
+        j = (i + 1) % count
+        bm.faces.new((ring0[i], ring0[j], ring1[j], ring1[i]))
+
+
+def mesh_object(name, bm):
+    """Turn a bmesh into a linked scene object with outward facing normals."""
+
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    mesh = bpy.data.meshes.new(name)
+    bm.to_mesh(mesh)
+    bm.free()
+    obj = bpy.data.objects.new(name, mesh)
+    bpy.context.scene.collection.objects.link(obj)
+    return obj
+
+
+def apply_modifiers(obj):
+    """Replace ``obj`` data by its evaluated (modifier applied) mesh.
+
+    Avoids ``bpy.ops.object.modifier_apply`` and its context requirements, so
+    this also works reliably in ``blender --background``.
+    """
+
+    if not obj.modifiers:
+        return
+
+    bpy.context.view_layer.update()
+    depsgraph = bpy.context.evaluated_depsgraph_get()
+    evaluated = obj.evaluated_get(depsgraph)
+    new_mesh = bpy.data.meshes.new_from_object(evaluated)
+
+    old_mesh = obj.data
+    mesh_name = old_mesh.name
+    obj.modifiers.clear()
+    obj.data = new_mesh
+    bpy.data.meshes.remove(old_mesh)
+    new_mesh.name = mesh_name
+
+
+def difference(target, cutter):
+    """Subtract ``cutter`` from ``target`` and delete the cutter."""
+
+    modifier = target.modifiers.new("cut", "BOOLEAN")
+    modifier.operation = "DIFFERENCE"
+    modifier.solver = "EXACT"
+    modifier.object = cutter
+    apply_modifiers(target)
+
+    cutter_mesh = cutter.data
+    bpy.data.objects.remove(cutter, do_unlink=True)
+    bpy.data.meshes.remove(cutter_mesh)
+
+
+@dataclass(frozen=True)
+class MeshReport:
+    """Result of :func:`check_mesh`."""
+
+    faces: int
+    non_manifold_edges: int
+    zero_area_faces: int
+
+    @property
+    def ok(self):
+        return self.faces > 0 and not self.non_manifold_edges and not self.zero_area_faces
+
+
+def check_mesh(name, obj, strict=True):
+    """Check a mesh for the defects this project cares about.
+
+    Counts non-manifold edges and zero-area faces.  In strict mode (the
+    default) a bad mesh raises, so a generator never exports a part that
+    violates the project's printing rules.
+    """
+
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+    faces = len(bm.faces)
+    non_manifold_edges = sum(1 for edge in bm.edges if not edge.is_manifold)
+    zero_area_faces = sum(
+        1 for face in bm.faces if face.calc_area() <= ZERO_AREA_EPSILON
+    )
+    bm.free()
+
+    report = MeshReport(faces, non_manifold_edges, zero_area_faces)
+    if report.ok:
+        print(f"{name}: watertight mesh, {faces} faces")
+        return report
+
+    problems = []
+    if not faces:
+        problems.append("no faces")
+    if non_manifold_edges:
+        problems.append(f"{non_manifold_edges} non-manifold edges")
+    if zero_area_faces:
+        problems.append(f"{zero_area_faces} zero-area faces")
+    message = f"{name}: invalid mesh ({', '.join(problems)})"
+
+    if strict:
+        print(f"ERROR: {message}", file=sys.stderr)
+        raise RuntimeError(message)
+
+    print(f"WARNING: {message} (check before printing)")
+    return report
