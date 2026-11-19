@@ -86,40 +86,94 @@ def _rotate(offset, angle):
     return (offset[0] * c - offset[1] * s, offset[0] * s + offset[1] * c)
 
 
+def _clip_relief_profile(clip_half, band_half, z_bottom, z_step, z_top):
+    """Closed eight-point profile (relief axis, Z) with a sharp step.
+
+    The lower part opens up to ``clip_half`` so the switch clip can spring
+    out; above ``z_step`` the pocket returns to the ``band_half`` surface
+    opening, leaving a horizontal shoulder that the clip catches on.
+    """
+
+    return (
+        (-clip_half, z_bottom),
+        (clip_half, z_bottom),
+        (clip_half, z_step),
+        (band_half, z_step),
+        (band_half, z_top),
+        (-band_half, z_top),
+        (-band_half, z_step),
+        (-clip_half, z_step),
+    )
+
+
 def add_switch_pocket(bm, x, y, rotation, thickness):
     """Add one stepped MX pocket to ``bm``.
 
-    The closed XZ profile is extruded along Y: a 14 x 14 mm band at the
-    surface, opened to 15 x 14 mm one millimetre below it so the horizontal
-    switch clips can spring back out.
+    The surface band is a 14 x 14 mm opening.  One millimetre below it the
+    pocket widens by the clip relief so the MX clips can spring back out;
+    with the current constants that relief is 14 x 15 mm, i.e. the extra
+    clearance is on the north and south edges where the clips sit.
+
+    The stepped profile is built in the plane of the relief axis and
+    extruded across the other axis, so the transition stays a flat shoulder
+    instead of becoming a taper.  Relief on both axes at once is rejected:
+    an MX switch only clips north/south (or east/west), never both.
     """
 
-    x_inner = MX_POCKET / 2.0
-    x_outer = MX_POCKET_CLIP_X / 2.0
-    y_half = MX_POCKET_CLIP_Y / 2.0
+    band = MX_POCKET / 2.0
+    clip_x = MX_POCKET_CLIP_X / 2.0
+    clip_y = MX_POCKET_CLIP_Y / 2.0
+
+    if clip_x < band or clip_y < band:
+        raise ValueError(
+            "switch pocket clip relief must not be smaller than the "
+            f"{MX_POCKET} mm surface band, got "
+            f"{MX_POCKET_CLIP_X} x {MX_POCKET_CLIP_Y} mm"
+        )
+
+    relief_x = clip_x > band
+    relief_y = clip_y > band
+    if relief_x and relief_y:
+        raise ValueError(
+            "switch pocket clip relief must be on one axis only, got "
+            f"{MX_POCKET_CLIP_X} x {MX_POCKET_CLIP_Y} mm under a "
+            f"{MX_POCKET} mm surface band"
+        )
+
     z_bottom = thickness - MX_POCKET_DEPTH
     z_step = thickness - CLIP_RELIEF_DEPTH
     z_top = thickness + EPS
 
-    profile = (
-        (-x_outer, z_bottom),
-        (x_outer, z_bottom),
-        (x_outer, z_step),
-        (x_inner, z_step),
-        (x_inner, z_top),
-        (-x_inner, z_top),
-        (-x_inner, z_step),
-        (-x_outer, z_step),
-    )
+    if not (relief_x or relief_y):
+        mesh.add_box(
+            bm,
+            (x, y, (z_bottom + z_top) / 2.0),
+            (MX_POCKET, MX_POCKET, z_top - z_bottom),
+            rotation,
+        )
+        return
+
+    if relief_y:
+        profile = _clip_relief_profile(
+            clip_y, band, z_bottom, z_step, z_top
+        )
+    else:
+        profile = _clip_relief_profile(
+            clip_x, band, z_bottom, z_step, z_top
+        )
 
     cos_r = math.cos(rotation)
     sin_r = math.sin(rotation)
     rings = []
-    for offset_y in (-y_half, y_half):
+    for side in (-1.0, 1.0):
         ring = []
-        for offset_x, z in profile:
-            wx = x + offset_x * cos_r - offset_y * sin_r
-            wy = y + offset_x * sin_r + offset_y * cos_r
+        for offset, z in profile:
+            if relief_y:
+                local_x, local_y = side * band, offset
+            else:
+                local_x, local_y = offset, side * band
+            wx = x + local_x * cos_r - local_y * sin_r
+            wy = y + local_x * sin_r + local_y * cos_r
             ring.append(bm.verts.new((wx, wy, z)))
         rings.append(ring)
 
@@ -132,12 +186,19 @@ def add_switch_pocket(bm, x, y, rotation, thickness):
 
 
 def switch_pocket_cutter(placed, thickness):
-    """One cutter mesh containing every switch pocket."""
+    """One cutter mesh containing every switch pocket.
+
+    The cutter is validated too: a malformed stepped profile (for example a
+    zero-width clip step) used to slip through because only the final plate
+    was checked.  Fail here instead of exporting a pocket without relief.
+    """
 
     bm = bmesh.new()
     for x, y, rotation in placed:
         add_switch_pocket(bm, x, y, rotation, thickness)
-    return mesh.mesh_object("switch_pockets", bm)
+    pocket = mesh.mesh_object("switch_pockets", bm)
+    mesh.check_mesh("switch_pockets", pocket, strict=True)
+    return pocket
 
 
 def socket_pocket_cutters(placed):
