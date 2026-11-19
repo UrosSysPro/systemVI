@@ -1,6 +1,6 @@
 """Deprecated compatibility facade for the old case/cover module.
 
-New code should import :mod:`case` for the case and :mod:`cover` for the lid.
+New code should import :mod:`case` for the split case parts and :mod:`cover` for the lid.
 This file exists only so older scripts that imported ``keyboard_case`` keep
 working.
 """
@@ -26,7 +26,8 @@ from case import (  # noqa: F401
     USB_PORT_WIDTH,
     WALL,
     CaseMetrics,
-    build_case,
+    build_case_bottom,
+    build_case_edges,
     case_metrics,
 )
 from cover import build_cover  # noqa: F401

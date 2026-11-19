@@ -187,6 +187,54 @@ class TestMountingOptions(unittest.TestCase):
             mounting.MountingOptions(magnet_spacing=0.0).validate()
 
 
+class TestPlateTabPlan(unittest.TestCase):
+    def test_adaptive_rows_and_screw_positions(self):
+        width, height = 80.2, 99.25
+        plan = mounting.plate_tab_plan(width, height)
+        self.assertEqual(len(plan.by_side("west")), 2)
+        self.assertEqual(len(plan.by_side("east")), 2)
+        self.assertEqual(len(plan.by_side("south")), 1)
+        self.assertEqual(plan.count, 5)
+
+        for tab in plan.tabs:
+            self.assertAlmostEqual(tab.width, mounting.TAB_WIDTH)
+            self.assertAlmostEqual(tab.depth, mounting.TAB_DEPTH)
+            if tab.side == "west":
+                self.assertLess(tab.screw[0], -width / 2.0)
+                self.assertAlmostEqual(
+                    tab.screw[0], -(width / 2.0 + mounting.SCREW_FROM_EDGE)
+                )
+            elif tab.side == "east":
+                self.assertGreater(tab.screw[0], width / 2.0)
+                self.assertAlmostEqual(
+                    tab.screw[0], width / 2.0 + mounting.SCREW_FROM_EDGE
+                )
+            else:
+                self.assertAlmostEqual(tab.screw[0], 0.0)
+                self.assertAlmostEqual(
+                    tab.screw[1], -(height / 2.0 + mounting.SCREW_FROM_EDGE)
+                )
+
+    def test_more_tabs_on_a_long_board(self):
+        short = mounting.plate_tab_plan(80.2, 99.25)
+        long = mounting.plate_tab_plan(447.0, 119.0)
+        self.assertGreater(long.count, short.count)
+        self.assertGreater(len(long.by_side("south")), 1)
+
+    def test_tabs_fit_between_their_screw_holes(self):
+        plan = mounting.plate_tab_plan(80.2, 99.25)
+        for tab in plan.tabs:
+            self.assertGreater(
+                tab.depth,
+                mounting.SCREW_FROM_EDGE
+                + mounting.SCREW_HOLE_DIAMETER / 2.0,
+            )
+
+    def test_side_too_short_rejected(self):
+        with self.assertRaises(ValueError):
+            mounting.plate_tab_plan(8.0, 8.0)
+
+
 class TestRibPlan(unittest.TestCase):
     def test_one_rib_between_two_1u_keys(self):
         keys = [layout.Key(0.0, 0.0), layout.Key(layout.PITCH, 0.0)]

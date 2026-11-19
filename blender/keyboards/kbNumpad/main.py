@@ -1,9 +1,10 @@
 """kbNumpad: a 17 key numeric keypad, 4u x 5u.
 
-Generates the three printed parts into the repository ``build/`` directory:
+Generates the four printed parts into the repository ``build/`` directory:
 
     build/kbNumpad_top_plate.stl
-    build/kbNumpad_case.stl
+    build/kbNumpad_case_bottom.stl
+    build/kbNumpad_case_edges.stl
     build/kbNumpad_cover.stl
 
 The tall keys (plus and Enter are 2u high) get a single switch cutout at the
@@ -16,8 +17,8 @@ Options go after Blender's ``--`` separator:
     blender --background --python keyboards/kbNumpad/main.py -- \
         --led-facing south --horizontal 8 --vertical 4 --output build/out.stl
 
-``--output`` names the top plate; the case and cover reuse its stem with
-_case and _cover suffixes.
+``--output`` names the top plate; the two case parts and cover reuse its stem
+with _case_bottom, _case_edges and _cover suffixes.
 """
 
 import os
@@ -66,10 +67,10 @@ KEYS = layout.keys_from_units(NUMPAD_KEYS)
 
 def main(argv=None):
     args = cli.parse_args(
-        argv, description=f"kbNumpad ({len(KEYS)} keys): top plate, case and cover"
+        argv, description=f"kbNumpad ({len(KEYS)} keys): top plate, split case and cover"
     )
     params = cli.params_from_args(args)
-    plate_path, case_path, cover_path = cli.output_paths(
+    plate_path, case_bottom_path, case_edges_path, cover_path = cli.output_paths(
         args.output, *cli.default_paths(PROJECT_DIR, NAME)
     )
 
@@ -77,7 +78,8 @@ def main(argv=None):
         name=NAME,
         keys=KEYS,
         plate_path=plate_path,
-        case_path=case_path,
+        case_bottom_path=case_bottom_path,
+        case_edges_path=case_edges_path,
         cover_path=cover_path,
         params=params,
         compartment_height=args.compartment_height,

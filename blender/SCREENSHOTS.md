@@ -58,13 +58,14 @@ Outputs:
 
 ```text
 build/kbNumpad_top_plate.stl
-build/kbNumpad_case.stl
+build/kbNumpad_case_bottom.stl
+build/kbNumpad_case_edges.stl
 build/kbNumpad_cover.stl
 build/kbNumpad_preview.png
 ```
 
-Plate 80.2 × 99.25 × 9.5 mm · case 94.7 × 131.25 × 27.5 mm ·
-cover 80.3 × 17.3 × 15.0 mm.
+Plate 87.4 × 102.85 × 9.5 mm · case bottom 89.2 × 125.75 × 6.8 mm ·
+case edges 94.7 × 131.25 × 27.5 mm · cover 80.3 × 17.3 × 15.0 mm.
 
 ## 60% — ANSI 61 keys
 
@@ -86,13 +87,14 @@ Outputs:
 
 ```text
 build/kb60_top_plate.stl
-build/kb60_case.stl
+build/kb60_case_bottom.stl
+build/kb60_case_edges.stl
 build/kb60_cover.stl
 build/kb60_preview.png
 ```
 
-Plate 289.75 × 99.25 × 9.5 mm · case 304.25 × 131.25 × 27.5 mm ·
-cover 289.85 × 17.3 × 15.0 mm.
+Plate 296.95 × 102.85 × 9.5 mm · case bottom 298.75 × 125.75 × 6.8 mm ·
+case edges 304.25 × 131.25 × 27.5 mm · cover 289.85 × 17.3 × 15.0 mm.
 
 ## 75% — 83 keys
 
@@ -114,13 +116,14 @@ Outputs:
 
 ```text
 build/kb75_top_plate.stl
-build/kb75_case.stl
+build/kb75_case_bottom.stl
+build/kb75_case_edges.stl
 build/kb75_cover.stl
 build/kb75_preview.png
 ```
 
-Plate 308.8 × 118.3 × 9.5 mm · case 323.3 × 150.3 × 27.5 mm ·
-cover 308.9 × 17.3 × 15.0 mm.
+Plate 316.0 × 121.9 × 9.5 mm · case bottom 317.8 × 144.8 × 6.8 mm ·
+case edges 323.3 × 150.3 × 27.5 mm · cover 308.9 × 17.3 × 15.0 mm.
 
 ## 100% — ANSI 104 keys
 
@@ -142,13 +145,14 @@ Outputs:
 
 ```text
 build/kb100_top_plate.stl
-build/kb100_case.stl
+build/kb100_case_bottom.stl
+build/kb100_case_edges.stl
 build/kb100_cover.stl
 build/kb100_preview.png
 ```
 
-Plate 432.62 × 118.3 × 9.5 mm · case 447.12 × 150.3 × 27.5 mm ·
-cover 432.73 × 17.3 × 15.0 mm.
+Plate 439.83 × 121.9 × 9.5 mm · case bottom 441.62 × 144.8 × 6.8 mm ·
+case edges 447.12 × 150.3 × 27.5 mm · cover 432.73 × 17.3 × 15.0 mm.
 
 ## Stabilizer slider
 
@@ -182,7 +186,8 @@ This writes:
 
 ```text
 build/kb60_south.stl
-build/kb60_south_case.stl
+build/kb60_south_case_bottom.stl
+build/kb60_south_case_edges.stl
 build/kb60_south_cover.stl
 ```
 

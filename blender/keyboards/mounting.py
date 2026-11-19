@@ -1,13 +1,15 @@
-"""Cover magnets and wire-routing geometry.
+"""Plate fastening tabs, cover magnets and wire-routing geometry.
 
-The top plate is **not fastened** at the moment.  The earlier bottom-screw
-design needed notches in the case wall for the plate ears, which is not
-acceptable.  Moving the heatset inserts between the keys is not possible with
-M3 inserts: adjacent 1u switch pockets leave a 5.05 mm web, an M3 insert is
-4.6 mm across before any wall thickness, and the hotswap socket tab already
-protrudes 0.365 mm into that web.  The plate therefore sits in its pocket,
-supported by small ribs on the case floor, until a wall-free fastening is
-chosen.
+The case is split into a bottom tray and an outer edge ring.  The top plate
+has lower side tabs that are clamped between the two: the tab sits on the
+bottom tray and under the edge ring's internal shelf, and an M2 screw goes up
+from a counterbore in the bottom tray through the tab into a vertical heatset
+insert in the edge ring.  Tabs are planned adaptively from the plate size
+(:func:`plate_tab_plan`): west and east sides get an evenly spaced row, and the
+south edge gets a row as well.  The north edge stays free for the bay and cover
+lip.  The earlier idea of M3 inserts in the inter-key webs is still rejected:
+the 5.05 mm web is too narrow for an insert once walls and the socket tab are
+accounted for.
 
 The cover is held by rectangular magnets.  Each side edge carries two magnets,
 evenly spaced along the side of the compartment.  An adaptive, evenly spaced row
@@ -62,6 +64,36 @@ RIB_CLEARANCE = 0.5        # between neighbouring ribs
 RIB_MIN_LENGTH = 2.0
 RIB_MAX_CELL_GAP = 1.5     # only cells that touch (or nearly touch)
 RIB_MIN_OVERLAP = 4.0
+
+# --------------------------------------------------------------------------
+# Split case and plate fastening
+# --------------------------------------------------------------------------
+#
+# The case is split into a bottom tray and an outer edge ring.  The top plate
+# has lower side tabs that sit on the bottom tray; the edge ring has an
+# internal lower recess and an overhanging shelf above the tabs.  M2 screws go
+# up from counterbores in the bottom tray, through the tabs, into vertical
+# heatset inserts in the edge ring.
+#
+# The tab is 4 mm high (the lower part of the 9.5 mm plate), which leaves room
+# for a 4.5 mm insert under the 15 mm case rim.  The screw sits 2.2 mm
+# inboard of the plate edge; the edge ring keeps at least 0.4 mm of material
+# around the insert.
+
+TAB_HEIGHT = 4.0           # plate tab height, from the plate bottom
+TAB_DEPTH = 3.6            # radial length of a plate tab beyond the outline
+TAB_WIDTH = 9.0            # length of a tab along the plate edge
+TAB_TARGET_SPACING = 50.0  # target spacing for the adaptive tab rows
+TAB_SIDE_MARGIN = 10.0     # preferred gap from a plate corner
+TAB_MIN_GAP = 6.0          # minimum gap between two tabs on one side
+TAB_OVERLAP = 0.5          # tab runs into the plate for a clean union
+
+SCREW_HOLE_DIAMETER = 2.4       # M2 clearance
+SCREW_HEAD_DIAMETER = 4.0       # 3.8 mm M2 head plus print clearance
+SCREW_COUNTERBORE_DEPTH = 2.0
+SCREW_FROM_EDGE = 2.2           # screw centre inboard of the plate outline
+INSERT_HOLE_DIAMETER = 3.0      # M2 heatset insert, nominal 3.0 mm OD
+INSERT_HOLE_DEPTH = 4.5
 
 
 @dataclass(frozen=True)
@@ -267,6 +299,113 @@ def magnet_plan(
         rail_y0=rail_y0,
         top_count=top_count,
     )
+
+
+@dataclass(frozen=True)
+class PlateTab:
+    """One lower fastening tab on the top plate.
+
+    ``centre`` is the centre of the tab box in the centred plate frame and
+    ``screw`` is the M2 clearance-hole centre, slightly outboard of ``centre``
+    because the tab runs into the plate for the boolean union.
+    """
+
+    side: str
+    centre: tuple[float, float]
+    screw: tuple[float, float]
+    width: float
+    depth: float
+
+
+@dataclass(frozen=True)
+class TabPlan:
+    tabs: tuple[PlateTab, ...]
+
+    @property
+    def count(self):
+        return len(self.tabs)
+
+    def by_side(self, side):
+        return tuple(tab for tab in self.tabs if tab.side == side)
+
+
+def _tab_count(length, minimum=1):
+    """Adaptive number of tabs that fit evenly on one plate side."""
+
+    usable = length - 2.0 * TAB_SIDE_MARGIN
+    if usable <= 0.0:
+        usable = length - 2.0 * TAB_WIDTH
+    if usable < TAB_WIDTH:
+        raise ValueError(
+            f"plate side is too short for a {TAB_WIDTH} mm fastening tab "
+            f"({length:.1f} mm available)"
+        )
+
+    count = max(1, int(round(usable / TAB_TARGET_SPACING)))
+    while count > minimum and (
+        count * TAB_WIDTH + (count - 1) * TAB_MIN_GAP > usable
+    ):
+        count -= 1
+    if count * TAB_WIDTH + (count - 1) * TAB_MIN_GAP > usable:
+        raise ValueError(
+            f"{count} fastening tabs do not fit on a {length:.1f} mm plate "
+            f"side; reduce TAB_WIDTH or use a larger plate"
+        )
+    return count
+
+
+def plate_tab_plan(width, height):
+    """Plan lower side tabs for a centred plate of ``width`` x ``height``.
+
+    West and east sides get an adaptive row along Y; the south edge gets an
+    adaptive row along X.  The north edge is left free for the electronics bay
+    and cover lip.  Tab centres are evenly distributed along each side, so
+    they always stay clear of the corners.
+    """
+
+    if not math.isfinite(width) or not math.isfinite(height):
+        raise ValueError("plate width and height must be finite")
+    if width <= 2.0 * TAB_DEPTH or height <= TAB_DEPTH:
+        raise ValueError(
+            f"plate is too small for fastening tabs: {width:.1f} x "
+            f"{height:.1f} mm"
+        )
+
+    half_w = width / 2.0
+    half_d = height / 2.0
+    tabs = []
+
+    side_count = _tab_count(height)
+    for index in range(side_count):
+        y = -half_d + height * (index + 1) / (side_count + 1)
+        for side in ("west", "east"):
+            sign = -1.0 if side == "west" else 1.0
+            centre_x = sign * (half_w + TAB_DEPTH / 2.0)
+            screw_x = sign * (half_w + SCREW_FROM_EDGE)
+            tabs.append(
+                PlateTab(
+                    side=side,
+                    centre=(centre_x, y),
+                    screw=(screw_x, y),
+                    width=TAB_WIDTH,
+                    depth=TAB_DEPTH,
+                )
+            )
+
+    south_count = _tab_count(width)
+    for index in range(south_count):
+        x = -half_w + width * (index + 1) / (south_count + 1)
+        tabs.append(
+            PlateTab(
+                side="south",
+                centre=(x, -(half_d + TAB_DEPTH / 2.0)),
+                screw=(x, -(half_d + SCREW_FROM_EDGE)),
+                width=TAB_WIDTH,
+                depth=TAB_DEPTH,
+            )
+        )
+
+    return TabPlan(tuple(tabs))
 
 
 def rib_plan(keys, bounds):

@@ -102,7 +102,8 @@ def argument_parser(description=None):
         "--wall",
         type=float,
         metavar="MM",
-        help="case outer wall thickness (default: 7 mm)",
+        help="case outer wall thickness (default: 7 mm; the split case needs "
+        "at least 7 mm)",
     )
     parser.add_argument(
         "--compartment-ramp",
@@ -114,8 +115,9 @@ def argument_parser(description=None):
 
     hardware_group = parser.add_argument_group(
         "cover magnets and wire routing (mm)",
-        "The top plate is not fastened for now.  The cover is held by "
-        "magnets on 45-degree bay shelves; the case floor is recessed for wires.",
+        "The split case clamps the plate tabs with M2 screws; the cover is "
+        "held by magnets on 45-degree bay shelves and the case floor is "
+        "recessed for wires.",
     )
     defaults = mounting.MountingOptions()
     hardware_group.add_argument(
@@ -166,7 +168,8 @@ def argument_parser(description=None):
     parser.add_argument(
         "--output",
         metavar="PATH",
-        help="base STL path; case and cover get _case/_cover suffixes "
+        help="base STL path; the two case parts and cover get "
+        "_case_bottom/_case_edges/_cover suffixes "
         "(default: build/<name>_top_plate.stl next to the repository); "
         "split mode writes _top_half/_bottom_half instead",
     )
@@ -229,22 +232,39 @@ def parse_args(argv=None, description=None):
     return parser.parse_args(script_arguments(argv))
 
 
-def output_paths(base_path, plate_default, case_default, cover_default):
-    """Resolve the three part paths for one keyboard.
+def output_paths(
+    base_path,
+    plate_default,
+    case_bottom_default,
+    case_edges_default,
+    cover_default,
+):
+    """Resolve the four part paths for one keyboard.
 
-    ``--output`` (``base_path``) names the top plate STL; the case and cover
-    reuse its stem with ``_case`` and ``_cover`` suffixes, so generating
-    variants with different paddings/facings never overwrites another variant.
+    ``--output`` (``base_path``) names the top plate STL; the two case parts
+    and cover reuse its stem with ``_case_bottom``, ``_case_edges`` and
+    ``_cover`` suffixes, so generating variants with different
+    paddings/facings never overwrites another variant.
     """
 
     if base_path is None:
-        return plate_default, case_default, cover_default
+        return (
+            plate_default,
+            case_bottom_default,
+            case_edges_default,
+            cover_default,
+        )
 
     stem, extension = os.path.splitext(base_path)
     if not extension:
         extension = ".stl"
         base_path = f"{base_path}{extension}"
-    return base_path, f"{stem}_case{extension}", f"{stem}_cover{extension}"
+    return (
+        base_path,
+        f"{stem}_case_bottom{extension}",
+        f"{stem}_case_edges{extension}",
+        f"{stem}_cover{extension}",
+    )
 
 
 def default_paths(project_dir, name):
@@ -253,7 +273,8 @@ def default_paths(project_dir, name):
     build_dir = os.path.join(project_dir, "build")
     return (
         os.path.join(build_dir, f"{name}_top_plate.stl"),
-        os.path.join(build_dir, f"{name}_case.stl"),
+        os.path.join(build_dir, f"{name}_case_bottom.stl"),
+        os.path.join(build_dir, f"{name}_case_edges.stl"),
         os.path.join(build_dir, f"{name}_cover.stl"),
     )
 

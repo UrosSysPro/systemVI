@@ -1,7 +1,7 @@
-"""Render an assembled keyboard: top plate, case and cover.
+"""Render an assembled keyboard: top plate, split case and cover.
 
-The keyboard is selected on the command line and the three printed parts use
-three distinct Monokai accent colours.  The script builds the same parts as
+The keyboard is selected on the command line and the four printed parts use
+distinct Monokai accent colours.  The script builds the same parts as
 the generator, so the render matches the exported STLs.
 
 Run headlessly with:
@@ -43,6 +43,7 @@ KEYBOARDS = {
 
 # Monokai palette.
 CASE_COLOUR = "#66D9EF"      # cyan
+CASE_BOTTOM_COLOUR = "#4FB8CE"  # darker cyan, shows the split
 COVER_COLOUR = "#F92672"     # pink
 PLATE_COLOUR = "#E6DB74"     # yellow
 BACKGROUND = "#272822"       # Monokai background
@@ -93,14 +94,17 @@ def load_keyboard(name):
 
 
 def build_parts(keys):
-    """Build the three parts in the same relative positions as the STLs."""
+    """Build the four parts in the same relative positions as the STLs."""
 
     params = layout.PlateParams()
     top_plate = plate_module.build_top_plate(
         keys, name="preview_top_plate", params=params
     )
-    case_obj = case_module.build_case(
-        keys, name="preview_case", params=params
+    case_bottom = case_module.build_case_bottom(
+        keys, name="preview_case_bottom", params=params
+    )
+    case_edges = case_module.build_case_edges(
+        keys, name="preview_case_edges", params=params
     )
     cover_obj = cover_module.build_cover(
         keys, name="preview_cover", params=params
@@ -108,7 +112,7 @@ def build_parts(keys):
 
     # The exported plate sits on z = 0; in the assembly it rests on the floor.
     top_plate.location.z = case_module.FLOOR
-    return top_plate, case_obj, cover_obj
+    return top_plate, case_bottom, case_edges, cover_obj
 
 
 def configure_scene(args):
@@ -242,14 +246,15 @@ def main(argv=None):
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
     export.reset_scene()
-    top_plate, case_obj, cover_obj = build_parts(keys)
+    top_plate, case_bottom, case_edges, cover_obj = build_parts(keys)
 
     apply_material(top_plate, PLATE_COLOUR, roughness=0.5)
-    apply_material(case_obj, CASE_COLOUR, roughness=0.45)
+    apply_material(case_bottom, CASE_BOTTOM_COLOUR, roughness=0.45)
+    apply_material(case_edges, CASE_COLOUR, roughness=0.45)
     apply_material(cover_obj, COVER_COLOUR, roughness=0.4)
 
     scene = configure_scene(args)
-    frame_camera(scene, (top_plate, case_obj, cover_obj))
+    frame_camera(scene, (top_plate, case_bottom, case_edges, cover_obj))
 
     scene.render.filepath = output_path
     bpy.ops.render.render(write_still=True)

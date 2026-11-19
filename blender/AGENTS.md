@@ -10,10 +10,10 @@ Implemented keyboards:
 
 | Entry point | Layout | Parts |
 |---|---|---|
-| `keyboards/kbNumpad/main.py` | 17-key numpad | plate, case, cover |
-| `keyboards/kb60/main.py` | ANSI 61-key 60% | plate, case, cover |
-| `keyboards/kb75/main.py` | 83-key 75% | plate, case, cover |
-| `keyboards/kb100/main.py` | ANSI 104-key full-size | plate, case, cover |
+| `keyboards/kbNumpad/main.py` | 17-key numpad | plate, case bottom, case edges, cover |
+| `keyboards/kb60/main.py` | ANSI 61-key 60% | plate, case bottom, case edges, cover |
+| `keyboards/kb75/main.py` | 83-key 75% | plate, case bottom, case edges, cover |
+| `keyboards/kb100/main.py` | ANSI 104-key full-size | plate, case bottom, case edges, cover |
 
 Placeholders:
 
@@ -64,10 +64,10 @@ blender/
 │   ├── layout.py                # pure layout model; no bpy
 │   ├── mesh.py                  # bmesh primitives, booleans, validation
 │   ├── hardware.py              # MX switch, hotswap, LED cutouts
-│   ├── mounting.py              # cover magnets + inter-key wire ribs
+│   ├── mounting.py              # plate tabs, cover magnets, wire ribs
 │   ├── stabilizer.py            # custom 2 mm-wire stabilizer cutouts + slider
-│   ├── plate.py                 # flat top plate (no fastening holes)
-│   ├── case.py                  # case, bay, USB-C, wire recess, magnet shelves
+│   ├── plate.py                 # flat top plate + lower fastening tabs
+│   ├── case.py                  # split case bottom/edges, bay, USB-C, magnets
 │   ├── cover.py                 # L-shaped/flat cover with local magnet bosses
 │   ├── export.py                # scene reset + atomic STL export
 │   ├── cli.py                   # shared argparse and output paths
@@ -95,17 +95,27 @@ blender/
   centered coordinates so the parts align.
 - Top plate local Z is `0 .. 9.5 mm`. In the assembly the plate sits on the
   inter-key support ribs at `z = 3 .. 12.5 mm`. The rest of the pocket floor is
-  recessed 1.5 mm for wires.
+  recessed 1.5 mm for wires. The lower 4 mm of the plate carries the fastening
+  tabs, so the plate split is at local z = 4.0 mm.
 - The case rim is at 15 mm. The default compartment and cover top are at
   **27.5 mm**; the cover lid is 2.5 mm thick, its front lip is 12.5 mm tall
   (total cover height 15 mm), and local 1.5 mm bosses under the magnets hang
   down to the 45-degree case shelves.
 - The default case uses 7 mm walls and a 17.5 mm-deep electronics bay.
-- The top plate is **not fastened** for now. The cover is held by 6 x 3 x 3
-  magnets: two along each side edge with their long sides on Y (or one centered
-  if the span is too short), plus an adaptive evenly spaced row along the top
-  edge with long sides on X (target spacing 40 mm). The case supports each one
-  with its own small 45-degree shelf.
+- The case is split into a bottom tray and an outer edge ring. The bottom tray
+  is inset behind the edge ring, so only its underside is visible; the two
+  bottom faces are coplanar. The edge ring has a lower internal recess that
+  fits over the tray's perimeter lip and plate tabs, and an overhanging shelf
+  at z = 7 mm with vertical M2 heatset inserts.
+- The top plate has adaptive 4 mm-high lower tabs on west, east and south.
+  Each tab sits on the bottom tray, under the edge-ring shelf. M2 x 10
+  socket-head screws enter from counterbores in the bottom tray, pass through
+  the tab and engage the insert. The north edge is free for the bay and cover
+  lip.
+- The cover is held by 6 x 3 x 3 magnets: two along each side edge with their
+  long sides on Y (or one centered if the span is too short), plus an adaptive
+  evenly spaced row along the top edge with long sides on X (target spacing
+  40 mm). The edge ring supports each one with its own small 45-degree shelf.
 - `--led-facing south` adds 180 degrees to every key's cutout rotation. It flips
   the whole switch footprint, not only the LED. North and south plates are not
   interchangeable; generate the matching variant.
@@ -119,20 +129,22 @@ layout data
    │
    ├─ layout_bounds() ──► plate/case rectangle
    |                        │
-   |                        └─ magnet_plan() / rib_plan() ──► plan
+   |                        ├─ magnet_plan() / rib_plan() ──► plan
+   |                        └─ plate_tab_plan() ──► tab/screw positions
    │
-   ├─ build_top_plate()  ──► build/top_plate.stl   (no fastening holes)
-   ├─ build_case()       ──► build/case.stl        (wire recess, ribs, shelves)
-   └─ build_cover()      ──► build/cover.stl       (local bosses + pockets)
+   ├─ build_top_plate()   ──► build/top_plate.stl      (tabs + M2 holes)
+   ├─ build_case_bottom() ──► build/case_bottom.stl   (wire recess, ribs, lip)
+   ├─ build_case_edges()  ──► build/case_edges.stl    (bay, USB-C, inserts)
+   └─ build_cover()       ──► build/cover.stl         (local bosses + pockets)
 ```
 
 `generate_keyboard(spec)`:
 
 1. validates case metrics and compartment values before touching the scene,
 2. resets the scene once,
-3. builds all three parts,
+3. builds the plate, both case parts and the cover,
 4. runs strict mesh validation on each,
-5. exports all three with atomic replacement.
+5. exports all four with atomic replacement.
 
 ### Dependency direction
 
@@ -140,9 +152,9 @@ layout data
 - `mesh.py` owns low-level bmesh primitives, booleans and validation.
 - `hardware.py` owns shared MX/hotswap/LED cutout dimensions and cutters.
 - `stabilizer.py` owns the custom stabilizer dimensions, plate cutters and slider.
-- `mounting.py` owns magnet/wire dimensions and the shared magnet/rib plans.
-  It is pure Python and imports only layout.
-- `plate.py` imports layout, hardware, stabilizer and mesh.
+- `mounting.py` owns plate-tab, magnet and wire dimensions and the shared
+  tab/magnet/rib plans. It is pure Python and imports only layout.
+- `plate.py` imports layout, hardware, mesh, mounting and stabilizer.
 - `case.py` imports layout, hardware, mesh and mounting.
 - `cover.py` imports case, mesh, hardware and mounting.
 - `export.py`, `cli.py` and `generate.py` sit above the builders.
@@ -181,10 +193,10 @@ blender --background --python-exit-code 1 --python keyboards/kb60/main.py -- \
 | `--padding-left/right/top/bottom MM` | Individual sides; highest precedence. |
 | `--compartment-height MM` | Raised bay height (default 27.5 mm). |
 | `--compartment-depth MM` | Internal north/south depth of the bay (default 17.5 mm). |
-| `--wall MM` | Case outer wall thickness (default 7 mm). |
+| `--wall MM` | Case outer wall thickness (default 7 mm; the split geometry needs at least 7 mm). |
 | `--compartment-ramp MM` | Horizontal run of the raised-compartment slope; 0 gives a vertical step. |
-| `--split-plate` | Export the top plate as two horizontal halves instead of one STL; case and cover are unchanged. |
-| `--output PATH` | Base STL path; case/cover reuse the stem with `_case`/`_cover`; split mode adds `_top_half`/`_bottom_half`. |
+| `--split-plate` | Export the top plate as two horizontal halves instead of one STL; the split case and cover are unchanged. |
+| `--output PATH` | Base STL path; case parts/cover reuse the stem with `_case_bottom`/`_case_edges`/`_cover`; split mode adds `_top_half`/`_bottom_half`. |
 | `--magnet-width MM` | Magnet long side, along the edge (default 6.0). |
 | `--magnet-length MM` | Magnet short side, across the edge (default 3.0). |
 | `--magnet-thickness MM` | Magnet vertical size; sets the local cover boss height (default 3.0). |
@@ -200,12 +212,13 @@ Default outputs:
 
 ```text
 build/<name>_top_plate.stl
-build/<name>_case.stl
+build/<name>_case_bottom.stl
+build/<name>_case_edges.stl
 build/<name>_cover.stl
 ```
 
-Examples: `build/kb75_top_plate.stl`, `build/kb100_case.stl`,
-`build/kbNumpad_cover.stl`.
+Examples: `build/kb75_top_plate.stl`, `build/kb100_case_bottom.stl`,
+`build/kb100_case_edges.stl`, `build/kbNumpad_cover.stl`.
 
 `--output` names the plate; for example:
 
@@ -213,8 +226,8 @@ Examples: `build/kb75_top_plate.stl`, `build/kb100_case.stl`,
 --output build/kb60_south.stl
 ```
 
-writes `build/kb60_south.stl`, `build/kb60_south_case.stl` and
-`build/kb60_south_cover.stl`.
+writes `build/kb60_south.stl`, `build/kb60_south_case_bottom.stl`,
+`build/kb60_south_case_edges.stl` and `build/kb60_south_cover.stl`.
 
 With `--split-plate`, the normal top plate is replaced by:
 
@@ -223,10 +236,11 @@ build/<name>_top_plate_top_half.stl
 build/<name>_top_plate_bottom_half.stl
 ```
 
-The split is through the middle of the 1.5 mm switch/socket web at z = 3.75 mm.
-The top half contains the switch pockets; the bottom half contains the
-hotswap/LED pockets. Both halves are validated strictly before export. The case
-and cover are still exported unchanged.
+The split is at z = 4.0 mm, through the 1.5 mm switch/socket web and at the top
+of the fastening tabs. The top half contains the switch pockets; the bottom
+half contains the hotswap/LED pockets plus all fastening tabs. Both halves are
+validated strictly before export. The split case and cover are still exported
+unchanged.
 
 The standalone stabilizer generator writes:
 
@@ -365,12 +379,14 @@ blender --background --python-exit-code 1 --python keyboards/stabilizers/main.py
 
 ## Case, cover and USB-C
 
-`case.py` builds a hollow tray with rounded corners, 45 degree rim chamfers and a
-north electronics bay.
+`case.py` builds the case as two parts that share the old outside silhouette: a
+bottom tray with an inset perimeter, and a full-height outer edge ring with the
+electronics bay.
 
 Key dimensions:
 
-- wall 7 mm (default; configurable with `--wall`), floor 3 mm, chamfer 1.5 mm, corner radius 7 mm,
+- wall 7 mm (the split needs at least 7 mm; thicker is allowed),
+  floor 3 mm, chamfer 1.5 mm, corner radius 7 mm,
 - plate pocket clearance 0.25 mm per side,
 - bay depth 17.5 mm (default; configurable with `--compartment-depth`),
 - lid thickness 2.5 mm, shelf ledge 1.5 mm wide, lid clearance 0.2 mm,
@@ -379,26 +395,52 @@ Key dimensions:
 - the bay shelf sits 2.5 mm below the compartment top; the 45-degree magnet
   shelves stop 1.5 mm below the shelf so the cover's local bosses meet them.
 
+### Split case and plate fastening
+
+The bottom tray is inset behind the edge ring, so its vertical edge is hidden
+and only its underside is visible.  Both bottom faces are at z = 0.  The edge
+ring keeps the current outer wall, chamfer and rounded corner; inside it has a
+**straight-sided** lower recess from z = 0 to 7 mm (no undercut, so the tray can
+slide in from below).  The 1.5 mm outer bottom chamfer leaves about **1.05 mm**
+of outer wall at z = 0.  At z = 7 mm an inward shelf overhangs the tabs.
+Vertical **M2 heatset insert** holes (3.0 mm OD, 4.5 mm deep) open downward from
+this shelf.
+
+The bottom tray has:
+
+- a 3 mm bed with a rounded plan that fits the edge-ring recess with 0.2 mm
+  radial clearance,
+- an upstanding **0.7 mm perimeter lip** from z = 3 to 6.8 mm, interrupted at
+  each plate-tab location.  It stops 0.2 mm below the edge shelf so the screws
+  clamp the tab, not the lip.  The lip enters the edge-ring recess and locates
+  the tray; the tabs carry the clamping load,
+- **M2 counterbores** (4.0 mm for the 3.8 mm head, 2.0 mm deep) and 2.4 mm
+  through-holes in the bed at each tab, opening from below.
+
+The top plate has adaptive lower tabs: **4 mm high**, **3.6 mm deep**, **9 mm
+wide**, on west, east and south.  `plate_tab_plan(width, height)` distributes
+them evenly with a 50 mm target spacing, 10 mm preferred corner margin and
+6 mm minimum gap.  Each tab has a 2.4 mm M2 clearance hole at 2.2 mm inboard of
+the plate edge.  In the assembly the tab sits on the bottom bed and under the
+edge shelf; an **M2 x 10 socket-head screw** enters from below.  The north edge
+has no tabs, leaving the bay and cover lip free.
+
+The previous idea of M3 inserts in the inter-key webs is still rejected:
+adjacent 1u switch pockets leave a **5.05 mm** web, an M3 insert is **4.6 mm**
+across before wall thickness, and the hotswap socket tab already protrudes
+**0.365 mm** into that web.  Putting the inserts in the edge ring avoids all of
+those cutouts.
+
 ### Plate support and wire routing
-
-The top plate is **not fastened** at the moment.  The previous bottom-screw
-design required notches in the case walls, which is unwanted.  Moving the M3
-heatset inserts between the keys is not possible:
-
-- adjacent 1u switch pockets leave a **5.05 mm** web between them;
-- an M3 insert is **4.6 mm** across before any wall thickness is added;
-- the hotswap socket tab already protrudes **0.365 mm** into that web.
-
-So the plate sits in its pocket, supported by small ribs, until a wall-free
-fastening is chosen.
 
 The plate-pocket floor is recessed by `wire_gap` (1.5 mm) and gets one short
 **3 x 10 mm rib in each gap between neighbouring keycaps**, at the original
 floor level.  The ribs sit under the cap boundaries, which are solid plate even
 for wide keys; they are clear of the switch pockets and socket tabs.  The plate
 rests on them; wires run in the channels between.  The recess is open to the
-bay at the plate's north edge.  There is no perimeter rib: the plate edges
-overhang the recess by 1.5 mm.
+bay at the plate's north edge.  It is inset **0.5 mm** from the west, east and
+south pocket walls so the counterbores cannot become tangent to the recess and
+the plate edge keeps a solid rim.  There is no perimeter rib.
 
 ### Cover magnets
 
@@ -477,13 +519,14 @@ Options:
 
 Palette:
 
-- case `#66D9EF` cyan,
+- case edges `#66D9EF` cyan,
+- case bottom `#4FB8CE` darker cyan (shows the split),
 - cover `#F92672` pink,
 - top plate `#E6DB74` yellow,
 - background `#272822`.
 
 The previewer is not a model generator and does not write STLs. It uses the
-default plate/case parameters, so it matches the default generated parts.
+default plate/split-case parameters, so it matches the default generated parts.
 
 For inspecting one part from an arbitrary angle, use `render_part.py`:
 
@@ -497,7 +540,7 @@ The cover's front lip hides its underside from a low south view; use azimuth
 
 Options:
 
-- `--keyboard ...`, `--part plate|case|cover|assembly|slider`
+- `--keyboard ...`, `--part plate|case|case_bottom|case_edges|cover|assembly|slider`
 - `--stl PATH` — render an existing STL instead of building a part
 - `--azimuth DEG` — 0 south, 90 east, 180 north, 270 west
 - `--elevation DEG` — negative values look from below
@@ -531,15 +574,16 @@ KEYS = layout.keys_from_rows(ROWS)
 
 args = cli.parse_args(argv, description=f"{NAME} ({len(KEYS)} keys)")
 params = cli.params_from_args(args)
-plate, case_path, cover_path = cli.output_paths(
+plate, case_bottom, case_edges, cover = cli.output_paths(
     args.output, *cli.default_paths(PROJECT_DIR, NAME)
 )
 spec = generate.KeyboardSpec(
     name=NAME,
     keys=KEYS,
     plate_path=plate,
-    case_path=case_path,
-    cover_path=cover_path,
+    case_bottom_path=case_bottom,
+    case_edges_path=case_edges,
+    cover_path=cover,
     params=params,
     compartment_height=args.compartment_height,
     compartment_ramp=args.compartment_ramp,
@@ -555,8 +599,8 @@ generate.generate_keyboard(spec)
 
 - `blender --background --python-exit-code 1 --python keyboards/<name>/main.py`
   exits 0.
-- Default mode creates three STLs under `build/`; split mode creates the two
-  plate halves plus the case and cover.
+- Default mode creates four STLs under `build/`; split mode creates the two
+  plate halves plus the two case parts and cover.
 - Every part passes strict mesh validation (manifold, no zero-area faces).
 - Dimensions are plausible and the parts align.
 - North and south variants both generate if the layout is intended to support
@@ -580,8 +624,8 @@ Pure layout and mounting plans:
 python3 -m unittest discover -s tests -p "test_*.py" -v
 ```
 
-Geometry metrics for all four boards plus a real numpad plate/case/cover/split
-build:
+Geometry metrics for all four boards plus a real numpad plate/case-bottom/
+case-edges/cover/split build and the south-facing 100% plate:
 
 ```sh
 blender --background --python-exit-code 1 --python tests/run_blender_tests.py
@@ -624,7 +668,7 @@ blender --background --python-exit-code 1 --python keyboards/stabilizers/main.py
 
 ```sh
 blender --background --python-exit-code 1 --python keyboards/render_part.py -- \
-  --keyboard kb75 --part case --azimuth 35 --elevation 35
+  --keyboard kb75 --part case_edges --azimuth 35 --elevation 35
 ```
 
 `render_part.py` builds one part (or the assembly, or a slider), frames it
@@ -644,12 +688,24 @@ elevation looks from below; `--orthographic` gives a dimension-friendly view.
   differs for south-facing vertical keys.
 - **Case shelf:** the USB glue shelf is an internal cantilever and may need a
   support on some printers.
-- **100% size:** the single-piece 100% case is about 447 mm wide; confirm the
-  printer bed size before printing.
-- **No top-plate fastening:** the plate sits in the case pocket; the cover lip
-  only locates it in Y, so it can still be lifted out. Do not reintroduce wall
-  notches for plate ears; between-key M3 inserts do not fit (5.05 mm web vs
-  4.6 mm insert plus walls and the socket tab).
+- **100% size:** the split 100% case is about 447 mm wide; confirm the printer
+  bed size before printing.
+- **Split-case fastening:** the plate is clamped between the bottom tray and the
+  edge-ring shelf by M2 screws from below. Do not reintroduce wall notches or
+  plate ears. Between-key M3 inserts still do not fit (5.05 mm web vs 4.6 mm
+  insert plus walls and the socket tab); keep the inserts in the edge ring.
+- **Edge-ring lower skin:** the straight recess leaves about 1.05 mm of outer
+  wall at the very bottom above the 1.5 mm chamfer; the wall option is limited
+  to 7 mm minimum. Revalidate all four boards if the tab/screw sizes change.
+- **Tab split:** tabs are exactly 4 mm high and the split is at z = 4.0 mm. The
+  top plate half has no tabs; all tabs are in the bottom half.
+- **Assembly order:** insert the plate from below into the edge ring, then fit
+  the bottom tray from below and screw upward. The plate cannot be dropped in
+  from above because the edge shelf overhangs the tabs.
+- **Tiny boolean holes:** the 100% south-facing plate can leave a sub-millimetre
+  boundary loop where a hotswap pocket corner meets a switch leg hole.
+  `mesh.fill_small_holes()` closes only loops under 2 mm perimeter; larger
+  boundary loops are still rejected by the strict mesh check.
 - **Inter-key ribs:** the case support ribs are deliberately short and placed
   only in keycap gaps; there is no continuous rib or perimeter rib.
 - **Compatibility shims:** do not add features to `keyboard_parts.py` or
@@ -661,8 +717,9 @@ elevation looks from below; `--orthographic` gives a dimension-friendly view.
 ## Future Corne and Dactyl
 
 - **Corne:** standard 3x6 + 3 thumb per half, split. The flat plate builder and
-  layout model can be reused per half. The split case/cover need a dedicated
-  builder; do not force them into the single-case `case_metrics`.
+  layout model can be reused per half. The split case here is a two-part case
+  for one board, not a left/right split; Corne still needs a dedicated
+  case/cover builder.
 - **Dactyl:** curved key wells. A new curved builder is required; the shared
   switch/LED/hotswap dimensions and mesh validation from `hardware.py`/`mesh.py`
   should be reused with 3D transforms. The current flat cup/plate builder is not

@@ -3,10 +3,10 @@
 Examples
 --------
 
-Top view of the case interior::
+Top view of the edge ring interior::
 
     blender --background --python-exit-code 1 --python keyboards/render_part.py -- \
-        --keyboard kbNumpad --part case --azimuth 35 --elevation 35
+        --keyboard kbNumpad --part case_edges --azimuth 35 --elevation 35
 
 Underside of the cover (magnet bosses).  Look from the north or side: the
 front lip hides the underside from a low south view::
@@ -22,7 +22,7 @@ Bottom view of the plate::
 An exported STL::
 
     blender --background --python-exit-code 1 --python keyboards/render_part.py -- \
-        --stl build/kb75_case.stl --azimuth 70 --elevation 25
+        --stl build/kb75_case_edges.stl --azimuth 70 --elevation 25
 
 Azimuth 0 looks from the south (front), 90 from the east, 180 from the north,
 270 from the west.  Elevation is degrees above the XY plane; negative values
@@ -58,6 +58,8 @@ BUILD_DIR = os.path.join(PROJECT_DIR, "build")
 PART_COLOURS = {
     "plate": preview.PLATE_COLOUR,
     "case": preview.CASE_COLOUR,
+    "case_bottom": preview.CASE_BOTTOM_COLOUR,
+    "case_edges": preview.CASE_COLOUR,
     "cover": preview.COVER_COLOUR,
     "slider": "#A6E22E",
 }
@@ -73,7 +75,15 @@ def parse_args(argv=None):
     )
     parser.add_argument(
         "--part",
-        choices=("plate", "case", "cover", "assembly", "slider"),
+        choices=(
+            "plate",
+            "case",
+            "case_bottom",
+            "case_edges",
+            "cover",
+            "assembly",
+            "slider",
+        ),
         default="assembly",
         help="which part to build; ignored with --stl (default: %(default)s)",
     )
@@ -184,11 +194,26 @@ def _build(keyboard, part):
         return [
             plate_module.build_top_plate(keys, name=name, params=params)
         ]
-    if part == "case":
+    if part == "case_bottom":
         return [
-            case_module.build_case(
+            case_module.build_case_bottom(
                 keys, name=name, params=params, options=options
             )
+        ]
+    if part == "case_edges":
+        return [
+            case_module.build_case_edges(
+                keys, name=name, params=params, options=options
+            )
+        ]
+    if part == "case":
+        return [
+            case_module.build_case_bottom(
+                keys, name=f"{name}_bottom", params=params, options=options
+            ),
+            case_module.build_case_edges(
+                keys, name=f"{name}_edges", params=params, options=options
+            ),
         ]
     if part == "cover":
         return [
@@ -200,14 +225,17 @@ def _build(keyboard, part):
     top_plate = plate_module.build_top_plate(
         keys, name=f"{name}_plate", params=params
     )
-    case_obj = case_module.build_case(
-        keys, name=f"{name}_case", params=params, options=options
+    bottom = case_module.build_case_bottom(
+        keys, name=f"{name}_case_bottom", params=params, options=options
+    )
+    edges = case_module.build_case_edges(
+        keys, name=f"{name}_case_edges", params=params, options=options
     )
     cover_obj = cover_module.build_cover(
         keys, name=f"{name}_cover", params=params, options=options
     )
     top_plate.location.z = case_module.FLOOR
-    return [top_plate, case_obj, cover_obj]
+    return [top_plate, bottom, edges, cover_obj]
 
 
 def _apply_materials(objects, part, args):
@@ -215,14 +243,19 @@ def _apply_materials(objects, part, args):
         for obj in objects:
             preview.apply_material(obj, args.colour)
         return
-    if part == "assembly" and len(objects) == 3:
+    if part == "assembly" and len(objects) == 4:
         colours = (
             PART_COLOURS["plate"],
-            PART_COLOURS["case"],
+            PART_COLOURS["case_bottom"],
+            PART_COLOURS["case_edges"],
             PART_COLOURS["cover"],
         )
         for obj, colour in zip(objects, colours):
             preview.apply_material(obj, colour)
+        return
+    if part == "case" and len(objects) == 2:
+        preview.apply_material(objects[0], PART_COLOURS["case_bottom"])
+        preview.apply_material(objects[1], PART_COLOURS["case_edges"])
         return
     colour = PART_COLOURS.get(part, preview.PLATE_COLOUR)
     for obj in objects:

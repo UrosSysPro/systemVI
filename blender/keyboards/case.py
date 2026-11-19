@@ -1,27 +1,26 @@
-"""Flat keyboard case with a top electronics bay.
+"""Split flat keyboard case with a top electronics bay.
 
-The case is a hollow tray with 45 degree chamfers on the top and bottom rims
-and rounded corners.  The top plate drops into a pocket that the case wall
-wraps on the left, right and bottom (south) sides.  On the top (north) side the
-case extends into an electronics bay for the controller and batteries.
+The case is printed as two parts that share the existing outer silhouette:
 
-``DEFAULT_COMPARTMENT_HEIGHT`` sets the top of that bay.  The default is a
+- :func:`build_case_bottom` is the bottom tray.  Its footprint is inset behind
+  the edge ring, so only its underside is visible.  It carries the wire recess,
+  the inter-key support ribs, an upstanding perimeter lip and the M2
+  counterbored screw holes.
+- :func:`build_case_edges` is the full-height outer edge ring plus the bay,
+  USB-C opening and cover magnet shelves.  From the outside it is unchanged.
+  Inside it has a lower recess that fits over the bottom tray's lip and an
+  overhanging shelf above the plate tabs, with vertical heatset inserts.
+
+The top plate has 4 mm lower side tabs.  A tab sits on the bottom tray and
+under the edge ring's shelf; an M2 screw from below clamps the stack.  The
+edge ring and bottom tray bottom faces are coplanar.
+
+``DEFAULT_COMPARTMENT_HEIGHT`` sets the top of the bay.  The default is a
 raised 27.5 mm compartment; the case rim remains at 15 mm.  When the compartment
 is higher than the rim, the case's outer edges are slanted over
 ``COMPARTMENT_RAMP`` from the rim height up to the compartment height.
 
-Mounting and wire routing also live in this module, driven by
-:mod:`mounting`:
-
-- the plate pocket floor is recessed by ``wire_gap`` and stiffened with short
-  ribs between adjacent keys, leaving channels for wires under the plate;
-- the top plate is not fastened; it sits in the pocket on those ribs (the
-  earlier wall-notched screw ears were removed because the wall gaps were
-  unwanted);
-- a small 45-degree shelf under each magnet holds the cover; each shelf top sits
-  below the bay shelf so the cover's local magnet bosses meet it.
-
-This module builds the case only.  The separate cover lives in
+This module builds the two case parts only.  The separate cover lives in
 :mod:`cover`; both share :func:`case_metrics` so they always fit the same bay.
 All dimensions are millimetres; one Blender unit is one millimetre on STL
 export.
@@ -82,6 +81,21 @@ USB_PORT_FROM_LEFT = 12.0  # slot centre from the bay's inner west wall
 PLATE_TOP = FLOOR + hardware.PLATE_THICKNESS
 CASE_HEIGHT = PLATE_TOP + LID_THICKNESS
 
+# Split-case fastening.  All extents are measured outward from the plate pocket
+# rectangle (which is the plate outline plus PLATE_CLEARANCE).  The lower
+# recess is stepped because the case's 1.5 mm bottom chamfer leaves less room
+# for the outer wall at z = 0.
+TAB_TOP = FLOOR + mounting.TAB_HEIGHT       # top of the plate tabs
+BOTTOM_EXT = 4.25                            # bottom tray footprint
+EDGE_LOWER_EXT = 4.45                        # edge lower recess
+BOTTOM_LIP_WIDTH = 0.7                       # upstanding perimeter lip
+BOTTOM_LIP_OVERLAP = 0.5                     # into the bottom tray
+BOTTOM_LIP_CLEARANCE = 0.2                   # below the edge shelf
+SPLIT_MIN_WALL = 7.0                         # radial room for tabs/inserts
+WIRE_RECESS_INSET = 0.5                      # solid rim under the plate edge
+BOTTOM_RADIUS = 4.25                         # bottom tray footprint
+EDGE_LOWER_RADIUS = 4.45                     # edge lower recess
+
 MAGNET_SHELF_EDGE = 1.5    # material under the magnet pocket at the shelf edge
 DEFAULT_COMPARTMENT_HEIGHT = 27.5  # raised bay height
 COMPARTMENT_HEIGHT = DEFAULT_COMPARTMENT_HEIGHT  # compatibility name
@@ -113,6 +127,10 @@ class CaseMetrics:
     shelf: float
     magnets: mounting.MagnetPlan
     ribs: tuple[layout.Rect, ...]
+    tabs: mounting.TabPlan
+    bottom: layout.Rect
+    edge_lower: layout.Rect
+    tab_top: float
 
 
 def case_metrics(
@@ -140,6 +158,12 @@ def case_metrics(
     bay_depth = COMPARTMENT_DEPTH if compartment_depth is None else compartment_depth
     if not math.isfinite(wall) or wall <= 0.0:
         raise ValueError(f"wall must be a positive number, got {wall}")
+    if wall < SPLIT_MIN_WALL:
+        raise ValueError(
+            "wall must be at least "
+            f"{SPLIT_MIN_WALL} mm for the split case's lower recess, tabs and "
+            f"heatset inserts; got {wall} mm"
+        )
     if not math.isfinite(bay_depth) or bay_depth <= 0.0:
         raise ValueError(
             f"compartment_depth must be a positive number, got {bay_depth}"
@@ -224,6 +248,27 @@ def case_metrics(
             )
     ribs = mounting.rib_plan(keys, bounds)
 
+    tabs = mounting.plate_tab_plan(bounds.width, bounds.height)
+    bottom = layout.Rect(
+        pocket.x0 - BOTTOM_EXT,
+        pocket.x1 + BOTTOM_EXT,
+        pocket.y0 - BOTTOM_EXT,
+        bay_north + BOTTOM_EXT,
+    )
+    edge_lower = layout.Rect(
+        pocket.x0 - EDGE_LOWER_EXT,
+        pocket.x1 + EDGE_LOWER_EXT,
+        pocket.y0 - EDGE_LOWER_EXT,
+        bay_north + EDGE_LOWER_EXT,
+    )
+
+    if TAB_TOP + mounting.INSERT_HOLE_DEPTH + 1.0 > CASE_HEIGHT:
+        raise ValueError(
+            "the plate tabs and heatset inserts are too tall for the case "
+            f"rim: need {TAB_TOP + mounting.INSERT_HOLE_DEPTH + 1.0:.1f} mm, "
+            f"rim is {CASE_HEIGHT:.1f} mm"
+        )
+
     return CaseMetrics(
         width=east - west,
         depth=north - south,
@@ -241,6 +286,10 @@ def case_metrics(
         shelf=shelf,
         magnets=magnets,
         ribs=ribs,
+        tabs=tabs,
+        bottom=bottom,
+        edge_lower=edge_lower,
+        tab_top=TAB_TOP,
     )
 
 
@@ -417,6 +466,27 @@ def _box_cutter(name, rect, z_min, z_max):
     return mesh.mesh_object(name, bm)
 
 
+def _rounded_rect_prism(name, rect, radius, z_min, z_max):
+    """Solid with a rounded-rectangle plan, used for the split-case parts.
+
+    The outer shell corners are rounded, so a rectangular lower recess would
+    either break through them or become tangent at some height.  The recess
+    and the bottom tray use the same rounded plan with a constant wall inset.
+    """
+
+    bm = bmesh.new()
+    points = _rounded_rect_points(
+        rect.centre_x,
+        rect.centre_y,
+        rect.width / 2.0,
+        rect.height / 2.0,
+        radius,
+        CORNER_SEGMENTS,
+    )
+    mesh.add_prism_z(bm, points, z_min, z_max)
+    return mesh.mesh_object(name, bm)
+
+
 def _plate_pocket_cutter(metrics):
     return _box_cutter(
         "plate_pocket",
@@ -562,11 +632,25 @@ def _usb_platform(metrics):
 
 
 def _wire_recess_cutter(metrics, options):
-    """Recess the plate-pocket floor so wires can pass under the plate."""
+    """Recess the plate-pocket floor so wires can pass under the plate.
 
+    The recess is inset slightly on the west, east and south walls so the
+    bottom tray keeps a solid rim under the plate edge and the M2 counterbores
+    cannot become tangent to the recess wall.  It stays open to the bay on the
+    north side.
+    """
+
+    inset = WIRE_RECESS_INSET
+    pocket = metrics.plate_pocket
+    recess = layout.Rect(
+        pocket.x0 + inset,
+        pocket.x1 - inset,
+        pocket.y0 + inset,
+        pocket.y1,
+    )
     return _box_cutter(
         "wire_recess",
-        metrics.plate_pocket,
+        recess,
         FLOOR - options.wire_gap,
         FLOOR + hardware.EPS,
     )
@@ -658,21 +742,206 @@ def _magnet_pocket_cutters(metrics):
 
 
 # --------------------------------------------------------------------------
+# Split-case specific geometry
+# --------------------------------------------------------------------------
+
+
+def _edge_lower_cutter(metrics):
+    """The internal recess that receives the bottom tray and plate tabs.
+
+    It is straight-sided all the way to z = 0: the bottom tray and its lip can
+    slide in from below.  The 1.5 mm outer bottom chamfer still leaves about
+    1.05 mm of outer wall at the very bottom.
+    """
+
+    return _rounded_rect_prism(
+        "edge_lower",
+        metrics.edge_lower,
+        EDGE_LOWER_RADIUS,
+        -hardware.EPS,
+        metrics.tab_top,
+    )
+
+
+def _insert_hole_cutters(metrics):
+    """Vertical heatset-insert holes above each plate tab."""
+
+    bm = bmesh.new()
+    radius = mounting.INSERT_HOLE_DIAMETER / 2.0
+    for tab in metrics.tabs.tabs:
+        mesh.add_cylinder(
+            bm,
+            tab.screw,
+            radius,
+            metrics.tab_top - 0.1,
+            metrics.tab_top + mounting.INSERT_HOLE_DEPTH,
+        )
+    if not metrics.tabs.tabs:
+        bm.free()
+        return None
+    return mesh.mesh_object("insert_holes", bm)
+
+
+def _bottom_bed_builder(metrics):
+    """The 3 mm bottom tray bed, with a rounded plan."""
+
+    return _rounded_rect_prism(
+        "case_bottom_bed",
+        metrics.bottom,
+        BOTTOM_RADIUS,
+        0.0,
+        FLOOR,
+    )
+
+
+def _bottom_lip_builder(metrics):
+    """Upstanding perimeter lip, interrupted at each plate tab."""
+
+    outer = metrics.bottom
+    inner = layout.Rect(
+        outer.x0 + BOTTOM_LIP_WIDTH,
+        outer.x1 - BOTTOM_LIP_WIDTH,
+        outer.y0 + BOTTOM_LIP_WIDTH,
+        outer.y1 - BOTTOM_LIP_WIDTH,
+    )
+    z0 = FLOOR - BOTTOM_LIP_OVERLAP
+    z1 = metrics.tab_top - BOTTOM_LIP_CLEARANCE
+
+    ring = _rounded_rect_prism(
+        "case_bottom_lip",
+        outer,
+        BOTTOM_RADIUS,
+        z0,
+        z1,
+    )
+    inner_cutter = _rounded_rect_prism(
+        "case_bottom_lip_inner",
+        inner,
+        BOTTOM_RADIUS - BOTTOM_LIP_WIDTH,
+        z0 - 0.1,
+        z1 + 0.5,
+    )
+    mesh.difference(ring, inner_cutter)
+
+    gap_bm = bmesh.new()
+    for tab in metrics.tabs.tabs:
+        if tab.side == "west":
+            x0, x1 = outer.x0 - 0.5, outer.x0 + BOTTOM_LIP_WIDTH + 0.5
+            y0 = tab.centre[1] - mounting.TAB_WIDTH / 2.0 - 0.2
+            y1 = tab.centre[1] + mounting.TAB_WIDTH / 2.0 + 0.2
+        elif tab.side == "east":
+            x0, x1 = outer.x1 - BOTTOM_LIP_WIDTH - 0.5, outer.x1 + 0.5
+            y0 = tab.centre[1] - mounting.TAB_WIDTH / 2.0 - 0.2
+            y1 = tab.centre[1] + mounting.TAB_WIDTH / 2.0 + 0.2
+        else:
+            x0 = tab.centre[0] - mounting.TAB_WIDTH / 2.0 - 0.2
+            x1 = tab.centre[0] + mounting.TAB_WIDTH / 2.0 + 0.2
+            y0, y1 = outer.y0 - 0.5, outer.y0 + BOTTOM_LIP_WIDTH + 0.5
+        mesh.add_box(
+            gap_bm,
+            ((x0 + x1) / 2.0, (y0 + y1) / 2.0, (FLOOR - 0.05 + z1 + 0.5) / 2.0),
+            (x1 - x0, y1 - y0, z1 + 0.55 - (FLOOR - 0.05)),
+        )
+    if metrics.tabs.tabs:
+        gap_cutter = mesh.mesh_object("case_bottom_lip_gaps", gap_bm)
+        mesh.difference(ring, gap_cutter)
+    else:
+        gap_bm.free()
+
+    return ring
+
+
+def _bottom_screw_cutters(metrics):
+    """Counterbores and through-holes for the M2 screws from below."""
+
+    through_bm = bmesh.new()
+    head_bm = bmesh.new()
+    hole_radius = mounting.SCREW_HOLE_DIAMETER / 2.0
+    head_radius = mounting.SCREW_HEAD_DIAMETER / 2.0
+    for tab in metrics.tabs.tabs:
+        mesh.add_cylinder(
+            through_bm,
+            tab.screw,
+            hole_radius,
+            mounting.SCREW_COUNTERBORE_DEPTH - 0.1,
+            FLOOR + hardware.EPS,
+        )
+        mesh.add_cylinder(
+            head_bm,
+            tab.screw,
+            head_radius,
+            -hardware.EPS,
+            mounting.SCREW_COUNTERBORE_DEPTH,
+        )
+    if not metrics.tabs.tabs:
+        through_bm.free()
+        head_bm.free()
+        return None, None
+    return (
+        mesh.mesh_object("case_bottom_screw_holes", through_bm),
+        mesh.mesh_object("case_bottom_counterbores", head_bm),
+    )
+
+
+# --------------------------------------------------------------------------
 # Part generation
 # --------------------------------------------------------------------------
 
 
-def build_case(
+def build_case_bottom(
     keys,
     params=None,
-    name="case",
+    name="case_bottom",
     compartment_height=None,
     compartment_ramp=None,
     wall=None,
     compartment_depth=None,
     options=None,
 ):
-    """Build the case; the plate pocket is centred like the top plate."""
+    """Build the inset bottom tray with wire recess, ribs and screw holes."""
+
+    ramp = COMPARTMENT_RAMP if compartment_ramp is None else compartment_ramp
+    if not math.isfinite(ramp) or ramp < 0.0:
+        raise ValueError(
+            f"compartment_ramp must be a non-negative number, got {ramp}"
+        )
+    options = options or mounting.MountingOptions()
+    metrics = case_metrics(
+        keys,
+        params,
+        compartment_height=compartment_height,
+        wall=wall,
+        compartment_depth=compartment_depth,
+        options=options,
+    )
+
+    bottom = _bottom_bed_builder(metrics)
+    mesh.union(bottom, _bottom_lip_builder(metrics))
+
+    mesh.difference(bottom, _wire_recess_cutter(metrics, options))
+    if metrics.ribs:
+        mesh.union(bottom, _floor_rib_builder(metrics, options))
+
+    through, heads = _bottom_screw_cutters(metrics)
+    if through is not None:
+        mesh.difference(bottom, through)
+        mesh.difference(bottom, heads)
+
+    mesh.check_mesh(name, bottom, strict=True)
+    return bottom
+
+
+def build_case_edges(
+    keys,
+    params=None,
+    name="case_edges",
+    compartment_height=None,
+    compartment_ramp=None,
+    wall=None,
+    compartment_depth=None,
+    options=None,
+):
+    """Build the full-height edge ring, bay, USB-C and magnet shelves."""
 
     ramp = COMPARTMENT_RAMP if compartment_ramp is None else compartment_ramp
     if not math.isfinite(ramp) or ramp < 0.0:
@@ -697,6 +966,7 @@ def build_case(
         _plate_pocket_cutter(metrics),
         _bay_cavity_cutter(metrics),
         _bay_opening_cutter(metrics),
+        _edge_lower_cutter(metrics),
     ]
     if metrics.height > CASE_HEIGHT:
         cutters.insert(0, _compartment_ramp_cutter(metrics, ramp))
@@ -709,14 +979,14 @@ def build_case(
     for shelf in _magnet_shelf_builders(metrics):
         mesh.union(case, shelf)
 
-    mesh.difference(case, _wire_recess_cutter(metrics, options))
-    if metrics.ribs:
-        mesh.union(case, _floor_rib_builder(metrics, options))
-
     mesh.difference(case, _magnet_pocket_cutters(metrics))
 
     for cutter in (_usb_port_cutter(metrics), _usb_bevel_cutter(metrics)):
         mesh.difference(case, cutter)
+
+    insert_holes = _insert_hole_cutters(metrics)
+    if insert_holes is not None:
+        mesh.difference(case, insert_holes)
 
     _bevel_lower_rim(case, metrics)
 

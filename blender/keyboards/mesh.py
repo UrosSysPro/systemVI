@@ -199,6 +199,60 @@ class MeshReport:
         return self.faces > 0 and not self.non_manifold_edges and not self.zero_area_faces
 
 
+def fill_small_holes(name, obj, max_perimeter=2.0):
+    """Close tiny boundary loops left by an exact boolean.
+
+    The 100% south-facing plate can leave a sub-millimetre sliver hole where the
+    hotswap pocket corner meets a switch leg hole.  The hole is a boolean
+    artifact, not a design opening: its boundary is short and each edge has one
+    face.  Fill only such small loops; larger boundary loops are left for
+    :func:`check_mesh` to reject so a real modelling error stays loud.
+
+    Returns the number of new faces.
+    """
+
+    bm = bmesh.new()
+    bm.from_mesh(obj.data)
+
+    remaining = {edge for edge in bm.edges if not edge.is_manifold}
+    if not remaining:
+        bm.free()
+        return 0
+
+    groups = []
+    while remaining:
+        start = remaining.pop()
+        group = {start}
+        stack = [start]
+        while stack:
+            edge = stack.pop()
+            for vertex in edge.verts:
+                for other in vertex.link_edges:
+                    if other in remaining and not other.is_manifold:
+                        remaining.remove(other)
+                        group.add(other)
+                        stack.append(other)
+        groups.append(group)
+
+    filled = 0
+    for group in groups:
+        if any(len(edge.link_faces) != 1 for edge in group):
+            continue
+        if sum(edge.calc_length() for edge in group) > max_perimeter:
+            continue
+        result = bmesh.ops.holes_fill(bm, edges=list(group), sides=0)
+        filled += len(result.get("faces", ()))
+
+    if filled:
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+        bm.to_mesh(obj.data)
+        obj.data.update()
+        print(f"{name}: filled {filled} small boolean hole face(s)")
+
+    bm.free()
+    return filled
+
+
 def check_mesh(name, obj, strict=True):
     """Check a mesh for the defects this project cares about.
 

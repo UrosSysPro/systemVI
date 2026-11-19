@@ -6,9 +6,10 @@ switch, hotswap and LED cutouts.  Split boards can call it once per half;
 curved Dactyl key wells will use a separate builder that reuses
 :mod:`hardware`.
 
-The plate currently has no fastening holes; it sits in the case pocket on the
-case's inter-key support ribs.  See :mod:`mounting` for the reason the earlier
-bottom-screw ears were removed.
+The plate carries lower side tabs that are clamped between the split case's
+bottom tray and edge ring.  M2 clearance holes in the tabs line up with the
+counterbores in the bottom tray and the vertical heatset inserts in the edge
+ring.  See :mod:`mounting` for the shared tab plan.
 """
 
 from __future__ import annotations
@@ -19,6 +20,7 @@ import bpy
 import hardware
 import layout
 import mesh
+import mounting
 import stabilizer
 
 
@@ -63,6 +65,42 @@ def build_top_plate(keys, name="top_plate", params=None):
     )
     plate = mesh.mesh_object(name, bm)
 
+    tab_plan = mounting.plate_tab_plan(bounds.width, bounds.height)
+    tab_bm = bmesh.new()
+    for tab in tab_plan.tabs:
+        if tab.side in ("west", "east"):
+            radial_centre = (
+                -bounds.width / 2.0
+                + (mounting.TAB_OVERLAP - mounting.TAB_DEPTH) / 2.0
+            )
+            if tab.side == "east":
+                radial_centre = -radial_centre
+            mesh.add_box(
+                tab_bm,
+                (radial_centre, tab.centre[1], mounting.TAB_HEIGHT / 2.0),
+                (
+                    mounting.TAB_DEPTH + mounting.TAB_OVERLAP,
+                    tab.width,
+                    mounting.TAB_HEIGHT,
+                ),
+            )
+        else:
+            radial_centre = (
+                -bounds.height / 2.0
+                + (mounting.TAB_OVERLAP - mounting.TAB_DEPTH) / 2.0
+            )
+            mesh.add_box(
+                tab_bm,
+                (tab.centre[0], radial_centre, mounting.TAB_HEIGHT / 2.0),
+                (
+                    tab.width,
+                    mounting.TAB_DEPTH + mounting.TAB_OVERLAP,
+                    mounting.TAB_HEIGHT,
+                ),
+            )
+    tabs = mesh.mesh_object(f"{name}_tabs", tab_bm)
+    mesh.union(plate, tabs)
+
     socket_body, socket_tab = hardware.socket_pocket_cutters(placed)
     cutters = [
         hardware.switch_pocket_cutter(placed, thickness),
@@ -73,8 +111,25 @@ def build_top_plate(keys, name="top_plate", params=None):
         socket_tab,
     ]
     cutters.extend(stabilizer.plate_cutters(stabilizer_placed, thickness))
+
+    screw_bm = bmesh.new()
+    for tab in tab_plan.tabs:
+        mesh.add_cylinder(
+            screw_bm,
+            tab.screw,
+            mounting.SCREW_HOLE_DIAMETER / 2.0,
+            -hardware.EPS,
+            mounting.TAB_HEIGHT + hardware.EPS,
+        )
+    cutters.append(mesh.mesh_object(f"{name}_tab_holes", screw_bm))
+
     for cutter in cutters:
         mesh.difference(plate, cutter)
+
+    # Exact booleans occasionally leave a tiny boundary loop at a hotswap
+    # pocket corner, especially on the south-facing 100% plate.  Close only
+    # sub-millimetre loops; anything larger still fails the strict check.
+    mesh.fill_small_holes(name, plate)
 
     mesh.check_mesh(name, plate, strict=True)
     return plate
@@ -116,9 +171,11 @@ def split_top_plate(plate, name="top_plate", cut_z=None):
     """
 
     if cut_z is None:
-        cut_z = (
-            hardware.SOCKET_POCKET_DEPTH
-            + hardware.WEB_THICKNESS / 2.0
+        # Keep the whole 4 mm fastening tab in the bottom half.  The cut is
+        # still inside the switch/socket web (3.0 .. 4.5 mm).
+        cut_z = max(
+            mounting.TAB_HEIGHT,
+            hardware.SOCKET_POCKET_DEPTH + hardware.WEB_THICKNESS / 2.0,
         )
     if not 0.0 < cut_z < hardware.PLATE_THICKNESS:
         raise ValueError(

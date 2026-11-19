@@ -2,8 +2,9 @@
 
 A :class:`KeyboardSpec` bundles the layout, parameters, output paths and the
 optional raised compartment.  ``generate_keyboard`` validates every dimension
-before building anything, builds all three parts, then exports them, so a bad
-option cannot leave a half-written variant behind.
+before building anything, builds the plate, the two split case parts and the
+cover, then exports them, so a bad option cannot leave a half-written variant
+behind.
 
 Split and curved boards will have their own specs/builders, but can reuse the
 same layout, hardware and mesh modules.
@@ -25,12 +26,13 @@ import plate
 
 @dataclass
 class KeyboardSpec:
-    """Everything needed to generate one flat keyboard's three parts."""
+    """Everything needed to generate one flat keyboard's four parts."""
 
     name: str
     keys: list[layout.Key]
     plate_path: str
-    case_path: str
+    case_bottom_path: str
+    case_edges_path: str
     cover_path: str
     params: layout.PlateParams = field(default_factory=layout.PlateParams)
     compartment_height: float | None = None
@@ -63,7 +65,7 @@ def _print_dimensions(label, obj):
 
 
 def generate_keyboard(spec):
-    """Build and export the plate, case and cover described by ``spec``."""
+    """Build and export the plate, two case parts and cover for ``spec``."""
 
     if spec.compartment_ramp is not None and (
         not math.isfinite(spec.compartment_ramp) or spec.compartment_ramp < 0.0
@@ -96,9 +98,19 @@ def generate_keyboard(spec):
             top_plate,
             name=f"{spec.name}_top_plate",
         )
-    case_obj = case.build_case(
+    case_bottom = case.build_case_bottom(
         spec.keys,
-        name=f"{spec.name}_case",
+        name=f"{spec.name}_case_bottom",
+        params=spec.params,
+        compartment_height=spec.compartment_height,
+        compartment_ramp=spec.compartment_ramp,
+        wall=spec.wall,
+        compartment_depth=spec.compartment_depth,
+        options=spec.options,
+    )
+    case_edges = case.build_case_edges(
+        spec.keys,
+        name=f"{spec.name}_case_edges",
         params=spec.params,
         compartment_height=spec.compartment_height,
         compartment_ramp=spec.compartment_ramp,
@@ -122,7 +134,8 @@ def generate_keyboard(spec):
         top_half, bottom_half = split_halves
         _print_dimensions(f"{spec.name}: top half", top_half)
         _print_dimensions(f"{spec.name}: bottom half", bottom_half)
-    _print_dimensions(f"{spec.name}: case", case_obj)
+    _print_dimensions(f"{spec.name}: case bottom", case_bottom)
+    _print_dimensions(f"{spec.name}: case edges", case_edges)
     _print_dimensions(f"{spec.name}: cover", cover_obj)
 
     if split_halves is None:
@@ -131,7 +144,8 @@ def generate_keyboard(spec):
         top_path, bottom_path = _plate_split_paths(spec.plate_path)
         export.export_stl(split_halves[0], top_path)
         export.export_stl(split_halves[1], bottom_path)
-    export.export_stl(case_obj, spec.case_path)
+    export.export_stl(case_bottom, spec.case_bottom_path)
+    export.export_stl(case_edges, spec.case_edges_path)
     export.export_stl(cover_obj, spec.cover_path)
 
-    return top_plate, case_obj, cover_obj
+    return top_plate, case_bottom, case_edges, cover_obj

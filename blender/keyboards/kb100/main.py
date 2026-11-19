@@ -1,12 +1,13 @@
 """kb100: a full-size ANSI 104-key keyboard, 22.5u x 6u.
 
-Generates the three printed parts into the repository ``build/`` directory:
+Generates the four printed parts into the repository ``build/`` directory:
 
     build/kb100_top_plate.stl
-    build/kb100_case.stl
+    build/kb100_case_bottom.stl
+    build/kb100_case_edges.stl
     build/kb100_cover.stl
 
-The plate cutouts, case and cover come from the shared keyboard modules.  The
+The plate cutouts, split case and cover come from the shared keyboard modules.  The
 layout is a single piece: a 15u main block, a 3u navigation cluster and a 4u
 numeric keypad, separated by 0.25u gaps.  The function row contains Esc,
 F1-F12 and PrtSc/ScrollLock/Pause; the numeric keypad starts on the number row.
@@ -18,8 +19,8 @@ Options go after Blender's ``--`` separator:
     blender --background --python keyboards/kb100/main.py -- \
         --led-facing south --horizontal 6 --output build/kb100_wide.stl
 
-``--output`` names the top plate; the case and cover reuse its stem with
-``_case`` and ``_cover`` suffixes.
+``--output`` names the top plate; the two case parts and cover reuse its stem
+with ``_case_bottom``, ``_case_edges`` and ``_cover`` suffixes.
 """
 
 import os
@@ -117,10 +118,10 @@ KEYS = build_layout()
 
 def main(argv=None):
     args = cli.parse_args(
-        argv, description=f"kb100 ({len(KEYS)} keys): top plate, case and cover"
+        argv, description=f"kb100 ({len(KEYS)} keys): top plate, split case and cover"
     )
     params = cli.params_from_args(args)
-    plate_path, case_path, cover_path = cli.output_paths(
+    plate_path, case_bottom_path, case_edges_path, cover_path = cli.output_paths(
         args.output, *cli.default_paths(PROJECT_DIR, NAME)
     )
 
@@ -128,7 +129,8 @@ def main(argv=None):
         name=NAME,
         keys=KEYS,
         plate_path=plate_path,
-        case_path=case_path,
+        case_bottom_path=case_bottom_path,
+        case_edges_path=case_edges_path,
         cover_path=cover_path,
         params=params,
         compartment_height=args.compartment_height,

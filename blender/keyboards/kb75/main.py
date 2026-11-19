@@ -1,12 +1,13 @@
 """kb75: a 75% style keyboard, 83 keys, 16u x 6u.
 
-Generates the three printed parts into the repository ``build/`` directory:
+Generates the four printed parts into the repository ``build/`` directory:
 
     build/kb75_top_plate.stl
-    build/kb75_case.stl
+    build/kb75_case_bottom.stl
+    build/kb75_case_edges.stl
     build/kb75_cover.stl
 
-The plate cutouts, case and cover come from the shared keyboard modules.
+The plate cutouts, split case and cover come from the shared keyboard modules.
 
 Run headlessly with:
     blender --background --python keyboards/kb75/main.py
@@ -15,8 +16,8 @@ Options go after Blender's ``--`` separator:
     blender --background --python keyboards/kb75/main.py -- \
         --led-facing south --horizontal 8 --vertical 4 --output build/out.stl
 
-``--output`` names the top plate; the case and cover reuse its stem with
-_case and _cover suffixes.
+``--output`` names the top plate; the two case parts and cover reuse its stem
+with _case_bottom, _case_edges and _cover suffixes.
 """
 
 import os
@@ -55,10 +56,10 @@ KEYS = layout.keys_from_rows(LAYOUT_ROWS)
 
 def main(argv=None):
     args = cli.parse_args(
-        argv, description=f"kb75 ({len(KEYS)} keys): top plate, case and cover"
+        argv, description=f"kb75 ({len(KEYS)} keys): top plate, split case and cover"
     )
     params = cli.params_from_args(args)
-    plate_path, case_path, cover_path = cli.output_paths(
+    plate_path, case_bottom_path, case_edges_path, cover_path = cli.output_paths(
         args.output, *cli.default_paths(PROJECT_DIR, NAME)
     )
 
@@ -66,7 +67,8 @@ def main(argv=None):
         name=NAME,
         keys=KEYS,
         plate_path=plate_path,
-        case_path=case_path,
+        case_bottom_path=case_bottom_path,
+        case_edges_path=case_edges_path,
         cover_path=cover_path,
         params=params,
         compartment_height=args.compartment_height,
