@@ -18,8 +18,8 @@ Mounting and wire routing also live in this module, driven by
 - the top plate is not fastened; it sits in the pocket on those ribs (the
   earlier wall-notched screw ears were removed because the wall gaps were
   unwanted);
-- two full-height rails inside the bay hold the cover magnets; their tops sit
-  below the shelf so the cover's local magnet bosses meet them.
+- a small 45-degree shelf under each magnet holds the cover; each shelf top sits
+  below the bay shelf so the cover's local magnet bosses meet it.
 
 This module builds the case only.  The separate cover lives in
 :mod:`cover`; both share :func:`case_metrics` so they always fit the same bay.
@@ -82,6 +82,7 @@ USB_PORT_FROM_LEFT = 12.0  # slot centre from the bay's inner west wall
 PLATE_TOP = FLOOR + hardware.PLATE_THICKNESS
 CASE_HEIGHT = PLATE_TOP + LID_THICKNESS
 
+MAGNET_SHELF_EDGE = 1.5    # material under the magnet pocket at the shelf edge
 DEFAULT_COMPARTMENT_HEIGHT = 27.5  # raised bay height
 COMPARTMENT_HEIGHT = DEFAULT_COMPARTMENT_HEIGHT  # compatibility name
 COMPARTMENT_RAMP = 20.0    # horizontal run of the slanted edge
@@ -148,7 +149,9 @@ def case_metrics(
     options = options or mounting.MountingOptions()
     options.validate(FLOOR)
     lid_thickness = LID_THICKNESS
-    boss_height = options.magnet_boss_height(lid_thickness)
+    boss_height = options.magnet_boss_height(
+        options.magnet_thickness, lid_thickness
+    )
     if (
         height - lid_thickness - boss_height
         < PLATE_TOP + 0.5
@@ -202,9 +205,23 @@ def case_metrics(
         FLOOR + (height - lid_thickness - FLOOR) / 2.0,
     )
     shelf = height - lid_thickness
+    north_start = usb_center[0] + USB_RECESS_WIDTH / 2.0 + 0.5
     magnets = mounting.magnet_plan(
-        opening, shelf, options, COVER_WALL, boss_height
+        opening,
+        cavity,
+        shelf,
+        options,
+        COVER_WALL,
+        north_start,
     )
+    for mount in magnets.mounts:
+        edge = mount.pocket_depth + MAGNET_SHELF_EDGE
+        if mount.rail_top - edge - mount.shelf_width < FLOOR:
+            raise ValueError(
+                "the 45-degree magnet shelves would reach below the case "
+                "floor; reduce a magnet dimension or increase "
+                "compartment_height"
+            )
     ribs = mounting.rib_plan(keys, bounds)
 
     return CaseMetrics(
@@ -540,7 +557,7 @@ def _usb_platform(metrics):
 
 
 # --------------------------------------------------------------------------
-# Plate mounting, wire routing and cover magnets
+# Wire routing and cover magnets
 # --------------------------------------------------------------------------
 
 
@@ -568,26 +585,63 @@ def _floor_rib_builder(metrics, options):
     return mesh.mesh_object("floor_ribs", bm)
 
 
-def _magnet_rail_builder(metrics):
-    """Two full-height rails inside the bay that carry the cover magnets."""
+def _magnet_shelf_builders(metrics):
+    """One small 45-degree shelf per magnet.
 
-    bm = bmesh.new()
-    seen = set()
+    Each shelf is a short pad around a single magnet pocket: a flat top, a
+    45-degree underside running back to the cavity wall, and only enough length
+    along the rail to leave a thin wall around the pocket.  There is no
+    continuous rail.  The shelves attach to the cavity wall, so the sloped
+    underside does not cross the bay wall.
+    """
+
+    builders = []
+
     for mount in metrics.magnets.mounts:
-        if mount.rail in seen:
-            continue
-        seen.add(mount.rail)
         x0, x1, y0, y1 = mount.rail
-        mesh.add_box(
-            bm,
-            ((x0 + x1) / 2.0, (y0 + y1) / 2.0, (FLOOR + mount.rail_top) / 2.0),
-            (x1 - x0, y1 - y0, mount.rail_top - FLOOR),
+        top = mount.rail_top
+        edge = mount.pocket_depth + MAGNET_SHELF_EDGE
+        width = mount.shelf_width
+        half = mount.shelf_length / 2.0
+        bm = bmesh.new()
+        if mount.side == "west":
+            profile = (
+                (x0, top),
+                (x0 + width, top),
+                (x0 + width, top - edge),
+                (x0, top - edge - width),
+            )
+            mesh.add_prism_y(
+                bm, profile, mount.centre[1] - half, mount.centre[1] + half
+            )
+        elif mount.side == "east":
+            profile = (
+                (x1, top),
+                (x1 - width, top),
+                (x1 - width, top - edge),
+                (x1, top - edge - width),
+            )
+            mesh.add_prism_y(
+                bm, profile, mount.centre[1] - half, mount.centre[1] + half
+            )
+        else:  # north
+            profile = (
+                (y1, top),
+                (y1 - width, top),
+                (y1 - width, top - edge),
+                (y1, top - edge - width),
+            )
+            mesh.add_prism_x(
+                bm, profile, mount.centre[0] - half, mount.centre[0] + half
+            )
+        builders.append(
+            mesh.mesh_object(f"magnet_shelf_{len(builders)}", bm)
         )
-    return mesh.mesh_object("magnet_rails", bm)
+    return builders
 
 
 def _magnet_pocket_cutters(metrics):
-    """Magnet pockets in the tops of the case rails."""
+    """Magnet pockets in the tops of the 45-degree case shelves."""
 
     bm = bmesh.new()
     for mount in metrics.magnets.mounts:
@@ -652,7 +706,8 @@ def build_case(
 
     platform = _usb_platform(metrics)
     mesh.union(case, platform)
-    mesh.union(case, _magnet_rail_builder(metrics))
+    for shelf in _magnet_shelf_builders(metrics):
+        mesh.union(case, shelf)
 
     mesh.difference(case, _wire_recess_cutter(metrics, options))
     if metrics.ribs:

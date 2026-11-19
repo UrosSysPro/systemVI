@@ -2,3 +2,6 @@
 *.stl
 *.STL
 .dsh/
+
+# Python caches
+__pycache__/

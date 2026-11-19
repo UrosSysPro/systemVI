@@ -5,10 +5,10 @@ of the top row of keys to the plate surface.  When the bay is flush, there is
 no lip below the lid, so the cover is a plain box; the builder special-cases
 that instead of emitting a degenerate profile.
 
-The cover is held by rectangular magnets in the case rails.  The lid itself
-stays thin; each magnet sits in a small local boss on the underside, so only
-the four magnet locations are thickened.  The boss bottoms land on the case
-rail tops while the rest of the cover rests on the bay shelf.
+The cover is held by rectangular magnets on 45-degree case shelves.  The lid
+itself stays thin; each magnet sits in a small local boss on the underside, so
+only the magnet locations are thickened.  The boss bottoms land on the shelf
+tops while the rest of the cover rests on the bay shelf.
 """
 
 from __future__ import annotations
@@ -27,16 +27,24 @@ def _boss_rect(metrics, mount):
     cx, cy = mount.centre
     width, length = mount.size
     x0 = max(
-        metrics.cover.x0, cx - width / 2.0 - mounting.BOSS_X_MARGIN
+        metrics.cover.x0,
+        metrics.bay_cavity.x0,
+        cx - width / 2.0 - mounting.BOSS_X_MARGIN,
     )
     x1 = min(
-        metrics.cover.x1, cx + width / 2.0 + mounting.BOSS_X_MARGIN
+        metrics.cover.x1,
+        metrics.bay_cavity.x1,
+        cx + width / 2.0 + mounting.BOSS_X_MARGIN,
     )
     y0 = max(
-        metrics.cover.y0, cy - length / 2.0 - mounting.BOSS_Y_MARGIN
+        metrics.cover.y0,
+        metrics.bay_cavity.y0,
+        cy - length / 2.0 - mounting.BOSS_Y_MARGIN,
     )
     y1 = min(
-        metrics.cover.y1, cy + length / 2.0 + mounting.BOSS_Y_MARGIN
+        metrics.cover.y1,
+        metrics.bay_cavity.y1,
+        cy + length / 2.0 + mounting.BOSS_Y_MARGIN,
     )
     return x0, x1, y0, y1
 

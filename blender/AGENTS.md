@@ -67,14 +67,15 @@ blender/
 │   ├── mounting.py              # cover magnets + inter-key wire ribs
 │   ├── stabilizer.py            # custom 2 mm-wire stabilizer cutouts + slider
 │   ├── plate.py                 # flat top plate (no fastening holes)
-│   ├── case.py                  # case, bay, USB-C, wire recess, magnet rails
+│   ├── case.py                  # case, bay, USB-C, wire recess, magnet shelves
 │   ├── cover.py                 # L-shaped/flat cover with local magnet bosses
 │   ├── export.py                # scene reset + atomic STL export
 │   ├── cli.py                   # shared argparse and output paths
 │   ├── generate.py              # KeyboardSpec + generate_keyboard
 │   ├── keyboard_parts.py        # deprecated compatibility facade
 │   ├── keyboard_case.py         # deprecated compatibility facade
-│   ├── render_preview.py        # optional assembled preview renderer
+│   ├── render_preview.py        # assembled preview renderer
+│   ├── render_part.py           # any-part, any-angle preview renderer
 │   ├── kbNumpad/main.py
 │   ├── kb60/main.py
 │   ├── kb75/main.py
@@ -82,6 +83,7 @@ blender/
 │   ├── corne/main.py            # placeholder
 │   ├── dactyl/main.py           # placeholder
 │   └── stabilizers/main.py      # standalone slider generator
+├── tests/                       # pure and Blender-side tests
 └── .dsh/                        # harness tooling, ignored; not model code
 ```
 
@@ -97,10 +99,13 @@ blender/
 - The case rim is at 15 mm. The default compartment and cover top are at
   **27.5 mm**; the cover lid is 2.5 mm thick, its front lip is 12.5 mm tall
   (total cover height 15 mm), and local 1.5 mm bosses under the magnets hang
-  down to the case rails.
+  down to the 45-degree case shelves.
 - The default case uses 7 mm walls and a 17.5 mm-deep electronics bay.
-- The top plate is **not fastened** for now. The cover is held by magnets in two
-  bay rails: four 6 x 6 x 3 magnets, or two 6 x 10 x 3 magnets.
+- The top plate is **not fastened** for now. The cover is held by 6 x 3 x 3
+  magnets: two along each side edge with their long sides on Y (or one centered
+  if the span is too short), plus an adaptive evenly spaced row along the top
+  edge with long sides on X (target spacing 40 mm). The case supports each one
+  with its own small 45-degree shelf.
 - `--led-facing south` adds 180 degrees to every key's cutout rotation. It flips
   the whole switch footprint, not only the LED. North and south plates are not
   interchangeable; generate the matching variant.
@@ -117,7 +122,7 @@ layout data
    |                        └─ magnet_plan() / rib_plan() ──► plan
    │
    ├─ build_top_plate()  ──► build/top_plate.stl   (no fastening holes)
-   ├─ build_case()       ──► build/case.stl        (wire recess, ribs, rails)
+   ├─ build_case()       ──► build/case.stl        (wire recess, ribs, shelves)
    └─ build_cover()      ──► build/cover.stl       (local bosses + pockets)
 ```
 
@@ -180,9 +185,10 @@ blender --background --python-exit-code 1 --python keyboards/kb60/main.py -- \
 | `--compartment-ramp MM` | Horizontal run of the raised-compartment slope; 0 gives a vertical step. |
 | `--split-plate` | Export the top plate as two horizontal halves instead of one STL; case and cover are unchanged. |
 | `--output PATH` | Base STL path; case/cover reuse the stem with `_case`/`_cover`; split mode adds `_top_half`/`_bottom_half`. |
-| `--magnet-width MM` | Magnet size across the side rail (default 6.0). |
-| `--magnet-length MM` | Magnet size along the rail (default 6.0). |
-| `--magnet-thickness MM` | Magnet thickness; sets the local cover boss height (default 3.0). |
+| `--magnet-width MM` | Magnet long side, along the edge (default 6.0). |
+| `--magnet-length MM` | Magnet short side, across the edge (default 3.0). |
+| `--magnet-thickness MM` | Magnet vertical size; sets the local cover boss height (default 3.0). |
+| `--magnet-spacing MM` | Target spacing for the adaptive top-edge row (default 40.0). |
 | `--wire-gap MM` | Depth of the wire recess under the plate (default 1.5). |
 
 Padding precedence is `--all`, then `--horizontal`/`--vertical`, then the
@@ -367,11 +373,11 @@ Key dimensions:
 - wall 7 mm (default; configurable with `--wall`), floor 3 mm, chamfer 1.5 mm, corner radius 7 mm,
 - plate pocket clearance 0.25 mm per side,
 - bay depth 17.5 mm (default; configurable with `--compartment-depth`),
-- lid thickness 2.5 mm, shelf 1.5 mm, lid clearance 0.2 mm,
+- lid thickness 2.5 mm, shelf ledge 1.5 mm wide, lid clearance 0.2 mm,
 - default compartment/cover top 27.5 mm; rim 15 mm; plate top 12.5 mm,
 - cover front wall 2.5 mm thick; front lip 12.5 mm tall,
-- the bay shelf sits 2.5 mm below the compartment top; the magnet rails stop
-  1.5 mm below the shelf so the cover's local bosses meet them.
+- the bay shelf sits 2.5 mm below the compartment top; the 45-degree magnet
+  shelves stop 1.5 mm below the shelf so the cover's local bosses meet them.
 
 ### Plate support and wire routing
 
@@ -398,17 +404,34 @@ overhang the recess by 1.5 mm.
 
 The cover lid stays **2.5 mm** thick.  Only the magnet locations are thickened:
 each magnet gets a local **1.5 mm boss** on the cover underside.  The bosses
-land on two full-height rails inside the bay, attached to the side walls; the
-rest of the lid rests on the bay shelf at 25 mm.
+land on small 45-degree shelves inside the bay; the rest of the lid rests on the
+bay shelf at 25 mm.
 
-- 6 x 6 x 3 magnets: two per rail (four total);
-- 6 x 10 x 3 magnets: one per rail (two total).
+Standard magnets are **6 x 3 x 3 mm**.  The longest side follows the edge:
+6 mm along Y on the side edges, 6 mm along X on the top edge, and 3 mm
+vertical.  **Each magnet gets its own small shelf.**  There is no continuous
+side or top rail:
 
-The rail top is 1.5 mm below the shelf (23.5 mm default), so the boss bottoms
-and the two magnets meet there.  Both the rail and the boss/lid get a pocket
-`magnet + 0.4 mm` across and `magnet thickness + 0.1 mm` deep; the cover keeps a
-0.9 mm top skin.  The front lip still hangs to the plate top and locates the
-lid in Y.
+- each side edge carries **two magnets**, long side along Y, placed end-to-end
+  with a narrow gap; if the side span is too short for two, it gets **one
+  centered magnet** instead.  Generation fails only if even one cannot fit;
+- the top (north) edge starts east of the USB-C recess and carries an adaptive
+  evenly spaced row of magnets with their long sides along X:
+  `count = ceil(available_width / magnet_spacing)`, capped by what fits.  The
+  default spacing is 40 mm, giving 2 top magnets on the numpad, 7 on the
+  60%/75%, and 11 on the 100% (6/11/11/15 total with the side magnets).
+
+If `magnet_width` is too large for even one side magnet, generation fails; when
+it only fits one, that side gets one centered magnet.  The shelves are separate
+pads, unioned one by one; adjacent side pads have a narrow gap between them.
+
+Each small shelf has a flat top at the magnet height and a **45-degree
+underside** running back to the cavity wall.  It does not extend down to the
+floor.  The shelf top is 1.5 mm below the bay shelf (23.5 mm default), so the
+boss bottoms and the magnets meet there.  Both the shelf and the boss/lid get a
+pocket `magnet + 0.4 mm` across and `magnet thickness + 0.1 mm` deep; the cover
+keeps a 0.9 mm top skin.  The front lip still hangs to the plate top and locates
+the lid in Y.
 
 When the compartment is raised, the outer shell gets its normal chamfer at the
 raised height, then the ramp cutter lowers the key-side section to the 15 mm rim.
@@ -461,6 +484,28 @@ Palette:
 
 The previewer is not a model generator and does not write STLs. It uses the
 default plate/case parameters, so it matches the default generated parts.
+
+For inspecting one part from an arbitrary angle, use `render_part.py`:
+
+```sh
+blender --background --python-exit-code 1 --python keyboards/render_part.py -- \
+  --keyboard kbNumpad --part cover --azimuth 180 --elevation -55
+```
+
+The cover's front lip hides its underside from a low south view; use azimuth
+180 (north) or a side angle for the magnet bosses.
+
+Options:
+
+- `--keyboard ...`, `--part plate|case|cover|assembly|slider`
+- `--stl PATH` — render an existing STL instead of building a part
+- `--azimuth DEG` — 0 south, 90 east, 180 north, 270 west
+- `--elevation DEG` — negative values look from below
+- `--orthographic`, `--margin F`
+- `--samples N`, `--width PX`, `--height PX`, `--colour #RRGGBB`
+- `--output PATH`
+
+The default output is `build/<keyboard>_<part>_az<angle>_el<angle>.png`.
 
 ## Adding a new flat keyboard
 
@@ -527,10 +572,22 @@ generate.generate_keyboard(spec)
 - Re-run all implemented layouts after any hardware change. The 100% layout is
   the most likely to expose boolean/topology problems.
 
-## Validation
+## Tests and validation
 
-There is currently no formal test suite. Generation is the test, and the mesh
-validator is strict:
+Pure layout and mounting plans:
+
+```sh
+python3 -m unittest discover -s tests -p "test_*.py" -v
+```
+
+Geometry metrics for all four boards plus a real numpad plate/case/cover/split
+build:
+
+```sh
+blender --background --python-exit-code 1 --python tests/run_blender_tests.py
+```
+
+Generation remains the integration test, and the mesh validator is strict:
 
 - `mesh.check_mesh()` fails on non-manifold edges, zero-area faces or an empty
   mesh.
@@ -558,6 +615,22 @@ Run the stabilizer generator after changes to stabilizer constants:
 blender --background --python-exit-code 1 --python keyboards/stabilizers/main.py
 ```
 
+## Development loop
+
+1. Make the change.
+2. Regenerate all four keyboards (the loop above) and/or run the tests.
+3. If a part fails validation or looks wrong, render the affected part from the
+   relevant angles and inspect the PNG before changing code again:
+
+```sh
+blender --background --python-exit-code 1 --python keyboards/render_part.py -- \
+  --keyboard kb75 --part case --azimuth 35 --elevation 35
+```
+
+`render_part.py` builds one part (or the assembly, or a slider), frames it
+automatically and can also load an arbitrary STL with `--stl`.  Negative
+elevation looks from below; `--orthographic` gives a dimension-friendly view.
+
 ## Known constraints and pitfalls
 
 - **Hotswap pocket size:** the current validated pocket is 12 x 9 mm plus one
@@ -573,10 +646,10 @@ blender --background --python-exit-code 1 --python keyboards/stabilizers/main.py
   support on some printers.
 - **100% size:** the single-piece 100% case is about 447 mm wide; confirm the
   printer bed size before printing.
-- **No top-plate fastening:** the plate is held only by the case pocket and the
-  cover lip. Do not reintroduce wall notches for plate ears; between-key M3
-  inserts do not fit (5.05 mm web vs 4.6 mm insert plus walls and the socket
-  tab).
+- **No top-plate fastening:** the plate sits in the case pocket; the cover lip
+  only locates it in Y, so it can still be lifted out. Do not reintroduce wall
+  notches for plate ears; between-key M3 inserts do not fit (5.05 mm web vs
+  4.6 mm insert plus walls and the socket tab).
 - **Inter-key ribs:** the case support ribs are deliberately short and placed
   only in keycap gaps; there is no continuous rib or perimeter rib.
 - **Compatibility shims:** do not add features to `keyboard_parts.py` or
@@ -599,8 +672,8 @@ blender --background --python-exit-code 1 --python keyboards/stabilizers/main.py
 
 ## Git hygiene
 
-- `.gitignore` ignores `*.stl`, `*.STL`, `.dsh/`; `keyboards/.gitignore` ignores
-  `__pycache__/`.
+- `.gitignore` ignores `*.stl`, `*.STL`, `.dsh/` and `__pycache__/`;
+  `keyboards/.gitignore` also ignores its own `__pycache__/`.
 - Commit sources: `AGENTS.md`, `README.md`, `SCREENSHOTS.md`, `.gitignore`,
   shared modules, layout `main.py` files, preview and stabilizer scripts, and the
   documentation previews in `screenshots/`.

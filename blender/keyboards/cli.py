@@ -115,7 +115,7 @@ def argument_parser(description=None):
     hardware_group = parser.add_argument_group(
         "cover magnets and wire routing (mm)",
         "The top plate is not fastened for now.  The cover is held by "
-        "magnets in the bay side rails; the case floor is recessed for wires.",
+        "magnets on 45-degree bay shelves; the case floor is recessed for wires.",
     )
     defaults = mounting.MountingOptions()
     hardware_group.add_argument(
@@ -123,21 +123,29 @@ def argument_parser(description=None):
         type=float,
         default=defaults.magnet_width,
         metavar="MM",
-        help="magnet size across the side rail (default: %(default)s)",
+        help="magnet long side, along the edge (default: %(default)s)",
     )
     hardware_group.add_argument(
         "--magnet-length",
         type=float,
         default=defaults.magnet_length,
         metavar="MM",
-        help="magnet size along the rail (default: %(default)s)",
+        help="magnet short side, across the edge (default: %(default)s)",
     )
     hardware_group.add_argument(
         "--magnet-thickness",
         type=float,
         default=defaults.magnet_thickness,
         metavar="MM",
-        help="magnet thickness; sets the local cover boss height "
+        help="magnet thickness / vertical size; sets the local cover boss "
+        "height (default: %(default)s)",
+    )
+    hardware_group.add_argument(
+        "--magnet-spacing",
+        type=float,
+        default=defaults.magnet_spacing,
+        metavar="MM",
+        help="target spacing for the adaptive top-edge magnet row "
         "(default: %(default)s)",
     )
     hardware_group.add_argument(
@@ -204,6 +212,7 @@ def mounting_from_args(args):
         magnet_width=args.magnet_width,
         magnet_length=args.magnet_length,
         magnet_thickness=args.magnet_thickness,
+        magnet_spacing=args.magnet_spacing,
         wire_gap=args.wire_gap,
     )
     try:
