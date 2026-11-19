@@ -5,6 +5,10 @@ The builder is deliberately layout agnostic: give it any list of
 switch, hotswap and LED cutouts.  Split boards can call it once per half;
 curved Dactyl key wells will use a separate builder that reuses
 :mod:`hardware`.
+
+The plate currently has no fastening holes; it sits in the case pocket on the
+case's inter-key support ribs.  See :mod:`mounting` for the reason the earlier
+bottom-screw ears were removed.
 """
 
 from __future__ import annotations

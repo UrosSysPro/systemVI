@@ -19,6 +19,7 @@ import case
 import cover
 import export
 import layout
+import mounting
 import plate
 
 
@@ -37,6 +38,9 @@ class KeyboardSpec:
     wall: float | None = None
     compartment_depth: float | None = None
     split_plate: bool = False
+    options: mounting.MountingOptions = field(
+        default_factory=mounting.MountingOptions
+    )
 
 
 def _plate_split_paths(plate_path):
@@ -76,6 +80,7 @@ def generate_keyboard(spec):
         compartment_height=spec.compartment_height,
         wall=spec.wall,
         compartment_depth=spec.compartment_depth,
+        options=spec.options,
     )
 
     export.reset_scene()
@@ -99,6 +104,7 @@ def generate_keyboard(spec):
         compartment_ramp=spec.compartment_ramp,
         wall=spec.wall,
         compartment_depth=spec.compartment_depth,
+        options=spec.options,
     )
     cover_obj = cover.build_cover(
         spec.keys,
@@ -107,6 +113,7 @@ def generate_keyboard(spec):
         compartment_height=spec.compartment_height,
         wall=spec.wall,
         compartment_depth=spec.compartment_depth,
+        options=spec.options,
     )
 
     if split_halves is None:

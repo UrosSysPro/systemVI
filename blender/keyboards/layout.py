@@ -51,7 +51,7 @@ class Rect:
 class PlateParams:
     """Per-keyboard top plate parameters.
 
-    Every margin defaults to ``PLATE_MARGIN`` (5 mm), so the generated plate is
+    Every margin defaults to ``PLATE_MARGIN`` (2 mm), so the generated plate is
     unchanged unless a value is overridden.  ``led_facing`` is either
     ``"north"`` or ``"south"``: south rotates the *entire* switch footprint
     (pins, legs, hotswap pocket, LED pocket and light hole) by 180 degrees

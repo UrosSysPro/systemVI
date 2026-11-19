@@ -64,10 +64,11 @@ blender/
 │   ├── layout.py                # pure layout model; no bpy
 │   ├── mesh.py                  # bmesh primitives, booleans, validation
 │   ├── hardware.py              # MX switch, hotswap, LED cutouts
+│   ├── mounting.py              # cover magnets + inter-key wire ribs
 │   ├── stabilizer.py            # custom 2 mm-wire stabilizer cutouts + slider
-│   ├── plate.py                 # flat top plate builder
-│   ├── case.py                  # case, bay, USB-C opening, glue shelf
-│   ├── cover.py                 # L-shaped/flat cover
+│   ├── plate.py                 # flat top plate (no fastening holes)
+│   ├── case.py                  # case, bay, USB-C, wire recess, magnet rails
+│   ├── cover.py                 # L-shaped/flat cover with local magnet bosses
 │   ├── export.py                # scene reset + atomic STL export
 │   ├── cli.py                   # shared argparse and output paths
 │   ├── generate.py              # KeyboardSpec + generate_keyboard
@@ -90,11 +91,16 @@ blender/
 - `+Y` is north, the function/top-row side. Rows go south as Y decreases.
 - The top plate is centered on the origin; the case and cover use the same
   centered coordinates so the parts align.
-- Top plate local Z is `0 .. 9.5 mm`. In the assembly the plate sits on the case
-  floor: `z = 3 .. 12.5 mm`.
+- Top plate local Z is `0 .. 9.5 mm`. In the assembly the plate sits on the
+  inter-key support ribs at `z = 3 .. 12.5 mm`. The rest of the pocket floor is
+  recessed 1.5 mm for wires.
 - The case rim is at 15 mm. The default compartment and cover top are at
-  **27.5 mm**; the cover front wall is 15 mm tall.
+  **27.5 mm**; the cover lid is 2.5 mm thick, its front lip is 12.5 mm tall
+  (total cover height 15 mm), and local 1.5 mm bosses under the magnets hang
+  down to the case rails.
 - The default case uses 7 mm walls and a 17.5 mm-deep electronics bay.
+- The top plate is **not fastened** for now. The cover is held by magnets in two
+  bay rails: four 6 x 6 x 3 magnets, or two 6 x 10 x 3 magnets.
 - `--led-facing south` adds 180 degrees to every key's cutout rotation. It flips
   the whole switch footprint, not only the LED. North and south plates are not
   interchangeable; generate the matching variant.
@@ -107,10 +113,12 @@ layout data
    ├─ keys_from_rows() / keys_from_units() ──► Key[]
    │
    ├─ layout_bounds() ──► plate/case rectangle
+   |                        │
+   |                        └─ magnet_plan() / rib_plan() ──► plan
    │
-   ├─ build_top_plate()  ──► build/top_plate.stl
-   ├─ build_case()       ──► build/case.stl
-   └─ build_cover()      ──► build/cover.stl
+   ├─ build_top_plate()  ──► build/top_plate.stl   (no fastening holes)
+   ├─ build_case()       ──► build/case.stl        (wire recess, ribs, rails)
+   └─ build_cover()      ──► build/cover.stl       (local bosses + pockets)
 ```
 
 `generate_keyboard(spec)`:
@@ -127,9 +135,11 @@ layout data
 - `mesh.py` owns low-level bmesh primitives, booleans and validation.
 - `hardware.py` owns shared MX/hotswap/LED cutout dimensions and cutters.
 - `stabilizer.py` owns the custom stabilizer dimensions, plate cutters and slider.
+- `mounting.py` owns magnet/wire dimensions and the shared magnet/rib plans.
+  It is pure Python and imports only layout.
 - `plate.py` imports layout, hardware, stabilizer and mesh.
-- `case.py` imports layout, hardware and mesh.
-- `cover.py` imports case and mesh.
+- `case.py` imports layout, hardware, mesh and mounting.
+- `cover.py` imports case, mesh, hardware and mounting.
 - `export.py`, `cli.py` and `generate.py` sit above the builders.
 - Keyboard `main.py` files contain only the layout data, path setup, CLI call and
   `KeyboardSpec` construction.
@@ -170,6 +180,10 @@ blender --background --python-exit-code 1 --python keyboards/kb60/main.py -- \
 | `--compartment-ramp MM` | Horizontal run of the raised-compartment slope; 0 gives a vertical step. |
 | `--split-plate` | Export the top plate as two horizontal halves instead of one STL; case and cover are unchanged. |
 | `--output PATH` | Base STL path; case/cover reuse the stem with `_case`/`_cover`; split mode adds `_top_half`/`_bottom_half`. |
+| `--magnet-width MM` | Magnet size across the side rail (default 6.0). |
+| `--magnet-length MM` | Magnet size along the rail (default 6.0). |
+| `--magnet-thickness MM` | Magnet thickness; sets the local cover boss height (default 3.0). |
+| `--wire-gap MM` | Depth of the wire recess under the plate (default 1.5). |
 
 Padding precedence is `--all`, then `--horizontal`/`--vertical`, then the
 individual sides.
@@ -355,7 +369,46 @@ Key dimensions:
 - bay depth 17.5 mm (default; configurable with `--compartment-depth`),
 - lid thickness 2.5 mm, shelf 1.5 mm, lid clearance 0.2 mm,
 - default compartment/cover top 27.5 mm; rim 15 mm; plate top 12.5 mm,
-- cover front wall 2.5 mm thick and 15 mm tall.
+- cover front wall 2.5 mm thick; front lip 12.5 mm tall,
+- the bay shelf sits 2.5 mm below the compartment top; the magnet rails stop
+  1.5 mm below the shelf so the cover's local bosses meet them.
+
+### Plate support and wire routing
+
+The top plate is **not fastened** at the moment.  The previous bottom-screw
+design required notches in the case walls, which is unwanted.  Moving the M3
+heatset inserts between the keys is not possible:
+
+- adjacent 1u switch pockets leave a **5.05 mm** web between them;
+- an M3 insert is **4.6 mm** across before any wall thickness is added;
+- the hotswap socket tab already protrudes **0.365 mm** into that web.
+
+So the plate sits in its pocket, supported by small ribs, until a wall-free
+fastening is chosen.
+
+The plate-pocket floor is recessed by `wire_gap` (1.5 mm) and gets one short
+**3 x 10 mm rib in each gap between neighbouring keycaps**, at the original
+floor level.  The ribs sit under the cap boundaries, which are solid plate even
+for wide keys; they are clear of the switch pockets and socket tabs.  The plate
+rests on them; wires run in the channels between.  The recess is open to the
+bay at the plate's north edge.  There is no perimeter rib: the plate edges
+overhang the recess by 1.5 mm.
+
+### Cover magnets
+
+The cover lid stays **2.5 mm** thick.  Only the magnet locations are thickened:
+each magnet gets a local **1.5 mm boss** on the cover underside.  The bosses
+land on two full-height rails inside the bay, attached to the side walls; the
+rest of the lid rests on the bay shelf at 25 mm.
+
+- 6 x 6 x 3 magnets: two per rail (four total);
+- 6 x 10 x 3 magnets: one per rail (two total).
+
+The rail top is 1.5 mm below the shelf (23.5 mm default), so the boss bottoms
+and the two magnets meet there.  Both the rail and the boss/lid get a pocket
+`magnet + 0.4 mm` across and `magnet thickness + 0.1 mm` deep; the cover keeps a
+0.9 mm top skin.  The front lip still hangs to the plate top and locates the
+lid in Y.
 
 When the compartment is raised, the outer shell gets its normal chamfer at the
 raised height, then the ramp cutter lowers the key-side section to the 15 mm rim.
@@ -448,6 +501,7 @@ spec = generate.KeyboardSpec(
     wall=args.wall,
     compartment_depth=args.compartment_depth,
     split_plate=args.split_plate,
+    options=cli.mounting_from_args(args),
 )
 generate.generate_keyboard(spec)
 ```
@@ -519,6 +573,12 @@ blender --background --python-exit-code 1 --python keyboards/stabilizers/main.py
   support on some printers.
 - **100% size:** the single-piece 100% case is about 447 mm wide; confirm the
   printer bed size before printing.
+- **No top-plate fastening:** the plate is held only by the case pocket and the
+  cover lip. Do not reintroduce wall notches for plate ears; between-key M3
+  inserts do not fit (5.05 mm web vs 4.6 mm insert plus walls and the socket
+  tab).
+- **Inter-key ribs:** the case support ribs are deliberately short and placed
+  only in keycap gaps; there is no continuous rib or perimeter rib.
 - **Compatibility shims:** do not add features to `keyboard_parts.py` or
   `keyboard_case.py`.
 - **Build PNGs:** STLs and working previews under `build/` are generated

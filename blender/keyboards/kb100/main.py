@@ -136,6 +136,7 @@ def main(argv=None):
         wall=args.wall,
         compartment_depth=args.compartment_depth,
         split_plate=args.split_plate,
+        options=cli.mounting_from_args(args),
     )
     generate.generate_keyboard(spec)
     return 0

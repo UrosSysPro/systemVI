@@ -10,6 +10,17 @@ raised 27.5 mm compartment; the case rim remains at 15 mm.  When the compartment
 is higher than the rim, the case's outer edges are slanted over
 ``COMPARTMENT_RAMP`` from the rim height up to the compartment height.
 
+Mounting and wire routing also live in this module, driven by
+:mod:`mounting`:
+
+- the plate pocket floor is recessed by ``wire_gap`` and stiffened with short
+  ribs between adjacent keys, leaving channels for wires under the plate;
+- the top plate is not fastened; it sits in the pocket on those ribs (the
+  earlier wall-notched screw ears were removed because the wall gaps were
+  unwanted);
+- two full-height rails inside the bay hold the cover magnets; their tops sit
+  below the shelf so the cover's local magnet bosses meet them.
+
 This module builds the case only.  The separate cover lives in
 :mod:`cover`; both share :func:`case_metrics` so they always fit the same bay.
 All dimensions are millimetres; one Blender unit is one millimetre on STL
@@ -26,6 +37,7 @@ import bmesh
 import hardware
 import layout
 import mesh
+import mounting
 
 # --------------------------------------------------------------------------
 # Case dimensions
@@ -40,7 +52,7 @@ CORNER_SEGMENTS = 8        # segments per rounded corner
 PLATE_CLEARANCE = 0.25     # per side, plate pocket vs top plate
 COMPARTMENT_DEPTH = 17.5   # internal north/south depth of the bay
 
-LID_THICKNESS = 2.5        # cover top thickness
+LID_THICKNESS = 2.5        # minimum cover top thickness; magnets can raise it
 LID_LEDGE = 1.5            # shelf around the bay the cover rests on
 LID_CLEARANCE = 0.2        # per side, cover vs bay opening
 
@@ -96,6 +108,10 @@ class CaseMetrics:
     bay_cavity: layout.Rect
     cover: layout.Rect
     usb_center: tuple
+    lid_thickness: float
+    shelf: float
+    magnets: mounting.MagnetPlan
+    ribs: tuple[layout.Rect, ...]
 
 
 def case_metrics(
@@ -104,6 +120,7 @@ def case_metrics(
     compartment_height=None,
     wall=None,
     compartment_depth=None,
+    options=None,
 ):
     """Compute every dimension of the case for one keyboard layout."""
 
@@ -128,6 +145,21 @@ def case_metrics(
         )
 
     params = params or layout.PlateParams()
+    options = options or mounting.MountingOptions()
+    options.validate(FLOOR)
+    lid_thickness = LID_THICKNESS
+    boss_height = options.magnet_boss_height(lid_thickness)
+    if (
+        height - lid_thickness - boss_height
+        < PLATE_TOP + 0.5
+    ):
+        raise ValueError(
+            "compartment_height must leave room for the plate and the cover "
+            f"magnet bosses: need at least "
+            f"{PLATE_TOP + lid_thickness + boss_height + 0.5} mm, "
+            f"got {height} mm"
+        )
+
     bounds = layout.layout_bounds(keys, params)
     half_w = bounds.width / 2.0
     half_d = bounds.height / 2.0
@@ -167,8 +199,13 @@ def case_metrics(
     )
     usb_center = (
         opening.x0 + USB_PORT_FROM_LEFT,
-        FLOOR + (height - LID_THICKNESS - FLOOR) / 2.0,
+        FLOOR + (height - lid_thickness - FLOOR) / 2.0,
     )
+    shelf = height - lid_thickness
+    magnets = mounting.magnet_plan(
+        opening, shelf, options, COVER_WALL, boss_height
+    )
+    ribs = mounting.rib_plan(keys, bounds)
 
     return CaseMetrics(
         width=east - west,
@@ -183,6 +220,10 @@ def case_metrics(
         bay_cavity=cavity,
         cover=cover,
         usb_center=usb_center,
+        lid_thickness=lid_thickness,
+        shelf=shelf,
+        magnets=magnets,
+        ribs=ribs,
     )
 
 
@@ -383,7 +424,7 @@ def _bay_opening_cutter(metrics):
     return _box_cutter(
         "bay_opening",
         metrics.bay_opening,
-        metrics.height - LID_THICKNESS,
+        metrics.shelf,
         metrics.height + hardware.EPS,
     )
 
@@ -499,6 +540,70 @@ def _usb_platform(metrics):
 
 
 # --------------------------------------------------------------------------
+# Plate mounting, wire routing and cover magnets
+# --------------------------------------------------------------------------
+
+
+def _wire_recess_cutter(metrics, options):
+    """Recess the plate-pocket floor so wires can pass under the plate."""
+
+    return _box_cutter(
+        "wire_recess",
+        metrics.plate_pocket,
+        FLOOR - options.wire_gap,
+        FLOOR + hardware.EPS,
+    )
+
+
+def _floor_rib_builder(metrics, options):
+    """Short support ribs, one in each gap between adjacent 1u keys."""
+
+    bm = bmesh.new()
+    for rect in metrics.ribs:
+        mesh.add_box(
+            bm,
+            (rect.centre_x, rect.centre_y, FLOOR - options.wire_gap / 2.0),
+            (rect.width, rect.height, options.wire_gap),
+        )
+    return mesh.mesh_object("floor_ribs", bm)
+
+
+def _magnet_rail_builder(metrics):
+    """Two full-height rails inside the bay that carry the cover magnets."""
+
+    bm = bmesh.new()
+    seen = set()
+    for mount in metrics.magnets.mounts:
+        if mount.rail in seen:
+            continue
+        seen.add(mount.rail)
+        x0, x1, y0, y1 = mount.rail
+        mesh.add_box(
+            bm,
+            ((x0 + x1) / 2.0, (y0 + y1) / 2.0, (FLOOR + mount.rail_top) / 2.0),
+            (x1 - x0, y1 - y0, mount.rail_top - FLOOR),
+        )
+    return mesh.mesh_object("magnet_rails", bm)
+
+
+def _magnet_pocket_cutters(metrics):
+    """Magnet pockets in the tops of the case rails."""
+
+    bm = bmesh.new()
+    for mount in metrics.magnets.mounts:
+        cx, cy = mount.centre
+        width, length = mount.size
+        z0 = mount.rail_top - mount.pocket_depth
+        z1 = mount.rail_top + hardware.EPS
+        mesh.add_box(
+            bm,
+            (cx, cy, (z0 + z1) / 2.0),
+            (width, length, z1 - z0),
+        )
+    return mesh.mesh_object("magnet_pockets", bm)
+
+
+# --------------------------------------------------------------------------
 # Part generation
 # --------------------------------------------------------------------------
 
@@ -511,6 +616,7 @@ def build_case(
     compartment_ramp=None,
     wall=None,
     compartment_depth=None,
+    options=None,
 ):
     """Build the case; the plate pocket is centred like the top plate."""
 
@@ -519,12 +625,14 @@ def build_case(
         raise ValueError(
             f"compartment_ramp must be a non-negative number, got {ramp}"
         )
+    options = options or mounting.MountingOptions()
     metrics = case_metrics(
         keys,
         params,
         compartment_height=compartment_height,
         wall=wall,
         compartment_depth=compartment_depth,
+        options=options,
     )
 
     bm = bmesh.new()
@@ -544,6 +652,13 @@ def build_case(
 
     platform = _usb_platform(metrics)
     mesh.union(case, platform)
+    mesh.union(case, _magnet_rail_builder(metrics))
+
+    mesh.difference(case, _wire_recess_cutter(metrics, options))
+    if metrics.ribs:
+        mesh.union(case, _floor_rib_builder(metrics, options))
+
+    mesh.difference(case, _magnet_pocket_cutters(metrics))
 
     for cutter in (_usb_port_cutter(metrics), _usb_bevel_cutter(metrics)):
         mesh.difference(case, cutter)

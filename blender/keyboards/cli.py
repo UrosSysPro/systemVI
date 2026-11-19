@@ -11,6 +11,7 @@ import os
 import sys
 
 import layout
+import mounting
 
 
 def script_arguments(argv=None):
@@ -111,6 +112,43 @@ def argument_parser(description=None):
         "compartment (default: 20 mm); 0 gives a vertical step",
     )
 
+    hardware_group = parser.add_argument_group(
+        "cover magnets and wire routing (mm)",
+        "The top plate is not fastened for now.  The cover is held by "
+        "magnets in the bay side rails; the case floor is recessed for wires.",
+    )
+    defaults = mounting.MountingOptions()
+    hardware_group.add_argument(
+        "--magnet-width",
+        type=float,
+        default=defaults.magnet_width,
+        metavar="MM",
+        help="magnet size across the side rail (default: %(default)s)",
+    )
+    hardware_group.add_argument(
+        "--magnet-length",
+        type=float,
+        default=defaults.magnet_length,
+        metavar="MM",
+        help="magnet size along the rail (default: %(default)s)",
+    )
+    hardware_group.add_argument(
+        "--magnet-thickness",
+        type=float,
+        default=defaults.magnet_thickness,
+        metavar="MM",
+        help="magnet thickness; sets the local cover boss height "
+        "(default: %(default)s)",
+    )
+    hardware_group.add_argument(
+        "--wire-gap",
+        type=float,
+        default=defaults.wire_gap,
+        metavar="MM",
+        help="recess depth in the plate pocket floor for wires "
+        "(default: %(default)s)",
+    )
+
     parser.add_argument(
         "--split-plate",
         action="store_true",
@@ -157,6 +195,22 @@ def params_from_args(args):
         )
     except ValueError as exc:
         raise SystemExit(f"error: {exc}") from exc
+
+
+def mounting_from_args(args):
+    """Build the mounting options from parsed CLI arguments."""
+
+    options = mounting.MountingOptions(
+        magnet_width=args.magnet_width,
+        magnet_length=args.magnet_length,
+        magnet_thickness=args.magnet_thickness,
+        wire_gap=args.wire_gap,
+    )
+    try:
+        options.validate()
+    except ValueError as exc:
+        raise SystemExit(f"error: {exc}") from exc
+    return options
 
 
 def parse_args(argv=None, description=None):

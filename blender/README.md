@@ -7,10 +7,15 @@ files under `build/`; there is no GUI step and no `.blend` file to maintain.
 Each keyboard produces three printed parts:
 
 - **Top plate** — MX switch pockets, hotswap-socket pockets, LED pockets/light
-  holes, and stabilizer post holes/wire channels.
+  holes, and stabilizer post holes/wire channels. It currently has no fastening
+  holes; it sits in the case pocket.
 - **Case** — hollow tray with an electronics bay, USB-C opening with a 45°
-  beveled recess and internal glue shelf.
-- **Cover** — flat or L-shaped lid for the electronics bay.
+  beveled recess and internal glue shelf. The plate-pocket floor is recessed
+  for wires and has short support ribs between adjacent keys; two rails inside
+  the bay hold cover magnets.
+- **Cover** — flat or L-shaped lid for the electronics bay, with local magnet
+  bosses and pockets on its underside. The lid stays thin; only the magnet
+  locations are thickened.
 
 Custom stabilizer sliders are generated separately for use with 2 mm solid
 copper wire.
@@ -41,6 +46,15 @@ blender --background --python-exit-code 1 --python keyboards/kb75/main.py
 blender --background --python-exit-code 1 --python keyboards/kb100/main.py
 blender --background --python-exit-code 1 --python keyboards/kbNumpad/main.py
 ```
+
+The parts assemble with:
+
+- the top plate dropped into its pocket on the case support ribs (no screws for
+  now; between-key M3 inserts do not fit);
+- four 6 x 6 x 3 magnets (or two 6 x 10 x 3), in the case rails and cover
+  bosses;
+- wires running in the 1.5 mm recess under the plate, between the short
+  inter-key ribs.
 
 The outputs are named:
 
@@ -93,6 +107,11 @@ blender --background --python-exit-code 1 --python keyboards/render_preview.py -
 - Electronics bay depth: **17.5 mm**
 - Compartment height: **27.5 mm**
 - Switch/LED facing: north
+- Magnets: **6 x 6 x 3** (two per side rail); the cover keeps a 2.5 mm lid with
+  1.5 mm local bosses around the magnets
+- Wire recess: **1.5 mm** below the plate, with small 3 x 10 mm ribs in the
+  keycap gaps
+- Top plate: not fastened for now
 
 These can be changed with the shared options, for example:
 
@@ -100,6 +119,11 @@ These can be changed with the shared options, for example:
 blender --background --python-exit-code 1 --python keyboards/kb60/main.py -- \
   --all 3 --wall 5 --compartment-depth 25 --compartment-height 20 \
   --led-facing south --output build/kb60_custom.stl
+
+# magnet and wire sizes are parameters too
+blender --background --python-exit-code 1 --python keyboards/kb75/main.py -- \
+  --magnet-width 6 --magnet-length 10 --magnet-thickness 3 \
+  --wire-gap 1.5
 ```
 
 See [AGENTS.md](AGENTS.md) for the full option reference, mesh conventions, and
