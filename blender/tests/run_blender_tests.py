@@ -21,8 +21,10 @@ sys.path.insert(0, os.path.join(ROOT, "keyboards"))
 
 import case
 import case_split
+import cli
 import cover
 import export
+import generate
 import layout
 import mounting
 import plate
@@ -200,6 +202,29 @@ def check_case_split(keys, name="kb60"):
     )
 
 
+def check_output_paths():
+    """The default tree is build/<name>/{top_plate,case,cover}/... ."""
+
+    plate_path, bottom_path, edges_path, cover_path = cli.default_paths(
+        ROOT, "kb60"
+    )
+    base = os.path.join(ROOT, "build", "kb60")
+    assert plate_path == os.path.join(base, "top_plate", "top_plate.stl")
+    assert bottom_path == os.path.join(base, "case", "case_bottom.stl")
+    assert edges_path == os.path.join(base, "case", "case_edges.stl")
+    assert cover_path == os.path.join(base, "cover", "cover.stl")
+
+    west_path = case_split.piece_path(edges_path, "west")
+    assert west_path == os.path.join(base, "case", "case_edges_west.stl")
+    top_half, bottom_half = generate._plate_split_paths(plate_path)
+    assert top_half == os.path.join(base, "top_plate", "top_plate_top_half.stl")
+    assert bottom_half == os.path.join(
+        base, "top_plate", "top_plate_bottom_half.stl"
+    )
+
+    print("default output tree: build/<name>/{top_plate,case,cover}/")
+
+
 def main():
     layouts = {}
     for name in NAMES:
@@ -210,6 +235,7 @@ def main():
     check_numpad_build(layouts["kbNumpad"])
     assert not case_split.should_split(case.case_metrics(layouts["kbNumpad"]))
     check_case_split(layouts["kb60"])
+    check_output_paths()
 
     # The south-facing 100% plate used to leave a tiny boolean sliver at a
     # hotswap pocket corner; build it every run so the repair stays covered.

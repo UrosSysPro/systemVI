@@ -2,13 +2,13 @@
 
 Generates the printed parts into the repository ``build/`` directory:
 
-    build/kb75_top_plate.stl
-    build/kb75_case_bottom.stl
-    build/kb75_cover.stl
-    build/kb75_case_edges_west.stl
-    build/kb75_case_edges_east.stl
-    build/kb75_case_edges_north.stl
-    build/kb75_case_edges_south.stl
+    build/kb75/top_plate/top_plate.stl
+    build/kb75/case/case_bottom.stl
+    build/kb75/case/case_edges_west.stl
+    build/kb75/case/case_edges_east.stl
+    build/kb75/case/case_edges_north.stl
+    build/kb75/case/case_edges_south.stl
+    build/kb75/cover/cover.stl
 
 The case is wider than 250 mm, so the edge ring is split into four dovetailed
 pieces instead of one; see ``case_split.py``.
@@ -22,8 +22,10 @@ Options go after Blender's ``--`` separator:
     blender --background --python keyboards/kb75/main.py -- \
         --led-facing south --horizontal 8 --vertical 4 --output build/out.stl
 
-``--output`` names the top plate; the two case parts and cover reuse its stem
-with _case_bottom, _case_edges and _cover suffixes.  The split edge ring adds
+``--output`` is an explicit flat override: it names the top plate STL and the
+two case parts and cover reuse its stem with _case_bottom, _case_edges and
+_cover suffixes.  Without it the files go to the per-keyboard ``top_plate``,
+``case`` and ``cover`` directories shown above.  The split edge ring adds
 _west, _east, _north or _south to the _case_edges stem.
 """
 

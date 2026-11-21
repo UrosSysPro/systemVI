@@ -57,10 +57,10 @@ blender --background --python-exit-code 1 --python keyboards/render_preview.py -
 Outputs:
 
 ```text
-build/kbNumpad_top_plate.stl
-build/kbNumpad_case_bottom.stl
-build/kbNumpad_case_edges.stl
-build/kbNumpad_cover.stl
+build/kbNumpad/top_plate/top_plate.stl
+build/kbNumpad/case/case_bottom.stl
+build/kbNumpad/case/case_edges.stl
+build/kbNumpad/cover/cover.stl
 build/kbNumpad_preview.png
 ```
 
@@ -86,10 +86,13 @@ blender --background --python-exit-code 1 --python keyboards/render_preview.py -
 Outputs:
 
 ```text
-build/kb60_top_plate.stl
-build/kb60_case_bottom.stl
-build/kb60_case_edges.stl
-build/kb60_cover.stl
+build/kb60/top_plate/top_plate.stl
+build/kb60/case/case_bottom.stl
+build/kb60/case/case_edges_west.stl
+build/kb60/case/case_edges_east.stl
+build/kb60/case/case_edges_north.stl
+build/kb60/case/case_edges_south.stl
+build/kb60/cover/cover.stl
 build/kb60_preview.png
 ```
 
@@ -115,10 +118,13 @@ blender --background --python-exit-code 1 --python keyboards/render_preview.py -
 Outputs:
 
 ```text
-build/kb75_top_plate.stl
-build/kb75_case_bottom.stl
-build/kb75_case_edges.stl
-build/kb75_cover.stl
+build/kb75/top_plate/top_plate.stl
+build/kb75/case/case_bottom.stl
+build/kb75/case/case_edges_west.stl
+build/kb75/case/case_edges_east.stl
+build/kb75/case/case_edges_north.stl
+build/kb75/case/case_edges_south.stl
+build/kb75/cover/cover.stl
 build/kb75_preview.png
 ```
 
@@ -144,10 +150,13 @@ blender --background --python-exit-code 1 --python keyboards/render_preview.py -
 Outputs:
 
 ```text
-build/kb100_top_plate.stl
-build/kb100_case_bottom.stl
-build/kb100_case_edges.stl
-build/kb100_cover.stl
+build/kb100/top_plate/top_plate.stl
+build/kb100/case/case_bottom.stl
+build/kb100/case/case_edges_west.stl
+build/kb100/case/case_edges_east.stl
+build/kb100/case/case_edges_north.stl
+build/kb100/case/case_edges_south.stl
+build/kb100/cover/cover.stl
 build/kb100_preview.png
 ```
 
@@ -190,6 +199,10 @@ build/kb60_south_case_bottom.stl
 build/kb60_south_case_edges.stl
 build/kb60_south_cover.stl
 ```
+
+`--output` is a flat override. Without it, each keyboard writes its own
+`build/<name>/top_plate/`, `build/<name>/case/` and `build/<name>/cover/`
+tree.
 
 Screenshots in `screenshots/` are documentation copies; the render commands
 write to `build/`. STLs and the working previews in `build/` are generated

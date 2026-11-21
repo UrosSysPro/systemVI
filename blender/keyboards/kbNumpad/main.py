@@ -2,10 +2,10 @@
 
 Generates the four printed parts into the repository ``build/`` directory:
 
-    build/kbNumpad_top_plate.stl
-    build/kbNumpad_case_bottom.stl
-    build/kbNumpad_case_edges.stl
-    build/kbNumpad_cover.stl
+    build/kbNumpad/top_plate/top_plate.stl
+    build/kbNumpad/case/case_bottom.stl
+    build/kbNumpad/case/case_edges.stl
+    build/kbNumpad/cover/cover.stl
 
 The tall keys (plus and Enter are 2u high) get a single switch cutout at the
 centre of their 2u footprint, exactly like the 1u keys.
@@ -17,8 +17,10 @@ Options go after Blender's ``--`` separator:
     blender --background --python keyboards/kbNumpad/main.py -- \
         --led-facing south --horizontal 8 --vertical 4 --output build/out.stl
 
-``--output`` names the top plate; the two case parts and cover reuse its stem
-with _case_bottom, _case_edges and _cover suffixes.
+``--output`` is an explicit flat override: it names the top plate STL and the
+two case parts and cover reuse its stem with _case_bottom, _case_edges and
+_cover suffixes.  Without it the files go to the per-keyboard ``top_plate``,
+``case`` and ``cover`` directories shown above.
 """
 
 import os

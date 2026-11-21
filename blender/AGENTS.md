@@ -133,12 +133,12 @@ layout data
    |                        ├─ magnet_plan() / rib_plan() ──► plan
    |                        └─ plate_tab_plan() ──► tab/screw positions
    │
-   ├─ build_top_plate()   ──► build/top_plate.stl      (tabs + M2 holes)
-   ├─ build_case_bottom() ──► build/case_bottom.stl   (wire recess, ribs, lip)
-   ├─ build_case_edges()  ──► build/case_edges.stl    (bay, USB-C, inserts)
+   ├─ build_top_plate()   ──► build/<name>/top_plate/...  (tabs + M2 holes)
+   ├─ build_case_bottom() ──► build/<name>/case/case_bottom.stl
+   ├─ build_case_edges()  ──► build/<name>/case/case_edges.stl
    │                            │
    │                            └─ split_case_edges() (case width > 250 mm)
-   └─ build_cover()       ──► build/cover.stl         (local bosses + pockets)
+   └─ build_cover()       ──► build/<name>/cover/cover.stl
 ```
 
 `generate_keyboard(spec)`:
@@ -203,7 +203,7 @@ blender --background --python-exit-code 1 --python keyboards/kb60/main.py -- \
 | `--wall MM` | Case outer wall thickness (default 7 mm; the split geometry needs at least 7 mm). |
 | `--compartment-ramp MM` | Horizontal run of the raised-compartment slope; 0 gives a vertical step. |
 | `--split-plate` | Export the top plate as two horizontal halves instead of one STL; the split case and cover are unchanged. |
-| `--output PATH` | Base STL path; case parts/cover reuse the stem with `_case_bottom`/`_case_edges`/`_cover`; `--split-plate` adds `_top_half`/`_bottom_half`; a wide case adds `_case_edges_west`/`_east`/`_north`/`_south`. |
+| `--output PATH` | Explicit flat base STL path; case parts/cover reuse the stem with `_case_bottom`/`_case_edges`/`_cover`; `--split-plate` adds `_top_half`/`_bottom_half`; a wide case adds `_case_edges_west`/`_east`/`_north`/`_south`. Without it outputs go to `build/<name>/{top_plate,case,cover}/`. |
 | `--magnet-width MM` | Magnet long side, along the edge (default 6.0). |
 | `--magnet-length MM` | Magnet short side, across the edge (default 3.0). |
 | `--magnet-thickness MM` | Magnet vertical size; sets the local cover boss height (default 3.0). |
@@ -215,33 +215,36 @@ individual sides.
 
 ## Outputs
 
-Default outputs:
+Default outputs (one directory per keyboard):
 
 ```text
-build/<name>_top_plate.stl
-build/<name>_case_bottom.stl
-build/<name>_case_edges.stl
-build/<name>_cover.stl
+build/<name>/top_plate/top_plate.stl
+build/<name>/case/case_bottom.stl
+build/<name>/case/case_edges.stl
+build/<name>/cover/cover.stl
 ```
 
-Examples: `build/kb75_top_plate.stl`, `build/kb100_case_bottom.stl`,
-`build/kb100_case_edges_west.stl`, `build/kbNumpad_case_edges.stl`,
-`build/kbNumpad_cover.stl`.
+Examples: `build/kb75/top_plate/top_plate.stl`,
+`build/kb100/case/case_bottom.stl`, `build/kb100/case/case_edges_west.stl`,
+`build/kbNumpad/case/case_edges.stl`, `build/kbNumpad/cover/cover.stl`.
 
-`--output` names the plate; for example:
+`--output` is an explicit flat override: it names the top plate and the case
+parts and cover reuse its stem. For example:
 
 ```sh
 --output build/kb60_south.stl
 ```
 
 writes `build/kb60_south.stl`, `build/kb60_south_case_bottom.stl`,
-`build/kb60_south_case_edges.stl` and `build/kb60_south_cover.stl`.
+`build/kb60_south_case_edges.stl` and `build/kb60_south_cover.stl`.  Without
+`--output`, the per-keyboard tree above is used.
 
-With `--split-plate`, the normal top plate is replaced by:
+With `--split-plate`, the normal top plate is replaced by two files in the
+keyboard's `top_plate/` directory:
 
 ```text
-build/<name>_top_plate_top_half.stl
-build/<name>_top_plate_bottom_half.stl
+build/<name>/top_plate/top_plate_top_half.stl
+build/<name>/top_plate/top_plate_bottom_half.stl
 ```
 
 The split is at z = 4.0 mm, through the 1.5 mm switch/socket web and at the top
@@ -251,16 +254,17 @@ validated strictly before export. The split case and cover are still exported
 unchanged.
 
 When the case is wider than **250 mm** (the 60%, 75% and 100% boards), the
-single `_case_edges.stl` is replaced by four dovetailed pieces:
+single `case/case_edges.stl` is replaced by four dovetailed pieces in the same
+`case/` directory:
 
 ```text
-build/<name>_case_edges_west.stl
-build/<name>_case_edges_east.stl
-build/<name>_case_edges_north.stl
-build/<name>_case_edges_south.stl
+build/<name>/case/case_edges_west.stl
+build/<name>/case/case_edges_east.stl
+build/<name>/case/case_edges_north.stl
+build/<name>/case/case_edges_south.stl
 ```
 
-With `--output build/kb60_south.stl` the pieces become
+With `--output build/kb60_south.stl` the pieces become flat
 `build/kb60_south_case_edges_west.stl` and so on. The top plate, bottom tray and
 cover outputs are unchanged. A 250 mm case is *not* split; the cut is triggered
 above 250 mm.
@@ -670,9 +674,10 @@ generate.generate_keyboard(spec)
 
 - `blender --background --python-exit-code 1 --python keyboards/<name>/main.py`
   exits 0.
-- Default mode creates four STLs under `build/`; above 250 mm case width the
-  edge ring becomes four pieces instead of one. `--split-plate` adds the two
-  plate halves; the two case parts and cover are otherwise unchanged.
+- Default mode creates the `build/<name>/` tree: one `top_plate/` file (or two
+  with `--split-plate`), `case/` with the bottom tray plus one edge ring or
+  four pieces, and one `cover/` file. Above 250 mm case width the edge ring
+  becomes four pieces instead of one.
 - Every part passes strict mesh validation (manifold, no zero-area faces).
 - Dimensions are plausible and the parts align.
 - North and south variants both generate if the layout is intended to support

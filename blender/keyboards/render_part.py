@@ -22,7 +22,7 @@ Bottom view of the plate::
 An exported STL::
 
     blender --background --python-exit-code 1 --python keyboards/render_part.py -- \
-        --stl build/kb75_case_edges.stl --azimuth 70 --elevation 25
+        --stl build/kbNumpad/case/case_edges.stl --azimuth 70 --elevation 25
 
 Azimuth 0 looks from the south (front), 90 from the east, 180 from the north,
 270 from the west.  Elevation is degrees above the XY plane; negative values

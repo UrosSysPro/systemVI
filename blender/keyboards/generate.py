@@ -168,4 +168,24 @@ def generate_keyboard(spec):
             )
     export.export_stl(cover_obj, spec.cover_path)
 
+    # Keep each output mode self-contained: a normal run must not leave the
+    # split halves behind, and a split run must not leave the single plate or
+    # the single edge ring behind.
+    stale = []
+    if split_halves is None:
+        stale.extend(_plate_split_paths(spec.plate_path))
+    else:
+        stale.append(spec.plate_path)
+    if case_edge_pieces is None:
+        stale.extend(
+            case_split.piece_path(spec.case_edges_path, suffix)
+            for suffix in case_split.PIECE_SUFFIXES
+        )
+    else:
+        stale.append(spec.case_edges_path)
+    for path in stale:
+        if os.path.isfile(path):
+            os.remove(path)
+            print(f"Removed stale {path}")
+
     return top_plate, case_bottom, case_edges, cover_obj

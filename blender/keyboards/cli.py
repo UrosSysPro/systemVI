@@ -168,11 +168,13 @@ def argument_parser(description=None):
     parser.add_argument(
         "--output",
         metavar="PATH",
-        help="base STL path; the case parts and cover get "
-        "_case_bottom/_case_edges/_cover suffixes "
-        "(default: build/<name>_top_plate.stl next to the repository); "
-        "--split-plate writes _top_half/_bottom_half instead, and a wide "
-        "case writes _case_edges_west/_east/_north/_south",
+        help="explicit flat base STL path; the case parts and cover get "
+        "_case_bottom/_case_edges/_cover suffixes.  By default each keyboard "
+        "writes build/<name>/top_plate/top_plate.stl, "
+        "build/<name>/case/case_bottom.stl, build/<name>/case/case_edges.stl "
+        "and build/<name>/cover/cover.stl; --split-plate writes "
+        "_top_half/_bottom_half instead, and a wide case writes "
+        "_case_edges_west/_east/_north/_south in the case directory",
     )
     return parser
 
@@ -269,14 +271,27 @@ def output_paths(
 
 
 def default_paths(project_dir, name):
-    """Default output paths under the repository's ``build/`` directory."""
+    """Default output paths under ``build/<name>/``.
 
-    build_dir = os.path.join(project_dir, "build")
+    Each keyboard gets one directory per part group::
+
+        build/<name>/top_plate/top_plate.stl
+        build/<name>/case/case_bottom.stl
+        build/<name>/case/case_edges.stl
+        build/<name>/cover/cover.stl
+
+    A wide case replaces ``case_edges.stl`` with the four ``case_edges_*``
+    pieces in the same directory, and ``--split-plate`` replaces
+    ``top_plate.stl`` with ``top_plate_top_half.stl`` and
+    ``top_plate_bottom_half.stl``.
+    """
+
+    base_dir = os.path.join(project_dir, "build", name)
     return (
-        os.path.join(build_dir, f"{name}_top_plate.stl"),
-        os.path.join(build_dir, f"{name}_case_bottom.stl"),
-        os.path.join(build_dir, f"{name}_case_edges.stl"),
-        os.path.join(build_dir, f"{name}_cover.stl"),
+        os.path.join(base_dir, "top_plate", "top_plate.stl"),
+        os.path.join(base_dir, "case", "case_bottom.stl"),
+        os.path.join(base_dir, "case", "case_edges.stl"),
+        os.path.join(base_dir, "cover", "cover.stl"),
     )
 
 

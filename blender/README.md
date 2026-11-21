@@ -45,7 +45,7 @@ Corne and Dactyl are planned; their entry points are placeholders.
 ## Quick start
 
 Run from the repository root. Each command writes the top plate, both case
-parts and the cover into `build/`:
+parts and the cover into its own `build/<name>/` tree:
 
 ```sh
 blender --background --python-exit-code 1 --python keyboards/kb60/main.py
@@ -57,20 +57,20 @@ blender --background --python-exit-code 1 --python keyboards/kbNumpad/main.py
 The outputs are named:
 
 ```text
-build/<name>_top_plate.stl
-build/<name>_case_bottom.stl
-build/<name>_case_edges.stl
-build/<name>_cover.stl
+build/<name>/top_plate/top_plate.stl
+build/<name>/case/case_bottom.stl
+build/<name>/case/case_edges.stl
+build/<name>/cover/cover.stl
 ```
 
-On a case wider than 250 mm the `_case_edges.stl` output is replaced by four
-dovetailed pieces:
+On a case wider than 250 mm the `case/case_edges.stl` output is replaced by
+four dovetailed pieces in the same `case/` directory:
 
 ```text
-build/<name>_case_edges_west.stl
-build/<name>_case_edges_east.stl
-build/<name>_case_edges_north.stl
-build/<name>_case_edges_south.stl
+build/<name>/case/case_edges_west.stl
+build/<name>/case/case_edges_east.stl
+build/<name>/case/case_edges_north.stl
+build/<name>/case/case_edges_south.stl
 ```
 
 Assembly: fit 6 × 3 × 3 magnets in the case shelves and cover bosses — two per
@@ -97,11 +97,12 @@ horizontal halves with one flat side each:
 blender --background --python-exit-code 1 --python keyboards/kb60/main.py -- --split-plate
 ```
 
-This replaces the normal top plate with:
+This replaces the normal top plate with two files in the `top_plate/`
+directory:
 
 ```text
-build/<name>_top_plate_top_half.stl
-build/<name>_top_plate_bottom_half.stl
+build/<name>/top_plate/top_plate_top_half.stl
+build/<name>/top_plate/top_plate_bottom_half.stl
 ```
 
 The cut is at z = 4.0 mm, through the 1.5 mm switch/socket web and exactly at
@@ -116,13 +117,13 @@ A 250 mm print bed cannot hold the edge ring of the 60%, 75% or 100% boards
 (their cases are about 304, 323 and 447 mm wide). When the case is wider than
 **250 mm**, the generator automatically cuts the edge ring along X at one
 quarter and three quarters of the case width — the 1:2:1 sections — and exports
-four pieces:
+four pieces into `build/<name>/case/`:
 
 ```text
-build/<name>_case_edges_west.stl
-build/<name>_case_edges_east.stl
-build/<name>_case_edges_north.stl
-build/<name>_case_edges_south.stl
+build/<name>/case/case_edges_west.stl
+build/<name>/case/case_edges_east.stl
+build/<name>/case/case_edges_north.stl
+build/<name>/case/case_edges_south.stl
 ```
 
 The two cuts cross the north and south walls, so the closed ring becomes a west
