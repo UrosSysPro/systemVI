@@ -183,6 +183,18 @@ blender --background --python-exit-code 1 --python keyboards/render_part.py -- \
 build; `case` renders both case parts. `--stl PATH` renders an exported STL
 instead.
 
+For an exploded view — bottom tray at the bottom, edge-ring side pieces spread
+in the middle, top plate above them and the cover at the very top — use:
+
+```sh
+blender --background --python-exit-code 1 --python keyboards/render_exploded.py -- \
+  --keyboard kb75
+```
+
+`--split-plate` shows the plate as its two halves. `--spread`, `--gap`,
+`--plate-gap`, `--plate-half-gap` and `--cover-gap` tune the separation. The
+default output is `build/<keyboard>_exploded.png`.
+
 ## Current defaults
 
 - Top-plate padding: **2 mm** on all four sides
@@ -254,6 +266,7 @@ keyboards/
   stabilizers/main.py
   render_preview.py
   render_part.py     any-part, any-angle preview
+  render_exploded.py exploded view
 tests/               pure and Blender-side tests
 ```
 

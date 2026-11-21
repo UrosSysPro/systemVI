@@ -77,6 +77,7 @@ blender/
 │   ├── keyboard_case.py         # deprecated compatibility facade
 │   ├── render_preview.py        # assembled preview renderer
 │   ├── render_part.py           # any-part, any-angle preview renderer
+│   ├── render_exploded.py       # exploded-view renderer
 │   ├── kbNumpad/main.py
 │   ├── kb60/main.py
 │   ├── kb75/main.py
@@ -624,6 +625,37 @@ Options:
 - `--output PATH`
 
 The default output is `build/<keyboard>_<part>_az<angle>_el<angle>.png`.
+
+### Exploded view
+
+`render_exploded.py` separates the parts into layers: the bottom tray at the
+bottom, the edge ring in the middle (the two U side pieces of a wide case spread
+outward; the two rails stay at their wall positions), the top plate above them
+and the cover at the very top:
+
+```sh
+blender --background --python-exit-code 1 --python keyboards/render_exploded.py -- \
+  --keyboard kb75
+```
+
+Options:
+
+- `--keyboard kbNumpad|kb60|kb75|kb100`
+- `--split-plate` — show the plate as its two horizontal halves
+- `--spread MM` — west/east side-piece spread along X (default 50 mm); the two
+  middle rails stay at their wall positions
+- `--gap MM` — bottom tray to edge ring (default 50 mm)
+- `--plate-gap MM` — edge-ring top to plate (default 45 mm)
+- `--plate-half-gap MM` — gap between split plate halves (default 14 mm)
+- `--cover-gap MM` — plate top to cover (default 30 mm)
+- `--azimuth DEG`, `--elevation DEG` — camera orbit (default 35/30)
+- `--orthographic`, `--margin F`
+- `--samples N`, `--width PX`, `--height PX`
+- `--output PATH` — default `build/<keyboard>_exploded.png`
+
+The wide boards' edge pieces keep their dovetails; the numpad's one-piece ring
+stays together. The script builds the same default parts as the generator and
+writes only a PNG.
 
 ## Adding a new flat keyboard
 

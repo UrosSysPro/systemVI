@@ -335,6 +335,10 @@ def split_case_edges(edges, metrics, name="case_edges"):
     south_piece = mesh.duplicate_object(middle, f"{name}_south")
     mesh.difference(south_piece, _box_y(f"{name}_south_cut", 0.0, _BIG))
 
+    # ``middle`` is only an intermediate: it still contains both rails, so it
+    # must not be rendered next to the two printed pieces above.
+    middle.hide_render = True
+
     pieces = [
         ("west", west_piece),
         ("east", east_piece),
