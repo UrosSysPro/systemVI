@@ -105,11 +105,11 @@ build/<name>/top_plate/top_plate_top_half.stl
 build/<name>/top_plate/top_plate_bottom_half.stl
 ```
 
-The cut is at z = 4.0 mm, through the 1.5 mm switch/socket web and exactly at
-the top of the fastening tabs. The top half has the switch pockets; the bottom
-half has the hotswap and LED pockets plus all fastening tabs. Both halves must
-pass mesh validation before either is exported. The split case and cover are
-still generated normally.
+The cut is at z = 3.75 mm, through the middle of the switch/socket web and the
+middle-pin hole. The top half has the switch pockets and only the top 0.25 mm
+edge of the fastening tabs; the bottom half has the hotswap and LED pockets and
+the lower 3.75 mm of the tabs. Both halves must pass mesh validation before
+either is exported. The split case and cover are still generated normally.
 
 ## Split case edge ring
 
@@ -133,20 +133,18 @@ rail and an east U. On the 100% board the widest piece is about 232 mm.
 Each seam has a dovetail inside the wall: the rails carry the male dovetails and
 the side pieces the matching slots. A dovetail is 4 mm deep, 2.5 mm wide at the
 rail end and 3.7 mm wide at the tip, with 0.2 mm total clearance and a 0.2 mm
-seam gap. The male dovetail stops **2.5 mm below** the wall top. On the south
-wall it starts 1.5 mm above the plate-tab shelf; on the north wall it runs down
-to the case bottom (the bottom tray does not reach the bay wall) and fills the
-slot there. The slot is cut right through the bottom of the side piece and stops
-just above the plug top, so it is **open at the bottom and capped at the top**.
-The side pieces are lowered onto the rails from above: the plug enters the slot
-from below and the cap then stops the rail lifting out. Glue the joints.
+seam gap. Both dovetails start **1.5 mm above** the plate-tab shelf and stop
+**2.5 mm below** the wall top, so they clear the bottom tray. The slot is cut
+right through the bottom of the side piece and stops just above the plug top,
+so it is **open at the bottom and capped at the top**. The side pieces are
+lowered onto the rails from above: the plug enters the slot from below and the
+cap then stops the rail lifting out. Glue the joints.
 
 Because the slot is open at the bottom, the rails are retained downward by the
-glue, the plate or the tray rather than by a slot floor. Print note: the south
-dovetail undercuts the case's lower recess by about 3.6 mm; support that
-underside or orient the south rail so it is not a downward overhang. The north
-dovetail reaches the case bottom. The plate, bottom tray and cover are not split
-by this feature.
+glue, the plate or the tray rather than by a slot floor. Print note: both
+dovetails undercut the lower recess / open slot by about 3.6 mm; support those
+undersides or orient the rails so they are not downward overhangs. The plate,
+bottom tray and cover are not split by this feature.
 
 ## Stabilizer slider
 
@@ -194,6 +192,16 @@ blender --background --python-exit-code 1 --python keyboards/render_exploded.py 
 `--split-plate` shows the plate as its two halves. `--spread`, `--gap`,
 `--plate-gap`, `--plate-half-gap` and `--cover-gap` tune the separation. The
 default output is `build/<keyboard>_exploded.png`.
+
+For close-ups of the dovetail joint:
+
+```sh
+blender --background --python-exit-code 1 --python keyboards/render_dovetail.py -- \
+  --keyboard kb60 --side north
+```
+
+This writes the male plug and female slot views to
+`build/<keyboard>_dovetail_<side>_male.png` and `_female.png`.
 
 ## Current defaults
 
@@ -267,6 +275,7 @@ keyboards/
   render_preview.py
   render_part.py     any-part, any-angle preview
   render_exploded.py exploded view
+  render_dovetail.py male/female dovetail close-ups
 tests/               pure and Blender-side tests
 ```
 

@@ -148,11 +148,12 @@ def check_numpad_build(keys):
 
     top, bottom = plate.split_top_plate(plate_obj, name="test_split")
     bpy.context.view_layer.update()
-    close(top.dimensions.z, 5.5, 0.05)
-    close(bottom.dimensions.z, 4.0, 0.05)
-    # The top half carries no tabs; the bottom half carries all of them.
-    close(top.dimensions.x, plate_obj.dimensions.x - 2.0 * 3.6, 0.05)
-    close(top.dimensions.y, plate_obj.dimensions.y - 3.6, 0.05)
+    close(top.dimensions.z, 5.75, 0.05)
+    close(bottom.dimensions.z, 3.75, 0.05)
+    # Both halves reach the full tab footprint: the top half carries the 0.25 mm
+    # top edge of the tabs and the bottom half the lower 3.75 mm.
+    close(top.dimensions.x, plate_obj.dimensions.x, 0.05)
+    close(top.dimensions.y, plate_obj.dimensions.y, 0.05)
     close(bottom.dimensions.x, plate_obj.dimensions.x, 0.05)
     close(bottom.dimensions.y, plate_obj.dimensions.y, 0.05)
 

@@ -12,14 +12,12 @@ into four printable pieces:
 
 Both cuts cross the north and south walls, so each seam gets two dovetails.  The
 middle rails carry the male dovetails; the two side pieces get the matching
-slots.  A dovetail is a vertical prism that stops 2.5 mm below the wall top.  On
-the south wall it starts 1.5 mm above the plate-tab shelf (z = 8.5 mm); on the
-north wall it runs down to the case bottom (z = 0) so it fills the slot there,
-because the tray does not reach the bay wall.  The slot is cut right through the
-bottom of the side piece and stops just above the plug top: it is open at the
-bottom and closed by the side piece's own material (the cap) at the top.  The
-side pieces therefore drop onto the rails from above, with the male plug
-entering the slot through its bottom opening; the cap then traps the plug
+slots.  A dovetail is a vertical prism that starts 1.5 mm above the plate-tab shelf
+(z = 8.5 mm) and stops 2.5 mm below the wall top.  The slot is cut right
+through the bottom of the side piece and stops just above the plug top: it is
+open at the bottom and closed by the side piece's own material (the cap) at the
+top.  The side pieces therefore drop onto the rails from above, with the male
+plug entering the slot through its bottom opening; the cap then traps the plug
 vertically.  The wide tip is away from the rail end, which locks the pieces
 against separation along X.
 
@@ -28,10 +26,9 @@ faces and it stays clear of the 1.5 mm top chamfer.  The seam gap and the slot
 clearance are both 0.2 mm; glue holds the ring closed and the M2 screws and
 plate tabs keep the stack aligned.
 
-The south dovetail's underside overhangs the case's lower recess by about 3.6 mm.
-Print the south rail with support under the dovetail, or orient it so that
-underside is not a downward-facing overhang; the north dovetail reaches the
-bottom and needs no support there.
+The dovetail's underside overhangs the lower recess / open slot by about
+3.6 mm.  Print the rails with support under the dovetail, or orient them so that
+underside is not a downward-facing overhang.
 
 All four pieces are validated strictly before export.
 """
@@ -182,9 +179,8 @@ def _joint_solids(metrics, cut, sign, side):
 
     # The plug starts 0.5 mm inside the rail for a clean boolean union and its
     # widest part is the free tip inside the side piece.  Its top is held
-    # DOVETAIL_TOP_GAP below the wall top.  On the north wall the plug runs to
-    # the case bottom so it fills the open bottom of the slot (the tray does not
-    # reach the bay wall); on the south it stops above the tray lip.
+    # DOVETAIL_TOP_GAP below the wall top and its bottom stops 1.5 mm above the
+    # plate-tab shelf, clear of the bottom tray.
     root = middle_face - sign * 0.5
     plug_points = _taper_points(
         root,
@@ -193,7 +189,7 @@ def _joint_solids(metrics, cut, sign, side):
         half_width(-0.5),
         half_width(DOVETAIL_DEPTH),
     )
-    plug_bottom = 0.0 if side == "north" else JOINT_BOTTOM
+    plug_bottom = JOINT_BOTTOM
     plug_bm = bmesh.new()
     mesh.add_prism_z(plug_bm, plug_points, plug_bottom, plug_top)
     plug = mesh.mesh_object(f"dovetail_plug_{side}", plug_bm)

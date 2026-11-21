@@ -161,12 +161,11 @@ def split_top_plate(plate, name="top_plate", cut_z=None):
     """
 
     if cut_z is None:
-        # Keep the whole 4 mm fastening tab in the bottom half.  The cut is
-        # still inside the switch/socket web (3.0 .. 4.5 mm).
-        cut_z = max(
-            mounting.TAB_HEIGHT,
-            hardware.SOCKET_POCKET_DEPTH + hardware.WEB_THICKNESS / 2.0,
-        )
+        # The original split, before the fastening tabs: through the middle of
+        # the switch/socket web (3.0 .. 4.5 mm), on the middle-pin hole.  The
+        # bottom half keeps the lower 3.75 mm of the 4 mm tabs; the top half
+        # gets only their top 0.25 mm edge.
+        cut_z = hardware.SOCKET_POCKET_DEPTH + hardware.WEB_THICKNESS / 2.0
     if not 0.0 < cut_z < hardware.PLATE_THICKNESS:
         raise ValueError(
             f"cut_z must be between 0 and {hardware.PLATE_THICKNESS} mm, "

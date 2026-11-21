@@ -78,6 +78,7 @@ blender/
 │   ├── render_preview.py        # assembled preview renderer
 │   ├── render_part.py           # any-part, any-angle preview renderer
 │   ├── render_exploded.py       # exploded-view renderer
+│   ├── render_dovetail.py       # male/female dovetail close-ups
 │   ├── kbNumpad/main.py
 │   ├── kb60/main.py
 │   ├── kb75/main.py
@@ -98,7 +99,9 @@ blender/
 - Top plate local Z is `0 .. 9.5 mm`. In the assembly the plate sits on the
   inter-key support ribs at `z = 3 .. 12.5 mm`. The rest of the pocket floor is
   recessed 1.5 mm for wires. The lower 4 mm of the plate carries the fastening
-  tabs, so the plate split is at local z = 4.0 mm.
+  tabs. The plate split is at local z = **3.75 mm**, through the middle of the
+  switch/socket web (the middle-pin hole): the bottom half keeps the lower
+  3.75 mm of the tabs and the top half gets only their top 0.25 mm edge.
 - The case rim is at 15 mm. The default compartment and cover top are at
   **27.5 mm**; the cover lid is 2.5 mm thick, its front lip is 12.5 mm tall
   (total cover height 15 mm), and local 1.5 mm bosses under the magnets hang
@@ -248,11 +251,11 @@ build/<name>/top_plate/top_plate_top_half.stl
 build/<name>/top_plate/top_plate_bottom_half.stl
 ```
 
-The split is at z = 4.0 mm, through the 1.5 mm switch/socket web and at the top
-of the fastening tabs. The top half contains the switch pockets; the bottom
-half contains the hotswap/LED pockets plus all fastening tabs. Both halves are
-validated strictly before export. The split case and cover are still exported
-unchanged.
+The split is at z = **3.75 mm**, through the middle of the switch/socket web and
+the middle-pin hole. The top half contains the switch pockets and only the top
+0.25 mm edge of the fastening tabs; the bottom half contains the hotswap/LED
+pockets and the lower 3.75 mm of the tabs. Both halves are validated strictly
+before export. The split case and cover are still exported unchanged.
 
 When the case is wider than **250 mm** (the 60%, 75% and 100% boards), the
 single `case/case_edges.stl` is replaced by four dovetailed pieces in the same
@@ -483,24 +486,23 @@ Dovetail dimensions (`case_split.py`):
   face at the rim.  The band is measured from the wall's inner face and stops
   short of the 1.5 mm top chamfer, so the joint never breaks the outer surface
   or the inner pocket,
-- on the south wall starts **1.5 mm above** the z = 7 mm tab shelf; on the
-  north wall it runs down to the case bottom (z = 0) because the bottom tray
-  does not reach the bay wall, so it fills the slot there.  Both stop
-  **2.5 mm below** the wall top.  The slot is cut right through the bottom of
-  the side piece and stops just above the plug top: open at the bottom, capped
-  by the side piece's own material at the top.  The side pieces are lowered
-  onto the rails from above; the plug enters the slot through its bottom
-  opening and the cap stops the rail lifting out,
+- starts **1.5 mm above** the z = 7 mm tab shelf (z = 8.5 mm) on both walls and
+  stops **2.5 mm below** the wall top.  The slot is cut right through the
+  bottom of the side piece and stops just above the plug top: open at the
+  bottom, capped by the side piece's own material at the top.  The side pieces
+  are lowered onto the rails from above; the plug enters the slot through its
+  bottom opening and the cap stops the rail lifting out,
 - **0.2 mm** total clearance in the slot and a **0.2 mm** seam gap.
 
 The south wall is 15 mm tall and the north wall follows the raised compartment;
-the joint stops 2.5 mm below either rim.  The slot is hidden inside the wall
-and the top rim is solid except for the straight butt seam.  Glue the joints:
-the cap prevents the rail lifting, while the open bottom means the rail must be
-held down by glue, the plate or the tray.  The south dovetail's underside
-overhangs the lower recess by about **3.6 mm**; print the south rail with
-support under it, or orient it so that face is not a downward overhang.  The
-north dovetail reaches the case bottom and needs no support there.
+the joint stops 2.5 mm below either rim.  The plug bottom is 1.5 mm above the
+tab shelf, so the dovetail clears the bottom tray.  The slot is hidden inside
+the wall and the top rim is solid except for the straight butt seam.  Glue the
+joints: the cap prevents the rail lifting, while the open bottom means the rail
+must be held down by glue, the plate or the tray.  The dovetails' undersides
+overhang the lower recess / open slot by about **3.6 mm**; print both rails with
+support under the dovetail, or orient them so that face is not a downward
+overhang.
 
 The plate, bottom tray and cover are not split by this feature.  Each piece is
 validated strictly and its X extent is checked against the 250 mm target; if a
@@ -657,6 +659,27 @@ The wide boards' edge pieces keep their dovetails; the numpad's one-piece ring
 stays together. The script builds the same default parts as the generator and
 writes only a PNG.
 
+### Dovetail close-ups
+
+`render_dovetail.py` renders the male plug and the female slot as two close-ups:
+the male rail from the east and the side piece from the west:
+
+```sh
+blender --background --python-exit-code 1 --python keyboards/render_dovetail.py -- \
+  --keyboard kb60 --side north
+```
+
+Options:
+
+- `--keyboard kbNumpad|kb60|kb75|kb100`
+- `--side north|south` — which wall's dovetail (default north)
+- `--output BASE` — optional base path; `_male` and `_female` are appended
+- `--samples N`, `--width PX`, `--height PX`
+
+The default outputs are `build/<keyboard>_dovetail_<side>_male.png` and
+`build/<keyboard>_dovetail_<side>_female.png`.  The plug's lower end and the
+slot's open bottom / top cap are visible.
+
 ## Adding a new flat keyboard
 
 1. Create `keyboards/<name>/main.py`.
@@ -807,8 +830,9 @@ elevation looks from below; `--orthographic` gives a dimension-friendly view.
 - **Edge-ring lower skin:** the straight recess leaves about 1.05 mm of outer
   wall at the very bottom above the 1.5 mm chamfer; the wall option is limited
   to 7 mm minimum. Revalidate all four boards if the tab/screw sizes change.
-- **Tab split:** tabs are exactly 4 mm high and the split is at z = 4.0 mm. The
-  top plate half has no tabs; all tabs are in the bottom half.
+- **Tab split:** tabs are exactly 4 mm high and the split is at z = 3.75 mm.
+  The bottom half carries the lower 3.75 mm of the tabs and their M2 holes; the
+  top half carries only the top 0.25 mm edge.
 - **Assembly order:** when the edge ring is split, place the two middle rails
   first and lower the side pieces onto them from above; their slots are open at
   the bottom so the plugs enter from below. Glue the joints. Then insert the
@@ -817,13 +841,13 @@ elevation looks from below; `--orthographic` gives a dimension-friendly view.
   overhangs the tabs.
 - **Wide case split:** the edge ring splits automatically above 250 mm case
   width, at ±`width / 4`. The slot is open at the bottom and capped 2.5 mm below
-  the top; the male dovetail is shortened to match. The dovetails lock only
-  along X; glue the joints. The cap stops the rails lifting, but the open bottom
-  means the rails must be retained by glue, the plate or the tray. The south
-  dovetail's underside is a ~3.6 mm overhang over the lower recess, so support
-  the south rail when printing it; the north dovetail reaches the case bottom.
-  Re-run all four boards after changing the `case_split` constants or the
-  wall/top-chamfer geometry.
+  the top; the male dovetail starts 1.5 mm above the tab shelf, so it clears the
+  bottom tray. The dovetails lock only along X; glue the joints. The cap stops
+  the rails lifting, but the open bottom means the rails must be retained by
+  glue, the plate or the tray. Both dovetails' undersides are a ~3.6 mm
+  overhang over the lower recess / open slot, so support both rails when
+  printing them. Re-run all four boards after changing the `case_split`
+  constants or the wall/top-chamfer geometry.
 - **Tiny boolean holes:** the 100% south-facing plate can leave a sub-millimetre
   boundary loop where a hotswap pocket corner meets a switch leg hole.
   `mesh.fill_small_holes()` closes only loops under 2 mm perimeter; larger
