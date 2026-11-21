@@ -40,7 +40,7 @@ class KeyboardSpec:
     compartment_ramp: float | None = None
     wall: float | None = None
     compartment_depth: float | None = None
-    split_plate: bool = False
+    split_plate: bool = True
     options: mounting.MountingOptions = field(
         default_factory=mounting.MountingOptions
     )

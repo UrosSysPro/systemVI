@@ -16,8 +16,8 @@ under the edge ring's shelf; an M2 screw from below clamps the stack.  The
 edge ring and bottom tray bottom faces are coplanar.
 
 ``DEFAULT_COMPARTMENT_HEIGHT`` sets the top of the bay.  The default is a
-raised 27.5 mm compartment; the case rim remains at 15 mm.  When the compartment
-is higher than the rim, the case's outer edges are slanted over
+raised 27.5 mm compartment; the case rim/wall remains at 20 mm.  When the
+compartment is higher than the rim, the case's outer edges are slanted over
 ``COMPARTMENT_RAMP`` from the rim height up to the compartment height.
 
 This module builds the two case parts only.  The separate cover lives in
@@ -80,7 +80,7 @@ USB_PLATFORM_TOP_OVERLAP = 0.2  # shaved flush by the through opening cutter
 USB_PORT_FROM_LEFT = 12.0  # slot centre from the bay's inner west wall
 
 PLATE_TOP = FLOOR + hardware.PLATE_THICKNESS
-CASE_HEIGHT = PLATE_TOP + LID_THICKNESS
+CASE_HEIGHT = 20.0  # outer case rim / wall height (lower edge)
 
 # Split-case fastening.  All extents are measured outward from the plate pocket
 # rectangle (which is the plate outline plus PLATE_CLEARANCE).  The lower

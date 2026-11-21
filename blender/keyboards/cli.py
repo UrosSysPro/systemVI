@@ -161,20 +161,22 @@ def argument_parser(description=None):
 
     parser.add_argument(
         "--split-plate",
-        action="store_true",
-        help="export the top plate as separate top and bottom halves instead "
-        "of one STL; case and cover are unchanged",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="export the top plate as separate top and bottom halves "
+        "(default: %(default)s); use --no-split-plate for one STL.  Case and "
+        "cover are unchanged",
     )
     parser.add_argument(
         "--output",
         metavar="PATH",
         help="explicit flat base STL path; the case parts and cover get "
         "_case_bottom/_case_edges/_cover suffixes.  By default each keyboard "
-        "writes build/<name>/top_plate/top_plate.stl, "
-        "build/<name>/case/case_bottom.stl, build/<name>/case/case_edges.stl "
-        "and build/<name>/cover/cover.stl; --split-plate writes "
-        "_top_half/_bottom_half instead, and a wide case writes "
-        "_case_edges_west/_east/_north/_south plus "
+        "writes build/<name>/top_plate/top_plate_top_half.stl and "
+        "top_plate_bottom_half.stl, build/<name>/case/case_bottom.stl, "
+        "build/<name>/case/case_edges.stl and build/<name>/cover/cover.stl; "
+        "--no-split-plate writes a single top_plate.stl instead, and a wide "
+        "case writes _case_edges_west/_east/_north/_south plus "
         "_case_bottom_west/_east in the case directory",
     )
     return parser
@@ -276,16 +278,17 @@ def default_paths(project_dir, name):
 
     Each keyboard gets one directory per part group::
 
-        build/<name>/top_plate/top_plate.stl
+        build/<name>/top_plate/top_plate_top_half.stl
+        build/<name>/top_plate/top_plate_bottom_half.stl
         build/<name>/case/case_bottom.stl
         build/<name>/case/case_edges.stl
         build/<name>/cover/cover.stl
 
     A wide case replaces ``case_edges.stl`` with the four ``case_edges_*``
     pieces in the same directory and ``case_bottom.stl`` with
-    ``case_bottom_west.stl`` / ``case_bottom_east.stl``, and
-    ``--split-plate`` replaces ``top_plate.stl`` with
-    ``top_plate_top_half.stl`` and ``top_plate_bottom_half.stl``.
+    ``case_bottom_west.stl`` / ``case_bottom_east.stl``.  The top plate is
+    split by default; ``--no-split-plate`` replaces the two halves with a
+    single ``top_plate.stl``.
     """
 
     base_dir = os.path.join(project_dir, "build", name)
