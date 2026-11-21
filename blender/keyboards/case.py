@@ -360,7 +360,13 @@ def _add_loft_y(bm, rings):
 
 
 def _add_case_shell(bm, metrics):
-    """Outer solid: rounded rectangle with 45 degree top and bottom chamfers."""
+    """Outer solid: rounded rectangle with a 45 degree bottom chamfer.
+
+    The top rim is left square here and chamfered in :func:`_bevel_top_rim`
+    after the raised-compartment ramp has been cut.  Building the top chamfer
+    up front would make the ramp cutter slice through it, so the slope would
+    end in a sharp edge and the chamfer would taper to a point.
+    """
 
     centre_x = (metrics.west + metrics.east) / 2.0
     centre_y = (metrics.south + metrics.north) / 2.0
@@ -370,8 +376,7 @@ def _add_case_shell(bm, metrics):
     profiles = (
         (0.0, CHAMFER),
         (CHAMFER, 0.0),
-        (metrics.height - CHAMFER, 0.0),
-        (metrics.height, CHAMFER),
+        (metrics.height, 0.0),
     )
 
     rings = []
@@ -389,18 +394,17 @@ def _add_case_shell(bm, metrics):
     _add_loft(bm, rings)
 
 
-def _bevel_lower_rim(case, metrics):
-    """Chamfer the rim exposed by a raised-compartment cut.
+def _bevel_top_rim(case, metrics):
+    """Chamfer the whole outer top rim with one continuous 45 degree bevel.
 
-    The shell is built with its top chamfer at ``metrics.height``.  The ramp
-    cutter then removes the southern part down to ``CASE_HEIGHT``, so that
-    new top rim has square edges.  Bevel only the outer rim edges at that
-    height, after all cuts, leaving the raised compartment and the internal
-    pockets untouched.
+    The shell is built square-edged at ``metrics.height``; the ramp cutter
+    lowers the key-side part of the rim to ``CASE_HEIGHT`` and forms the sloped
+    transition.  Beveling every outer-plan edge that separates the vertical
+    wall from an upward-facing top surface in one operation keeps the chamfer
+    continuous across the flat lower rim, the slope and the raised compartment.
+    A separate bevel of only the flat rim would end in a point where the slope
+    starts.
     """
-
-    if metrics.height <= CASE_HEIGHT:
-        return
 
     centre_x = (metrics.west + metrics.east) / 2.0
     centre_y = (metrics.south + metrics.north) / 2.0
@@ -426,11 +430,11 @@ def _bevel_lower_rim(case, metrics):
     for edge in bm.edges:
         if len(edge.link_faces) != 2:
             continue
-        if any(abs(vertex.co.z - CASE_HEIGHT) > 1e-4 for vertex in edge.verts):
-            continue
         if not all(on_outer_plan(vertex) for vertex in edge.verts):
             continue
         if not any(abs(face.normal.z) < 0.1 for face in edge.link_faces):
+            continue
+        if not any(face.normal.z > 0.1 for face in edge.link_faces):
             continue
         rim_edges.append(edge)
 
@@ -962,14 +966,16 @@ def build_case_edges(
     _add_case_shell(bm, metrics)
     case = mesh.mesh_object(name, bm)
 
+    if metrics.height > CASE_HEIGHT:
+        mesh.difference(case, _compartment_ramp_cutter(metrics, ramp))
+    _bevel_top_rim(case, metrics)
+
     cutters = [
         _plate_pocket_cutter(metrics),
         _bay_cavity_cutter(metrics),
         _bay_opening_cutter(metrics),
         _edge_lower_cutter(metrics),
     ]
-    if metrics.height > CASE_HEIGHT:
-        cutters.insert(0, _compartment_ramp_cutter(metrics, ramp))
 
     for cutter in cutters:
         mesh.difference(case, cutter)
@@ -987,8 +993,6 @@ def build_case_edges(
     insert_holes = _insert_hole_cutters(metrics)
     if insert_holes is not None:
         mesh.difference(case, insert_holes)
-
-    _bevel_lower_rim(case, metrics)
 
     mesh.check_mesh(name, case, strict=True)
     return case
