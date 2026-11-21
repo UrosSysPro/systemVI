@@ -89,9 +89,19 @@ CASE_HEIGHT = 20.0  # outer case rim / wall height (lower edge)
 TAB_TOP = FLOOR + mounting.TAB_HEIGHT       # top of the plate tabs
 BOTTOM_EXT = 4.25                            # bottom tray footprint
 EDGE_LOWER_EXT = 4.45                        # edge lower recess
-BOTTOM_LIP_WIDTH = 0.7                       # upstanding perimeter lip
+# The lip runs from the tray's outer face back toward the plate, closing the
+# void the plate's edge used to hang over.  The tray's outer face is
+# BOTTOM_EXT + PLATE_CLEARANCE = 4.5 mm from the plate edge, so 4.0 mm leaves
+# a 0.5 mm running clearance: the plate pocket (0.25 mm) and the edge-ring
+# lower recess (0.2 mm) can never make the lip and the plate touch.  The lip
+# is interrupted at every plate tab, which then passes through the cutout.
+BOTTOM_LIP_WIDTH = 4.0                       # upstanding perimeter lip
 BOTTOM_LIP_OVERLAP = 0.5                     # into the bottom tray
 BOTTOM_LIP_CLEARANCE = 0.2                   # below the edge shelf
+# Side clearance of each lip cutout around a plate tab.  The plate has 0.25 mm
+# pocket play and the tray 0.2 mm lower-recess play, so the cutouts need more
+# than 0.2 mm to let the tray slide past tabs that are not perfectly centred.
+BOTTOM_LIP_TAB_CLEARANCE = 0.5
 SPLIT_MIN_WALL = 7.0                         # radial room for tabs/inserts
 WIRE_RECESS_INSET = 0.5                      # solid rim under the plate edge
 BOTTOM_RADIUS = 4.25                         # bottom tray footprint
@@ -104,10 +114,16 @@ EDGE_LOWER_RADIUS = 4.45                     # edge lower recess
 BOTTOM_SPLIT_MIN_WIDTH = 50.0    # split above this case width
 BOTTOM_SPLIT_MAX_WIDTH = 250.0   # target maximum printable half width
 BOTTOM_SEAM_GAP = 0.2            # total gap between the two halves
-BOTTOM_DOVETAIL_DEPTH = 5.0      # tenon reach into the opposite half
-BOTTOM_DOVETAIL_NECK = 5.0       # tenon width at the root
-BOTTOM_DOVETAIL_TIP = 8.0        # tenon width at the free tip (undercut)
+# Female slot.  These stay as they are; only the male tenon below is reduced.
+BOTTOM_DOVETAIL_DEPTH = 5.0      # slot reach into the opposite half
+BOTTOM_DOVETAIL_NECK = 5.0       # slot width at the root
+BOTTOM_DOVETAIL_TIP = 8.0        # slot width at the free tip (undercut)
 BOTTOM_DOVETAIL_CLEARANCE = 0.2  # total slot clearance around a tenon
+# Male tenon.  It is deliberately smaller than the slot in X and Y so the
+# printed tray halves do not bind; the slot keeps the nominal shape above.
+BOTTOM_TENON_DEPTH = 4.2         # tenon reach into the opposite half
+BOTTOM_TENON_NECK = 4.4          # tenon width at its root
+BOTTOM_TENON_TIP = 7.2           # tenon width at its free tip
 BOTTOM_DOVETAIL_TARGET_SPACING = 30.0
 BOTTOM_DOVETAIL_SPAN_FRACTION = 0.6  # share of the plate depth that gets tenons
 BOTTOM_DOVETAIL_MIN_WEB = 5.0    # material between two neighbouring tenons
@@ -848,15 +864,15 @@ def _bottom_lip_builder(metrics):
     for tab in metrics.tabs.tabs:
         if tab.side == "west":
             x0, x1 = outer.x0 - 0.5, outer.x0 + BOTTOM_LIP_WIDTH + 0.5
-            y0 = tab.centre[1] - mounting.TAB_WIDTH / 2.0 - 0.2
-            y1 = tab.centre[1] + mounting.TAB_WIDTH / 2.0 + 0.2
+            y0 = tab.centre[1] - mounting.TAB_WIDTH / 2.0 - BOTTOM_LIP_TAB_CLEARANCE
+            y1 = tab.centre[1] + mounting.TAB_WIDTH / 2.0 + BOTTOM_LIP_TAB_CLEARANCE
         elif tab.side == "east":
             x0, x1 = outer.x1 - BOTTOM_LIP_WIDTH - 0.5, outer.x1 + 0.5
-            y0 = tab.centre[1] - mounting.TAB_WIDTH / 2.0 - 0.2
-            y1 = tab.centre[1] + mounting.TAB_WIDTH / 2.0 + 0.2
+            y0 = tab.centre[1] - mounting.TAB_WIDTH / 2.0 - BOTTOM_LIP_TAB_CLEARANCE
+            y1 = tab.centre[1] + mounting.TAB_WIDTH / 2.0 + BOTTOM_LIP_TAB_CLEARANCE
         else:
-            x0 = tab.centre[0] - mounting.TAB_WIDTH / 2.0 - 0.2
-            x1 = tab.centre[0] + mounting.TAB_WIDTH / 2.0 + 0.2
+            x0 = tab.centre[0] - mounting.TAB_WIDTH / 2.0 - BOTTOM_LIP_TAB_CLEARANCE
+            x1 = tab.centre[0] + mounting.TAB_WIDTH / 2.0 + BOTTOM_LIP_TAB_CLEARANCE
             y0, y1 = outer.y0 - 0.5, outer.y0 + BOTTOM_LIP_WIDTH + 0.5
         mesh.add_box(
             gap_bm,
@@ -1087,9 +1103,9 @@ def split_case_bottom(
     )
 
     tenon_root = -half - 0.5
-    tenon_tip = half + BOTTOM_DOVETAIL_DEPTH
+    tenon_tip = half + BOTTOM_TENON_DEPTH
     slot_mouth = half - 0.5
-    slot_end = tenon_tip + BOTTOM_DOVETAIL_CLEARANCE / 2.0
+    slot_end = half + BOTTOM_DOVETAIL_DEPTH + BOTTOM_DOVETAIL_CLEARANCE / 2.0
 
     for index, y_centre in enumerate(positions):
         tenon = _dovetail_prism(
@@ -1097,8 +1113,8 @@ def split_case_bottom(
             tenon_root,
             tenon_tip,
             y_centre,
-            BOTTOM_DOVETAIL_NECK / 2.0,
-            BOTTOM_DOVETAIL_TIP / 2.0,
+            BOTTOM_TENON_NECK / 2.0,
+            BOTTOM_TENON_TIP / 2.0,
             0.0,
             floor_top,
         )

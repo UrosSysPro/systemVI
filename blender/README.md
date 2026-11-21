@@ -130,15 +130,17 @@ The two cuts cross the north and south walls, so the closed ring becomes a west
 U (west wall plus the west wall stubs), the middle north rail, the middle south
 rail and an east U. On the 100% board the widest piece is about 232 mm.
 
-Each seam has a dovetail inside the wall: the rails carry the male dovetails and
-the side pieces the matching slots. A dovetail is 4 mm deep, 2.5 mm wide at the
-rail end and 3.7 mm wide at the tip, with 0.2 mm total clearance and a 0.2 mm
-seam gap. Both dovetails start **1.5 mm above** the plate-tab shelf and stop
-**2.5 mm below** the wall top, so they clear the bottom tray. The slot is cut
-right through the bottom of the side piece and stops just above the plug top,
-so it is **open at the bottom and capped at the top**. The side pieces are
-lowered onto the rails from above: the plug enters the slot from below and the
-cap then stops the rail lifting out. Glue the joints.
+Each seam has a dovetail inside the wall: the rails carry the male plugs and the
+side pieces the matching slots. The slot is 4 mm deep, 2.5 mm wide at the rail
+end and 3.7 mm at the tip, with 0.2 mm total clearance; the male plug is
+deliberately smaller — 3.5 mm deep, 2.2 mm at the rail face and 3.25 mm at the
+tip — so the printed pieces slide together. Both dovetails start **1.5 mm
+above** the plate-tab shelf and stop **2.5 mm below** the wall top, so they
+clear the bottom tray. The slot is cut right through the bottom of the side
+piece and stops just above the plug top, so it is **open at the bottom and
+capped at the top**. The side pieces are lowered onto the rails from above: the
+plug enters the slot from below and the cap then stops the rail lifting out.
+Glue the joints.
 
 Because the slot is open at the bottom, the rails are retained downward by the
 glue, the plate or the tray rather than by a slot floor. Print note: both
@@ -216,11 +218,14 @@ This writes the male plug and female slot views to
   spaced top-edge row (default target spacing **40 mm**)
 - Wire recess: **1.5 mm** below the plate, with 3 × 10 mm ribs in the keycap gaps
 - Fastening: **M2 × 10** socket-head screws and **3.0 mm OD** heatset inserts;
-  adaptive tabs on both sides and the south edge, 4 mm high, 3.6 mm deep,
-  12 mm wide
-- Case split: bottom tray inset behind the edge ring; both undersides flush
+  adaptive tabs on both sides and the south edge, 4 mm high, 4.5 mm deep,
+  12 mm wide, reaching the bottom tray's outer face
+- Case split: bottom tray inset behind the edge ring; both undersides flush;
+  its 4 mm perimeter lip reaches to within 0.5 mm of the plate edge, with a
+  cutout at every plate tab
 - Wide cases: edge ring auto-split above **250 mm** case width at the 1:2:1
-  cuts, with 4 dovetails (4 mm deep, 2.5/3.7 mm wide, 0.2 mm clearance)
+  cuts, with 4 dovetails (slot 4 mm deep, 2.5/3.7 mm wide, 0.2 mm clearance;
+  male plug 3.5 mm deep, 2.2/3.25 mm wide)
 
 These can be changed with the shared options, for example:
 

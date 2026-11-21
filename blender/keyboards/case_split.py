@@ -24,7 +24,9 @@ against separation along X.
 The dovetail sits inside the wall.  Its Y position leaves material at both wall
 faces and it stays clear of the 1.5 mm top chamfer.  The seam gap and the slot
 clearance are both 0.2 mm; glue holds the ring closed and the M2 screws and
-plate tabs keep the stack aligned.
+plate tabs keep the stack aligned.  The male plug is printed smaller than the
+slot (0.15 mm extra clearance per side and 0.5 mm shorter) so the pieces slide
+together instead of binding.
 
 The dovetail's underside overhangs the lower recess / open slot by about
 3.6 mm.  Print the rails with support under the dovetail, or orient them so that
@@ -52,10 +54,17 @@ SPLIT_CASE_MAX_WIDTH = 250.0   # target maximum printable piece width
 SPLIT_RATIO = (1, 2, 1)        # widths of the west, middle and east sections
 
 SEAM_GAP = 0.2                 # total gap between two mating end faces
-JOINT_CLEARANCE = 0.2          # total clearance around a dovetail (0.1/side)
-DOVETAIL_NECK = 2.5            # width at the rail's end face
-DOVETAIL_TAIL = 3.7            # width at the far tip
-DOVETAIL_DEPTH = 4.0           # reach from the seam into the side piece
+JOINT_CLEARANCE = 0.2          # total clearance around the female slot
+# Female slot.  These stay as they are; only the male plug below is reduced.
+DOVETAIL_NECK = 2.5            # slot width at the rail's end face
+DOVETAIL_TAIL = 3.7            # slot width at the far tip
+DOVETAIL_DEPTH = 4.0           # slot reach from the seam into the side piece
+# Male plug.  It is deliberately smaller than the slot in X and Y so the
+# printed pieces do not bind: 0.15 mm more clearance per side and 0.5 mm
+# shorter reach.  The undercut (tail wider than the neck) is kept.
+PLUG_NECK = 2.2                # plug width at the rail's end face
+PLUG_TAIL = 3.25               # plug width at its free tip
+PLUG_DEPTH = 3.5               # plug reach from the seam into the side piece
 DOVETAIL_MARGIN = 0.9          # wall material kept at both faces
 DOVETAIL_START = case.TAB_TOP  # plate-tab shelf, z = 7 mm
 DOVETAIL_LIFT = 1.5            # plug bottom above the plate-tab shelf
@@ -68,6 +77,7 @@ PIECE_SUFFIXES = ("west", "east", "north", "south")
 _DOVETAIL_SLOPE = (
     (DOVETAIL_TAIL - DOVETAIL_NECK) / (2.0 * DOVETAIL_DEPTH)
 )
+_PLUG_SLOPE = (PLUG_TAIL - PLUG_NECK) / (2.0 * PLUG_DEPTH)
 _BIG = 1000.0
 
 
@@ -178,17 +188,22 @@ def _joint_solids(metrics, cut, sign, side):
     def half_width(distance):
         return DOVETAIL_NECK / 2.0 + _DOVETAIL_SLOPE * distance
 
+    def plug_half_width(distance):
+        return PLUG_NECK / 2.0 + _PLUG_SLOPE * distance
+
     # The plug starts 0.5 mm inside the rail for a clean boolean union and its
-    # widest part is the free tip inside the side piece.  Its top is held
-    # DOVETAIL_TOP_GAP below the wall top and its bottom stops 1.5 mm above the
-    # plate-tab shelf, clear of the bottom tray.
+    # widest part is the free tip inside the side piece.  It is shorter and
+    # narrower than the slot so the two printed pieces slide together.  Its top
+    # is held DOVETAIL_TOP_GAP below the wall top and its bottom stops 1.5 mm
+    # above the plate-tab shelf, clear of the bottom tray.
+    plug_tip = cut + sign * PLUG_DEPTH
     root = middle_face - sign * 0.5
     plug_points = _taper_points(
         root,
-        tip,
+        plug_tip,
         y_centre,
-        half_width(-0.5),
-        half_width(DOVETAIL_DEPTH),
+        plug_half_width(-0.5),
+        plug_half_width(PLUG_DEPTH),
     )
     plug_bottom = JOINT_BOTTOM
     plug_bm = bmesh.new()

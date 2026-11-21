@@ -321,23 +321,23 @@ Current known-good profile:
   centre.
 - Pin/contact holes: `(3.81, -2.54)` and `(-2.54, -5.08)`, diameter 3.2 mm.
   This is the X-mirrored pad pattern.
-- One **2 x 2 mm side tab** clearance on the higher pin's side:
-  - +X/right side,
-  - Y = `-2.54 mm`,
-  - 2 mm outward from the body edge,
+- Two **3 x 3 mm** side tabs, one per metal contact, each on its own pin's
+  X side and at that pin's Y, so the pair is diagonal rather than symmetric:
+  - higher pin `(3.81, -2.54)`: +X/right side, tab centre Y = `-2.54 mm`,
+  - lower pin `(-2.54, -5.08)`: -X/left side, tab centre Y = `-5.08 mm`,
+  - 3 mm outward from the body edge,
   - 0.2 mm overlap into the body pocket.
-- The lower pin's side is covered by the original 12 x 9 body pocket.
 - Socket pocket depth: 3 mm.
 
 The physical hotswap pad body was measured at 11 x 7 mm. A literal 11 x 7 plate
 pocket creates non-manifold slivers where the switch-leg holes break the pocket
-corner. The current 12 x 9 envelope plus one tab is the validated compromise.
-Do not blindly shrink it; if a tighter fit is required, add local leg relief and
-revalidate all four layouts.
+corner. The current 12 x 9 envelope plus the two contact tabs is the validated
+compromise. Do not blindly shrink it; if a tighter fit is required, add local
+leg relief and revalidate all four layouts.
 
 **Cut order matters.** In `plate.py` the socket body is cut before the leg/pin
-holes, and the side tab is cut **last**, after the through-holes. Changing that
-order can reintroduce non-manifold edges on the 100% plate.
+holes, and both side tabs are cut **last**, after the through-holes. Changing
+that order can reintroduce non-manifold edges on the 100% plate.
 
 ### RGB LED
 
@@ -441,20 +441,25 @@ The bottom tray has:
 
 - a 3 mm bed with a rounded plan that fits the edge-ring recess with 0.2 mm
   radial clearance,
-- an upstanding **0.7 mm perimeter lip** from z = 3 to 6.8 mm, interrupted at
-  each plate-tab location.  It stops 0.2 mm below the edge shelf so the screws
-  clamp the tab, not the lip.  The lip enters the edge-ring recess and locates
-  the tray; the tabs carry the clamping load,
+- an upstanding **4.0 mm perimeter lip** from z = 3 to 6.8 mm, interrupted at
+  each plate-tab location.  It reaches back to within **0.5 mm** of the plate
+  edge, so the plate's lower edge is cradled between the lip segments instead
+  of hanging over the lower recess.  It stops 0.2 mm below the edge shelf so
+  the screws clamp the tab, not the lip.  The lip enters the edge-ring recess
+  and locates the tray; the tabs carry the clamping load,
 - **M2 counterbores** (4.0 mm for the 3.8 mm head, 2.0 mm deep) and 2.4 mm
   through-holes in the bed at each tab, opening from below.
 
-The top plate has adaptive lower tabs: **4 mm high**, **3.6 mm deep**, **12 mm
+The top plate has adaptive lower tabs: **4 mm high**, **4.5 mm deep**, **12 mm
 wide**, on west, east and south.  `plate_tab_plan(width, height)` distributes
 them evenly with a 50 mm target spacing, 10 mm preferred corner margin and
-6 mm minimum gap.  Each tab has a 2.4 mm M2 clearance hole at 2.2 mm inboard of
-the plate edge.  In the assembly the tab sits on the bottom bed and under the
-edge shelf; an **M2 x 10 socket-head screw** enters from below.  The north edge
-has no tabs, leaving the bay and cover lip free.
+6 mm minimum gap.  The tab's outer face lands on the bottom tray's outer face,
+leaving 0.2 mm to the edge ring's lower wall, so it closes the gap instead of
+dangling; the lip's tab cutout is what lets it through.  Each tab has a 2.4 mm
+M2 clearance hole at 2.2 mm outboard of the plate edge.  In the assembly the tab
+sits on the bottom bed and under the edge shelf; an **M2 x 10 socket-head
+screw** enters from below.  The north edge has no tabs, leaving the bay and
+cover lip free.
 
 The previous idea of M3 inserts in the inter-key webs is still rejected:
 adjacent 1u switch pockets leave a **5.05 mm** web, an M3 insert is **4.6 mm**
@@ -475,13 +480,17 @@ the cuts produce four pieces:
 - the middle **north** rail and middle **south** rail.
 
 Both cuts cross the north and south walls, so every seam gets two dovetails.
-The rails carry the male dovetails; the side pieces get the matching slots.
+The rails carry the male plugs; the side pieces get the matching slots.  The
+slot keeps the nominal shape and the plug is deliberately undersized in X and
+Y, so the printed pieces slide together instead of binding.
 
 Dovetail dimensions (`case_split.py`):
 
-- **4.0 mm** deep into the side piece,
-- **2.5 mm** wide at the rail's end face, **3.7 mm** at the free tip (about
-  8.5-degree flanks),
+- female slot: **4.0 mm** deep into the side piece, **2.5 mm** wide at the
+  rail's end face and **3.7 mm** at the free tip (about 8.5-degree flanks),
+- male plug: **3.5 mm** deep, **2.2 mm** wide at the rail face and **3.25 mm** at
+  the free tip; 0.5 mm shorter and 0.15 mm more clearance per side than the
+  slot.  The undercut (tail wider than the neck) is kept for retention,
 - inside the wall, **0.9 mm** from the inner face and **0.9 mm** from the outer
   face at the rim.  The band is measured from the wall's inner face and stops
   short of the 1.5 mm top chamfer, so the joint never breaks the outer surface
@@ -810,11 +819,11 @@ elevation looks from below; `--orthographic` gives a dimension-friendly view.
 
 ## Known constraints and pitfalls
 
-- **Hotswap pocket size:** the current validated pocket is 12 x 9 mm plus one
-  higher-pin tab. A literal 11 x 7 mm pocket produced non-manifold slivers at the
-  switch-leg openings.
-- **Hotswap tab order:** the tab must be cut after the through-holes. The socket
-  body is cut before them.
+- **Hotswap pocket size:** the current validated pocket is 12 x 9 mm plus two
+  3 x 3 mm contact tabs. A literal 11 x 7 mm pocket produced non-manifold
+  slivers at the switch-leg openings.
+- **Hotswap tab order:** both tabs must be cut after the through-holes. The
+  socket body is cut before them.
 - **South facing:** all switch/hotswap/stabilizer cutouts rotate 180 degrees.
   Use the matching `--led-facing south` plates; do not mix north and south.
 - **Vertical stabilizers:** default wire direction is east; the slider rotation

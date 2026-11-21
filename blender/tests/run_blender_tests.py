@@ -91,21 +91,43 @@ def check_tab_fit(name, metrics):
 
     for tab in metrics.tabs.tabs:
         if tab.side == "west":
-            gap = (tab.centre[0] - tab.depth / 2.0) - (bottom.x0 + case.BOTTOM_LIP_WIDTH)
+            tab_outer = tab.centre[0] - tab.depth / 2.0
+            tab_inner = tab.centre[0] + tab.depth / 2.0
+            tray_outer = bottom.x0
+            lip_inner = bottom.x0 + case.BOTTOM_LIP_WIDTH
             wall = pocket.x0 - tab.screw[0]
             counterbore = tab.screw[0] - head_radius - bottom.x0
             edge_gap = bottom.x0 - edge.x0
         elif tab.side == "east":
-            gap = (bottom.x1 - case.BOTTOM_LIP_WIDTH) - (tab.centre[0] + tab.depth / 2.0)
+            tab_outer = tab.centre[0] + tab.depth / 2.0
+            tab_inner = tab.centre[0] - tab.depth / 2.0
+            tray_outer = bottom.x1
+            lip_inner = bottom.x1 - case.BOTTOM_LIP_WIDTH
             wall = tab.screw[0] - pocket.x1
             counterbore = bottom.x1 - (tab.screw[0] + head_radius)
             edge_gap = edge.x1 - bottom.x1
         else:
-            gap = (tab.centre[1] - tab.depth / 2.0) - (bottom.y0 + case.BOTTOM_LIP_WIDTH)
+            tab_outer = tab.centre[1] - tab.depth / 2.0
+            tab_inner = tab.centre[1] + tab.depth / 2.0
+            tray_outer = bottom.y0
+            lip_inner = bottom.y0 + case.BOTTOM_LIP_WIDTH
             wall = pocket.y0 - tab.screw[1]
             counterbore = tab.screw[1] - head_radius - bottom.y0
             edge_gap = bottom.y0 - edge.y0
-        assert gap >= 0.1, f"{name}: tab/lip gap {gap:.3f}"
+
+        # The tab reaches the tray's outer face, which is 0.2 mm inside the
+        # edge-ring lower wall; it passes through the lip cutout on the way.
+        assert abs(tab_outer - tray_outer) <= 0.05, (
+            f"{name}: tab outer face {tab_outer:.3f} does not reach the tray "
+            f"outer face {tray_outer:.3f}"
+        )
+        # The lip stops short of the plate edge but close enough to cradle it.
+        lip_gap = (pocket.x0 + case.PLATE_CLEARANCE) - lip_inner
+        if tab.side == "east":
+            lip_gap = lip_inner - (pocket.x1 - case.PLATE_CLEARANCE)
+        elif tab.side == "south":
+            lip_gap = (pocket.y0 + case.PLATE_CLEARANCE) - lip_inner
+        assert 0.0 < lip_gap <= 1.0, f"{name}: lip/plate gap {lip_gap:.3f}"
         assert wall >= insert_radius + 0.4, f"{name}: insert wall {wall:.3f}"
         assert counterbore >= 0.05, f"{name}: counterbore margin {counterbore:.3f}"
         assert edge_gap >= 0.1, f"{name}: lower edge clearance {edge_gap:.3f}"
@@ -122,8 +144,10 @@ def check_numpad_build(keys):
     cover_obj = cover.build_cover(keys, name="test_cover")
     bpy.context.view_layer.update()
 
-    close(plate_obj.dimensions.x, 87.4, 0.05)
-    close(plate_obj.dimensions.y, 102.85, 0.05)
+    # The plate's bounding box includes the lower tabs, which now reach the
+    # bottom tray's outer face (0.2 mm inside the edge-ring lower wall).
+    close(plate_obj.dimensions.x, 89.2, 0.05)
+    close(plate_obj.dimensions.y, 103.75, 0.05)
     close(plate_obj.dimensions.z, 9.5, 0.05)
     close(case_bottom.dimensions.x, 89.2, 0.05)
     close(case_bottom.dimensions.y, 125.75, 0.05)
@@ -188,9 +212,9 @@ def check_case_split(keys, name="kb60"):
         close(min(zs), 0.0, 1e-6)
         close(max(zs), metrics.height if suffix != "south" else case.CASE_HEIGHT, 0.05)
 
-    # The middle rails carry the dovetails, so they reach one dovetail depth
-    # past each seam.  The side pieces stop at the seam faces.
-    middle = metrics.width / 2.0 + 2.0 * case_split.DOVETAIL_DEPTH
+    # The middle rails carry the male plugs, so they reach one plug depth past
+    # each seam.  The side pieces stop at the seam faces.
+    middle = metrics.width / 2.0 + 2.0 * case_split.PLUG_DEPTH
     side = metrics.width / 4.0 - case_split.SEAM_GAP / 2.0
     close(extents["north"], middle, 0.05)
     close(extents["south"], middle, 0.05)

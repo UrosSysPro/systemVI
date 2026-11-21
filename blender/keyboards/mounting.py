@@ -77,11 +77,13 @@ RIB_MIN_OVERLAP = 4.0
 #
 # The tab is 4 mm high (the lower part of the 9.5 mm plate), which leaves room
 # for a 4.5 mm insert under the 15 mm case rim.  The screw sits 2.2 mm
-# inboard of the plate edge; the edge ring keeps at least 0.4 mm of material
-# around the insert.
+# outboard of the plate edge; the edge ring keeps at least 0.4 mm of material
+# around the insert.  The tab reaches out to the bottom tray's outer face, so
+# it closes the gap to the edge ring's lower wall instead of leaving the plate
+# edge hanging over the recess.
 
 TAB_HEIGHT = 4.0           # plate tab height, from the plate bottom
-TAB_DEPTH = 3.6            # radial length of a plate tab beyond the outline
+TAB_DEPTH = 4.5            # reaches the tray's outer face, 0.2 mm inside the ring
 TAB_WIDTH = 12.0           # length of a tab along the plate edge
 TAB_TARGET_SPACING = 50.0  # target spacing for the adaptive tab rows
 TAB_SIDE_MARGIN = 10.0     # preferred gap from a plate corner

@@ -50,7 +50,7 @@ MX_LEG_HOLE_DIAMETER = 2.0
 
 SOCKET_POCKET_LENGTH = 12.0      # X, known-good body envelope
 SOCKET_POCKET_WIDTH = 9.0        # Y, known-good body envelope
-SOCKET_CONTACT_SIZE = 2.0        # protruding metal contact tab
+SOCKET_CONTACT_SIZE = 3.0        # protruding metal contact tab, 3 x 3 mm
 SOCKET_CONTACT_EMBED = 0.2       # overlap into the body pocket
 SOCKET_POCKET_DEPTH = 3.0
 
@@ -72,9 +72,10 @@ WEB_THICKNESS = 1.5              # solid floor between switch and socket/LED
 PLATE_THICKNESS = MX_POCKET_DEPTH + WEB_THICKNESS + SOCKET_POCKET_DEPTH
 EPS = 0.5                        # cutters overshoot the plate faces
 
-# The hotswap body pocket is the proven 12 x 9 mm envelope.  Only the higher
-# pin gets a side extension for the protruding metal tab; the lower pin already
-# clears the original pocket.
+# The hotswap body pocket is the proven 12 x 9 mm envelope.  Each metal
+# contact tab is a separate 3 x 3 mm extension beyond the body edge, on that
+# pin's X side and at that pin's Y.  The two tabs are therefore diagonal, not
+# mirror-symmetric: the higher pin exits +X, the lower one -X.
 _SOCKET_MID_OFFSET = (-0.635, -3.81)
 
 
@@ -201,8 +202,27 @@ def switch_pocket_cutter(placed, thickness):
     return pocket
 
 
+def socket_contact_offsets():
+    """Plan offsets of the two metal-contact tab clearances from the switch.
+
+    A hotswap socket has two metal contacts, one per switch pin.  Each one
+    protrudes past the body edge on its own pin's side, at that pin's Y, so
+    the pair is diagonal rather than symmetric about the body.
+    """
+
+    half_length = SOCKET_POCKET_LENGTH / 2.0
+    tab_centre = (
+        half_length + (SOCKET_CONTACT_SIZE - SOCKET_CONTACT_EMBED) / 2.0
+    )
+    offsets = []
+    for pin_x, pin_y in MX_PIN_POSITIONS:
+        side = 1.0 if pin_x > _SOCKET_MID_OFFSET[0] else -1.0
+        offsets.append((_SOCKET_MID_OFFSET[0] + side * tab_centre, pin_y))
+    return tuple(offsets)
+
+
 def socket_pocket_cutters(placed):
-    """Body pocket plus one tab extension on the higher pin's side."""
+    """Body pocket plus one tab clearance on each metal contact's side."""
 
     body_bm = bmesh.new()
     for x, y, rotation in placed:
@@ -215,22 +235,20 @@ def socket_pocket_cutters(placed):
         )
     body = mesh.mesh_object("socket_pockets", body_bm)
 
-    half_length = SOCKET_POCKET_LENGTH / 2.0
     tab_width = SOCKET_CONTACT_SIZE + SOCKET_CONTACT_EMBED
-    tab_centre = half_length + (SOCKET_CONTACT_SIZE - SOCKET_CONTACT_EMBED) / 2.0
-    tab_x = _SOCKET_MID_OFFSET[0] + tab_centre
-    tab_y = MX_PIN_POSITIONS[0][1]
+    contact_offsets = socket_contact_offsets()
 
     tab_bm = bmesh.new()
     for x, y, rotation in placed:
-        ox, oy = _rotate((tab_x, tab_y), rotation)
-        mesh.add_box(
-            tab_bm,
-            (x + ox, y + oy, (SOCKET_POCKET_DEPTH - EPS) / 2.0),
-            (tab_width, SOCKET_CONTACT_SIZE, SOCKET_POCKET_DEPTH + EPS),
-            rotation,
-        )
-    tab = mesh.mesh_object("socket_tab", tab_bm)
+        for contact_x, contact_y in contact_offsets:
+            ox, oy = _rotate((contact_x, contact_y), rotation)
+            mesh.add_box(
+                tab_bm,
+                (x + ox, y + oy, (SOCKET_POCKET_DEPTH - EPS) / 2.0),
+                (tab_width, SOCKET_CONTACT_SIZE, SOCKET_POCKET_DEPTH + EPS),
+                rotation,
+            )
+    tab = mesh.mesh_object("socket_tabs", tab_bm)
 
     return [body, tab]
 
