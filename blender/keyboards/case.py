@@ -29,6 +29,7 @@ export.
 from __future__ import annotations
 
 import math
+import os
 from dataclasses import dataclass
 
 import bmesh
@@ -95,6 +96,21 @@ SPLIT_MIN_WALL = 7.0                         # radial room for tabs/inserts
 WIRE_RECESS_INSET = 0.5                      # solid rim under the plate edge
 BOTTOM_RADIUS = 4.25                         # bottom tray footprint
 EDGE_LOWER_RADIUS = 4.45                     # edge lower recess
+
+# Wide bottom trays are printed as two halves.  The single cut runs along X = 0
+# and carries several dovetails in the middle of the tray.  The dovetails sit in
+# the recessed plate-pocket floor, so their height follows the wire gap rather
+# than the full 3 mm bed.
+BOTTOM_SPLIT_MAX_WIDTH = 250.0   # split above this case width
+BOTTOM_SEAM_GAP = 0.2            # total gap between the two halves
+BOTTOM_DOVETAIL_DEPTH = 5.0      # tenon reach into the opposite half
+BOTTOM_DOVETAIL_NECK = 5.0       # tenon width at the root
+BOTTOM_DOVETAIL_TIP = 8.0        # tenon width at the free tip (undercut)
+BOTTOM_DOVETAIL_CLEARANCE = 0.2  # total slot clearance around a tenon
+BOTTOM_DOVETAIL_TARGET_SPACING = 30.0
+BOTTOM_DOVETAIL_SPAN_FRACTION = 0.6  # share of the plate depth that gets tenons
+BOTTOM_DOVETAIL_MIN_WEB = 5.0    # material between two neighbouring tenons
+BOTTOM_PIECE_SUFFIXES = ("west", "east")
 
 MAGNET_SHELF_EDGE = 1.5    # material under the magnet pocket at the shelf edge
 DEFAULT_COMPARTMENT_HEIGHT = 27.5  # raised bay height
@@ -933,6 +949,187 @@ def build_case_bottom(
 
     mesh.check_mesh(name, bottom, strict=True)
     return bottom
+
+
+# --------------------------------------------------------------------------
+# Bottom-tray print split
+# --------------------------------------------------------------------------
+
+
+def should_split_bottom(metrics):
+    """A bottom tray wider than 250 mm is printed as two dovetailed halves."""
+
+    return metrics.width > BOTTOM_SPLIT_MAX_WIDTH
+
+
+def bottom_piece_path(path, suffix):
+    """Derive ``_west`` / ``_east`` paths from the normal bottom-tray path."""
+
+    stem, extension = os.path.splitext(path)
+    extension = extension or ".stl"
+    return f"{stem}_{suffix}{extension}"
+
+
+def _bottom_dovetail_positions(metrics):
+    """Y centres of the dovetails along the central X = 0 seam.
+
+    The tenons stay inside the middle ``BOTTOM_DOVETAIL_SPAN_FRACTION`` of the
+    plate depth, so they sit in the recessed wire floor and keep clear of the
+    perimeter lip at the north and south ends of the seam.
+    """
+
+    pocket = metrics.plate_pocket
+    depth = pocket.y1 - pocket.y0
+    span = depth * BOTTOM_DOVETAIL_SPAN_FRACTION
+    count = max(
+        2,
+        int(span / BOTTOM_DOVETAIL_TARGET_SPACING + 0.5) + 1,
+    )
+    count = min(count, 6)
+    spacing = span / (count - 1)
+    minimum = BOTTOM_DOVETAIL_TIP + 2.0 * BOTTOM_DOVETAIL_MIN_WEB
+    if spacing < minimum - 1e-9:
+        raise ValueError(
+            "the bottom tray is too shallow for multiple dovetails: "
+            f"needs {minimum:.1f} mm spacing, has {spacing:.1f} mm"
+        )
+
+    centre = (pocket.y0 + pocket.y1) / 2.0
+    positions = [
+        centre + (index - (count - 1) / 2.0) * spacing
+        for index in range(count)
+    ]
+
+    recess_y0 = pocket.y0 + WIRE_RECESS_INSET
+    if positions[0] - BOTTOM_DOVETAIL_TIP / 2.0 < recess_y0 - 1e-9:
+        raise ValueError(
+            "the bottom dovetails would leave the recessed wire floor"
+        )
+    return positions
+
+
+def _box_between(name, x0, x1, y0, y1, z0, z1):
+    """Axis-aligned box solid from its extents."""
+
+    bm = bmesh.new()
+    mesh.add_box(
+        bm,
+        ((x0 + x1) / 2.0, (y0 + y1) / 2.0, (z0 + z1) / 2.0),
+        (x1 - x0, y1 - y0, z1 - z0),
+    )
+    return mesh.mesh_object(name, bm)
+
+
+def _dovetail_prism(name, x_root, x_tip, y_centre, half_root, half_tip, z0, z1):
+    """A dovetail trapezoid extruded vertically."""
+
+    points = (
+        (x_root, y_centre - half_root),
+        (x_root, y_centre + half_root),
+        (x_tip, y_centre + half_tip),
+        (x_tip, y_centre - half_tip),
+    )
+    bm = bmesh.new()
+    mesh.add_prism_z(bm, points, z0, z1)
+    return mesh.mesh_object(name, bm)
+
+
+def _x_extent(obj):
+    xs = [vertex.co.x for vertex in obj.data.vertices]
+    return max(xs) - min(xs)
+
+
+def split_case_bottom(
+    bottom,
+    metrics,
+    name="case_bottom",
+    options=None,
+):
+    """Cut a built bottom tray into west/east dovetailed halves.
+
+    One straight cut at X = 0 separates the tray; several dovetail tenons are
+    then added to the west half and matching slots cut into the east half.  The
+    tenons are short in Z because the seam runs through the recessed wire floor,
+    and they are prismatic in Z, so the east half drops onto them during
+    assembly.  Returns ``[("west", object), ("east", object)]``.  The source
+    ``bottom`` object is left untouched.
+    """
+
+    if not should_split_bottom(metrics):
+        raise ValueError(
+            f"{name} is only {metrics.width:.1f} mm wide; the print split is "
+            f"for cases wider than {BOTTOM_SPLIT_MAX_WIDTH:.0f} mm"
+        )
+    options = options or mounting.MountingOptions()
+    floor_top = FLOOR - options.wire_gap
+    half = BOTTOM_SEAM_GAP / 2.0
+    big = max(
+        abs(metrics.west),
+        abs(metrics.east),
+        abs(metrics.south),
+        abs(metrics.north),
+    ) + 50.0
+
+    positions = _bottom_dovetail_positions(metrics)
+    print(
+        f"{name}: splitting into west/east halves at x = 0 with "
+        f"{len(positions)} dovetails"
+    )
+
+    west = mesh.duplicate_object(bottom, f"{name}_west")
+    east = mesh.duplicate_object(bottom, f"{name}_east")
+    mesh.difference(
+        west, _box_between(f"{name}_west_cut", -half, big, -big, big, -big, big)
+    )
+    mesh.difference(
+        east, _box_between(f"{name}_east_cut", -big, half, -big, big, -big, big)
+    )
+
+    tenon_root = -half - 0.5
+    tenon_tip = half + BOTTOM_DOVETAIL_DEPTH
+    slot_mouth = half - 0.5
+    slot_end = tenon_tip + BOTTOM_DOVETAIL_CLEARANCE / 2.0
+
+    for index, y_centre in enumerate(positions):
+        tenon = _dovetail_prism(
+            f"{name}_tenon_{index}",
+            tenon_root,
+            tenon_tip,
+            y_centre,
+            BOTTOM_DOVETAIL_NECK / 2.0,
+            BOTTOM_DOVETAIL_TIP / 2.0,
+            0.0,
+            floor_top,
+        )
+        mesh.union(west, tenon)
+
+        slot = _dovetail_prism(
+            f"{name}_slot_{index}",
+            slot_mouth,
+            slot_end,
+            y_centre,
+            BOTTOM_DOVETAIL_NECK / 2.0 + BOTTOM_DOVETAIL_CLEARANCE / 2.0,
+            BOTTOM_DOVETAIL_TIP / 2.0 + BOTTOM_DOVETAIL_CLEARANCE / 2.0,
+            -0.1,
+            floor_top + 0.1,
+        )
+        mesh.difference(east, slot)
+
+    pieces = [("west", west), ("east", east)]
+    for suffix, piece in pieces:
+        mesh.check_mesh(f"{name}_{suffix}", piece, strict=True)
+        extent = _x_extent(piece)
+        if extent > BOTTOM_SPLIT_MAX_WIDTH + 1e-6:
+            raise ValueError(
+                f"{name}_{suffix} is {extent:.1f} mm wide, wider than the "
+                f"{BOTTOM_SPLIT_MAX_WIDTH:.0f} mm target; the two-piece split "
+                "does not make this case printable"
+            )
+    print(
+        f"{name}: two pieces, widest "
+        f"{max(_x_extent(piece) for _, piece in pieces):.2f} mm"
+    )
+    return pieces
 
 
 def build_case_edges(

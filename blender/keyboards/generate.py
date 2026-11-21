@@ -109,6 +109,14 @@ def generate_keyboard(spec):
         compartment_depth=spec.compartment_depth,
         options=spec.options,
     )
+    case_bottom_pieces = None
+    if case.should_split_bottom(metrics):
+        case_bottom_pieces = case.split_case_bottom(
+            case_bottom,
+            metrics,
+            name=f"{spec.name}_case_bottom",
+            options=spec.options,
+        )
     case_edges = case.build_case_edges(
         spec.keys,
         name=f"{spec.name}_case_edges",
@@ -143,7 +151,11 @@ def generate_keyboard(spec):
         top_half, bottom_half = split_halves
         _print_dimensions(f"{spec.name}: top half", top_half)
         _print_dimensions(f"{spec.name}: bottom half", bottom_half)
-    _print_dimensions(f"{spec.name}: case bottom", case_bottom)
+    if case_bottom_pieces is None:
+        _print_dimensions(f"{spec.name}: case bottom", case_bottom)
+    else:
+        for suffix, piece in case_bottom_pieces:
+            _print_dimensions(f"{spec.name}: case bottom {suffix}", piece)
     if case_edge_pieces is None:
         _print_dimensions(f"{spec.name}: case edges", case_edges)
     else:
@@ -157,7 +169,14 @@ def generate_keyboard(spec):
         top_path, bottom_path = _plate_split_paths(spec.plate_path)
         export.export_stl(split_halves[0], top_path)
         export.export_stl(split_halves[1], bottom_path)
-    export.export_stl(case_bottom, spec.case_bottom_path)
+    if case_bottom_pieces is None:
+        export.export_stl(case_bottom, spec.case_bottom_path)
+    else:
+        for suffix, piece in case_bottom_pieces:
+            export.export_stl(
+                piece,
+                case.bottom_piece_path(spec.case_bottom_path, suffix),
+            )
     if case_edge_pieces is None:
         export.export_stl(case_edges, spec.case_edges_path)
     else:
@@ -169,13 +188,20 @@ def generate_keyboard(spec):
     export.export_stl(cover_obj, spec.cover_path)
 
     # Keep each output mode self-contained: a normal run must not leave the
-    # split halves behind, and a split run must not leave the single plate or
-    # the single edge ring behind.
+    # split halves behind, and a split run must not leave the single plate,
+    # bottom tray or edge ring behind.
     stale = []
     if split_halves is None:
         stale.extend(_plate_split_paths(spec.plate_path))
     else:
         stale.append(spec.plate_path)
+    if case_bottom_pieces is None:
+        stale.extend(
+            case.bottom_piece_path(spec.case_bottom_path, suffix)
+            for suffix in case.BOTTOM_PIECE_SUFFIXES
+        )
+    else:
+        stale.append(spec.case_bottom_path)
     if case_edge_pieces is None:
         stale.extend(
             case_split.piece_path(spec.case_edges_path, suffix)

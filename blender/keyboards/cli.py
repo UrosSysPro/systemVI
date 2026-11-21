@@ -174,7 +174,8 @@ def argument_parser(description=None):
         "build/<name>/case/case_bottom.stl, build/<name>/case/case_edges.stl "
         "and build/<name>/cover/cover.stl; --split-plate writes "
         "_top_half/_bottom_half instead, and a wide case writes "
-        "_case_edges_west/_east/_north/_south in the case directory",
+        "_case_edges_west/_east/_north/_south plus "
+        "_case_bottom_west/_east in the case directory",
     )
     return parser
 
@@ -281,9 +282,10 @@ def default_paths(project_dir, name):
         build/<name>/cover/cover.stl
 
     A wide case replaces ``case_edges.stl`` with the four ``case_edges_*``
-    pieces in the same directory, and ``--split-plate`` replaces
-    ``top_plate.stl`` with ``top_plate_top_half.stl`` and
-    ``top_plate_bottom_half.stl``.
+    pieces in the same directory and ``case_bottom.stl`` with
+    ``case_bottom_west.stl`` / ``case_bottom_east.stl``, and
+    ``--split-plate`` replaces ``top_plate.stl`` with
+    ``top_plate_top_half.stl`` and ``top_plate_bottom_half.stl``.
     """
 
     base_dir = os.path.join(project_dir, "build", name)
