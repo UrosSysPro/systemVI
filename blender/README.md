@@ -16,7 +16,9 @@ Each keyboard produces four part types:
   opening with a 45° beveled recess and internal glue shelf. From outside it
   looks exactly like the old one-piece case. Inside it has a lower recess for
   the bottom tray and plate tabs, with vertical M2 heatset inserts above each
-  tab. A small 45-degree shelf under each magnet in the bay holds the cover.
+  tab. A small 45-degree shelf under each magnet in the bay holds the cover,
+  and the side lid ledges stop 4.7 mm behind the bay's front edge so the
+  cover's front wall clears them.
 - **Cover** — thin L-shaped lid for the electronics bay, with local magnet
   bosses and pockets on its underside. Only the magnet locations are thickened.
 

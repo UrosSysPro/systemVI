@@ -134,6 +134,9 @@ DEFAULT_COMPARTMENT_HEIGHT = 27.5  # raised bay height
 COMPARTMENT_HEIGHT = DEFAULT_COMPARTMENT_HEIGHT  # compatibility name
 COMPARTMENT_RAMP = 20.0    # horizontal run of the slanted edge
 COVER_WALL = 2.5           # cover front wall thickness
+# Extra set-back of the lid ledge beyond the cover's front wall and the
+# magnet-rail gap, so the ledge ends clear of the cover's front lip.
+LID_LEDGE_SETBACK = 2.0
 
 CUTTER_MARGIN = 5.0        # side/south overshoot of the ramp cutter
 CUTTER_HEIGHT = 50.0       # top overshoot of the ramp cutter
@@ -534,12 +537,40 @@ def _plate_pocket_cutter(metrics):
 
 
 def _bay_cavity_cutter(metrics):
-    return _box_cutter(
-        "bay_cavity",
-        metrics.bay_cavity,
-        FLOOR,
-        metrics.height + hardware.EPS,
+    """Clear the bay interior, opening its front corners to the lid ledge.
+
+    The cover is L-shaped: its front wall is ``COVER_WALL`` thick and hangs
+    down at the bay's south edge.  The lid ledge runs the full bay length, so
+    without a notch the wall would collide with it and the cover could not
+    seat.  The cavity is therefore widened to the bay opening over
+    ``COVER_WALL + RAIL_FRONT_GAP + LID_LEDGE_SETBACK``, which ends the ledge
+    2 mm further behind the cover lip.  The side magnet shelves stay at
+    ``COVER_WALL + RAIL_FRONT_GAP``; their front ends are hidden under the
+    cover.
+    """
+
+    opening = metrics.bay_opening
+    cavity = metrics.bay_cavity
+    notch = (
+        opening.y0
+        + COVER_WALL
+        + mounting.RAIL_FRONT_GAP
+        + LID_LEDGE_SETBACK
     )
+    profile = (
+        (opening.x0, opening.y0),
+        (opening.x1, opening.y0),
+        (opening.x1, notch),
+        (cavity.x1, notch),
+        (cavity.x1, cavity.y1),
+        (cavity.x0, cavity.y1),
+        (cavity.x0, notch),
+        (opening.x0, notch),
+    )
+
+    bm = bmesh.new()
+    mesh.add_prism_z(bm, profile, FLOOR, metrics.height + hardware.EPS)
+    return mesh.mesh_object("bay_cavity", bm)
 
 
 def _bay_opening_cutter(metrics):

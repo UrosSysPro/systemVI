@@ -423,6 +423,10 @@ Key dimensions:
 - lid thickness 2.5 mm, shelf ledge 1.5 mm wide, lid clearance 0.2 mm,
 - default compartment/cover top 27.5 mm; rim 15 mm; plate top 12.5 mm,
 - cover front wall 2.5 mm thick; front lip 12.5 mm tall,
+- the side lid ledges are notched back by
+  `COVER_WALL + RAIL_FRONT_GAP + LID_LEDGE_SETBACK` (**4.7 mm**) at the bay's
+  front edge, so the cover's front wall drops past them; the side magnet
+  shelves keep the smaller `COVER_WALL + RAIL_FRONT_GAP` (**2.7 mm**) set-back,
 - the bay shelf sits 2.5 mm below the compartment top; the 45-degree magnet
   shelves stop 1.5 mm below the shelf so the cover's local bosses meet them.
 
@@ -534,7 +538,9 @@ the plate edge keeps a solid rim.  There is no perimeter rib.
 The cover lid stays **2.5 mm** thick.  Only the magnet locations are thickened:
 each magnet gets a local **1.5 mm boss** on the cover underside.  The bosses
 land on small 45-degree shelves inside the bay; the rest of the lid rests on the
-bay shelf at 25 mm.
+bay shelf at 25 mm.  The west/east lid ledges are notched back 4.7 mm at the
+bay's front so the cover's front wall clears them; the side magnet shelves keep
+their 2.7 mm set-back and their front ends stay hidden under the cover.
 
 Standard magnets are **6 x 3 x 3 mm**.  The longest side follows the edge:
 6 mm along Y on the side edges, 6 mm along X on the top edge, and 3 mm
