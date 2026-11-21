@@ -68,6 +68,7 @@ blender/
 │   ├── stabilizer.py            # custom 2 mm-wire stabilizer cutouts + slider
 │   ├── plate.py                 # flat top plate + lower fastening tabs
 │   ├── case.py                  # split case bottom/edges, bay, USB-C, magnets
+│   ├── case_split.py            # wide edge-ring split + dovetail joints
 │   ├── cover.py                 # L-shaped/flat cover with local magnet bosses
 │   ├── export.py                # scene reset + atomic STL export
 │   ├── cli.py                   # shared argparse and output paths
@@ -135,6 +136,8 @@ layout data
    ├─ build_top_plate()   ──► build/top_plate.stl      (tabs + M2 holes)
    ├─ build_case_bottom() ──► build/case_bottom.stl   (wire recess, ribs, lip)
    ├─ build_case_edges()  ──► build/case_edges.stl    (bay, USB-C, inserts)
+   │                            │
+   │                            └─ split_case_edges() (case width > 250 mm)
    └─ build_cover()       ──► build/cover.stl         (local bosses + pockets)
 ```
 
@@ -143,8 +146,10 @@ layout data
 1. validates case metrics and compartment values before touching the scene,
 2. resets the scene once,
 3. builds the plate, both case parts and the cover,
-4. runs strict mesh validation on each,
-5. exports all four with atomic replacement.
+4. splits the edge ring into four dovetailed pieces when the case is wider
+   than 250 mm,
+5. runs strict mesh validation on each part and piece,
+6. exports everything with atomic replacement.
 
 ### Dependency direction
 
@@ -156,6 +161,8 @@ layout data
   tab/magnet/rib plans. It is pure Python and imports only layout.
 - `plate.py` imports layout, hardware, mesh, mounting and stabilizer.
 - `case.py` imports layout, hardware, mesh and mounting.
+- `case_split.py` imports case and mesh; it splits a built wide edge ring and
+  owns the dovetail dimensions. `generate.py` calls it above the builders.
 - `cover.py` imports case, mesh, hardware and mounting.
 - `export.py`, `cli.py` and `generate.py` sit above the builders.
 - Keyboard `main.py` files contain only the layout data, path setup, CLI call and
@@ -196,7 +203,7 @@ blender --background --python-exit-code 1 --python keyboards/kb60/main.py -- \
 | `--wall MM` | Case outer wall thickness (default 7 mm; the split geometry needs at least 7 mm). |
 | `--compartment-ramp MM` | Horizontal run of the raised-compartment slope; 0 gives a vertical step. |
 | `--split-plate` | Export the top plate as two horizontal halves instead of one STL; the split case and cover are unchanged. |
-| `--output PATH` | Base STL path; case parts/cover reuse the stem with `_case_bottom`/`_case_edges`/`_cover`; split mode adds `_top_half`/`_bottom_half`. |
+| `--output PATH` | Base STL path; case parts/cover reuse the stem with `_case_bottom`/`_case_edges`/`_cover`; `--split-plate` adds `_top_half`/`_bottom_half`; a wide case adds `_case_edges_west`/`_east`/`_north`/`_south`. |
 | `--magnet-width MM` | Magnet long side, along the edge (default 6.0). |
 | `--magnet-length MM` | Magnet short side, across the edge (default 3.0). |
 | `--magnet-thickness MM` | Magnet vertical size; sets the local cover boss height (default 3.0). |
@@ -218,7 +225,8 @@ build/<name>_cover.stl
 ```
 
 Examples: `build/kb75_top_plate.stl`, `build/kb100_case_bottom.stl`,
-`build/kb100_case_edges.stl`, `build/kbNumpad_cover.stl`.
+`build/kb100_case_edges_west.stl`, `build/kbNumpad_case_edges.stl`,
+`build/kbNumpad_cover.stl`.
 
 `--output` names the plate; for example:
 
@@ -241,6 +249,21 @@ of the fastening tabs. The top half contains the switch pockets; the bottom
 half contains the hotswap/LED pockets plus all fastening tabs. Both halves are
 validated strictly before export. The split case and cover are still exported
 unchanged.
+
+When the case is wider than **250 mm** (the 60%, 75% and 100% boards), the
+single `_case_edges.stl` is replaced by four dovetailed pieces:
+
+```text
+build/<name>_case_edges_west.stl
+build/<name>_case_edges_east.stl
+build/<name>_case_edges_north.stl
+build/<name>_case_edges_south.stl
+```
+
+With `--output build/kb60_south.stl` the pieces become
+`build/kb60_south_case_edges_west.stl` and so on. The top plate, bottom tray and
+cover outputs are unchanged. A 250 mm case is *not* split; the cut is triggered
+above 250 mm.
 
 The standalone stabilizer generator writes:
 
@@ -417,7 +440,7 @@ The bottom tray has:
 - **M2 counterbores** (4.0 mm for the 3.8 mm head, 2.0 mm deep) and 2.4 mm
   through-holes in the bed at each tab, opening from below.
 
-The top plate has adaptive lower tabs: **4 mm high**, **3.6 mm deep**, **9 mm
+The top plate has adaptive lower tabs: **4 mm high**, **3.6 mm deep**, **12 mm
 wide**, on west, east and south.  `plate_tab_plan(width, height)` distributes
 them evenly with a 50 mm target spacing, 10 mm preferred corner margin and
 6 mm minimum gap.  Each tab has a 2.4 mm M2 clearance hole at 2.2 mm inboard of
@@ -430,6 +453,49 @@ adjacent 1u switch pockets leave a **5.05 mm** web, an M3 insert is **4.6 mm**
 across before wall thickness, and the hotswap socket tab already protrudes
 **0.365 mm** into that web.  Putting the inserts in the edge ring avoids all of
 those cutouts.
+
+### Wide edge-ring split
+
+`case_split.py` splits the finished edge ring when the case is wider than
+**250 mm** (`SPLIT_CASE_MAX_WIDTH`); the 60%, 75% and 100% cases qualify and the
+numpad stays whole.  The two vertical cuts along X are at ±`width / 4`, giving
+the same 1:2:1 sections as the split top plate.  Because the ring is closed,
+the cuts produce four pieces:
+
+- **west** and **east** U-shaped side pieces (side wall plus the end stubs of
+  the north and south walls),
+- the middle **north** rail and middle **south** rail.
+
+Both cuts cross the north and south walls, so every seam gets two dovetails.
+The rails carry the male dovetails; the side pieces get the matching slots.
+
+Dovetail dimensions (`case_split.py`):
+
+- **4.0 mm** deep into the side piece,
+- **2.5 mm** wide at the rail's end face, **3.7 mm** at the free tip (about
+  8.5-degree flanks),
+- inside the wall, **0.9 mm** from the inner face and **0.9 mm** from the outer
+  face at the rim.  The band is measured from the wall's inner face and stops
+  short of the 1.5 mm top chamfer, so the joint never breaks the outer surface
+  or the inner pocket,
+- starts **1.5 mm above** the z = 7 mm tab shelf and runs to the wall top.  It
+  is open at the top rim, so a rail slides down into the side pieces; the
+  1.5 mm layer under each slot is the vertical stop and lands the rail bottom
+  flush at z = 0,
+- **0.2 mm** total clearance in the slot and a **0.2 mm** seam gap.
+
+The south wall is 15 mm tall and the north wall follows the raised compartment,
+so the south dovetail is 6.5 mm tall and the north one about 19 mm.  The joints
+are hidden inside the wall except for the small slot in the top rim, which the
+rail's dovetail fills.  Glue the joints; the dovetail alone does not hold the
+rails vertically.  The male dovetail's underside overhangs the lower recess by
+about **3.6 mm**; print the rails with support under it, or orient them so that
+face is not a downward overhang.
+
+The plate, bottom tray and cover are not split by this feature.  Each piece is
+validated strictly and its X extent is checked against the 250 mm target; if a
+1:2:1 split would still leave a piece too wide, generation raises instead of
+exporting it.
 
 ### Plate support and wire routing
 
@@ -599,8 +665,9 @@ generate.generate_keyboard(spec)
 
 - `blender --background --python-exit-code 1 --python keyboards/<name>/main.py`
   exits 0.
-- Default mode creates four STLs under `build/`; split mode creates the two
-  plate halves plus the two case parts and cover.
+- Default mode creates four STLs under `build/`; above 250 mm case width the
+  edge ring becomes four pieces instead of one. `--split-plate` adds the two
+  plate halves; the two case parts and cover are otherwise unchanged.
 - Every part passes strict mesh validation (manifold, no zero-area faces).
 - Dimensions are plausible and the parts align.
 - North and south variants both generate if the layout is intended to support
@@ -624,8 +691,9 @@ Pure layout and mounting plans:
 python3 -m unittest discover -s tests -p "test_*.py" -v
 ```
 
-Geometry metrics for all four boards plus a real numpad plate/case-bottom/
-case-edges/cover/split build and the south-facing 100% plate:
+Geometry metrics for all four boards, a real numpad plate/case-bottom/
+case-edges/cover/split build, a split kb60 edge ring and the south-facing 100%
+plate:
 
 ```sh
 blender --background --python-exit-code 1 --python tests/run_blender_tests.py
@@ -699,9 +767,16 @@ elevation looks from below; `--orthographic` gives a dimension-friendly view.
   to 7 mm minimum. Revalidate all four boards if the tab/screw sizes change.
 - **Tab split:** tabs are exactly 4 mm high and the split is at z = 4.0 mm. The
   top plate half has no tabs; all tabs are in the bottom half.
-- **Assembly order:** insert the plate from below into the edge ring, then fit
-  the bottom tray from below and screw upward. The plate cannot be dropped in
-  from above because the edge shelf overhangs the tabs.
+- **Assembly order:** when the edge ring is split, slide and glue both middle
+  rails into the side pieces first. Then insert the plate from below into the
+  edge ring, fit the bottom tray from below and screw upward. The plate cannot
+  be dropped in from above because the edge shelf overhangs the tabs.
+- **Wide case split:** the edge ring splits automatically above 250 mm case
+  width, at ±`width / 4`. The dovetails lock only along X; the rails must be
+  glued. The male dovetail's underside is a ~3.6 mm overhang over the lower
+  recess, so support it when printing the rails. The slot's 1.5 mm floor is the
+  vertical stop. Re-run all four boards after changing the `case_split`
+  constants or the wall/top-chamfer geometry.
 - **Tiny boolean holes:** the 100% south-facing plate can leave a sub-millimetre
   boundary loop where a hotswap pocket corner meets a switch leg hole.
   `mesh.fill_small_holes()` closes only loops under 2 mm perimeter; larger

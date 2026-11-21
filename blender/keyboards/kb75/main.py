@@ -1,11 +1,17 @@
 """kb75: a 75% style keyboard, 83 keys, 16u x 6u.
 
-Generates the four printed parts into the repository ``build/`` directory:
+Generates the printed parts into the repository ``build/`` directory:
 
     build/kb75_top_plate.stl
     build/kb75_case_bottom.stl
-    build/kb75_case_edges.stl
     build/kb75_cover.stl
+    build/kb75_case_edges_west.stl
+    build/kb75_case_edges_east.stl
+    build/kb75_case_edges_north.stl
+    build/kb75_case_edges_south.stl
+
+The case is wider than 250 mm, so the edge ring is split into four dovetailed
+pieces instead of one; see ``case_split.py``.
 
 The plate cutouts, split case and cover come from the shared keyboard modules.
 
@@ -17,7 +23,8 @@ Options go after Blender's ``--`` separator:
         --led-facing south --horizontal 8 --vertical 4 --output build/out.stl
 
 ``--output`` names the top plate; the two case parts and cover reuse its stem
-with _case_bottom, _case_edges and _cover suffixes.
+with _case_bottom, _case_edges and _cover suffixes.  The split edge ring adds
+_west, _east, _north or _south to the _case_edges stem.
 """
 
 import os

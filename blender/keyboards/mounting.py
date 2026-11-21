@@ -82,7 +82,7 @@ RIB_MIN_OVERLAP = 4.0
 
 TAB_HEIGHT = 4.0           # plate tab height, from the plate bottom
 TAB_DEPTH = 3.6            # radial length of a plate tab beyond the outline
-TAB_WIDTH = 9.0            # length of a tab along the plate edge
+TAB_WIDTH = 12.0           # length of a tab along the plate edge
 TAB_TARGET_SPACING = 50.0  # target spacing for the adaptive tab rows
 TAB_SIDE_MARGIN = 10.0     # preferred gap from a plate corner
 TAB_MIN_GAP = 6.0          # minimum gap between two tabs on one side

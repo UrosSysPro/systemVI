@@ -15,7 +15,6 @@ ring.  See :mod:`mounting` for the shared tab plan.
 from __future__ import annotations
 
 import bmesh
-import bpy
 
 import hardware
 import layout
@@ -135,15 +134,6 @@ def build_top_plate(keys, name="top_plate", params=None):
     return plate
 
 
-def _duplicate(obj, name):
-    duplicate = bpy.data.objects.new(name, obj.data.copy())
-    bpy.context.scene.collection.objects.link(duplicate)
-    duplicate.location = obj.location
-    duplicate.rotation_euler = obj.rotation_euler
-    duplicate.scale = obj.scale
-    return duplicate
-
-
 def _halfspace(name, cut_z, above):
     """Large box covering one side of a horizontal cut."""
 
@@ -189,8 +179,8 @@ def split_top_plate(plate, name="top_plate", cut_z=None):
         f"socket ceiling {hardware.SOCKET_POCKET_DEPTH} mm)"
     )
 
-    top = _duplicate(plate, f"{name}_top_half")
-    bottom = _duplicate(plate, f"{name}_bottom_half")
+    top = mesh.duplicate_object(plate, f"{name}_top_half")
+    bottom = mesh.duplicate_object(plate, f"{name}_bottom_half")
 
     mesh.difference(top, _halfspace("cut_below", cut_z, above=False))
     mesh.difference(bottom, _halfspace("cut_above", cut_z, above=True))

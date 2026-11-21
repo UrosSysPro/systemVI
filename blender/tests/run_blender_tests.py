@@ -5,9 +5,9 @@ Run from the repository root with::
     blender --background --python-exit-code 1 --python tests/run_blender_tests.py
 
 The pure layout/mounting tests live in ``test_*.py`` and run under plain
-Python.  This file checks the generated metrics for all four boards and builds
-the numpad plate, case and cover (including the split plate) through the real
-builders.
+Python.  This file checks the generated metrics for all four boards, builds the
+numpad plate, case and cover (including the split plate), and splits the 60%
+edge ring into its four dovetailed pieces.
 """
 
 import importlib.util
@@ -20,6 +20,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "keyboards"))
 
 import case
+import case_split
 import cover
 import export
 import layout
@@ -156,6 +157,49 @@ def check_numpad_build(keys):
     print("kbNumpad: plate, split case, cover and split plate built")
 
 
+def check_case_split(keys, name="kb60"):
+    """A 60% edge ring must split into four validated dovetail pieces."""
+
+    export.reset_scene()
+    metrics = case.case_metrics(keys)
+    assert case_split.should_split(metrics), name
+    west_cut, east_cut = case_split.split_positions(metrics.width)
+    close(west_cut, -metrics.width / 4.0)
+    close(east_cut, metrics.width / 4.0)
+
+    edges = case.build_case_edges(keys, name=f"test_{name}_edges")
+    pieces = case_split.split_case_edges(
+        edges, metrics, name=f"test_{name}_edges"
+    )
+    assert [suffix for suffix, _ in pieces] == list(case_split.PIECE_SUFFIXES)
+
+    extents = {}
+    for suffix, piece in pieces:
+        xs = [vertex.co.x for vertex in piece.data.vertices]
+        zs = [vertex.co.z for vertex in piece.data.vertices]
+        extents[suffix] = max(xs) - min(xs)
+        assert extents[suffix] <= case_split.SPLIT_CASE_MAX_WIDTH + 1e-6, (
+            suffix,
+            extents[suffix],
+        )
+        close(min(zs), 0.0, 1e-6)
+        close(max(zs), metrics.height if suffix != "south" else case.CASE_HEIGHT, 0.05)
+
+    # The middle rails carry the dovetails, so they reach one dovetail depth
+    # past each seam.  The side pieces stop at the seam faces.
+    middle = metrics.width / 2.0 + 2.0 * case_split.DOVETAIL_DEPTH
+    side = metrics.width / 4.0 - case_split.SEAM_GAP / 2.0
+    close(extents["north"], middle, 0.05)
+    close(extents["south"], middle, 0.05)
+    close(extents["west"], side, 0.05)
+    close(extents["east"], side, 0.05)
+
+    print(
+        f"{name}: edge ring split into {len(pieces)} pieces, "
+        f"widest {max(extents.values()):.1f} mm"
+    )
+
+
 def main():
     layouts = {}
     for name in NAMES:
@@ -164,6 +208,8 @@ def main():
         check_metrics(name, keys)
 
     check_numpad_build(layouts["kbNumpad"])
+    assert not case_split.should_split(case.case_metrics(layouts["kbNumpad"]))
+    check_case_split(layouts["kb60"])
 
     # The south-facing 100% plate used to leave a tiny boolean sliver at a
     # hotswap pocket corner; build it every run so the repair stays covered.

@@ -4,7 +4,7 @@ Headless Blender scripts that generate 3D-printable keyboard housings and
 stabilizers. Every keyboard is built procedurally and exported as binary STL
 files under `build/`; there is no GUI step and no `.blend` file to maintain.
 
-Each keyboard produces four printed parts:
+Each keyboard produces four part types:
 
 - **Top plate** — MX switch pockets, hotswap-socket pockets, LED pockets/light
   holes, stabilizer post holes/wire channels, and 4 mm lower side tabs with M2
@@ -19,6 +19,10 @@ Each keyboard produces four printed parts:
   tab. A small 45-degree shelf under each magnet in the bay holds the cover.
 - **Cover** — thin L-shaped lid for the electronics bay, with local magnet
   bosses and pockets on its underside. Only the magnet locations are thickened.
+
+When the case is wider than **250 mm** the edge ring is automatically split into
+four dovetailed pieces (see [Split case edge ring](#split-case-edge-ring)); the
+top plate, bottom tray and cover are still exported whole.
 
 Custom stabilizer sliders are generated separately for use with 2 mm solid
 copper wire.
@@ -59,12 +63,23 @@ build/<name>_case_edges.stl
 build/<name>_cover.stl
 ```
 
+On a case wider than 250 mm the `_case_edges.stl` output is replaced by four
+dovetailed pieces:
+
+```text
+build/<name>_case_edges_west.stl
+build/<name>_case_edges_east.stl
+build/<name>_case_edges_north.stl
+build/<name>_case_edges_south.stl
+```
+
 Assembly: fit 6 × 3 × 3 magnets in the case shelves and cover bosses — two per
 side edge with their long sides along the edge, plus an adaptive evenly spaced
 row along the top edge. Install one M2 heatset insert above each edge-ring tab
-location. Lower the top plate into the edge ring from below, then fit the
-bottom tray from below: its perimeter lip enters the edge-ring recess and its
-counterbores line up with the plate tabs. Screw M2 × 10 socket-head screws up
+location. When the edge ring is split, first slide and glue the two middle rails
+into the side pieces. Lower the top plate into the edge ring from below, then
+fit the bottom tray from below: its perimeter lip enters the edge-ring recess and
+its counterbores line up with the plate tabs. Screw M2 × 10 socket-head screws up
 from underneath into the inserts; the bottom tray and edge ring bottom faces
 are flush. Route wires in the 1.5 mm recess between the support ribs.
 
@@ -92,6 +107,36 @@ the top of the fastening tabs. The top half has the switch pockets; the bottom
 half has the hotswap and LED pockets plus all fastening tabs. Both halves must
 pass mesh validation before either is exported. The split case and cover are
 still generated normally.
+
+## Split case edge ring
+
+A 250 mm print bed cannot hold the edge ring of the 60%, 75% or 100% boards
+(their cases are about 304, 323 and 447 mm wide). When the case is wider than
+**250 mm**, the generator automatically cuts the edge ring along X at one
+quarter and three quarters of the case width — the 1:2:1 sections — and exports
+four pieces:
+
+```text
+build/<name>_case_edges_west.stl
+build/<name>_case_edges_east.stl
+build/<name>_case_edges_north.stl
+build/<name>_case_edges_south.stl
+```
+
+The two cuts cross the north and south walls, so the closed ring becomes a west
+U (west wall plus the west wall stubs), the middle north rail, the middle south
+rail and an east U. On the 100% board the widest piece is about 232 mm.
+
+Each seam has a dovetail inside the 7 mm wall: the rails carry the male
+dovetails and the side pieces the matching slots. A dovetail is 4 mm deep,
+2.5 mm wide at the rail end and 3.7 mm wide at the tip, with 0.2 mm total
+clearance and a 0.2 mm seam gap. It is open at the top rim, so a rail slides
+down into the side pieces; the 1.5 mm of material left under each slot is the
+vertical stop that lands the rail bottom flush at z = 0. Glue the joints.
+
+Print note: the male dovetail undercuts the case's lower recess by about
+3.6 mm. Support that underside or orient the rails so it is not a downward
+overhang. The plate, bottom tray and cover are not split by this feature.
 
 ## Stabilizer slider
 
@@ -141,8 +186,11 @@ instead.
   spaced top-edge row (default target spacing **40 mm**)
 - Wire recess: **1.5 mm** below the plate, with 3 × 10 mm ribs in the keycap gaps
 - Fastening: **M2 × 10** socket-head screws and **3.0 mm OD** heatset inserts;
-  adaptive tabs on both sides and the south edge, 4 mm high, 3.6 mm deep
+  adaptive tabs on both sides and the south edge, 4 mm high, 3.6 mm deep,
+  12 mm wide
 - Case split: bottom tray inset behind the edge ring; both undersides flush
+- Wide cases: edge ring auto-split above **250 mm** case width at the 1:2:1
+  cuts, with 4 dovetails (4 mm deep, 2.5/3.7 mm wide, 0.2 mm clearance)
 
 These can be changed with the shared options, for example:
 
@@ -180,6 +228,7 @@ keyboards/
   stabilizer.py      custom stabilizer geometry
   plate.py           flat top plate
   case.py            split case parts, USB-C opening, magnet shelves
+  case_split.py      wide edge-ring split with dovetail joints
   cover.py           cover with local magnet bosses
   export.py          scene reset and atomic STL export
   cli.py             shared command-line options

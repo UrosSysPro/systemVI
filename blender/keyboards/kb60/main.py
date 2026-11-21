@@ -1,11 +1,17 @@
 """kb60: a standard ANSI 61-key 60% keyboard, 15u x 5u.
 
-Generates the four printed parts into the repository ``build/`` directory:
+Generates the printed parts into the repository ``build/`` directory:
 
     build/kb60_top_plate.stl
     build/kb60_case_bottom.stl
-    build/kb60_case_edges.stl
     build/kb60_cover.stl
+    build/kb60_case_edges_west.stl
+    build/kb60_case_edges_east.stl
+    build/kb60_case_edges_north.stl
+    build/kb60_case_edges_south.stl
+
+The case is wider than 250 mm, so the edge ring is split into four dovetailed
+pieces instead of one; see ``case_split.py``.
 
 The layout is the usual 60% arrangement: Esc in the top-left, no separate
 function row, no navigation cluster and no numeric keypad.  All keys are 1u
@@ -20,7 +26,9 @@ Options go after Blender's ``--`` separator:
         --led-facing south --horizontal 6 --output build/kb60_wide.stl
 
 ``--output`` names the top plate; the two case parts and cover reuse its stem
-with ``_case_bottom``, ``_case_edges`` and ``_cover`` suffixes.
+with ``_case_bottom``, ``_case_edges`` and ``_cover`` suffixes.  The split edge
+ring adds ``_west``, ``_east``, ``_north`` or ``_south`` to the
+``_case_edges`` stem.
 """
 
 import os

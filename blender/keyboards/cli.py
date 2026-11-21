@@ -168,10 +168,11 @@ def argument_parser(description=None):
     parser.add_argument(
         "--output",
         metavar="PATH",
-        help="base STL path; the two case parts and cover get "
+        help="base STL path; the case parts and cover get "
         "_case_bottom/_case_edges/_cover suffixes "
         "(default: build/<name>_top_plate.stl next to the repository); "
-        "split mode writes _top_half/_bottom_half instead",
+        "--split-plate writes _top_half/_bottom_half instead, and a wide "
+        "case writes _case_edges_west/_east/_north/_south",
     )
     return parser
 

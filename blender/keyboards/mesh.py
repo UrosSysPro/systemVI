@@ -135,6 +135,17 @@ def mesh_object(name, bm):
     return obj
 
 
+def duplicate_object(obj, name):
+    """Copy ``obj`` and its mesh data, linked into the active scene."""
+
+    duplicate = bpy.data.objects.new(name, obj.data.copy())
+    bpy.context.scene.collection.objects.link(duplicate)
+    duplicate.location = obj.location
+    duplicate.rotation_euler = obj.rotation_euler
+    duplicate.scale = obj.scale
+    return duplicate
+
+
 def apply_modifiers(obj):
     """Replace ``obj`` data by its evaluated (modifier applied) mesh.
 

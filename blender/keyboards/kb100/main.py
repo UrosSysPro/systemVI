@@ -1,11 +1,17 @@
 """kb100: a full-size ANSI 104-key keyboard, 22.5u x 6u.
 
-Generates the four printed parts into the repository ``build/`` directory:
+Generates the printed parts into the repository ``build/`` directory:
 
     build/kb100_top_plate.stl
     build/kb100_case_bottom.stl
-    build/kb100_case_edges.stl
     build/kb100_cover.stl
+    build/kb100_case_edges_west.stl
+    build/kb100_case_edges_east.stl
+    build/kb100_case_edges_north.stl
+    build/kb100_case_edges_south.stl
+
+The case is wider than 250 mm, so the edge ring is split into four dovetailed
+pieces instead of one; see ``case_split.py``.
 
 The plate cutouts, split case and cover come from the shared keyboard modules.  The
 layout is a single piece: a 15u main block, a 3u navigation cluster and a 4u
@@ -20,7 +26,9 @@ Options go after Blender's ``--`` separator:
         --led-facing south --horizontal 6 --output build/kb100_wide.stl
 
 ``--output`` names the top plate; the two case parts and cover reuse its stem
-with ``_case_bottom``, ``_case_edges`` and ``_cover`` suffixes.
+with ``_case_bottom``, ``_case_edges`` and ``_cover`` suffixes.  The split edge
+ring adds ``_west``, ``_east``, ``_north`` or ``_south`` to the
+``_case_edges`` stem.
 """
 
 import os

@@ -17,6 +17,7 @@ import os
 from dataclasses import dataclass, field
 
 import case
+import case_split
 import cover
 import export
 import layout
@@ -76,7 +77,7 @@ def generate_keyboard(spec):
         )
 
     # Validate before resetting the scene or writing any file.
-    case.case_metrics(
+    metrics = case.case_metrics(
         spec.keys,
         spec.params,
         compartment_height=spec.compartment_height,
@@ -128,6 +129,14 @@ def generate_keyboard(spec):
         options=spec.options,
     )
 
+    case_edge_pieces = None
+    if case_split.should_split(metrics):
+        case_edge_pieces = case_split.split_case_edges(
+            case_edges,
+            metrics,
+            name=f"{spec.name}_case_edges",
+        )
+
     if split_halves is None:
         _print_dimensions(f"{spec.name}: plate", top_plate)
     else:
@@ -135,7 +144,11 @@ def generate_keyboard(spec):
         _print_dimensions(f"{spec.name}: top half", top_half)
         _print_dimensions(f"{spec.name}: bottom half", bottom_half)
     _print_dimensions(f"{spec.name}: case bottom", case_bottom)
-    _print_dimensions(f"{spec.name}: case edges", case_edges)
+    if case_edge_pieces is None:
+        _print_dimensions(f"{spec.name}: case edges", case_edges)
+    else:
+        for suffix, piece in case_edge_pieces:
+            _print_dimensions(f"{spec.name}: case edges {suffix}", piece)
     _print_dimensions(f"{spec.name}: cover", cover_obj)
 
     if split_halves is None:
@@ -145,7 +158,14 @@ def generate_keyboard(spec):
         export.export_stl(split_halves[0], top_path)
         export.export_stl(split_halves[1], bottom_path)
     export.export_stl(case_bottom, spec.case_bottom_path)
-    export.export_stl(case_edges, spec.case_edges_path)
+    if case_edge_pieces is None:
+        export.export_stl(case_edges, spec.case_edges_path)
+    else:
+        for suffix, piece in case_edge_pieces:
+            export.export_stl(
+                piece,
+                case_split.piece_path(spec.case_edges_path, suffix),
+            )
     export.export_stl(cover_obj, spec.cover_path)
 
     return top_plate, case_bottom, case_edges, cover_obj
