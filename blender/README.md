@@ -76,8 +76,10 @@ build/<name>_case_edges_south.stl
 Assembly: fit 6 × 3 × 3 magnets in the case shelves and cover bosses — two per
 side edge with their long sides along the edge, plus an adaptive evenly spaced
 row along the top edge. Install one M2 heatset insert above each edge-ring tab
-location. When the edge ring is split, first slide and glue the two middle rails
-into the side pieces. Lower the top plate into the edge ring from below, then
+location. When the edge ring is split, place the two middle rails first and lower
+the side pieces onto them from above; the slots are open at the bottom and the
+caps stop the rails lifting. Glue the joints. Lower the top plate into the edge
+ring from below, then
 fit the bottom tray from below: its perimeter lip enters the edge-ring recess and
 its counterbores line up with the plate tabs. Screw M2 × 10 socket-head screws up
 from underneath into the inserts; the bottom tray and edge ring bottom faces
@@ -127,16 +129,23 @@ The two cuts cross the north and south walls, so the closed ring becomes a west
 U (west wall plus the west wall stubs), the middle north rail, the middle south
 rail and an east U. On the 100% board the widest piece is about 232 mm.
 
-Each seam has a dovetail inside the 7 mm wall: the rails carry the male
-dovetails and the side pieces the matching slots. A dovetail is 4 mm deep,
-2.5 mm wide at the rail end and 3.7 mm wide at the tip, with 0.2 mm total
-clearance and a 0.2 mm seam gap. It is open at the top rim, so a rail slides
-down into the side pieces; the 1.5 mm of material left under each slot is the
-vertical stop that lands the rail bottom flush at z = 0. Glue the joints.
+Each seam has a dovetail inside the wall: the rails carry the male dovetails and
+the side pieces the matching slots. A dovetail is 4 mm deep, 2.5 mm wide at the
+rail end and 3.7 mm wide at the tip, with 0.2 mm total clearance and a 0.2 mm
+seam gap. The male dovetail stops **2.5 mm below** the wall top. On the south
+wall it starts 1.5 mm above the plate-tab shelf; on the north wall it runs down
+to the case bottom (the bottom tray does not reach the bay wall) and fills the
+slot there. The slot is cut right through the bottom of the side piece and stops
+just above the plug top, so it is **open at the bottom and capped at the top**.
+The side pieces are lowered onto the rails from above: the plug enters the slot
+from below and the cap then stops the rail lifting out. Glue the joints.
 
-Print note: the male dovetail undercuts the case's lower recess by about
-3.6 mm. Support that underside or orient the rails so it is not a downward
-overhang. The plate, bottom tray and cover are not split by this feature.
+Because the slot is open at the bottom, the rails are retained downward by the
+glue, the plate or the tray rather than by a slot floor. Print note: the south
+dovetail undercuts the case's lower recess by about 3.6 mm; support that
+underside or orient the south rail so it is not a downward overhang. The north
+dovetail reaches the case bottom. The plate, bottom tray and cover are not split
+by this feature.
 
 ## Stabilizer slider
 

@@ -478,19 +478,24 @@ Dovetail dimensions (`case_split.py`):
   face at the rim.  The band is measured from the wall's inner face and stops
   short of the 1.5 mm top chamfer, so the joint never breaks the outer surface
   or the inner pocket,
-- starts **1.5 mm above** the z = 7 mm tab shelf and runs to the wall top.  It
-  is open at the top rim, so a rail slides down into the side pieces; the
-  1.5 mm layer under each slot is the vertical stop and lands the rail bottom
-  flush at z = 0,
+- on the south wall starts **1.5 mm above** the z = 7 mm tab shelf; on the
+  north wall it runs down to the case bottom (z = 0) because the bottom tray
+  does not reach the bay wall, so it fills the slot there.  Both stop
+  **2.5 mm below** the wall top.  The slot is cut right through the bottom of
+  the side piece and stops just above the plug top: open at the bottom, capped
+  by the side piece's own material at the top.  The side pieces are lowered
+  onto the rails from above; the plug enters the slot through its bottom
+  opening and the cap stops the rail lifting out,
 - **0.2 mm** total clearance in the slot and a **0.2 mm** seam gap.
 
-The south wall is 15 mm tall and the north wall follows the raised compartment,
-so the south dovetail is 6.5 mm tall and the north one about 19 mm.  The joints
-are hidden inside the wall except for the small slot in the top rim, which the
-rail's dovetail fills.  Glue the joints; the dovetail alone does not hold the
-rails vertically.  The male dovetail's underside overhangs the lower recess by
-about **3.6 mm**; print the rails with support under it, or orient them so that
-face is not a downward overhang.
+The south wall is 15 mm tall and the north wall follows the raised compartment;
+the joint stops 2.5 mm below either rim.  The slot is hidden inside the wall
+and the top rim is solid except for the straight butt seam.  Glue the joints:
+the cap prevents the rail lifting, while the open bottom means the rail must be
+held down by glue, the plate or the tray.  The south dovetail's underside
+overhangs the lower recess by about **3.6 mm**; print the south rail with
+support under it, or orient it so that face is not a downward overhang.  The
+north dovetail reaches the case bottom and needs no support there.
 
 The plate, bottom tray and cover are not split by this feature.  Each piece is
 validated strictly and its X extent is checked against the 250 mm target; if a
@@ -767,16 +772,21 @@ elevation looks from below; `--orthographic` gives a dimension-friendly view.
   to 7 mm minimum. Revalidate all four boards if the tab/screw sizes change.
 - **Tab split:** tabs are exactly 4 mm high and the split is at z = 4.0 mm. The
   top plate half has no tabs; all tabs are in the bottom half.
-- **Assembly order:** when the edge ring is split, slide and glue both middle
-  rails into the side pieces first. Then insert the plate from below into the
-  edge ring, fit the bottom tray from below and screw upward. The plate cannot
-  be dropped in from above because the edge shelf overhangs the tabs.
+- **Assembly order:** when the edge ring is split, place the two middle rails
+  first and lower the side pieces onto them from above; their slots are open at
+  the bottom so the plugs enter from below. Glue the joints. Then insert the
+  plate from below into the edge ring, fit the bottom tray from below and screw
+  upward. The plate cannot be dropped in from above because the edge shelf
+  overhangs the tabs.
 - **Wide case split:** the edge ring splits automatically above 250 mm case
-  width, at ±`width / 4`. The dovetails lock only along X; the rails must be
-  glued. The male dovetail's underside is a ~3.6 mm overhang over the lower
-  recess, so support it when printing the rails. The slot's 1.5 mm floor is the
-  vertical stop. Re-run all four boards after changing the `case_split`
-  constants or the wall/top-chamfer geometry.
+  width, at ±`width / 4`. The slot is open at the bottom and capped 2.5 mm below
+  the top; the male dovetail is shortened to match. The dovetails lock only
+  along X; glue the joints. The cap stops the rails lifting, but the open bottom
+  means the rails must be retained by glue, the plate or the tray. The south
+  dovetail's underside is a ~3.6 mm overhang over the lower recess, so support
+  the south rail when printing it; the north dovetail reaches the case bottom.
+  Re-run all four boards after changing the `case_split` constants or the
+  wall/top-chamfer geometry.
 - **Tiny boolean holes:** the 100% south-facing plate can leave a sub-millimetre
   boundary loop where a hotswap pocket corner meets a switch leg hole.
   `mesh.fill_small_holes()` closes only loops under 2 mm perimeter; larger
