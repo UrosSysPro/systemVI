@@ -234,7 +234,7 @@ def main():
         check_metrics(name, keys)
 
     check_numpad_build(layouts["kbNumpad"])
-    assert not case_split.should_split(case.case_metrics(layouts["kbNumpad"]))
+    assert case_split.should_split(case.case_metrics(layouts["kbNumpad"]))
     check_case_split(layouts["kb60"])
     check_output_paths()
 

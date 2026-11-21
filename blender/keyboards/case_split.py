@@ -47,7 +47,8 @@ import mesh
 # Split geometry
 # --------------------------------------------------------------------------
 
-SPLIT_CASE_MAX_WIDTH = 250.0   # split the edge ring above this case width
+SPLIT_CASE_MIN_WIDTH = 50.0    # split the edge ring above this case width
+SPLIT_CASE_MAX_WIDTH = 250.0   # target maximum printable piece width
 SPLIT_RATIO = (1, 2, 1)        # widths of the west, middle and east sections
 
 SEAM_GAP = 0.2                 # total gap between two mating end faces
@@ -73,7 +74,7 @@ _BIG = 1000.0
 def should_split(metrics):
     """Whether a case of these metrics needs a split edge ring."""
 
-    return metrics.width > SPLIT_CASE_MAX_WIDTH
+    return metrics.width > SPLIT_CASE_MIN_WIDTH
 
 
 def split_positions(width):

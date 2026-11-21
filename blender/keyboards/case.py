@@ -101,7 +101,8 @@ EDGE_LOWER_RADIUS = 4.45                     # edge lower recess
 # and carries several dovetails in the middle of the tray.  The dovetails sit in
 # the recessed plate-pocket floor, so their height follows the wire gap rather
 # than the full 3 mm bed.
-BOTTOM_SPLIT_MAX_WIDTH = 250.0   # split above this case width
+BOTTOM_SPLIT_MIN_WIDTH = 50.0    # split above this case width
+BOTTOM_SPLIT_MAX_WIDTH = 250.0   # target maximum printable half width
 BOTTOM_SEAM_GAP = 0.2            # total gap between the two halves
 BOTTOM_DOVETAIL_DEPTH = 5.0      # tenon reach into the opposite half
 BOTTOM_DOVETAIL_NECK = 5.0       # tenon width at the root
@@ -957,9 +958,9 @@ def build_case_bottom(
 
 
 def should_split_bottom(metrics):
-    """A bottom tray wider than 250 mm is printed as two dovetailed halves."""
+    """A bottom tray above the split threshold is printed as two halves."""
 
-    return metrics.width > BOTTOM_SPLIT_MAX_WIDTH
+    return metrics.width > BOTTOM_SPLIT_MIN_WIDTH
 
 
 def bottom_piece_path(path, suffix):
@@ -1058,7 +1059,7 @@ def split_case_bottom(
     if not should_split_bottom(metrics):
         raise ValueError(
             f"{name} is only {metrics.width:.1f} mm wide; the print split is "
-            f"for cases wider than {BOTTOM_SPLIT_MAX_WIDTH:.0f} mm"
+            f"for cases wider than {BOTTOM_SPLIT_MIN_WIDTH:.0f} mm"
         )
     options = options or mounting.MountingOptions()
     floor_top = FLOOR - options.wire_gap
