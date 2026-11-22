@@ -114,16 +114,17 @@ EDGE_LOWER_RADIUS = 4.45                     # edge lower recess
 BOTTOM_SPLIT_MIN_WIDTH = 50.0    # split above this case width
 BOTTOM_SPLIT_MAX_WIDTH = 250.0   # target maximum printable half width
 BOTTOM_SEAM_GAP = 0.2            # total gap between the two halves
-# Female slot.  These stay as they are; only the male tenon below is reduced.
+# Female slot.  The slot keeps the nominal shape; the male tenon below is sized
+# to fit inside it.
 BOTTOM_DOVETAIL_DEPTH = 5.0      # slot reach into the opposite half
 BOTTOM_DOVETAIL_NECK = 5.0       # slot width at the root
 BOTTOM_DOVETAIL_TIP = 8.0        # slot width at the free tip (undercut)
 BOTTOM_DOVETAIL_CLEARANCE = 0.2  # total slot clearance around a tenon
 # Male tenon.  It is deliberately smaller than the slot in X and Y so the
 # printed tray halves do not bind; the slot keeps the nominal shape above.
-BOTTOM_TENON_DEPTH = 4.2         # tenon reach into the opposite half
-BOTTOM_TENON_NECK = 4.4          # tenon width at its root
-BOTTOM_TENON_TIP = 7.2           # tenon width at its free tip
+BOTTOM_TENON_DEPTH = 4.5         # tenon reach into the opposite half
+BOTTOM_TENON_NECK = 4.6          # tenon width at its root
+BOTTOM_TENON_TIP = 7.5           # tenon width at its free tip
 BOTTOM_DOVETAIL_TARGET_SPACING = 30.0
 BOTTOM_DOVETAIL_SPAN_FRACTION = 0.6  # share of the plate depth that gets tenons
 BOTTOM_DOVETAIL_MIN_WEB = 5.0    # material between two neighbouring tenons
