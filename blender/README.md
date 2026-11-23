@@ -133,10 +133,10 @@ U (west wall plus the west wall stubs), the middle north rail, the middle south
 rail and an east U. On the 100% board the widest piece is about 232 mm.
 
 Each seam has a dovetail inside the wall: the rails carry the male plugs and the
-side pieces the matching slots. The slot is 4 mm deep, 2.5 mm wide at the rail
-end and 3.7 mm at the tip, with 0.2 mm total clearance; the male plug is
-deliberately smaller — 3.5 mm deep, 2.2 mm at the rail face and 3.25 mm at the
-tip — so the printed pieces slide together. Both dovetails start **1.5 mm
+side pieces the matching slots. The slot is 3.65 mm deep, 2.5 mm wide at the rail
+end and 3.55 mm at the tip. The male plug is the slot profile offset inward by
+**0.15 mm per side** and **0.15 mm shorter** at the tip. Both dovetails start
+**1.5 mm
 above** the plate-tab shelf and stop **2.5 mm below** the wall top, so they
 clear the bottom tray. The slot is cut right through the bottom of the side
 piece and stops just above the plug top, so it is **open at the bottom and
@@ -212,6 +212,7 @@ This writes the male plug and female slot views to
 - Top-plate padding: **2 mm** on all four sides
 - Case wall thickness: **7 mm**
 - Case floor thickness: **4 mm**
+- Case corner radius: **9 mm**; top and bottom bevel **2.0 mm**
 - Electronics bay depth: **27.5 mm**
 - Compartment height: **30 mm**
 - Switch/LED facing: north
@@ -231,8 +232,8 @@ This writes the male plug and female slot views to
   its 4 mm perimeter lip reaches to within 0.5 mm of the plate edge, with a
   cutout at every plate tab
 - Wide cases: edge ring auto-split above **250 mm** case width at the 1:2:1
-  cuts, with 4 dovetails (slot 4 mm deep, 2.5/3.7 mm wide, 0.2 mm clearance;
-  male plug 3.5 mm deep, 2.2/3.25 mm wide)
+  cuts, with 4 dovetails (slot 3.65 mm deep, 2.5/3.55 mm wide; male plug offset
+  0.15 mm per side and 0.15 mm shorter)
 
 These can be changed with the shared options, for example:
 

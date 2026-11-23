@@ -49,8 +49,9 @@ import mounting
 
 WALL = 7.0                 # outer wall thickness
 FLOOR = 4.0                # case floor thickness (countersunk screw heads)
-CHAMFER = 1.5              # 45 degree chamfer on the top and bottom rims
-CORNER_RADIUS = 7.0        # rounded corner radius in plan view
+CHAMFER = 2.0              # 45 degree chamfer on the top rim
+BOTTOM_CHAMFER = 2.0       # 45 degree chamfer on the bottom rim
+CORNER_RADIUS = 9.0        # rounded corner radius in plan view
 CORNER_SEGMENTS = 8        # segments per rounded corner
 
 PLATE_CLEARANCE = 0.25     # per side, plate pocket vs top plate
@@ -108,8 +109,8 @@ BOTTOM_LIP_CLEARANCE = 0.2                   # below the edge shelf
 BOTTOM_LIP_TAB_CLEARANCE = 0.5
 SPLIT_MIN_WALL = 7.0                         # radial room for tabs and recess
 WIRE_RECESS_INSET = 0.5                      # solid rim under the plate edge
-BOTTOM_RADIUS = 4.25                         # bottom tray footprint
-EDGE_LOWER_RADIUS = 4.45                     # edge lower recess
+BOTTOM_RADIUS = 6.25                         # bottom tray footprint
+EDGE_LOWER_RADIUS = 6.45                     # edge lower recess
 
 # --------------------------------------------------------------------------
 # North-edge screw boxes and the front triangular key
@@ -133,12 +134,12 @@ EDGE_BOX_EMBED = 0.5         # overlap into the north wall for a clean union
 # has a matching triangular dent in its south side, open at the top so the
 # edge ring can be lowered onto the tray.
 FRONT_WEDGE_WIDTH_FRACTION = 0.8
-FRONT_WEDGE_DEPTH = 3.0      # ledge depth into the tray side
-FRONT_WEDGE_HEIGHT = 3.0     # 45-degree underside; depth == height
+FRONT_WEDGE_DEPTH = 2.0      # ledge depth into the tray side
+FRONT_WEDGE_HEIGHT = 2.0     # 45-degree underside; depth == height
 FRONT_WEDGE_EMBED = 0.5      # overlap into the edge-ring wall
 FRONT_WEDGE_CLEARANCE = 0.2  # around the triangular dent
-FRONT_WEDGE_TOP = 5.3
-FRONT_WEDGE_BOTTOM = FRONT_WEDGE_TOP - FRONT_WEDGE_HEIGHT
+FRONT_WEDGE_BOTTOM = 2.3     # unchanged height above the floor
+FRONT_WEDGE_TOP = FRONT_WEDGE_BOTTOM + FRONT_WEDGE_HEIGHT
 
 # Wide bottom trays are printed as two halves.  The single cut runs along X = 0
 # and carries several dovetails in the middle of the tray.  The dovetails sit in
@@ -149,15 +150,13 @@ BOTTOM_SPLIT_MAX_WIDTH = 250.0   # target maximum printable half width
 BOTTOM_SEAM_GAP = 0.2            # total gap between the two halves
 # Female slot.  The slot keeps the nominal shape; the male tenon below is sized
 # to fit inside it.
-BOTTOM_DOVETAIL_DEPTH = 5.0      # slot reach into the opposite half
-BOTTOM_DOVETAIL_NECK = 5.0       # slot width at the root
-BOTTOM_DOVETAIL_TIP = 8.0        # slot width at the free tip (undercut)
-BOTTOM_DOVETAIL_CLEARANCE = 0.2  # total slot clearance around a tenon
+BOTTOM_DOVETAIL_DEPTH = 4.65     # slot reach = tenon + 0.15
+BOTTOM_DOVETAIL_NECK = 4.9      # slot width = tenon + 0.30 (0.15 per side)
+BOTTOM_DOVETAIL_TIP = 7.8       # slot width = tenon + 0.30 (0.15 per side)
+BOTTOM_DOVETAIL_CLEARANCE = 0.15  # per side around the male tenon
 # Male tenon.  It is deliberately smaller than the slot in X and Y so the
 # printed tray halves do not bind; the slot keeps the nominal shape above.
 BOTTOM_TENON_DEPTH = 4.5         # tenon reach into the opposite half
-BOTTOM_TENON_NECK = 4.6          # tenon width at its root
-BOTTOM_TENON_TIP = 7.5           # tenon width at its free tip
 BOTTOM_DOVETAIL_TARGET_SPACING = 30.0
 BOTTOM_DOVETAIL_SPAN_FRACTION = 0.6  # share of the plate depth that gets tenons
 BOTTOM_DOVETAIL_MIN_WEB = 5.0    # material between two neighbouring tenons
@@ -449,8 +448,8 @@ def _add_case_shell(bm, metrics):
     half_d = (metrics.north - metrics.south) / 2.0
 
     profiles = (
-        (0.0, CHAMFER),
-        (CHAMFER, 0.0),
+        (0.0, BOTTOM_CHAMFER),
+        (BOTTOM_CHAMFER, 0.0),
         (metrics.height, 0.0),
     )
 
@@ -1289,7 +1288,14 @@ def split_case_bottom(
     tenon_root = -half - 0.5
     tenon_tip = half + BOTTOM_TENON_DEPTH
     slot_mouth = half - 0.5
-    slot_end = half + BOTTOM_DOVETAIL_DEPTH + BOTTOM_DOVETAIL_CLEARANCE / 2.0
+    slot_end = half + BOTTOM_DOVETAIL_DEPTH
+
+    def slot_half_at(x):
+        t = (x - slot_mouth) / (slot_end - slot_mouth)
+        return (
+            BOTTOM_DOVETAIL_NECK / 2.0
+            + t * (BOTTOM_DOVETAIL_TIP - BOTTOM_DOVETAIL_NECK) / 2.0
+        )
 
     for index, y_centre in enumerate(positions):
         tenon = _dovetail_prism(
@@ -1297,8 +1303,8 @@ def split_case_bottom(
             tenon_root,
             tenon_tip,
             y_centre,
-            BOTTOM_TENON_NECK / 2.0,
-            BOTTOM_TENON_TIP / 2.0,
+            slot_half_at(tenon_root) - BOTTOM_DOVETAIL_CLEARANCE,
+            slot_half_at(tenon_tip) - BOTTOM_DOVETAIL_CLEARANCE,
             0.0,
             floor_top,
         )
@@ -1309,8 +1315,8 @@ def split_case_bottom(
             slot_mouth,
             slot_end,
             y_centre,
-            BOTTOM_DOVETAIL_NECK / 2.0 + BOTTOM_DOVETAIL_CLEARANCE / 2.0,
-            BOTTOM_DOVETAIL_TIP / 2.0 + BOTTOM_DOVETAIL_CLEARANCE / 2.0,
+            slot_half_at(slot_mouth),
+            slot_half_at(slot_end),
             -0.1,
             floor_top + 0.1,
         )

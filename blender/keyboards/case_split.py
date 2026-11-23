@@ -54,18 +54,16 @@ SPLIT_CASE_MAX_WIDTH = 250.0   # target maximum printable piece width
 SPLIT_RATIO = (1, 2, 1)        # widths of the west, middle and east sections
 
 SEAM_GAP = 0.2                 # total gap between two mating end faces
-JOINT_CLEARANCE = 0.2          # total clearance around the female slot
-# Female slot.  These stay as they are; only the male plug below is reduced.
+SIDE_CLEARANCE = 0.15          # per side between male plug and female slot
+CAP_CLEARANCE = 0.15           # free gap above the male plug
+# Female slot: 0.15 mm larger per side and 0.15 mm deeper than the male plug.
 DOVETAIL_NECK = 2.5            # slot width at the rail's end face
-DOVETAIL_TAIL = 3.7            # slot width at the far tip
-DOVETAIL_DEPTH = 4.0           # slot reach from the seam into the side piece
-# Male plug.  It is deliberately smaller than the slot in X and Y so the
-# printed pieces do not bind: 0.15 mm more clearance per side and 0.5 mm
-# shorter reach.  The undercut (tail wider than the neck) is kept.
-PLUG_NECK = 2.2                # plug width at the rail's end face
-PLUG_TAIL = 3.25               # plug width at its free tip
+DOVETAIL_TAIL = 3.55           # slot width at the far tip
+DOVETAIL_DEPTH = 3.65          # slot reach from the seam into the side piece
+# Male plug.  It is generated as the female slot offset inward by
+# SIDE_CLEARANCE, so every side has the same fit.
 PLUG_DEPTH = 3.5               # plug reach from the seam into the side piece
-DOVETAIL_MARGIN = 0.9          # wall material kept at both faces
+DOVETAIL_MARGIN = 0.4          # wall material kept at both faces
 DOVETAIL_START = case.TAB_TOP  # plate-tab shelf, z = 7 mm
 DOVETAIL_LIFT = 1.5            # plug bottom above the plate-tab shelf
 DOVETAIL_TOP_GAP = 2.5         # wall left above the dovetail / slot at the rim
@@ -74,10 +72,6 @@ JOINT_BOTTOM = DOVETAIL_START + DOVETAIL_LIFT
 
 PIECE_SUFFIXES = ("west", "east", "north", "south")
 
-_DOVETAIL_SLOPE = (
-    (DOVETAIL_TAIL - DOVETAIL_NECK) / (2.0 * DOVETAIL_DEPTH)
-)
-_PLUG_SLOPE = (PLUG_TAIL - PLUG_NECK) / (2.0 * PLUG_DEPTH)
 _BIG = 1000.0
 
 
@@ -185,25 +179,28 @@ def _joint_solids(metrics, cut, sign, side):
     tip = cut + sign * DOVETAIL_DEPTH
     plug_top = z_top - DOVETAIL_TOP_GAP
 
-    def half_width(distance):
-        return DOVETAIL_NECK / 2.0 + _DOVETAIL_SLOPE * distance
+    slot_mouth = side_face - sign * 0.5
+    slot_tip = tip
 
-    def plug_half_width(distance):
-        return PLUG_NECK / 2.0 + _PLUG_SLOPE * distance
+    def slot_half_at(x):
+        t = (x - slot_mouth) / (slot_tip - slot_mouth)
+        return (
+            DOVETAIL_NECK / 2.0
+            + t * (DOVETAIL_TAIL - DOVETAIL_NECK) / 2.0
+        )
 
-    # The plug starts 0.5 mm inside the rail for a clean boolean union and its
-    # widest part is the free tip inside the side piece.  It is shorter and
-    # narrower than the slot so the two printed pieces slide together.  Its top
-    # is held DOVETAIL_TOP_GAP below the wall top and its bottom stops 1.5 mm
-    # above the plate-tab shelf, clear of the bottom tray.
+    # The plug is the slot profile offset 0.15 mm inward on each side and
+    # 0.15 mm shorter at the tip.  The root starts 0.5 mm inside the rail for
+    # a clean boolean union; its top is held DOVETAIL_TOP_GAP below the wall
+    # top and its bottom stops 1.5 mm above the plate-tab shelf.
     plug_tip = cut + sign * PLUG_DEPTH
     root = middle_face - sign * 0.5
     plug_points = _taper_points(
         root,
         plug_tip,
         y_centre,
-        plug_half_width(-0.5),
-        plug_half_width(PLUG_DEPTH),
+        slot_half_at(root) - SIDE_CLEARANCE,
+        slot_half_at(plug_tip) - SIDE_CLEARANCE,
     )
     plug_bottom = JOINT_BOTTOM
     plug_bm = bmesh.new()
@@ -211,25 +208,22 @@ def _joint_solids(metrics, cut, sign, side):
     plug = mesh.mesh_object(f"dovetail_plug_{side}", plug_bm)
 
     # The slot starts 0.5 mm on the open side of the side piece's face so the
-    # notch is open, and ends just past the plug tip.  It is cut right through
-    # the bottom of the side piece so the female part can drop onto the male,
-    # and stops just above the plug top so the side piece keeps a cap over it.
-    clearance = JOINT_CLEARANCE / 2.0
-    slot_mouth = side_face - sign * 0.5
-    slot_tip = tip + sign * 0.1
+    # notch is open.  It is cut right through the bottom of the side piece so
+    # the female part can drop onto the male, and stops just above the plug top
+    # so the side piece keeps a cap over it.
     slot_points = _taper_points(
         slot_mouth,
         slot_tip,
         y_centre,
-        half_width(sign * (slot_mouth - middle_face)) + clearance,
-        half_width(sign * (slot_tip - middle_face)) + clearance,
+        slot_half_at(slot_mouth),
+        slot_half_at(slot_tip),
     )
     slot_bm = bmesh.new()
     mesh.add_prism_z(
         slot_bm,
         slot_points,
         -1.0,
-        plug_top + clearance,
+        plug_top + CAP_CLEARANCE,
     )
     slot = mesh.mesh_object(f"dovetail_slot_{side}", slot_bm)
     return plug, slot

@@ -419,7 +419,7 @@ electronics bay.
 Key dimensions:
 
 - wall 7 mm (the split needs at least 7 mm; thicker is allowed),
-  floor 4 mm, chamfer 1.5 mm, corner radius 7 mm,
+  floor 4 mm, top and bottom chamfer 2.0 mm, corner radius 9 mm,
 - plate pocket clearance 0.25 mm per side,
 - bay depth 27.5 mm (default; configurable with `--compartment-depth`),
 - lid thickness 2.5 mm, shelf ledge 1.5 mm wide, lid clearance 0.2 mm,
@@ -438,7 +438,7 @@ The bottom tray is inset behind the edge ring, so its vertical edge is hidden
 and only its underside is visible.  Both bottom faces are at z = 0.  The edge
 ring keeps the current outer wall, chamfer and rounded corner; inside it has a
 **straight-sided** lower recess from z = 0 to 8 mm (no undercut, so the tray can
-slide in from below).  The 1.5 mm outer bottom chamfer leaves about **1.05 mm**
+slide in from below).  The 2.0 mm outer bottom chamfer leaves about **0.55 mm**
 of outer wall at z = 0.  At z = 8 mm an inward shelf overhangs the tabs.
 
 The bottom tray has:
@@ -474,8 +474,8 @@ leaving the bay and cover lip free.
   each has a 7.5 mm blind 3 mm pilot.
 - The countersinks are **6 mm** across and **1.5 mm** deep, so the 4 mm floor
   leaves 2.5 mm under the head.
-- The south inner wall carries an **80%-width triangular ledge** (3 mm deep,
-  3 mm high, 0.5 mm embedded in the wall).  Its vertical cross-section is a
+- The south inner wall carries an **80%-width triangular ledge** (2 mm deep,
+  2 mm high, 0.5 mm embedded in the wall).  Its vertical cross-section is a
   right triangle with a **flat bottom** at z = 2.3, a 45-degree top, and the
   normal wall above and below.  The tray has a matching triangular side dent
   with the same profile and a uniform 0.2 mm print clearance.
@@ -500,14 +500,14 @@ Y, so the printed pieces slide together instead of binding.
 
 Dovetail dimensions (`case_split.py`):
 
-- female slot: **4.0 mm** deep into the side piece, **2.5 mm** wide at the
-  rail's end face and **3.7 mm** at the free tip (about 8.5-degree flanks),
-- male plug: **3.5 mm** deep, **2.2 mm** wide at the rail face and **3.25 mm** at
-  the free tip; 0.5 mm shorter and 0.15 mm more clearance per side than the
-  slot.  The undercut (tail wider than the neck) is kept for retention,
-- inside the wall, **0.9 mm** from the inner face and **0.9 mm** from the outer
+- female slot: **3.65 mm** deep into the side piece, **2.5 mm** wide at the
+  rail's end face and **3.55 mm** at the free tip (about 8.5-degree flanks),
+- male plug: generated from the slot profile, offset **0.15 mm per side** and
+  **0.15 mm shorter** at the tip.  The undercut (tail wider than the neck) is
+  kept for retention,
+- inside the wall, **0.4 mm** from the inner face and **0.4 mm** from the outer
   face at the rim.  The band is measured from the wall's inner face and stops
-  short of the 1.5 mm top chamfer, so the joint never breaks the outer surface
+  short of the 2.0 mm top chamfer, so the joint never breaks the outer surface
   or the inner pocket,
 - starts **1.5 mm above** the z = 8 mm tab shelf (z = 9.5 mm) on both walls and
   stops **2.5 mm below** the wall top.  The slot is cut right through the
@@ -515,7 +515,8 @@ Dovetail dimensions (`case_split.py`):
   bottom, capped by the side piece's own material at the top.  The side pieces
   are lowered onto the rails from above; the plug enters the slot through its
   bottom opening and the cap stops the rail lifting out,
-- **0.2 mm** total clearance in the slot and a **0.2 mm** seam gap.
+- **0.15 mm** clearance per side, a **0.15 mm** cap over the plug top and a
+  **0.2 mm** seam gap.
 
 The south wall is 15 mm tall and the north wall follows the raised compartment;
 the joint stops 2.5 mm below either rim.  The plug bottom is 1.5 mm above the
@@ -581,7 +582,7 @@ the lid in Y.
 When the compartment is raised, the outer shell gets its normal chamfer at the
 raised height, then the ramp cutter lowers the key-side section to the 15 mm rim.
 That newly exposed lower rim is chamfered **after** all cuts in
-`_bevel_lower_rim`, so the key-side rim keeps the same 1.5 mm top bevel as the
+`_bevel_lower_rim`, so the key-side rim keeps the same 2.0 mm top bevel as the
 raised compartment. This is a targeted outer-rim edge bevel, not a global bevel
 of the case.
 
@@ -854,8 +855,8 @@ elevation looks from below; `--orthographic` gives a dimension-friendly view.
   tray into blind plate pilots and four into the north-wall boxes. Do not
   reintroduce wall notches or plate ears, and keep the plate pilots clear of
   stabilizer channels and post holes.
-- **Edge-ring lower skin:** the straight recess leaves about 1.05 mm of outer
-  wall at the very bottom above the 1.5 mm chamfer; the wall option is limited
+- **Edge-ring lower skin:** the straight recess leaves about 0.55 mm of outer
+  wall at the very bottom above the 2.0 mm chamfer; the wall option is limited
   to 7 mm minimum. Revalidate all four boards if the tab sizes change.
 - **Tab split:** tabs are exactly 4 mm high and the split is at z = 3.75 mm.
   The bottom half carries the lower 3.75 mm of the tabs; the top half carries
