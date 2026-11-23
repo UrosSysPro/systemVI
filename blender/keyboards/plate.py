@@ -6,10 +6,10 @@ switch, hotswap and LED cutouts.  Split boards can call it once per half;
 curved Dactyl key wells will use a separate builder that reuses
 :mod:`hardware`.
 
-The plate carries lower side tabs that are clamped between the split case's
-bottom tray and edge ring.  M2 clearance holes in the tabs line up with the
-counterbores in the bottom tray and the vertical heatset inserts in the edge
-ring.  See :mod:`mounting` for the shared tab plan.
+The plate carries lower side tabs that fit between the split case's bottom tray
+and edge ring.  Two blind 3 mm pilot holes sit in the webs between three keys;
+they receive wood screws from below the tray.  See :mod:`mounting` for the
+shared tab plan and :mod:`hardware` for the screw-hole plan.
 """
 
 from __future__ import annotations
@@ -111,16 +111,17 @@ def build_top_plate(keys, name="top_plate", params=None):
     ]
     cutters.extend(stabilizer.plate_cutters(stabilizer_placed, thickness))
 
+    screws = hardware.plate_screw_plan(keys, params)
     screw_bm = bmesh.new()
-    for tab in tab_plan.tabs:
+    for x, y in screws:
         mesh.add_cylinder(
             screw_bm,
-            tab.screw,
-            mounting.SCREW_HOLE_DIAMETER / 2.0,
+            (x, y),
+            hardware.SCREW_HOLE_DIAMETER / 2.0,
             -hardware.EPS,
-            mounting.TAB_HEIGHT + hardware.EPS,
+            hardware.PLATE_SCREW_PILOT_DEPTH,
         )
-    cutters.append(mesh.mesh_object(f"{name}_tab_holes", screw_bm))
+    cutters.append(mesh.mesh_object(f"{name}_screw_pilots", screw_bm))
 
     for cutter in cutters:
         mesh.difference(plate, cutter)
@@ -161,7 +162,7 @@ def split_top_plate(plate, name="top_plate", cut_z=None):
     """
 
     if cut_z is None:
-        # The original split, before the fastening tabs: through the middle of
+        # The original split, before the locating tabs: through the middle of
         # the switch/socket web (3.0 .. 4.5 mm), on the middle-pin hole.  The
         # bottom half keeps the lower 3.75 mm of the 4 mm tabs; the top half
         # gets only their top 0.25 mm edge.

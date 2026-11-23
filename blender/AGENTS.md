@@ -66,7 +66,7 @@ blender/
 │   ├── hardware.py              # MX switch, hotswap, LED cutouts
 │   ├── mounting.py              # plate tabs, cover magnets, wire ribs
 │   ├── stabilizer.py            # custom 2 mm-wire stabilizer cutouts + slider
-│   ├── plate.py                 # flat top plate + lower fastening tabs
+│   ├── plate.py                 # flat top plate + lower locating tabs
 │   ├── case.py                  # split case bottom/edges, bay, USB-C, magnets
 │   ├── case_split.py            # wide edge-ring split + dovetail joints
 │   ├── cover.py                 # L-shaped/flat cover with local magnet bosses
@@ -97,26 +97,28 @@ blender/
 - The top plate is centered on the origin; the case and cover use the same
   centered coordinates so the parts align.
 - Top plate local Z is `0 .. 9.5 mm`. In the assembly the plate sits on the
-  inter-key support ribs at `z = 3 .. 12.5 mm`. The rest of the pocket floor is
-  recessed 1.5 mm for wires. The lower 4 mm of the plate carries the fastening
+  inter-key support ribs at `z = 4 .. 13.5 mm`. The rest of the pocket floor is
+  recessed 1.5 mm for wires. The lower 4 mm of the plate carries the locating
   tabs. The plate split is at local z = **3.75 mm**, through the middle of the
   switch/socket web (the middle-pin hole): the bottom half keeps the lower
   3.75 mm of the tabs and the top half gets only their top 0.25 mm edge.
 - The case rim is at 15 mm. The default compartment and cover top are at
-  **27.5 mm**; the cover lid is 2.5 mm thick, its front lip is 12.5 mm tall
-  (total cover height 15 mm), and local 1.5 mm bosses under the magnets hang
-  down to the 45-degree case shelves.
-- The default case uses 7 mm walls and a 17.5 mm-deep electronics bay.
+  **30 mm**; the cover lid is 2.5 mm thick, its front lip is 14 mm tall,
+  and local 1.5 mm bosses under the magnets hang down to the 45-degree case
+  shelves.
+- The default case uses 7 mm walls, a **4 mm floor** and a **27.5 mm-deep**
+  electronics bay.
 - The case is split into a bottom tray and an outer edge ring. The bottom tray
   is inset behind the edge ring, so only its underside is visible; the two
   bottom faces are coplanar. The edge ring has a lower internal recess that
-  fits over the tray's perimeter lip and plate tabs, and an overhanging shelf
-  at z = 7 mm with vertical M2 heatset inserts.
+  fits over the tray's perimeter lip and plate tabs, an overhanging shelf
+  above the tabs, four screw boxes on the north wall and a triangular ledge on
+  the south wall.
 - The top plate has adaptive 4 mm-high lower tabs on west, east and south.
-  Each tab sits on the bottom tray, under the edge-ring shelf. M2 x 10
-  socket-head screws enter from counterbores in the bottom tray, pass through
-  the tab and engage the insert. The north edge is free for the bay and cover
-  lip.
+  Each tab sits on the bottom tray, under the edge-ring shelf. Two 3 mm wood
+  screws enter from below the tray into blind pilot holes in the plate; four
+  more go through the tray's north edge into the edge-ring boxes. The north
+  edge is free for the bay and cover lip.
 - The cover is held by 6 x 3 x 3 magnets: two along each side edge with their
   long sides on Y (or one centered if the span is too short), plus an adaptive
   evenly spaced row along the top edge with long sides on X (target spacing
@@ -135,9 +137,9 @@ layout data
    ├─ layout_bounds() ──► plate/case rectangle
    |                        │
    |                        ├─ magnet_plan() / rib_plan() ──► plan
-   |                        └─ plate_tab_plan() ──► tab/screw positions
+   |                        └─ plate_tab_plan() ──► tab positions
    │
-   ├─ build_top_plate()   ──► build/<name>/top_plate/...  (tabs + M2 holes)
+   ├─ build_top_plate()   ──► build/<name>/top_plate/...  (tabs + 2 pilots)
    ├─ build_case_bottom() ──► build/<name>/case/case_bottom.stl
    ├─ build_case_edges()  ──► build/<name>/case/case_edges.stl
    │                            │
@@ -202,8 +204,8 @@ blender --background --python-exit-code 1 --python keyboards/kb60/main.py -- \
 | `--horizontal MM` | Left and right margins. |
 | `--vertical MM` | Top and bottom margins. |
 | `--padding-left/right/top/bottom MM` | Individual sides; highest precedence. |
-| `--compartment-height MM` | Raised bay height (default 27.5 mm). |
-| `--compartment-depth MM` | Internal north/south depth of the bay (default 17.5 mm). |
+| `--compartment-height MM` | Raised bay height (default 30 mm). |
+| `--compartment-depth MM` | Internal north/south depth of the bay (default 27.5 mm). |
 | `--wall MM` | Case outer wall thickness (default 7 mm; the split geometry needs at least 7 mm). |
 | `--compartment-ramp MM` | Horizontal run of the raised-compartment slope; 0 gives a vertical step. |
 | `--split-plate` | Export the top plate as two horizontal halves instead of one STL; the split case and cover are unchanged. |
@@ -253,7 +255,7 @@ build/<name>/top_plate/top_plate_bottom_half.stl
 
 The split is at z = **3.75 mm**, through the middle of the switch/socket web and
 the middle-pin hole. The top half contains the switch pockets and only the top
-0.25 mm edge of the fastening tabs; the bottom half contains the hotswap/LED
+0.25 mm edge of the locating tabs; the bottom half contains the hotswap/LED
 pockets and the lower 3.75 mm of the tabs. Both halves are validated strictly
 before export. The split case and cover are still exported unchanged.
 
@@ -417,12 +419,12 @@ electronics bay.
 Key dimensions:
 
 - wall 7 mm (the split needs at least 7 mm; thicker is allowed),
-  floor 3 mm, chamfer 1.5 mm, corner radius 7 mm,
+  floor 4 mm, chamfer 1.5 mm, corner radius 7 mm,
 - plate pocket clearance 0.25 mm per side,
-- bay depth 17.5 mm (default; configurable with `--compartment-depth`),
+- bay depth 27.5 mm (default; configurable with `--compartment-depth`),
 - lid thickness 2.5 mm, shelf ledge 1.5 mm wide, lid clearance 0.2 mm,
-- default compartment/cover top 27.5 mm; rim 15 mm; plate top 12.5 mm,
-- cover front wall 2.5 mm thick; front lip 12.5 mm tall,
+- default compartment/cover top 30 mm; rim 15 mm; plate top 13.5 mm,
+- cover front wall 2.5 mm thick; front lip 14 mm tall,
 - the side lid ledges are notched back by
   `COVER_WALL + RAIL_FRONT_GAP + LID_LEDGE_SETBACK` (**4.7 mm**) at the bay's
   front edge, so the cover's front wall drops past them; the side magnet
@@ -430,46 +432,54 @@ Key dimensions:
 - the bay shelf sits 2.5 mm below the compartment top; the 45-degree magnet
   shelves stop 1.5 mm below the shelf so the cover's local bosses meet them.
 
-### Split case and plate fastening
+### Split case and plate location
 
 The bottom tray is inset behind the edge ring, so its vertical edge is hidden
 and only its underside is visible.  Both bottom faces are at z = 0.  The edge
 ring keeps the current outer wall, chamfer and rounded corner; inside it has a
-**straight-sided** lower recess from z = 0 to 7 mm (no undercut, so the tray can
+**straight-sided** lower recess from z = 0 to 8 mm (no undercut, so the tray can
 slide in from below).  The 1.5 mm outer bottom chamfer leaves about **1.05 mm**
-of outer wall at z = 0.  At z = 7 mm an inward shelf overhangs the tabs.
-Vertical **M2 heatset insert** holes (3.0 mm OD, 4.5 mm deep) open downward from
-this shelf.
+of outer wall at z = 0.  At z = 8 mm an inward shelf overhangs the tabs.
 
 The bottom tray has:
 
-- a 3 mm bed with a rounded plan that fits the edge-ring recess with 0.2 mm
+- a **4 mm bed** with a rounded plan that fits the edge-ring recess with 0.2 mm
   radial clearance,
-- an upstanding **4.0 mm perimeter lip** from z = 3 to 6.8 mm, interrupted at
+- an upstanding **4.0 mm perimeter lip** from z = 3.5 to 7.8 mm, interrupted at
   each plate-tab location.  It reaches back to within **0.5 mm** of the plate
   edge, so the plate's lower edge is cradled between the lip segments instead
-  of hanging over the lower recess.  It stops 0.2 mm below the edge shelf so
-  the screws clamp the tab, not the lip.  The lip enters the edge-ring recess
-  and locates the tray; the tabs carry the clamping load,
-- **M2 counterbores** (4.0 mm for the 3.8 mm head, 2.0 mm deep) and 2.4 mm
-  through-holes in the bed at each tab, opening from below.
+  of hanging over the lower recess.  It stops 0.2 mm below the edge shelf.  The
+  lip enters the edge-ring recess and locates the tray; the tabs sit under the
+  shelf and the six screws clamp the stack.
 
 The top plate has adaptive lower tabs: **4 mm high**, **4.5 mm deep**, **12 mm
 wide**, on west, east and south.  `plate_tab_plan(width, height)` distributes
 them evenly with a 50 mm target spacing, 10 mm preferred corner margin and
 6 mm minimum gap.  The tab's outer face lands on the bottom tray's outer face,
 leaving 0.2 mm to the edge ring's lower wall, so it closes the gap instead of
-dangling; the lip's tab cutout is what lets it through.  Each tab has a 2.4 mm
-M2 clearance hole at 2.2 mm outboard of the plate edge.  In the assembly the tab
-sits on the bottom bed and under the edge shelf; an **M2 x 10 socket-head
-screw** enters from below.  The north edge has no tabs, leaving the bay and
-cover lip free.
+dangling; the lip's tab cutout is what lets it through.  In the assembly the tab
+sits on the bottom bed and under the edge shelf.  The plate also has two blind
+3 mm pilot holes in the webs between three keys.  The north edge has no tabs,
+leaving the bay and cover lip free.
 
-The previous idea of M3 inserts in the inter-key webs is still rejected:
-adjacent 1u switch pockets leave a **5.05 mm** web, an M3 insert is **4.6 mm**
-across before wall thickness, and the hotswap socket tab already protrudes
-**0.365 mm** into that web.  Putting the inserts in the edge ring avoids all of
-those cutouts.
+### Mounting screws and front key
+
+- Two 3 mm wood screws enter from counterbores in the tray, pass through the
+  bed (and the 1.5 mm wire recess) and thread into **7 mm blind pilots** in the
+  plate.  The pilots are placed automatically at key-cap junctions, clear of
+  every switch, socket, LED and stabilizer cutout.
+- Four more screws enter along the north edge through tray counterbores into
+  **10 x 6.45 x 8 mm boxes** on the lower north wall.  The boxes locally
+  thicken the 2.55 mm lower wall and continue into the wall above the shelf;
+  each has a 7.5 mm blind 3 mm pilot.
+- The countersinks are **6 mm** across and **1.5 mm** deep, so the 4 mm floor
+  leaves 2.5 mm under the head.
+- The south inner wall carries an **80%-width triangular ledge** (3 mm deep,
+  3 mm high, 0.5 mm embedded in the wall).  Its vertical cross-section is a
+  right triangle with a **flat bottom** at z = 2.3, a 45-degree top, and the
+  normal wall above and below.  The tray has a matching triangular side dent
+  with the same profile and a uniform 0.2 mm print clearance.
+  The ledge is interrupted at every south plate tab.
 
 ### Wide edge-ring split
 
@@ -499,7 +509,7 @@ Dovetail dimensions (`case_split.py`):
   face at the rim.  The band is measured from the wall's inner face and stops
   short of the 1.5 mm top chamfer, so the joint never breaks the outer surface
   or the inner pocket,
-- starts **1.5 mm above** the z = 7 mm tab shelf (z = 8.5 mm) on both walls and
+- starts **1.5 mm above** the z = 8 mm tab shelf (z = 9.5 mm) on both walls and
   stops **2.5 mm below** the wall top.  The slot is cut right through the
   bottom of the side piece and stops just above the plug top: open at the
   bottom, capped by the side piece's own material at the top.  The side pieces
@@ -530,15 +540,15 @@ floor level.  The ribs sit under the cap boundaries, which are solid plate even
 for wide keys; they are clear of the switch pockets and socket tabs.  The plate
 rests on them; wires run in the channels between.  The recess is open to the
 bay at the plate's north edge.  It is inset **0.5 mm** from the west, east and
-south pocket walls so the counterbores cannot become tangent to the recess and
-the plate edge keeps a solid rim.  There is no perimeter rib.
+south pocket walls so the recess keeps a solid rim under the plate edge.  There
+is no perimeter rib.
 
 ### Cover magnets
 
 The cover lid stays **2.5 mm** thick.  Only the magnet locations are thickened:
 each magnet gets a local **1.5 mm boss** on the cover underside.  The bosses
 land on small 45-degree shelves inside the bay; the rest of the lid rests on the
-bay shelf at 25 mm.  The west/east lid ledges are notched back 4.7 mm at the
+bay shelf at 27.5 mm.  The west/east lid ledges are notched back 4.7 mm at the
 bay's front so the cover's front wall clears them; the side magnet shelves keep
 their 2.7 mm set-back and their front ends stay hidden under the cover.
 
@@ -562,7 +572,7 @@ pads, unioned one by one; adjacent side pads have a narrow gap between them.
 
 Each small shelf has a flat top at the magnet height and a **45-degree
 underside** running back to the cavity wall.  It does not extend down to the
-floor.  The shelf top is 1.5 mm below the bay shelf (23.5 mm default), so the
+floor.  The shelf top is 1.5 mm below the bay shelf (26.0 mm default), so the
 boss bottoms and the magnets meet there.  Both the shelf and the boss/lid get a
 pocket `magnet + 0.4 mm` across and `magnet thickness + 0.1 mm` deep; the cover
 keeps a 0.9 mm top skin.  The front lip still hangs to the plate top and locates
@@ -838,22 +848,25 @@ elevation looks from below; `--orthographic` gives a dimension-friendly view.
   support on some printers.
 - **100% size:** the split 100% case is about 447 mm wide; confirm the printer
   bed size before printing.
-- **Split-case fastening:** the plate is clamped between the bottom tray and the
-  edge-ring shelf by M2 screws from below. Do not reintroduce wall notches or
-  plate ears. Between-key M3 inserts still do not fit (5.05 mm web vs 4.6 mm
-  insert plus walls and the socket tab); keep the inserts in the edge ring.
+- **Split-case location:** the plate sits between the bottom tray and the
+  edge-ring shelf and is located by the tray lip, edge-ring recess and the
+  south triangular ledge. Six 3 mm wood screws clamp the stack: two through the
+  tray into blind plate pilots and four into the north-wall boxes. Do not
+  reintroduce wall notches or plate ears, and keep the plate pilots clear of
+  stabilizer channels and post holes.
 - **Edge-ring lower skin:** the straight recess leaves about 1.05 mm of outer
   wall at the very bottom above the 1.5 mm chamfer; the wall option is limited
-  to 7 mm minimum. Revalidate all four boards if the tab/screw sizes change.
+  to 7 mm minimum. Revalidate all four boards if the tab sizes change.
 - **Tab split:** tabs are exactly 4 mm high and the split is at z = 3.75 mm.
-  The bottom half carries the lower 3.75 mm of the tabs and their M2 holes; the
-  top half carries only the top 0.25 mm edge.
-- **Assembly order:** when the edge ring is split, place the two middle rails
-  first and lower the side pieces onto them from above; their slots are open at
-  the bottom so the plugs enter from below. Glue the joints. Then insert the
-  plate from below into the edge ring, fit the bottom tray from below and screw
-  upward. The plate cannot be dropped in from above because the edge shelf
-  overhangs the tabs.
+  The bottom half carries the lower 3.75 mm of the tabs; the top half carries
+  only the top 0.25 mm edge.
+- **Assembly order:** put the plate on the bottom tray, then lower the edge ring
+  over it: the south triangular ledge enters the tray's side dent and the north
+  screw boxes enter the lip cutouts. When the edge ring is split, place the two
+  middle rails first and lower the side pieces onto them from above; their
+  slots are open at the bottom so the plugs enter from below. Glue the joints.
+  Drive the six screws from below. The plate cannot be dropped in from above
+  after the edge ring is seated because the edge shelf overhangs the tabs.
 - **Wide case split:** the edge ring splits automatically above 250 mm case
   width, at ±`width / 4`. The slot is open at the bottom and capped 2.5 mm below
   the top; the male dovetail starts 1.5 mm above the tab shelf, so it clears the

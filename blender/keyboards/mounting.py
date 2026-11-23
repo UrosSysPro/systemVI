@@ -1,15 +1,15 @@
-"""Plate fastening tabs, cover magnets and wire-routing geometry.
+"""Plate locating tabs, cover magnets and wire-routing geometry.
 
 The case is split into a bottom tray and an outer edge ring.  The top plate
-has lower side tabs that are clamped between the two: the tab sits on the
-bottom tray and under the edge ring's internal shelf, and an M2 screw goes up
-from a counterbore in the bottom tray through the tab into a vertical heatset
-insert in the edge ring.  Tabs are planned adaptively from the plate size
+has lower side tabs that are located between the two: the tab sits on the
+bottom tray, under the edge ring's internal shelf, and runs through a cutout in
+the tray's perimeter lip.  Tabs are planned adaptively from the plate size
 (:func:`plate_tab_plan`): west and east sides get an evenly spaced row, and the
 south edge gets a row as well.  The north edge stays free for the bay and cover
-lip.  The earlier idea of M3 inserts in the inter-key webs is still rejected:
-the 5.05 mm web is too narrow for an insert once walls and the socket tab are
-accounted for.
+lip.  Two 3 mm wood screws enter from below the tray into blind pilot holes in
+the plate, and four more thread into boxes on the north edge ring.  A wide
+triangular ledge on the south edge-ring wall fits a matching dent in the tray's
+side.
 
 The cover is held by rectangular magnets.  Each side edge carries two magnets,
 evenly spaced along the side of the compartment.  An adaptive, evenly spaced row
@@ -66,21 +66,19 @@ RIB_MAX_CELL_GAP = 1.5     # only cells that touch (or nearly touch)
 RIB_MIN_OVERLAP = 4.0
 
 # --------------------------------------------------------------------------
-# Split case and plate fastening
+# Split case and plate location
 # --------------------------------------------------------------------------
 #
 # The case is split into a bottom tray and an outer edge ring.  The top plate
 # has lower side tabs that sit on the bottom tray; the edge ring has an
-# internal lower recess and an overhanging shelf above the tabs.  M2 screws go
-# up from counterbores in the bottom tray, through the tabs, into vertical
-# heatset inserts in the edge ring.
+# internal lower recess and an overhanging shelf above the tabs.  Two screws
+# go through the tray into the plate; four more go into boxes on the north
+# wall.  The front triangular ledge and its tray dent locate the south side.
 #
 # The tab is 4 mm high (the lower part of the 9.5 mm plate), which leaves room
-# for a 4.5 mm insert under the 15 mm case rim.  The screw sits 2.2 mm
-# outboard of the plate edge; the edge ring keeps at least 0.4 mm of material
-# around the insert.  The tab reaches out to the bottom tray's outer face, so
-# it closes the gap to the edge ring's lower wall instead of leaving the plate
-# edge hanging over the recess.
+# under the 15 mm case rim.  The tab reaches out to the bottom tray's outer
+# face, so it closes the gap to the edge ring's lower wall instead of leaving
+# the plate edge hanging over the recess.
 
 TAB_HEIGHT = 4.0           # plate tab height, from the plate bottom
 TAB_DEPTH = 4.5            # reaches the tray's outer face, 0.2 mm inside the ring
@@ -89,13 +87,6 @@ TAB_TARGET_SPACING = 50.0  # target spacing for the adaptive tab rows
 TAB_SIDE_MARGIN = 10.0     # preferred gap from a plate corner
 TAB_MIN_GAP = 6.0          # minimum gap between two tabs on one side
 TAB_OVERLAP = 0.5          # tab runs into the plate for a clean union
-
-SCREW_HOLE_DIAMETER = 2.4       # M2 clearance
-SCREW_HEAD_DIAMETER = 4.0       # 3.8 mm M2 head plus print clearance
-SCREW_COUNTERBORE_DEPTH = 2.0
-SCREW_FROM_EDGE = 2.2           # screw centre inboard of the plate outline
-INSERT_HOLE_DIAMETER = 3.0      # M2 heatset insert, nominal 3.0 mm OD
-INSERT_HOLE_DEPTH = 4.5
 
 
 @dataclass(frozen=True)
@@ -305,16 +296,13 @@ def magnet_plan(
 
 @dataclass(frozen=True)
 class PlateTab:
-    """One lower fastening tab on the top plate.
+    """One lower locating tab on the top plate.
 
-    ``centre`` is the centre of the tab box in the centred plate frame and
-    ``screw`` is the M2 clearance-hole centre, slightly outboard of ``centre``
-    because the tab runs into the plate for the boolean union.
+    ``centre`` is the centre of the tab box in the centred plate frame.
     """
 
     side: str
     centre: tuple[float, float]
-    screw: tuple[float, float]
     width: float
     depth: float
 
@@ -339,7 +327,7 @@ def _tab_count(length, minimum=1):
         usable = length - 2.0 * TAB_WIDTH
     if usable < TAB_WIDTH:
         raise ValueError(
-            f"plate side is too short for a {TAB_WIDTH} mm fastening tab "
+            f"plate side is too short for a {TAB_WIDTH} mm locating tab "
             f"({length:.1f} mm available)"
         )
 
@@ -350,7 +338,7 @@ def _tab_count(length, minimum=1):
         count -= 1
     if count * TAB_WIDTH + (count - 1) * TAB_MIN_GAP > usable:
         raise ValueError(
-            f"{count} fastening tabs do not fit on a {length:.1f} mm plate "
+            f"{count} locating tabs do not fit on a {length:.1f} mm plate "
             f"side; reduce TAB_WIDTH or use a larger plate"
         )
     return count
@@ -369,7 +357,7 @@ def plate_tab_plan(width, height):
         raise ValueError("plate width and height must be finite")
     if width <= 2.0 * TAB_DEPTH or height <= TAB_DEPTH:
         raise ValueError(
-            f"plate is too small for fastening tabs: {width:.1f} x "
+            f"plate is too small for locating tabs: {width:.1f} x "
             f"{height:.1f} mm"
         )
 
@@ -383,12 +371,10 @@ def plate_tab_plan(width, height):
         for side in ("west", "east"):
             sign = -1.0 if side == "west" else 1.0
             centre_x = sign * (half_w + TAB_DEPTH / 2.0)
-            screw_x = sign * (half_w + SCREW_FROM_EDGE)
             tabs.append(
                 PlateTab(
                     side=side,
                     centre=(centre_x, y),
-                    screw=(screw_x, y),
                     width=TAB_WIDTH,
                     depth=TAB_DEPTH,
                 )
@@ -401,7 +387,6 @@ def plate_tab_plan(width, height):
             PlateTab(
                 side="south",
                 centre=(x, -(half_d + TAB_DEPTH / 2.0)),
-                screw=(x, -(half_d + SCREW_FROM_EDGE)),
                 width=TAB_WIDTH,
                 depth=TAB_DEPTH,
             )

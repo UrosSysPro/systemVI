@@ -89,14 +89,14 @@ def argument_parser(description=None):
         type=float,
         metavar="MM",
         help="raised top compartment height; must be at least the case rim "
-        "height (default: 27.5 mm, raised)",
+        "height (default: 30 mm, raised)",
     )
     parser.add_argument(
         "--compartment-depth",
         type=float,
         metavar="MM",
         help="internal north/south depth of the electronics bay "
-        "(default: 17.5 mm)",
+        "(default: 27.5 mm)",
     )
     parser.add_argument(
         "--wall",
@@ -115,9 +115,11 @@ def argument_parser(description=None):
 
     hardware_group = parser.add_argument_group(
         "cover magnets and wire routing (mm)",
-        "The split case clamps the plate tabs with M2 screws; the cover is "
-        "held by magnets on 45-degree bay shelves and the case floor is "
-        "recessed for wires.",
+        "Six countersunk 3 mm wood screws hold the stack: two through the "
+        "tray into blind plate pilots, four through the tray into boxes on the "
+        "north edge ring.  A wide triangular ledge on the south wall fits a "
+        "matching dent in the tray.  The cover is held by magnets on "
+        "45-degree bay shelves and the case floor is recessed for wires.",
     )
     defaults = mounting.MountingOptions()
     hardware_group.add_argument(

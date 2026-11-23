@@ -18,6 +18,7 @@ import math
 
 import bmesh
 
+import layout
 import mesh
 
 # --------------------------------------------------------------------------
@@ -305,3 +306,318 @@ def hole_cutter(placed, thickness):
                 bm, (x + ox, y + oy), MX_LEG_HOLE_DIAMETER / 2.0, z_min, z_max
             )
     return mesh.mesh_object("holes", bm)
+
+
+# --------------------------------------------------------------------------
+# Plate mounting screws
+# --------------------------------------------------------------------------
+#
+# Two thin wood screws enter from the bottom tray and thread into blind pilot
+# holes in the top plate.  Each screw sits in a web where three keycaps meet,
+# so it is clear of every switch, socket and LED cutout.  The position plan is
+# pure 2D geometry shared by the plate and case builders.
+
+SCREW_HOLE_DIAMETER = 3.0          # thin wood screw, nominal 3 mm
+SCREW_COUNTERSINK_DIAMETER = 6.0   # 90-degree countersunk head
+SCREW_COUNTERSINK_DEPTH = 1.5
+PLATE_SCREW_PILOT_DEPTH = 7.0      # blind, leaves a 2.5 mm top skin
+
+# Cutout envelopes used only to keep the screw holes out of the plate features.
+_SCREW_SWITCH_HALF = (MX_POCKET / 2.0, MX_POCKET_CLIP_Y / 2.0)
+_SCREW_SOCKET_HALF = (SOCKET_POCKET_LENGTH / 2.0, SOCKET_POCKET_WIDTH / 2.0)
+_SCREW_LED_HALF = (LED_POCKET / 2.0, LED_POCKET / 2.0)
+_SCREW_TAB_OFFSETS = socket_contact_offsets()
+_SCREW_FEATURE_RECTS = (
+    ((0.0, 0.0), _SCREW_SWITCH_HALF),
+    (_SOCKET_MID_OFFSET, _SCREW_SOCKET_HALF),
+    (LED_OFFSET, _SCREW_LED_HALF),
+) + tuple(
+    (offset, (SOCKET_CONTACT_SIZE / 2.0, SOCKET_CONTACT_SIZE / 2.0))
+    for offset in _SCREW_TAB_OFFSETS
+)
+_SCREW_FEATURE_CIRCLES = (
+    ((0.0, 0.0), MX_CENTER_POST_DIAMETER / 2.0),
+    (MX_PIN_POSITIONS[0], MX_PIN_HOLE_DIAMETER / 2.0),
+    (MX_PIN_POSITIONS[1], MX_PIN_HOLE_DIAMETER / 2.0),
+    (MX_LEG_POSITIONS[0], MX_LEG_HOLE_DIAMETER / 2.0),
+    (MX_LEG_POSITIONS[1], MX_LEG_HOLE_DIAMETER / 2.0),
+    (LED_OFFSET, LED_LIGHT_HOLE_DIAMETER / 2.0),
+)
+
+_PLATE_SCREW_CACHE = {}
+
+
+def _rotate_point(point, angle):
+    c = math.cos(angle)
+    s = math.sin(angle)
+    return (point[0] * c - point[1] * s, point[0] * s + point[1] * c)
+
+
+def _rect_distance(point, centre, half):
+    dx = abs(point[0] - centre[0]) - half[0]
+    dy = abs(point[1] - centre[1]) - half[1]
+    if dx <= 0.0 and dy <= 0.0:
+        return -min(-dx, -dy)
+    return math.hypot(max(dx, 0.0), max(dy, 0.0))
+
+
+def _segment_distance(point, first, second):
+    dx = second[0] - first[0]
+    dy = second[1] - first[1]
+    length_sq = dx * dx + dy * dy
+    if length_sq <= 1e-12:
+        return math.hypot(point[0] - first[0], point[1] - first[1])
+    t = (
+        (point[0] - first[0]) * dx + (point[1] - first[1]) * dy
+    ) / length_sq
+    t = max(0.0, min(1.0, t))
+    return math.hypot(
+        point[0] - (first[0] + t * dx),
+        point[1] - (first[1] + t * dy),
+    )
+
+
+def _point_in_polygon(point, polygon):
+    inside = False
+    count = len(polygon)
+    for index in range(count):
+        x0, y0 = polygon[index]
+        x1, y1 = polygon[(index + 1) % count]
+        crosses = (y0 > point[1]) != (y1 > point[1])
+        if crosses:
+            x = x0 + (point[1] - y0) * (x1 - x0) / (y1 - y0)
+            if point[0] < x:
+                inside = not inside
+    return inside
+
+
+def _polygon_distance(point, polygon):
+    best = min(
+        _segment_distance(point, polygon[index], polygon[(index + 1) % len(polygon)])
+        for index in range(len(polygon))
+    )
+    if _point_in_polygon(point, polygon):
+        return -best
+    return best
+
+
+def _stabilizer_obstacles(placed):
+    """Plate polygons of the stabilizer post holes and wire channels."""
+
+    import stabilizer
+
+    obstacles = []
+    for x, y, rotation, _rect, width, height in placed:
+        orientation = stabilizer.stabilizer_orientation(width, height)
+        if orientation is None:
+            continue
+        dimension = (
+            width
+            if orientation == stabilizer.STAB_HORIZONTAL
+            else height
+        )
+        offset = stabilizer.wire_offset(dimension)
+        local_rotation = rotation
+        if orientation == stabilizer.STAB_VERTICAL:
+            local_rotation -= math.pi / 2.0
+
+        for sign in (-1.0, 1.0):
+            dx, dy = _rotate_point((sign * offset, 0.0), local_rotation)
+            cx = x + dx
+            cy = y + dy
+            half = stabilizer.POST_HOLE / 2.0
+            corners = [
+                _rotate_point((sx * half, sy * half), local_rotation)
+                for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1))
+            ]
+            obstacles.append([(cx + px, cy + py) for px, py in corners])
+
+        obstacles.append(
+            stabilizer._transform(
+                stabilizer._channel_profile(offset),
+                x,
+                y,
+                local_rotation,
+            )
+        )
+    return obstacles
+
+
+def _screw_clearance(point, placed, obstacles=()):
+    """Distance from ``point`` to the nearest plate cutout envelope."""
+
+    best = 1e9
+    for x, y, rotation, _rect, _width, _height in placed:
+        local = _rotate_point(
+            (point[0] - x, point[1] - y), -rotation
+        )
+        for centre, half in _SCREW_FEATURE_RECTS:
+            best = min(best, _rect_distance(local, centre, half))
+        for centre, radius in _SCREW_FEATURE_CIRCLES:
+            best = min(
+                best,
+                math.hypot(local[0] - centre[0], local[1] - centre[1])
+                - radius,
+            )
+    for polygon in obstacles:
+        best = min(best, _polygon_distance(point, polygon))
+    return best
+
+
+def _triple_junctions(placed):
+    """Points in the plate frame where three or more keycap cells meet."""
+
+    xs = set()
+    ys = set()
+    for _x, _y, _rotation, rect, _width, _height in placed:
+        xs.update((round(rect.x0, 6), round(rect.x1, 6)))
+        ys.update((round(rect.y0, 6), round(rect.y1, 6)))
+
+    points = {}
+    for x in xs:
+        for y in ys:
+            touching = sum(
+                1
+                for _kx, _ky, _rot, rect, _width, _height in placed
+                if rect.x0 - 1e-6 <= x <= rect.x1 + 1e-6
+                and rect.y0 - 1e-6 <= y <= rect.y1 + 1e-6
+            )
+            if touching >= 3:
+                points[(x, y)] = touching
+    return points
+
+
+def _optimized_screw_point(point, placed, obstacles, radius=2.0, step=0.5):
+    """Nudge a junction within ``radius`` to maximise cutout clearance."""
+
+    best = (_screw_clearance(point, placed, obstacles), point)
+    count = int(round(radius / step))
+    for ix in range(-count, count + 1):
+        for iy in range(-count, count + 1):
+            x = point[0] + ix * step
+            y = point[1] + iy * step
+            if math.hypot(x - point[0], y - point[1]) > radius + 1e-9:
+                continue
+            clearance = _screw_clearance((x, y), placed, obstacles)
+            if clearance > best[0]:
+                best = (clearance, (x, y))
+    return best[0], best[1][0], best[1][1]
+
+
+def plate_screw_plan(keys, params=None):
+    """Choose the two middle wood-screw pilot holes in the top plate.
+
+    Each hole lies in the web where three keycaps meet, roughly half way
+    between the plate centre and its left/right sides.  The plan picks the
+    most central pair with enough separation, then nudges each hole by up to
+    2 mm to keep a solid wall around it.
+    """
+
+    params = params or layout.PlateParams()
+    cache_key = (
+        params.margin_left,
+        params.margin_right,
+        params.margin_top,
+        params.margin_bottom,
+        params.led_facing,
+        tuple(
+            (
+                round(key.x, 6),
+                round(key.y, 6),
+                round(key.width, 6),
+                round(key.height, 6),
+                round(key.rotation, 9),
+            )
+            for key in keys
+        ),
+    )
+    cached = _PLATE_SCREW_CACHE.get(cache_key)
+    if cached is not None:
+        return cached
+
+    bounds = layout.layout_bounds(keys, params)
+    facing = params.facing_angle()
+    placed = []
+    for key in keys:
+        raw = key.bounds()
+        rect = layout.Rect(
+            raw.x0 - bounds.centre_x,
+            raw.x1 - bounds.centre_x,
+            raw.y0 - bounds.centre_y,
+            raw.y1 - bounds.centre_y,
+        )
+        placed.append(
+            (
+                key.x - bounds.centre_x,
+                key.y - bounds.centre_y,
+                key.rotation + facing,
+                rect,
+                key.width,
+                key.height,
+            )
+        )
+    obstacles = _stabilizer_obstacles(placed)
+
+    candidates = []
+    for point, count in sorted(_triple_junctions(placed).items()):
+        clearance, x, y = _optimized_screw_point(
+            point, placed, obstacles
+        )
+        candidates.append((x, y, clearance, count))
+    if len(candidates) < 2:
+        raise ValueError(
+            "the layout does not have two key junctions for the plate "
+            "mounting screws"
+        )
+
+    # A 3 mm hole needs at least 0.7 mm of material to every cutout.  A
+    # junction inside a stabilizer channel or post hole is rejected.
+    usable = [item for item in candidates if item[2] >= 2.2]
+    if len(usable) < 2:
+        usable = candidates
+
+    left = [item for item in usable if item[0] < -0.02 * bounds.width]
+    right = [item for item in usable if item[0] > 0.02 * bounds.width]
+    best = None
+    for a in left:
+        for b in right:
+            separation = b[0] - a[0]
+            if separation < 0.30 * bounds.width:
+                continue
+            score = (
+                0 if a[3] == 3 and b[3] == 3 else 1,
+                round(abs(a[1] - b[1]), 1),
+                round(abs(a[1]) + abs(b[1]), 1),
+                round(abs(a[0] + b[0]), 1),
+                -min(a[2], b[2]),
+                -separation,
+            )
+            if best is None or score < best[0]:
+                best = (score, a, b)
+
+    if best is None:
+        # Short boards can have a very narrow web between the two junctions;
+        # keep the most separated pair instead of failing.
+        for a in left:
+            for b in right:
+                separation = b[0] - a[0]
+                score = (
+                    0 if a[3] == 3 and b[3] == 3 else 1,
+                    round(abs(a[1] - b[1]), 1),
+                    round(abs(a[1]) + abs(b[1]), 1),
+                    round(abs(a[0] + b[0]), 1),
+                    -min(a[2], b[2]),
+                    -separation,
+                )
+                if best is None or score < best[0]:
+                    best = (score, a, b)
+    if best is None:
+        raise ValueError(
+            "the layout does not have a left/right pair of key junctions for "
+            "the plate mounting screws"
+        )
+
+    chosen = sorted((best[1][:2], best[2][:2]))
+    result = tuple((round(x, 4), round(y, 4)) for x, y in chosen)
+    _PLATE_SCREW_CACHE[cache_key] = result
+    return result

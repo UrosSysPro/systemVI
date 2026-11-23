@@ -7,18 +7,18 @@ files under `build/`; there is no GUI step and no `.blend` file to maintain.
 Each keyboard produces four part types:
 
 - **Top plate** — MX switch pockets, hotswap-socket pockets, LED pockets/light
-  holes, stabilizer post holes/wire channels, and 4 mm lower side tabs with M2
-  clearance holes. The tabs are clamped by the two case parts.
-- **Case bottom** — inset bottom tray with the 1.5 mm wire recess, short
-  inter-key support ribs, an upstanding perimeter lip and M2 counterbores. Its
-  underside is the only visible face.
+  holes, stabilizer post holes/wire channels, 4 mm lower side tabs and two
+  blind 3 mm pilot holes in the webs between three keys.
+- **Case bottom** — 4 mm-thick inset bottom tray with the 1.5 mm wire recess,
+  short inter-key support ribs, an upstanding perimeter lip, six countersunk
+  3 mm screw holes and a triangular dent in its south side.
 - **Case edges** — full-height outer edge ring with an electronics bay, USB-C
   opening with a 45° beveled recess and internal glue shelf. From outside it
   looks exactly like the old one-piece case. Inside it has a lower recess for
-  the bottom tray and plate tabs, with vertical M2 heatset inserts above each
-  tab. A small 45-degree shelf under each magnet in the bay holds the cover,
-  and the side lid ledges stop 4.7 mm behind the bay's front edge so the
-  cover's front wall clears them.
+  the bottom tray and plate tabs, four screw boxes on the north wall and a wide
+  triangular ledge on the south wall. A small 45-degree shelf under each magnet
+  in the bay holds the cover, and the side lid ledges stop 4.7 mm behind the
+  bay's front edge so the cover's front wall clears them.
 - **Cover** — thin L-shaped lid for the electronics bay, with local magnet
   bosses and pockets on its underside. Only the magnet locations are thickened.
 
@@ -77,15 +77,15 @@ build/<name>/case/case_edges_south.stl
 
 Assembly: fit 6 × 3 × 3 magnets in the case shelves and cover bosses — two per
 side edge with their long sides along the edge, plus an adaptive evenly spaced
-row along the top edge. Install one M2 heatset insert above each edge-ring tab
-location. When the edge ring is split, place the two middle rails first and lower
-the side pieces onto them from above; the slots are open at the bottom and the
-caps stop the rails lifting. Glue the joints. Lower the top plate into the edge
-ring from below, then
-fit the bottom tray from below: its perimeter lip enters the edge-ring recess and
-its counterbores line up with the plate tabs. Screw M2 × 10 socket-head screws up
-from underneath into the inserts; the bottom tray and edge ring bottom faces
-are flush. Route wires in the 1.5 mm recess between the support ribs.
+row along the top edge. When the edge ring is split, place the two middle rails
+first and lower the side pieces onto them from above; the slots are open at the
+bottom and the caps stop the rails lifting. Glue the joints. Put the plate on
+the bottom tray so its tabs sit in the lip cutouts, then lower the edge ring
+over it: the triangular south ledge enters the tray's side dent and the north
+screw boxes land in the lip cutouts. The bottom tray and edge ring bottom faces
+are flush. Drive six 3 mm wood screws from below: two through the tray into the
+blind plate pilots, four along the north edge into the boxes. Route wires in
+the 1.5 mm recess between the support ribs.
 
 The case split also leaves the bottom tray’s vertical edge hidden inside the
 edge ring, so only the underside of the bottom part is visible from outside.
@@ -109,7 +109,7 @@ build/<name>/top_plate/top_plate_bottom_half.stl
 
 The cut is at z = 3.75 mm, through the middle of the switch/socket web and the
 middle-pin hole. The top half has the switch pockets and only the top 0.25 mm
-edge of the fastening tabs; the bottom half has the hotswap and LED pockets and
+edge of the locating tabs; the bottom half has the hotswap and LED pockets and
 the lower 3.75 mm of the tabs. Both halves must pass mesh validation before
 either is exported. The split case and cover are still generated normally.
 
@@ -211,17 +211,22 @@ This writes the male plug and female slot views to
 
 - Top-plate padding: **2 mm** on all four sides
 - Case wall thickness: **7 mm**
-- Electronics bay depth: **17.5 mm**
-- Compartment height: **27.5 mm**
+- Case floor thickness: **4 mm**
+- Electronics bay depth: **27.5 mm**
+- Compartment height: **30 mm**
 - Switch/LED facing: north
 - Cover: **2.5 mm** lid with **1.5 mm** local bosses around the magnets
 - Magnets: **6 × 3 × 3**; two per side edge with their long sides along the
   edge when they fit, otherwise one centered per side, plus an adaptive evenly
   spaced top-edge row (default target spacing **40 mm**)
 - Wire recess: **1.5 mm** below the plate, with 3 × 10 mm ribs in the keycap gaps
-- Fastening: **M2 × 10** socket-head screws and **3.0 mm OD** heatset inserts;
-  adaptive tabs on both sides and the south edge, 4 mm high, 4.5 mm deep,
-  12 mm wide, reaching the bottom tray's outer face
+- Plate location: adaptive tabs on both sides and the south edge, 4 mm high,
+  4.5 mm deep, 12 mm wide, reaching the bottom tray's outer face; the tray lip
+  and edge-ring recess locate the stack
+- Screws: **six 3 mm countersunk wood screws** — two in the plate webs between
+  three keys and four along the north edge into the edge-ring boxes
+- Front key: an **80%-width** triangular ledge on the south wall, with a
+  matching triangular dent in the tray's side
 - Case split: bottom tray inset behind the edge ring; both undersides flush;
   its 4 mm perimeter lip reaches to within 0.5 mm of the plate edge, with a
   cutout at every plate tab

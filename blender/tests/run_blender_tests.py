@@ -25,6 +25,7 @@ import cli
 import cover
 import export
 import generate
+import hardware
 import layout
 import mounting
 import plate
@@ -34,6 +35,13 @@ NAMES = ("kbNumpad", "kb60", "kb75", "kb100")
 
 def close(actual, expected, tolerance=1e-6):
     assert abs(actual - expected) <= tolerance, (actual, expected)
+
+
+def cast_z(obj, x, y, z_start, direction):
+    hit, location, _normal, _face = obj.ray_cast(
+        (x, y, z_start), (0.0, 0.0, direction)
+    )
+    return location.z if hit else None
 
 
 def load_keys(name):
@@ -48,8 +56,14 @@ def check_metrics(name, keys):
     options = mounting.MountingOptions()
     metrics = case.case_metrics(keys, options=options)
     close(metrics.lid_thickness, 2.5)
-    close(metrics.shelf, 25.0)
-    close(metrics.magnets.mounts[0].rail_top, 23.5)
+    close(metrics.shelf, 27.5)
+    close(metrics.magnets.mounts[0].rail_top, 26.0)
+    assert len(metrics.plate_screws) == 2, f"{name}: plate screws"
+    assert len(metrics.edge_screws) == 4, f"{name}: edge screws"
+    assert metrics.plate_screws[0][0] < 0.0 < metrics.plate_screws[1][0], name
+    edge_xs = [position[0] for position in metrics.edge_screws]
+    assert edge_xs == sorted(edge_xs), f"{name}: unsorted edge screws"
+    assert len(set(round(x, 4) for x in edge_xs)) == 4, name
     side = [
         mount for mount in metrics.magnets.mounts
         if mount.side in ("west", "east")
@@ -61,7 +75,7 @@ def check_metrics(name, keys):
     assert metrics.magnets.top_count >= 1, f"{name}: no top-edge magnets"
     assert len(top) == metrics.magnets.top_count, name
     assert metrics.ribs, f"{name}: no support ribs"
-    assert metrics.tabs.count >= 3, f"{name}: no plate fastening tabs"
+    assert metrics.tabs.count >= 3, f"{name}: no plate locating tabs"
     check_tab_fit(name, metrics)
     close(side[0].size[0], 3.4)
     close(side[0].size[1], 6.4)
@@ -83,8 +97,6 @@ def check_metrics(name, keys):
 
 
 def check_tab_fit(name, metrics):
-    head_radius = mounting.SCREW_HEAD_DIAMETER / 2.0
-    insert_radius = mounting.INSERT_HOLE_DIAMETER / 2.0
     pocket = metrics.plate_pocket
     bottom = metrics.bottom
     edge = metrics.edge_lower
@@ -95,24 +107,18 @@ def check_tab_fit(name, metrics):
             tab_inner = tab.centre[0] + tab.depth / 2.0
             tray_outer = bottom.x0
             lip_inner = bottom.x0 + case.BOTTOM_LIP_WIDTH
-            wall = pocket.x0 - tab.screw[0]
-            counterbore = tab.screw[0] - head_radius - bottom.x0
             edge_gap = bottom.x0 - edge.x0
         elif tab.side == "east":
             tab_outer = tab.centre[0] + tab.depth / 2.0
             tab_inner = tab.centre[0] - tab.depth / 2.0
             tray_outer = bottom.x1
             lip_inner = bottom.x1 - case.BOTTOM_LIP_WIDTH
-            wall = tab.screw[0] - pocket.x1
-            counterbore = bottom.x1 - (tab.screw[0] + head_radius)
             edge_gap = edge.x1 - bottom.x1
         else:
             tab_outer = tab.centre[1] - tab.depth / 2.0
             tab_inner = tab.centre[1] + tab.depth / 2.0
             tray_outer = bottom.y0
             lip_inner = bottom.y0 + case.BOTTOM_LIP_WIDTH
-            wall = pocket.y0 - tab.screw[1]
-            counterbore = tab.screw[1] - head_radius - bottom.y0
             edge_gap = bottom.y0 - edge.y0
 
         # The tab reaches the tray's outer face, which is 0.2 mm inside the
@@ -128,8 +134,6 @@ def check_tab_fit(name, metrics):
         elif tab.side == "south":
             lip_gap = (pocket.y0 + case.PLATE_CLEARANCE) - lip_inner
         assert 0.0 < lip_gap <= 1.0, f"{name}: lip/plate gap {lip_gap:.3f}"
-        assert wall >= insert_radius + 0.4, f"{name}: insert wall {wall:.3f}"
-        assert counterbore >= 0.05, f"{name}: counterbore margin {counterbore:.3f}"
         assert edge_gap >= 0.1, f"{name}: lower edge clearance {edge_gap:.3f}"
 
     close(metrics.tab_top, case.TAB_TOP)
@@ -150,14 +154,14 @@ def check_numpad_build(keys):
     close(plate_obj.dimensions.y, 103.75, 0.05)
     close(plate_obj.dimensions.z, 9.5, 0.05)
     close(case_bottom.dimensions.x, 89.2, 0.05)
-    close(case_bottom.dimensions.y, 125.75, 0.05)
-    close(case_bottom.dimensions.z, 6.8, 0.05)
+    close(case_bottom.dimensions.y, 135.75, 0.05)
+    close(case_bottom.dimensions.z, 7.8, 0.05)
     close(case_edges.dimensions.x, 94.7, 0.05)
-    close(case_edges.dimensions.y, 131.25, 0.05)
-    close(case_edges.dimensions.z, 27.5, 0.05)
+    close(case_edges.dimensions.y, 141.25, 0.05)
+    close(case_edges.dimensions.z, 30.0, 0.05)
     close(cover_obj.dimensions.x, 80.3, 0.05)
-    close(cover_obj.dimensions.y, 17.3, 0.05)
-    close(cover_obj.dimensions.z, 15.0, 0.05)
+    close(cover_obj.dimensions.y, 27.3, 0.05)
+    close(cover_obj.dimensions.z, 16.5, 0.05)
 
     bottom_min_z = min(
         (case_bottom.matrix_world @ vertex.co).z
@@ -180,6 +184,25 @@ def check_numpad_build(keys):
     close(top.dimensions.y, plate_obj.dimensions.y, 0.05)
     close(bottom.dimensions.x, plate_obj.dimensions.x, 0.05)
     close(bottom.dimensions.y, plate_obj.dimensions.y, 0.05)
+
+    metrics = case.case_metrics(keys)
+    for x, y in metrics.plate_screws:
+        close(cast_z(plate_obj, x, y, 20.0, -1.0), 9.5, 0.05)
+        close(cast_z(plate_obj, x, y, -1.0, 1.0), hardware.PLATE_SCREW_PILOT_DEPTH, 0.05)
+    for x, y in metrics.edge_screws:
+        assert cast_z(case_bottom, x, y, -1.0, 1.0) is None
+        close(
+            cast_z(case_edges, x, y, -1.0, 1.0),
+            case.FLOOR + case.EDGE_BOX_SCREW_DEPTH,
+            0.05,
+        )
+    wedge_x = 10.0
+    wedge_y = metrics.edge_lower.y0 + 1.5
+    close(
+        cast_z(case_edges, wedge_x, wedge_y, -1.0, 1.0),
+        case.FRONT_WEDGE_BOTTOM,
+        0.05,
+    )
 
     print("kbNumpad: plate, split case, cover and split plate built")
 

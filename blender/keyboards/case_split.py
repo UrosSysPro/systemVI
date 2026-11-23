@@ -23,7 +23,7 @@ against separation along X.
 
 The dovetail sits inside the wall.  Its Y position leaves material at both wall
 faces and it stays clear of the 1.5 mm top chamfer.  The seam gap and the slot
-clearance are both 0.2 mm; glue holds the ring closed and the M2 screws and
+clearance are both 0.2 mm; glue holds the ring closed and the bottom tray and
 plate tabs keep the stack aligned.  The male plug is printed smaller than the
 slot (0.15 mm extra clearance per side and 0.5 mm shorter) so the pieces slide
 together instead of binding.

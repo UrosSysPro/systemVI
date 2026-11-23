@@ -4,15 +4,19 @@ The case is printed as two parts that share the existing outer silhouette:
 
 - :func:`build_case_bottom` is the bottom tray.  Its footprint is inset behind
   the edge ring, so only its underside is visible.  It carries the wire recess,
-  the inter-key support ribs, an upstanding perimeter lip and the M2
-  counterbored screw holes.
+  the inter-key support ribs, an upstanding perimeter lip, two countersunk
+  plate-screw holes, four countersunk north-edge holes and a triangular dent in
+  its south side.
 - :func:`build_case_edges` is the full-height outer edge ring plus the bay,
   USB-C opening and cover magnet shelves.  From the outside it is unchanged.
-  Inside it has a lower recess that fits over the bottom tray's lip and an
-  overhanging shelf above the plate tabs, with vertical heatset inserts.
+  Inside it has a lower recess that fits over the bottom tray's lip, an
+  overhanging shelf above the plate tabs, four screw boxes on the north wall
+  and a wide triangular ledge on the south wall.
 
 The top plate has 4 mm lower side tabs.  A tab sits on the bottom tray and
-under the edge ring's shelf; an M2 screw from below clamps the stack.  The
+under the edge ring's shelf.  Two 3 mm screws enter from below the tray into
+blind pilots in the plate; four more enter along the north edge into the screw
+boxes.  The triangular ledge on the south wall fits the tray's side dent.  The
 edge ring and bottom tray bottom faces are coplanar.
 
 ``DEFAULT_COMPARTMENT_HEIGHT`` sets the top of the bay.  The default is a
@@ -44,13 +48,13 @@ import mounting
 # --------------------------------------------------------------------------
 
 WALL = 7.0                 # outer wall thickness
-FLOOR = 3.0                # case floor thickness
+FLOOR = 4.0                # case floor thickness (countersunk screw heads)
 CHAMFER = 1.5              # 45 degree chamfer on the top and bottom rims
 CORNER_RADIUS = 7.0        # rounded corner radius in plan view
 CORNER_SEGMENTS = 8        # segments per rounded corner
 
 PLATE_CLEARANCE = 0.25     # per side, plate pocket vs top plate
-COMPARTMENT_DEPTH = 17.5   # internal north/south depth of the bay
+COMPARTMENT_DEPTH = 27.5   # internal north/south depth of the bay
 
 LID_THICKNESS = 2.5        # minimum cover top thickness; magnets can raise it
 LID_LEDGE = 1.5            # shelf around the bay the cover rests on
@@ -82,7 +86,7 @@ USB_PORT_FROM_LEFT = 12.0  # slot centre from the bay's inner west wall
 PLATE_TOP = FLOOR + hardware.PLATE_THICKNESS
 CASE_HEIGHT = 20.0  # outer case rim / wall height (lower edge)
 
-# Split-case fastening.  All extents are measured outward from the plate pocket
+# Split-case location.  All extents are measured outward from the plate pocket
 # rectangle (which is the plate outline plus PLATE_CLEARANCE).  The lower
 # recess is stepped because the case's 1.5 mm bottom chamfer leaves less room
 # for the outer wall at z = 0.
@@ -102,10 +106,39 @@ BOTTOM_LIP_CLEARANCE = 0.2                   # below the edge shelf
 # pocket play and the tray 0.2 mm lower-recess play, so the cutouts need more
 # than 0.2 mm to let the tray slide past tabs that are not perfectly centred.
 BOTTOM_LIP_TAB_CLEARANCE = 0.5
-SPLIT_MIN_WALL = 7.0                         # radial room for tabs/inserts
+SPLIT_MIN_WALL = 7.0                         # radial room for tabs and recess
 WIRE_RECESS_INSET = 0.5                      # solid rim under the plate edge
 BOTTOM_RADIUS = 4.25                         # bottom tray footprint
 EDGE_LOWER_RADIUS = 4.45                     # edge lower recess
+
+# --------------------------------------------------------------------------
+# North-edge screw boxes and the front triangular key
+# --------------------------------------------------------------------------
+#
+# Four thin wood screws enter from below the tray along the north edge and
+# thread into small boxes that thicken the lower edge-ring wall.  The boxes
+# fill the thin lower wall (z = 4 .. 8) and continue into the wall above the
+# tab shelf, so each screw has a solid 7.5 mm of material.
+EDGE_SCREW_X_FRACTIONS = (-0.42, -0.14, 0.14, 0.42)
+EDGE_SCREW_Y_OFFSET = 0.5    # screw centre north of the bay's front edge
+EDGE_BOX_WIDTH = 10.0
+EDGE_BOX_TOP = 12.0
+EDGE_BOX_SCREW_DEPTH = 7.5
+EDGE_BOX_LIP_CLEARANCE = 0.5
+EDGE_BOX_EMBED = 0.5         # overlap into the north wall for a clean union
+
+# The front key is a wide triangular ledge on the inner edge-ring wall.  Its
+# vertical cross-section is a right triangle: a flat top, a 45-degree
+# underside running back to the wall, and the normal wall below it.  The tray
+# has a matching triangular dent in its south side, open at the top so the
+# edge ring can be lowered onto the tray.
+FRONT_WEDGE_WIDTH_FRACTION = 0.8
+FRONT_WEDGE_DEPTH = 3.0      # ledge depth into the tray side
+FRONT_WEDGE_HEIGHT = 3.0     # 45-degree underside; depth == height
+FRONT_WEDGE_EMBED = 0.5      # overlap into the edge-ring wall
+FRONT_WEDGE_CLEARANCE = 0.2  # around the triangular dent
+FRONT_WEDGE_TOP = 5.3
+FRONT_WEDGE_BOTTOM = FRONT_WEDGE_TOP - FRONT_WEDGE_HEIGHT
 
 # Wide bottom trays are printed as two halves.  The single cut runs along X = 0
 # and carries several dovetails in the middle of the tray.  The dovetails sit in
@@ -131,7 +164,7 @@ BOTTOM_DOVETAIL_MIN_WEB = 5.0    # material between two neighbouring tenons
 BOTTOM_PIECE_SUFFIXES = ("west", "east")
 
 MAGNET_SHELF_EDGE = 1.5    # material under the magnet pocket at the shelf edge
-DEFAULT_COMPARTMENT_HEIGHT = 27.5  # raised bay height
+DEFAULT_COMPARTMENT_HEIGHT = 30.0  # raised bay height
 COMPARTMENT_HEIGHT = DEFAULT_COMPARTMENT_HEIGHT  # compatibility name
 COMPARTMENT_RAMP = 20.0    # horizontal run of the slanted edge
 COVER_WALL = 2.5           # cover front wall thickness
@@ -168,6 +201,8 @@ class CaseMetrics:
     bottom: layout.Rect
     edge_lower: layout.Rect
     tab_top: float
+    plate_screws: tuple
+    edge_screws: tuple
 
 
 def case_metrics(
@@ -198,8 +233,8 @@ def case_metrics(
     if wall < SPLIT_MIN_WALL:
         raise ValueError(
             "wall must be at least "
-            f"{SPLIT_MIN_WALL} mm for the split case's lower recess, tabs and "
-            f"heatset inserts; got {wall} mm"
+            f"{SPLIT_MIN_WALL} mm for the split case's lower recess and plate "
+            f"tabs; got {wall} mm"
         )
     if not math.isfinite(bay_depth) or bay_depth <= 0.0:
         raise ValueError(
@@ -298,16 +333,17 @@ def case_metrics(
         pocket.y0 - EDGE_LOWER_EXT,
         bay_north + EDGE_LOWER_EXT,
     )
-
-    if TAB_TOP + mounting.INSERT_HOLE_DEPTH + 1.0 > CASE_HEIGHT:
-        raise ValueError(
-            "the plate tabs and heatset inserts are too tall for the case "
-            f"rim: need {TAB_TOP + mounting.INSERT_HOLE_DEPTH + 1.0:.1f} mm, "
-            f"rim is {CASE_HEIGHT:.1f} mm"
+    width = east - west
+    edge_screws = tuple(
+        (
+            fraction * width,
+            bay_north + EDGE_SCREW_Y_OFFSET,
         )
+        for fraction in EDGE_SCREW_X_FRACTIONS
+    )
 
     return CaseMetrics(
-        width=east - west,
+        width=width,
         depth=north - south,
         height=height,
         west=west,
@@ -327,6 +363,8 @@ def case_metrics(
         bottom=bottom,
         edge_lower=edge_lower,
         tab_top=TAB_TOP,
+        plate_screws=hardware.plate_screw_plan(keys, params),
+        edge_screws=edge_screws,
     )
 
 
@@ -704,9 +742,8 @@ def _wire_recess_cutter(metrics, options):
     """Recess the plate-pocket floor so wires can pass under the plate.
 
     The recess is inset slightly on the west, east and south walls so the
-    bottom tray keeps a solid rim under the plate edge and the M2 counterbores
-    cannot become tangent to the recess wall.  It stays open to the bay on the
-    north side.
+    bottom tray keeps a solid rim under the plate edge.  It stays open to the
+    bay on the north side.
     """
 
     inset = WIRE_RECESS_INSET
@@ -832,25 +869,6 @@ def _edge_lower_cutter(metrics):
     )
 
 
-def _insert_hole_cutters(metrics):
-    """Vertical heatset-insert holes above each plate tab."""
-
-    bm = bmesh.new()
-    radius = mounting.INSERT_HOLE_DIAMETER / 2.0
-    for tab in metrics.tabs.tabs:
-        mesh.add_cylinder(
-            bm,
-            tab.screw,
-            radius,
-            metrics.tab_top - 0.1,
-            metrics.tab_top + mounting.INSERT_HOLE_DEPTH,
-        )
-    if not metrics.tabs.tabs:
-        bm.free()
-        return None
-    return mesh.mesh_object("insert_holes", bm)
-
-
 def _bottom_bed_builder(metrics):
     """The 3 mm bottom tray bed, with a rounded plan."""
 
@@ -920,36 +938,157 @@ def _bottom_lip_builder(metrics):
     return ring
 
 
-def _bottom_screw_cutters(metrics):
-    """Counterbores and through-holes for the M2 screws from below."""
+def _countersunk_holes_cutter(name, centres, through_top):
+    """3 mm through-holes with a 90-degree countersink from the bottom face."""
 
-    through_bm = bmesh.new()
-    head_bm = bmesh.new()
-    hole_radius = mounting.SCREW_HOLE_DIAMETER / 2.0
-    head_radius = mounting.SCREW_HEAD_DIAMETER / 2.0
-    for tab in metrics.tabs.tabs:
-        mesh.add_cylinder(
-            through_bm,
-            tab.screw,
-            hole_radius,
-            mounting.SCREW_COUNTERBORE_DEPTH - 0.1,
-            FLOOR + hardware.EPS,
-        )
-        mesh.add_cylinder(
-            head_bm,
-            tab.screw,
-            head_radius,
-            -hardware.EPS,
-            mounting.SCREW_COUNTERBORE_DEPTH,
-        )
-    if not metrics.tabs.tabs:
-        through_bm.free()
-        head_bm.free()
-        return None, None
-    return (
-        mesh.mesh_object("case_bottom_screw_holes", through_bm),
-        mesh.mesh_object("case_bottom_counterbores", head_bm),
+    shaft_radius = hardware.SCREW_HOLE_DIAMETER / 2.0
+    head_radius = hardware.SCREW_COUNTERSINK_DIAMETER / 2.0
+    depth = hardware.SCREW_COUNTERSINK_DEPTH
+    profile = (
+        (head_radius + 0.5, -0.5),
+        (shaft_radius, depth),
+        (shaft_radius, through_top),
     )
+    bm = bmesh.new()
+    for cx, cy in centres:
+        mesh.add_revolved_profile(bm, (cx, cy), profile)
+    return mesh.mesh_object(name, bm)
+
+
+def _edge_box_rects(metrics):
+    """Plan rectangles of the four screw boxes on the north wall."""
+
+    y_south = metrics.bay_cavity.y1
+    y_north = metrics.edge_lower.y1 + EDGE_BOX_EMBED
+    half = EDGE_BOX_WIDTH / 2.0
+    return tuple(
+        layout.Rect(x - half, x + half, y_south, y_north)
+        for x, _y in metrics.edge_screws
+    )
+
+
+def _edge_box_builders(metrics):
+    """Four boxes that thicken the thin lower north wall around the screws."""
+
+    builders = []
+    for index, rect in enumerate(_edge_box_rects(metrics)):
+        bm = bmesh.new()
+        mesh.add_box(
+            bm,
+            (
+                rect.centre_x,
+                rect.centre_y,
+                (FLOOR + EDGE_BOX_TOP) / 2.0,
+            ),
+            (rect.width, rect.height, EDGE_BOX_TOP - FLOOR),
+        )
+        builders.append(mesh.mesh_object(f"edge_screw_box_{index}", bm))
+    return builders
+
+
+def _edge_box_pilot_cutter(metrics):
+    """Blind 3 mm pilot holes through the four north-wall boxes."""
+
+    radius = hardware.SCREW_HOLE_DIAMETER / 2.0
+    bm = bmesh.new()
+    for x, y in metrics.edge_screws:
+        mesh.add_cylinder(
+            bm,
+            (x, y),
+            radius,
+            FLOOR - 0.5,
+            FLOOR + EDGE_BOX_SCREW_DEPTH,
+        )
+    return mesh.mesh_object("edge_screw_pilots", bm)
+
+
+def _edge_box_lip_cutters(metrics):
+    """Clear the tray lip where each north-wall box drops down onto it."""
+
+    bm = bmesh.new()
+    for rect in _edge_box_rects(metrics):
+        mesh.add_box(
+            bm,
+            (
+                rect.centre_x,
+                rect.centre_y,
+                (FLOOR - 0.1 + metrics.tab_top + 0.5) / 2.0,
+            ),
+            (
+                rect.width + 2.0 * EDGE_BOX_LIP_CLEARANCE,
+                rect.height + 2.0 * EDGE_BOX_LIP_CLEARANCE,
+                metrics.tab_top + 0.5 - (FLOOR - 0.1),
+            ),
+        )
+    return mesh.mesh_object("edge_box_lip_cutouts", bm)
+
+
+def _front_wedge_builder(metrics):
+    """Wide triangular ledge on the south wall, minus the plate-tab notches."""
+
+    wall_y = metrics.edge_lower.y0
+    x0 = -FRONT_WEDGE_WIDTH_FRACTION * metrics.width / 2.0
+    x1 = FRONT_WEDGE_WIDTH_FRACTION * metrics.width / 2.0
+    profile = (
+        (wall_y - FRONT_WEDGE_EMBED, FRONT_WEDGE_BOTTOM),
+        (wall_y + FRONT_WEDGE_DEPTH, FRONT_WEDGE_BOTTOM),
+        (wall_y, FRONT_WEDGE_TOP),
+        (wall_y - FRONT_WEDGE_EMBED, FRONT_WEDGE_TOP),
+    )
+    bm = bmesh.new()
+    mesh.add_prism_x(bm, profile, x0, x1)
+    wedge = mesh.mesh_object("front_wedge", bm)
+
+    notches = bmesh.new()
+    for tab in metrics.tabs.by_side("south"):
+        nx0 = tab.centre[0] - mounting.TAB_WIDTH / 2.0 - BOTTOM_LIP_TAB_CLEARANCE
+        nx1 = tab.centre[0] + mounting.TAB_WIDTH / 2.0 + BOTTOM_LIP_TAB_CLEARANCE
+        ny0 = wall_y - 0.1
+        ny1 = tab.centre[1] + mounting.TAB_DEPTH / 2.0 + BOTTOM_LIP_TAB_CLEARANCE
+        mesh.add_box(
+            notches,
+            (
+                (nx0 + nx1) / 2.0,
+                (ny0 + ny1) / 2.0,
+                (FRONT_WEDGE_BOTTOM - 1.0 + FRONT_WEDGE_TOP + 1.0) / 2.0,
+            ),
+            (
+                nx1 - nx0,
+                ny1 - ny0,
+                FRONT_WEDGE_HEIGHT + 2.0,
+            ),
+        )
+    if metrics.tabs.by_side("south"):
+        mesh.difference(wedge, mesh.mesh_object("front_wedge_notches", notches))
+    else:
+        notches.free()
+    return wedge
+
+
+def _front_wedge_dent_cutter(metrics):
+    """Triangular dent in the tray's south side, matching the front ledge.
+
+    The cutter is the same right triangle as the ledge, enlarged by a uniform
+    clearance and extruded over the same width, so the two profiles match.
+    """
+
+    wall_y = metrics.edge_lower.y0
+    bottom = FRONT_WEDGE_BOTTOM
+    top = FRONT_WEDGE_TOP
+    clearance = FRONT_WEDGE_CLEARANCE
+    out_y = wall_y - clearance
+    profile = (
+        (out_y, bottom - clearance),
+        (wall_y + FRONT_WEDGE_DEPTH + clearance, bottom - clearance),
+        (out_y, top + clearance),
+    )
+    half = (
+        FRONT_WEDGE_WIDTH_FRACTION * metrics.width / 2.0
+        + clearance
+    )
+    bm = bmesh.new()
+    mesh.add_prism_x(bm, profile, -half, half)
+    return mesh.mesh_object("front_wedge_dent", bm)
 
 
 # --------------------------------------------------------------------------
@@ -967,7 +1106,7 @@ def build_case_bottom(
     compartment_depth=None,
     options=None,
 ):
-    """Build the inset bottom tray with wire recess, ribs and screw holes."""
+    """Build the inset bottom tray with wire recess and ribs."""
 
     ramp = COMPARTMENT_RAMP if compartment_ramp is None else compartment_ramp
     if not math.isfinite(ramp) or ramp < 0.0:
@@ -991,10 +1130,23 @@ def build_case_bottom(
     if metrics.ribs:
         mesh.union(bottom, _floor_rib_builder(metrics, options))
 
-    through, heads = _bottom_screw_cutters(metrics)
-    if through is not None:
-        mesh.difference(bottom, through)
-        mesh.difference(bottom, heads)
+    # New screw mounting: two pilot-screw holes through the bed into the plate,
+    # four north-edge holes into the edge-ring boxes, and the front triangular
+    # interlock notch.
+    mesh.difference(bottom, _edge_box_lip_cutters(metrics))
+    mesh.difference(bottom, _front_wedge_dent_cutter(metrics))
+    mesh.difference(
+        bottom,
+        _countersunk_holes_cutter(
+            "plate_screw_holes", metrics.plate_screws, FLOOR + hardware.EPS
+        ),
+    )
+    mesh.difference(
+        bottom,
+        _countersunk_holes_cutter(
+            "edge_screw_holes", metrics.edge_screws, FLOOR + hardware.EPS
+        ),
+    )
 
     mesh.check_mesh(name, bottom, strict=True)
     return bottom
@@ -1236,9 +1388,10 @@ def build_case_edges(
     for cutter in (_usb_port_cutter(metrics), _usb_bevel_cutter(metrics)):
         mesh.difference(case, cutter)
 
-    insert_holes = _insert_hole_cutters(metrics)
-    if insert_holes is not None:
-        mesh.difference(case, insert_holes)
+    for box in _edge_box_builders(metrics):
+        mesh.union(case, box)
+    mesh.union(case, _front_wedge_builder(metrics))
+    mesh.difference(case, _edge_box_pilot_cutter(metrics))
 
     mesh.check_mesh(name, case, strict=True)
     return case

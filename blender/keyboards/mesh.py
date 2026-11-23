@@ -78,6 +78,59 @@ def add_cylinder_between(bm, start, end, radius, segments=CYLINDER_SEGMENTS):
     bmesh.ops.transform(bm, matrix=matrix, verts=ret["verts"])
 
 
+def add_cone(
+    bm,
+    centre_xy,
+    radius_bottom,
+    radius_top,
+    z_min,
+    z_max,
+    segments=CYLINDER_SEGMENTS,
+):
+    """Append a closed vertical truncated cone to ``bm``."""
+
+    add_revolved_profile(
+        bm,
+        centre_xy,
+        ((radius_bottom, z_min), (radius_top, z_max)),
+        segments,
+    )
+
+
+def add_revolved_profile(bm, centre_xy, profile, segments=CYLINDER_SEGMENTS):
+    """Append a closed solid of revolution around the vertical axis.
+
+    ``profile`` is a sequence of ``(radius, z)`` rings from bottom to top.
+    Consecutive rings with the same radius form a cylinder; different radii
+    form a cone.  This keeps a countersink and its through-hole in one closed
+    cutter instead of two overlapping solids.
+    """
+
+    cx, cy = centre_xy
+    rings = []
+    for radius, z in profile:
+        ring = []
+        for i in range(segments):
+            angle = 2.0 * math.pi * i / segments
+            ring.append(
+                bm.verts.new(
+                    (
+                        cx + radius * math.cos(angle),
+                        cy + radius * math.sin(angle),
+                        z,
+                    )
+                )
+            )
+        rings.append(ring)
+
+    bm.faces.new(tuple(reversed(rings[0])))
+    bm.faces.new(tuple(rings[-1]))
+    for lower, upper in zip(rings, rings[1:]):
+        for i in range(segments):
+            j = (i + 1) % segments
+            bm.faces.new((lower[i], lower[j], upper[j], upper[i]))
+
+
 def add_prism_x(bm, profile_yz, x0, x1):
     """Extrude a closed Y/Z profile along X into a solid."""
 
