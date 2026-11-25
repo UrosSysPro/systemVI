@@ -173,6 +173,85 @@ class TestMagnetPlan(unittest.TestCase):
         )
 
 
+class TestTiltPlan(unittest.TestCase):
+    def setUp(self):
+        self.bay = layout.Rect(-40.0, 40.0, 50.0, 77.5)
+        self.plan = mounting.tilt_plan(100.0, self.bay)
+
+    def test_bar_dimensions(self):
+        self.assertAlmostEqual(self.plan.width, 80.0)
+        self.assertAlmostEqual(self.plan.depth, mounting.TILT_DEPTH)
+        self.assertAlmostEqual(self.plan.height, mounting.TILT_HEIGHT)
+        self.assertAlmostEqual(self.plan.bevel, mounting.TILT_BEVEL)
+        self.assertAlmostEqual(self.plan.mount_y, self.bay.centre_y)
+
+    def test_six_magnets_in_one_row(self):
+        self.assertEqual(self.plan.magnet_count, 6)
+        self.assertAlmostEqual(
+            self.plan.magnet_pocket_depth,
+            mounting.TILT_MAGNET_THICKNESS + 0.1,
+        )
+        ys = {magnet.centre[1] for magnet in self.plan.magnets}
+        self.assertEqual(len(ys), 1)
+        self.assertAlmostEqual(next(iter(ys)), mounting.TILT_MAGNET_Y)
+        for magnet in self.plan.magnets:
+            self.assertAlmostEqual(
+                magnet.size[0], mounting.TILT_MAGNET_WIDTH + 0.4
+            )
+            self.assertAlmostEqual(
+                magnet.size[1], mounting.TILT_MAGNET_LENGTH + 0.4
+            )
+        centres = sorted(magnet.centre[0] for magnet in self.plan.magnets)
+        self.assertLess(centres[0], 0.0)
+        self.assertGreater(centres[-1], 0.0)
+        # Six is even, so no magnet pocket straddles the x = 0 print split.
+        for magnet in self.plan.magnets:
+            self.assertGreaterEqual(
+                abs(magnet.centre[0]) - magnet.size[0] / 2.0,
+                mounting.TILT_SEAM_CLEARANCE,
+            )
+
+    def test_two_wide_locating_pins(self):
+        self.assertEqual(self.plan.pin_count, 2)
+        for pin in self.plan.pins:
+            self.assertAlmostEqual(
+                abs(pin.centre[0]),
+                mounting.TILT_PIN_X_FRACTION * self.plan.width,
+            )
+            self.assertAlmostEqual(pin.centre[1], mounting.TILT_PIN_Y)
+            self.assertAlmostEqual(
+                pin.width, mounting.TILT_PIN_WIDTH_FRACTION * self.plan.width
+            )
+            self.assertAlmostEqual(pin.depth, mounting.TILT_PIN_DEPTH)
+            self.assertAlmostEqual(pin.height, mounting.TILT_PIN_HEIGHT)
+            self.assertLess(
+                abs(pin.centre[0]) + pin.width / 2.0,
+                self.plan.width / 2.0,
+            )
+
+    def test_magnets_and_pins_keep_their_distance(self):
+        magnet_rear = max(
+            magnet.centre[1] + magnet.size[1] / 2.0
+            for magnet in self.plan.magnets
+        )
+        pin_front = min(
+            pin.centre[1] - pin.depth / 2.0 for pin in self.plan.pins
+        )
+        self.assertGreaterEqual(
+            pin_front - magnet_rear, mounting.TILT_MIN_WALL
+        )
+
+    def test_shallow_bay_rejected(self):
+        with self.assertRaises(ValueError):
+            mounting.tilt_plan(
+                100.0, layout.Rect(-40.0, 40.0, 50.0, 60.0)
+            )
+
+    def test_narrow_case_rejected(self):
+        with self.assertRaises(ValueError):
+            mounting.tilt_plan(20.0, self.bay)
+
+
 class TestMountingOptions(unittest.TestCase):
     def test_defaults_validate(self):
         options = mounting.MountingOptions()

@@ -8,8 +8,9 @@ python3 -m unittest discover -s tests -p "test_*.py" -v
 ```
 
 The geometry tests check the derived metrics for all four boards, build the
-numpad plate, case bottom, case edges, cover and split plate through the real
-builders, and split the 60% edge ring into its four dovetailed pieces:
+numpad plate, case bottom, case edges, cover, split plate and tilt bar through
+the real builders, verify the tilt sockets with ray casts, and split the 60%
+edge ring into its four dovetailed pieces:
 
 ```sh
 blender --background --python-exit-code 1 --python tests/run_blender_tests.py

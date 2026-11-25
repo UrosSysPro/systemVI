@@ -2,9 +2,9 @@
 
 A :class:`KeyboardSpec` bundles the layout, parameters, output paths and the
 optional raised compartment.  ``generate_keyboard`` validates every dimension
-before building anything, builds the plate, the two split case parts and the
-cover, then exports them, so a bad option cannot leave a half-written variant
-behind.
+before building anything, builds the plate, the two split case parts, the cover
+and the rear tilt bar, then exports them, so a bad option cannot leave a
+half-written variant behind.
 
 Split and curved boards will have their own specs/builders, but can reuse the
 same layout, hardware and mesh modules.
@@ -23,11 +23,12 @@ import export
 import layout
 import mounting
 import plate
+import tilt
 
 
 @dataclass
 class KeyboardSpec:
-    """Everything needed to generate one flat keyboard's four parts."""
+    """Everything needed to generate one flat keyboard's five parts."""
 
     name: str
     keys: list[layout.Key]
@@ -35,6 +36,7 @@ class KeyboardSpec:
     case_bottom_path: str
     case_edges_path: str
     cover_path: str
+    tilt_path: str
     params: layout.PlateParams = field(default_factory=layout.PlateParams)
     compartment_height: float | None = None
     compartment_ramp: float | None = None
@@ -136,6 +138,10 @@ def generate_keyboard(spec):
         compartment_depth=spec.compartment_depth,
         options=spec.options,
     )
+    tilt_obj = tilt.build_tilt_bar(
+        metrics.tilt,
+        name=f"{spec.name}_tilt",
+    )
 
     case_edge_pieces = None
     if case_split.should_split(metrics):
@@ -162,6 +168,19 @@ def generate_keyboard(spec):
         for suffix, piece in case_edge_pieces:
             _print_dimensions(f"{spec.name}: case edges {suffix}", piece)
     _print_dimensions(f"{spec.name}: cover", cover_obj)
+    _print_dimensions(f"{spec.name}: tilt bar", tilt_obj)
+    contact_y = (
+        metrics.tilt.mount_y
+        - metrics.tilt.depth / 2.0
+        + metrics.tilt.bevel
+    )
+    run = contact_y - metrics.south
+    if run > 0.0:
+        angle = math.degrees(math.atan2(metrics.tilt.height, run))
+        print(
+            f"{spec.name}: tilt bar rear lift {metrics.tilt.height:.1f} mm "
+            f"(~{angle:.1f} deg typing angle)"
+        )
 
     if split_halves is None:
         export.export_stl(top_plate, spec.plate_path)
@@ -186,6 +205,7 @@ def generate_keyboard(spec):
                 case_split.piece_path(spec.case_edges_path, suffix),
             )
     export.export_stl(cover_obj, spec.cover_path)
+    export.export_stl(tilt_obj, spec.tilt_path)
 
     # Keep each output mode self-contained: a normal run must not leave the
     # split halves behind, and a split run must not leave the single plate,
@@ -214,4 +234,4 @@ def generate_keyboard(spec):
             os.remove(path)
             print(f"Removed stale {path}")
 
-    return top_plate, case_bottom, case_edges, cover_obj
+    return top_plate, case_bottom, case_edges, cover_obj, tilt_obj

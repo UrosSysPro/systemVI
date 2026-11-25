@@ -9,6 +9,7 @@ Generates the printed parts into the repository ``build/`` directory:
     build/kb75/case/case_edges_north.stl
     build/kb75/case/case_edges_south.stl
     build/kb75/cover/cover.stl
+    build/kb75/tilt/tilt.stl
 
 The case is wider than 250 mm, so the edge ring is split into four dovetailed
 pieces instead of one; see ``case_split.py``.
@@ -23,10 +24,10 @@ Options go after Blender's ``--`` separator:
         --led-facing south --horizontal 8 --vertical 4 --output build/out.stl
 
 ``--output`` is an explicit flat override: it names the top plate STL and the
-two case parts and cover reuse its stem with _case_bottom, _case_edges and
-_cover suffixes.  Without it the files go to the per-keyboard ``top_plate``,
-``case`` and ``cover`` directories shown above.  The split edge ring adds
-_west, _east, _north or _south to the _case_edges stem.
+case parts, cover and tilt bar reuse its stem with _case_bottom, _case_edges,
+_cover and _tilt suffixes.  Without it the files go to the per-keyboard
+``top_plate``, ``case``, ``cover`` and ``tilt`` directories shown above.  The
+split edge ring adds _west, _east, _north or _south to the _case_edges stem.
 """
 
 import os
@@ -68,8 +69,10 @@ def main(argv=None):
         argv, description=f"kb75 ({len(KEYS)} keys): top plate, split case and cover"
     )
     params = cli.params_from_args(args)
-    plate_path, case_bottom_path, case_edges_path, cover_path = cli.output_paths(
-        args.output, *cli.default_paths(PROJECT_DIR, NAME)
+    plate_path, case_bottom_path, case_edges_path, cover_path, tilt_path = (
+        cli.output_paths(
+            args.output, *cli.default_paths(PROJECT_DIR, NAME)
+        )
     )
 
     spec = generate.KeyboardSpec(
@@ -79,6 +82,7 @@ def main(argv=None):
         case_bottom_path=case_bottom_path,
         case_edges_path=case_edges_path,
         cover_path=cover_path,
+        tilt_path=tilt_path,
         params=params,
         compartment_height=args.compartment_height,
         compartment_ramp=args.compartment_ramp,

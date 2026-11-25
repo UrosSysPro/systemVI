@@ -27,6 +27,10 @@ The plate pocket floor is recessed by ``wire_gap`` and gets short ribs, one in
 each gap between neighbouring keycaps, at the original floor height.
 Wires run in the channels between them.
 
+The rear tilt bar is planned here too: :func:`tilt_plan` fixes its width,
+thickness, pins and six 6 x 3 x 3 mm magnets and returns the matching blind
+socket positions for the bottom tray.  The builder lives in :mod:`tilt`.
+
 All dimensions are millimetres.  This module is pure Python; it must not
 import ``bpy``.
 """
@@ -56,6 +60,43 @@ SIDE_MIN_GAP = 0.4         # minimum pocket-to-pocket gap on a side shelf
 BOSS_X_MARGIN = 1.0
 BOSS_Y_MARGIN = 0.2
 BOSS_LID_OVERLAP = 0.5     # boss runs into the lid for a clean union
+
+# --------------------------------------------------------------------------
+# Rear tilt bar
+# --------------------------------------------------------------------------
+#
+# A removable bar under the rear (north) edge raises the back of the keyboard.
+# It is 80% of the case width, 17.5 mm deep and 10 mm tall, with a 45-degree
+# bevel on both long bottom edges.  Two wide locating pins stand up from its top
+# face into blind rectangular sockets in the bottom tray.  Six 6 x 3 x 3 mm
+# magnets are embedded in the bar's top face and six matching magnets in the
+# tray's underside.  The magnet row is placed in the front half of the bar and
+# the pins behind it, so the two features never share a Y band.
+TILT_WIDTH_FRACTION = 0.8
+TILT_DEPTH = 17.5
+TILT_HEIGHT = 10.0
+TILT_BEVEL = 2.0
+TILT_BAY_CLEARANCE = 1.0   # minimum material around the bar inside the bay
+TILT_MIN_WALL = 1.5        # minimum material between a pocket and the bar edge
+
+TILT_MAGNET_COUNT = 6
+TILT_MAGNET_WIDTH = 6.0    # long side along X
+TILT_MAGNET_LENGTH = 3.0   # short side along Y
+TILT_MAGNET_THICKNESS = 3.0
+TILT_MAGNET_CLEARANCE = MAGNET_CLEARANCE
+TILT_MAGNET_POCKET_DEPTH = TILT_MAGNET_THICKNESS + 0.1
+TILT_MAGNET_Y = -2.5       # row centre from the bar centre (front half)
+TILT_MAGNET_EDGE = 8.0     # minimum end margin to the first magnet centre
+TILT_MAGNET_GAP = 2.0      # minimum material between neighbouring pockets
+TILT_SEAM_CLEARANCE = 1.0  # keep pockets clear of the bottom-tray split
+
+TILT_PIN_WIDTH_FRACTION = 0.22
+TILT_PIN_DEPTH = 4.0
+TILT_PIN_HEIGHT = 2.5
+TILT_PIN_X_FRACTION = 0.25
+TILT_PIN_Y = 4.5
+TILT_PIN_CLEARANCE = 0.25  # per side, pin socket vs pin
+TILT_PIN_POCKET_DEPTH = TILT_PIN_HEIGHT + 0.1
 
 # Wire routing: one short rib in each keycap gap.
 RIB_WIDTH = 3.0
@@ -291,6 +332,172 @@ def magnet_plan(
         mounts=tuple(mounts),
         rail_y0=rail_y0,
         top_count=top_count,
+    )
+
+
+@dataclass(frozen=True)
+class TiltPin:
+    """One locating pin on the tilt bar, in the bar's centred frame."""
+
+    centre: tuple[float, float]
+    width: float
+    depth: float
+    height: float
+
+
+@dataclass(frozen=True)
+class TiltMagnet:
+    """One magnet pocket position, in the bar's centred frame."""
+
+    centre: tuple[float, float]
+    size: tuple[float, float]
+
+
+@dataclass(frozen=True)
+class TiltPlan:
+    """Dimensions and mounting features of the removable rear tilt bar.
+
+    The bar is built centred on X/Y with its bottom at z = 0.  In the assembly
+    its top face meets the bottom tray at z = 0, so the bar is lowered by
+    ``height`` and moved to ``mount_y``.  The case pockets use the same local
+    coordinates offset by ``mount_y``.
+    """
+
+    width: float
+    depth: float
+    height: float
+    bevel: float
+    mount_y: float
+    pins: tuple[TiltPin, ...]
+    magnets: tuple[TiltMagnet, ...]
+    magnet_pocket_depth: float
+    pin_pocket_depth: float
+    pin_clearance: float
+
+    @property
+    def magnet_count(self):
+        return len(self.magnets)
+
+    @property
+    def pin_count(self):
+        return len(self.pins)
+
+
+def tilt_plan(case_width, bay):
+    """Plan the rear tilt bar and its sockets in the bottom tray.
+
+    ``case_width`` is the outer case width; ``bay`` is the bay opening
+    rectangle.  The bar is centred under the bay, so its whole footprint is on
+    the flat part of the bottom tray and its blind sockets never reach the wire
+    recess or the bay cavity.  The six magnets form a single row, which keeps
+    every pocket clear of the bottom tray's x = 0 print split.
+    """
+
+    if not math.isfinite(case_width) or case_width <= 0.0:
+        raise ValueError(f"case_width must be positive, got {case_width}")
+
+    width = TILT_WIDTH_FRACTION * case_width
+    if width <= 2.0 * TILT_MIN_WALL:
+        raise ValueError(
+            "the case is too narrow for a rear tilt bar: "
+            f"{width:.1f} mm wide"
+        )
+    if TILT_DEPTH > bay.height - 2.0 * TILT_BAY_CLEARANCE:
+        raise ValueError(
+            "the rear tilt bar is deeper than the electronics bay: it needs "
+            f"{TILT_DEPTH + 2.0 * TILT_BAY_CLEARANCE:.1f} mm of bay depth, "
+            f"got {bay.height:.1f} mm; increase --compartment-depth"
+        )
+
+    mount_y = bay.centre_y
+    if (
+        mount_y - TILT_DEPTH / 2.0 < bay.y0 + TILT_BAY_CLEARANCE
+        or mount_y + TILT_DEPTH / 2.0 > bay.y1 - TILT_BAY_CLEARANCE
+    ):
+        raise ValueError(
+            "the rear tilt bar does not fit inside the electronics bay"
+        )
+
+    magnet_x = TILT_MAGNET_WIDTH + 2.0 * TILT_MAGNET_CLEARANCE
+    magnet_y = TILT_MAGNET_LENGTH + 2.0 * TILT_MAGNET_CLEARANCE
+    magnet_pocket_z = TILT_MAGNET_POCKET_DEPTH
+    if magnet_pocket_z >= TILT_HEIGHT - 1.0:
+        raise ValueError(
+            "the tilt-bar magnets are too thick for the "
+            f"{TILT_HEIGHT:.1f} mm bar"
+        )
+
+    edge = max(TILT_MAGNET_EDGE, 0.04 * width)
+    pitch = (width - 2.0 * edge) / (TILT_MAGNET_COUNT - 1)
+    if pitch < magnet_x + TILT_MAGNET_GAP:
+        raise ValueError(
+            f"{TILT_MAGNET_COUNT} tilt-bar magnets do not fit across "
+            f"{width:.1f} mm: need {magnet_x + TILT_MAGNET_GAP:.1f} mm "
+            f"pitch, have {pitch:.1f} mm"
+        )
+
+    centres_x = [
+        -width / 2.0 + edge + index * pitch
+        for index in range(TILT_MAGNET_COUNT)
+    ]
+    if any(
+        abs(centre_x) - magnet_x / 2.0 < TILT_SEAM_CLEARANCE
+        for centre_x in centres_x
+    ):
+        raise ValueError(
+            "a tilt-bar magnet pocket would cross the bottom-tray split at "
+            "x = 0"
+        )
+
+    if TILT_MAGNET_Y - magnet_y / 2.0 < -TILT_DEPTH / 2.0 + TILT_MIN_WALL:
+        raise ValueError("the tilt-bar magnet row is too close to its front edge")
+    if TILT_MAGNET_Y + magnet_y / 2.0 > TILT_DEPTH / 2.0 - TILT_MIN_WALL:
+        raise ValueError("the tilt-bar magnet row is too close to its back edge")
+
+    pin_width = TILT_PIN_WIDTH_FRACTION * width
+    pin_x = TILT_PIN_X_FRACTION * width
+    if pin_x + pin_width / 2.0 > width / 2.0 - TILT_MIN_WALL:
+        raise ValueError("the tilt-bar locating pins do not fit across the bar")
+    if pin_x - pin_width / 2.0 - TILT_PIN_CLEARANCE < TILT_SEAM_CLEARANCE:
+        raise ValueError("a tilt-bar pin socket would cross the bottom-tray split")
+
+    pin_front = TILT_PIN_Y - TILT_PIN_DEPTH / 2.0
+    magnet_rear = TILT_MAGNET_Y + magnet_y / 2.0
+    if pin_front - magnet_rear < TILT_MIN_WALL:
+        raise ValueError(
+            "the tilt-bar pins would be too close to the magnet pockets"
+        )
+    if TILT_PIN_Y + TILT_PIN_DEPTH / 2.0 > TILT_DEPTH / 2.0 - TILT_MIN_WALL:
+        raise ValueError("the tilt-bar pins are too close to its back edge")
+
+    magnets = tuple(
+        TiltMagnet(
+            centre=(centre_x, TILT_MAGNET_Y),
+            size=(magnet_x, magnet_y),
+        )
+        for centre_x in centres_x
+    )
+    pins = tuple(
+        TiltPin(
+            centre=(sign * pin_x, TILT_PIN_Y),
+            width=pin_width,
+            depth=TILT_PIN_DEPTH,
+            height=TILT_PIN_HEIGHT,
+        )
+        for sign in (-1.0, 1.0)
+    )
+
+    return TiltPlan(
+        width=width,
+        depth=TILT_DEPTH,
+        height=TILT_HEIGHT,
+        bevel=TILT_BEVEL,
+        mount_y=mount_y,
+        pins=pins,
+        magnets=magnets,
+        magnet_pocket_depth=magnet_pocket_z,
+        pin_pocket_depth=TILT_PIN_POCKET_DEPTH,
+        pin_clearance=TILT_PIN_CLEARANCE,
     )
 
 

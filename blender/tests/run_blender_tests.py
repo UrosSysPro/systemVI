@@ -29,6 +29,7 @@ import hardware
 import layout
 import mounting
 import plate
+import tilt
 
 NAMES = ("kbNumpad", "kb60", "kb75", "kb100")
 
@@ -85,6 +86,26 @@ def check_metrics(name, keys):
         assert (
             mount.rail_top - mount.pocket_depth > case.FLOOR + 1.0
         ), f"{name}: magnet pocket too close to the case floor"
+
+    tilt_plan = metrics.tilt
+    assert tilt_plan.magnet_count == 6, f"{name}: tilt magnets"
+    assert tilt_plan.pin_count == 2, f"{name}: tilt pins"
+    close(tilt_plan.width, 0.8 * metrics.width)
+    assert tilt_plan.width <= metrics.bottom.width + 1e-9, (
+        f"{name}: tilt bar wider than the bottom tray"
+    )
+    assert case.FLOOR - tilt_plan.pin_pocket_depth >= 1.0, name
+    assert case.FLOOR - tilt_plan.magnet_pocket_depth >= 0.8, name
+    for magnet in tilt_plan.magnets:
+        assert (
+            abs(magnet.centre[0]) - magnet.size[0] / 2.0
+            >= mounting.TILT_SEAM_CLEARANCE
+        ), f"{name}: tilt magnet crosses the tray split"
+    print(
+        f"{name}: tilt bar {tilt_plan.width:.1f} x {tilt_plan.depth:.1f} x "
+        f"{tilt_plan.height:.1f} mm, {tilt_plan.magnet_count} magnets, "
+        f"{tilt_plan.pin_count} pins"
+    )
 
     dense_options = mounting.MountingOptions(magnet_spacing=20.0)
     dense_metrics = case.case_metrics(keys, options=dense_options)
@@ -186,6 +207,40 @@ def check_numpad_build(keys):
     close(bottom.dimensions.y, plate_obj.dimensions.y, 0.05)
 
     metrics = case.case_metrics(keys)
+    tilt_obj = tilt.build_tilt_bar(metrics.tilt, name="test_tilt")
+    close(tilt_obj.dimensions.x, metrics.tilt.width, 0.05)
+    close(tilt_obj.dimensions.y, metrics.tilt.depth, 0.05)
+    close(
+        tilt_obj.dimensions.z,
+        metrics.tilt.height + mounting.TILT_PIN_HEIGHT,
+        0.05,
+    )
+    for magnet in metrics.tilt.magnets:
+        x = magnet.centre[0]
+        y = metrics.tilt.mount_y + magnet.centre[1]
+        close(
+            cast_z(case_bottom, x, y, -1.0, 1.0),
+            metrics.tilt.magnet_pocket_depth,
+            0.05,
+        )
+        close(
+            cast_z(tilt_obj, x, magnet.centre[1], 20.0, -1.0),
+            metrics.tilt.height - metrics.tilt.magnet_pocket_depth,
+            0.05,
+        )
+    for pin in metrics.tilt.pins:
+        x = pin.centre[0]
+        y = metrics.tilt.mount_y + pin.centre[1]
+        close(
+            cast_z(case_bottom, x, y, -1.0, 1.0),
+            metrics.tilt.pin_pocket_depth,
+            0.05,
+        )
+        close(
+            cast_z(tilt_obj, x, pin.centre[1], 20.0, -1.0),
+            metrics.tilt.height + pin.height,
+            0.05,
+        )
     for x, y in metrics.plate_screws:
         close(cast_z(plate_obj, x, y, 20.0, -1.0), 9.5, 0.05)
         close(cast_z(plate_obj, x, y, -1.0, 1.0), hardware.PLATE_SCREW_PILOT_DEPTH, 0.05)
@@ -204,7 +259,7 @@ def check_numpad_build(keys):
         0.05,
     )
 
-    print("kbNumpad: plate, split case, cover and split plate built")
+    print("kbNumpad: plate, split case, cover, split plate and tilt bar built")
 
 
 def check_case_split(keys, name="kb60"):
@@ -253,14 +308,22 @@ def check_case_split(keys, name="kb60"):
 def check_output_paths():
     """The default tree is build/<name>/{top_plate,case,cover}/... ."""
 
-    plate_path, bottom_path, edges_path, cover_path = cli.default_paths(
-        ROOT, "kb60"
+    plate_path, bottom_path, edges_path, cover_path, tilt_path = (
+        cli.default_paths(ROOT, "kb60")
     )
     base = os.path.join(ROOT, "build", "kb60")
     assert plate_path == os.path.join(base, "top_plate", "top_plate.stl")
     assert bottom_path == os.path.join(base, "case", "case_bottom.stl")
     assert edges_path == os.path.join(base, "case", "case_edges.stl")
     assert cover_path == os.path.join(base, "cover", "cover.stl")
+    assert tilt_path == os.path.join(base, "tilt", "tilt.stl")
+
+    flat = cli.output_paths(
+        "build/flat.stl", *cli.default_paths(ROOT, "kb60")
+    )
+    assert os.path.normpath(flat[4]) == os.path.normpath(
+        os.path.join("build", "flat_tilt.stl")
+    )
 
     west_path = case_split.piece_path(edges_path, "west")
     assert west_path == os.path.join(base, "case", "case_edges_west.stl")
@@ -270,7 +333,7 @@ def check_output_paths():
         base, "top_plate", "top_plate_bottom_half.stl"
     )
 
-    print("default output tree: build/<name>/{top_plate,case,cover}/")
+    print("default output tree: build/<name>/{top_plate,case,cover,tilt}/")
 
 
 def main():

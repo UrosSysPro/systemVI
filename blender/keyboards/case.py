@@ -5,8 +5,8 @@ The case is printed as two parts that share the existing outer silhouette:
 - :func:`build_case_bottom` is the bottom tray.  Its footprint is inset behind
   the edge ring, so only its underside is visible.  It carries the wire recess,
   the inter-key support ribs, an upstanding perimeter lip, two countersunk
-  plate-screw holes, four countersunk north-edge holes and a triangular dent in
-  its south side.
+  plate-screw holes, four countersunk north-edge holes, a triangular dent in
+  its south side and blind sockets for the rear tilt bar.
 - :func:`build_case_edges` is the full-height outer edge ring plus the bay,
   USB-C opening and cover magnet shelves.  From the outside it is unchanged.
   Inside it has a lower recess that fits over the bottom tray's lip, an
@@ -197,6 +197,7 @@ class CaseMetrics:
     magnets: mounting.MagnetPlan
     ribs: tuple[layout.Rect, ...]
     tabs: mounting.TabPlan
+    tilt: mounting.TiltPlan
     bottom: layout.Rect
     edge_lower: layout.Rect
     tab_top: float
@@ -340,6 +341,22 @@ def case_metrics(
         )
         for fraction in EDGE_SCREW_X_FRACTIONS
     )
+    tilt = mounting.tilt_plan(width, opening)
+    if tilt.width > bottom.width:
+        raise ValueError(
+            "the rear tilt bar is wider than the bottom tray; increase the "
+            "case width or reduce the wall thickness"
+        )
+    if FLOOR - tilt.pin_pocket_depth < 1.0:
+        raise ValueError(
+            "the tilt-bar pin sockets would leave less than 1 mm of the case "
+            "floor"
+        )
+    if FLOOR - tilt.magnet_pocket_depth < 0.8:
+        raise ValueError(
+            "the tilt-bar magnet pockets would leave less than 0.8 mm of the "
+            "case floor"
+        )
 
     return CaseMetrics(
         width=width,
@@ -359,6 +376,7 @@ def case_metrics(
         magnets=magnets,
         ribs=ribs,
         tabs=tabs,
+        tilt=tilt,
         bottom=bottom,
         edge_lower=edge_lower,
         tab_top=TAB_TOP,
@@ -1090,6 +1108,52 @@ def _front_wedge_dent_cutter(metrics):
     return mesh.mesh_object("front_wedge_dent", bm)
 
 
+def _tilt_pocket_cutter(metrics):
+    """Blind magnet and pin sockets for the rear tilt bar.
+
+    The sockets open on the tray's underside, under the solid bay floor.  They
+    are shallower than the 4 mm floor, so they never reach the electronics bay
+    or the wire recess.  The cutter overshoots below z = 0 so the boolean has a
+    clean opening.
+    """
+
+    plan = metrics.tilt
+    bm = bmesh.new()
+    for magnet in plan.magnets:
+        z0 = -0.5
+        z1 = plan.magnet_pocket_depth
+        mesh.add_box(
+            bm,
+            (
+                magnet.centre[0],
+                plan.mount_y + magnet.centre[1],
+                (z0 + z1) / 2.0,
+            ),
+            (
+                magnet.size[0],
+                magnet.size[1],
+                z1 - z0,
+            ),
+        )
+    for pin in plan.pins:
+        z0 = -0.5
+        z1 = plan.pin_pocket_depth
+        mesh.add_box(
+            bm,
+            (
+                pin.centre[0],
+                plan.mount_y + pin.centre[1],
+                (z0 + z1) / 2.0,
+            ),
+            (
+                pin.width + 2.0 * plan.pin_clearance,
+                pin.depth + 2.0 * plan.pin_clearance,
+                z1 - z0,
+            ),
+        )
+    return mesh.mesh_object("tilt_sockets", bm)
+
+
 # --------------------------------------------------------------------------
 # Part generation
 # --------------------------------------------------------------------------
@@ -1105,7 +1169,7 @@ def build_case_bottom(
     compartment_depth=None,
     options=None,
 ):
-    """Build the inset bottom tray with wire recess and ribs."""
+    """Build the inset bottom tray with wire recess, ribs and tilt sockets."""
 
     ramp = COMPARTMENT_RAMP if compartment_ramp is None else compartment_ramp
     if not math.isfinite(ramp) or ramp < 0.0:
@@ -1146,6 +1210,10 @@ def build_case_bottom(
             "edge_screw_holes", metrics.edge_screws, FLOOR + hardware.EPS
         ),
     )
+
+    # Blind sockets for the removable rear tilt bar.  They sit under the solid
+    # bay floor, clear of the wire recess, the screw boxes and the x = 0 split.
+    mesh.difference(bottom, _tilt_pocket_cutter(metrics))
 
     mesh.check_mesh(name, bottom, strict=True)
     return bottom

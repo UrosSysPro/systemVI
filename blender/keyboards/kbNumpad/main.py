@@ -1,11 +1,12 @@
 """kbNumpad: a 17 key numeric keypad, 4u x 5u.
 
-Generates the four printed parts into the repository ``build/`` directory:
+Generates the five printed parts into the repository ``build/`` directory:
 
     build/kbNumpad/top_plate/top_plate.stl
     build/kbNumpad/case/case_bottom.stl
     build/kbNumpad/case/case_edges.stl
     build/kbNumpad/cover/cover.stl
+    build/kbNumpad/tilt/tilt.stl
 
 The tall keys (plus and Enter are 2u high) get a single switch cutout at the
 centre of their 2u footprint, exactly like the 1u keys.
@@ -18,9 +19,9 @@ Options go after Blender's ``--`` separator:
         --led-facing south --horizontal 8 --vertical 4 --output build/out.stl
 
 ``--output`` is an explicit flat override: it names the top plate STL and the
-two case parts and cover reuse its stem with _case_bottom, _case_edges and
-_cover suffixes.  Without it the files go to the per-keyboard ``top_plate``,
-``case`` and ``cover`` directories shown above.
+case parts, cover and tilt bar reuse its stem with _case_bottom, _case_edges,
+_cover and _tilt suffixes.  Without it the files go to the per-keyboard
+``top_plate``, ``case``, ``cover`` and ``tilt`` directories shown above.
 """
 
 import os
@@ -72,8 +73,10 @@ def main(argv=None):
         argv, description=f"kbNumpad ({len(KEYS)} keys): top plate, split case and cover"
     )
     params = cli.params_from_args(args)
-    plate_path, case_bottom_path, case_edges_path, cover_path = cli.output_paths(
-        args.output, *cli.default_paths(PROJECT_DIR, NAME)
+    plate_path, case_bottom_path, case_edges_path, cover_path, tilt_path = (
+        cli.output_paths(
+            args.output, *cli.default_paths(PROJECT_DIR, NAME)
+        )
     )
 
     spec = generate.KeyboardSpec(
@@ -83,6 +86,7 @@ def main(argv=None):
         case_bottom_path=case_bottom_path,
         case_edges_path=case_edges_path,
         cover_path=cover_path,
+        tilt_path=tilt_path,
         params=params,
         compartment_height=args.compartment_height,
         compartment_ramp=args.compartment_ramp,

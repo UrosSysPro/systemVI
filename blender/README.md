@@ -4,14 +4,15 @@ Headless Blender scripts that generate 3D-printable keyboard housings and
 stabilizers. Every keyboard is built procedurally and exported as binary STL
 files under `build/`; there is no GUI step and no `.blend` file to maintain.
 
-Each keyboard produces four part types:
+Each keyboard produces five part types:
 
 - **Top plate** — MX switch pockets, hotswap-socket pockets, LED pockets/light
   holes, stabilizer post holes/wire channels, 4 mm lower side tabs and two
   blind 3 mm pilot holes in the webs between three keys.
 - **Case bottom** — 4 mm-thick inset bottom tray with the 1.5 mm wire recess,
   short inter-key support ribs, an upstanding perimeter lip, six countersunk
-  3 mm screw holes and a triangular dent in its south side.
+  3 mm screw holes, a triangular dent in its south side and blind sockets for
+  the rear tilt bar.
 - **Case edges** — full-height outer edge ring with an electronics bay, USB-C
   opening with a 45° beveled recess and internal glue shelf. From outside it
   looks exactly like the old one-piece case. Inside it has a lower recess for
@@ -21,6 +22,10 @@ Each keyboard produces four part types:
   bay's front edge so the cover's front wall clears them.
 - **Cover** — thin L-shaped lid for the electronics bay, with local magnet
   bosses and pockets on its underside. Only the magnet locations are thickened.
+- **Tilt bar** — removable rear riser that lifts the back of the keyboard. It
+  is 80% of the case width, 17.5 mm deep and 10 mm tall, with a 45° bevel on
+  both long bottom edges. Two wide pins enter the case sockets and six
+  **6 × 3 × 3 mm** magnets in each part hold it in place.
 
 When the case is wider than **250 mm** the edge ring is automatically split into
 four dovetailed pieces (see [Split case edge ring](#split-case-edge-ring)); the
@@ -47,7 +52,7 @@ Corne and Dactyl are planned; their entry points are placeholders.
 ## Quick start
 
 Run from the repository root. Each command writes the top plate, both case
-parts and the cover into its own `build/<name>/` tree:
+parts, the cover and the rear tilt bar into its own `build/<name>/` tree:
 
 ```sh
 blender --background --python-exit-code 1 --python keyboards/kb60/main.py
@@ -63,6 +68,7 @@ build/<name>/top_plate/top_plate.stl
 build/<name>/case/case_bottom.stl
 build/<name>/case/case_edges.stl
 build/<name>/cover/cover.stl
+build/<name>/tilt/tilt.stl
 ```
 
 On a case wider than 250 mm the `case/case_edges.stl` output is replaced by
@@ -77,15 +83,18 @@ build/<name>/case/case_edges_south.stl
 
 Assembly: fit 6 × 3 × 3 magnets in the case shelves and cover bosses — two per
 side edge with their long sides along the edge, plus an adaptive evenly spaced
-row along the top edge. When the edge ring is split, place the two middle rails
-first and lower the side pieces onto them from above; the slots are open at the
-bottom and the caps stop the rails lifting. Glue the joints. Put the plate on
-the bottom tray so its tabs sit in the lip cutouts, then lower the edge ring
-over it: the triangular south ledge enters the tray's side dent and the north
-screw boxes land in the lip cutouts. The bottom tray and edge ring bottom faces
-are flush. Drive six 3 mm wood screws from below: two through the tray into the
-blind plate pilots, four along the north edge into the boxes. Route wires in
-the 1.5 mm recess between the support ribs.
+row along the top edge. Fit six more magnets in the tilt bar's top face and six
+in the matching pockets on the bottom tray's underside. When the edge ring is
+split, place the two middle rails first and lower the side pieces onto them from
+above; the slots are open at the bottom and the caps stop the rails lifting.
+Glue the joints. Put the plate on the bottom tray so its tabs sit in the lip
+cutouts, then lower the edge ring over it: the triangular south ledge enters the
+tray's side dent and the north screw boxes land in the lip cutouts. The bottom
+tray and edge ring bottom faces are flush. Drive six 3 mm wood screws from below:
+two through the tray into the blind plate pilots, four along the north edge into
+the boxes. Route wires in the 1.5 mm recess between the support ribs. Push the
+tilt bar's two wide pins into the sockets under the rear bay and let the magnets
+snap it in place.
 
 The case split also leaves the bottom tray’s vertical edge hidden inside the
 edge ring, so only the underside of the bottom part is visible from outside.
@@ -150,6 +159,36 @@ dovetails undercut the lower recess / open slot by about 3.6 mm; support those
 undersides or orient the rails so they are not downward overhangs. The plate,
 bottom tray and cover are not split by this feature.
 
+## Rear tilt bar
+
+Every keyboard also exports a removable rear riser at
+`build/<name>/tilt/tilt.stl`. It spans **80% of the case width**, is
+**17.5 mm** deep and **10 mm** tall, and has a **2 mm, 45° bevel on both long
+bottom edges**. In the assembly its top face meets the bottom tray at z = 0;
+the bar hangs below the rear electronics bay.
+
+- Two wide locating pins stand up from the top face: 22% of the bar width,
+  4 mm deep and 2.5 mm high. They enter blind rectangular sockets in the
+  bottom tray, so the bar cannot slide or rotate.
+- Six **6 × 3 × 3 mm** magnets sit in one row in the front half of the bar.
+  Six matching pockets are cut in the tray's underside. Every pocket opens on
+  the mating face; insert the magnets and glue them. Test the polarity first:
+  the bar and tray magnets must face each other with opposite poles.
+- The sockets are under the solid bay floor: the pin sockets leave 1.4 mm of
+  the 4 mm floor and the magnet pockets leave 0.9 mm. They never reach the wire
+  recess or the bay cavity.
+- Six magnets is an even count, so the row always straddles the tray's x = 0
+  print split without a pocket crossing it.
+- The bar is built in printing orientation: bottom at z = 0, pins and magnet
+  pockets facing up. Its bottom bevels print without support.
+- The 10 mm rear lift gives about a **5.0°** typing angle on the five-row
+  numpad/60% cases and **4.3°** on the six-row 75%/100% cases.
+
+The tilt bar is always exported as **one printed part**, as designed — it is
+not split with the case. At the full 80% width that fits the numpad and the 60%
+(243 mm), but the 75% (259 mm) and 100% (358 mm) bars need a bed at least that
+wide. The case parts still split at the 250 mm print target.
+
 ## Stabilizer slider
 
 Generate the custom slider with:
@@ -181,9 +220,9 @@ blender --background --python-exit-code 1 --python keyboards/render_part.py -- \
 
 `--azimuth` orbits around the part (0 = front/south, 90 = east) and
 `--elevation` looks from above or below.
-`--part plate|case|case_bottom|case_edges|cover|slider|assembly` selects what to
-build; `case` renders both case parts. `--stl PATH` renders an exported STL
-instead.
+`--part plate|case|case_bottom|case_edges|cover|tilt|slider|assembly` selects
+what to build; `case` renders both case parts and `assembly` includes the tilt
+bar. `--stl PATH` renders an exported STL instead.
 
 For an exploded view — bottom tray at the bottom, edge-ring side pieces spread
 in the middle, top plate above them and the cover at the very top — use:
@@ -220,6 +259,9 @@ This writes the male plug and female slot views to
 - Magnets: **6 × 3 × 3**; two per side edge with their long sides along the
   edge when they fit, otherwise one centered per side, plus an adaptive evenly
   spaced top-edge row (default target spacing **40 mm**)
+- Rear tilt bar: **80% × 17.5 × 10 mm** with 2 mm bottom bevels, two wide pins
+  and **six 6 × 3 × 3 mm magnets**; the bottom tray gets matching blind sockets
+  and magnet pockets
 - Wire recess: **1.5 mm** below the plate, with 3 × 10 mm ribs in the keycap gaps
 - Plate location: adaptive tabs on both sides and the south edge, 4 mm high,
   4.5 mm deep, 12 mm wide, reaching the bottom tray's outer face; the tray lip
@@ -273,6 +315,7 @@ keyboards/
   case.py            split case parts, USB-C opening, magnet shelves
   case_split.py      wide edge-ring split with dovetail joints
   cover.py           cover with local magnet bosses
+  tilt.py            removable rear tilt bar and locating pins
   export.py          scene reset and atomic STL export
   cli.py             shared command-line options
   generate.py        keyboard orchestration

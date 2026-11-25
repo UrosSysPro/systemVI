@@ -172,13 +172,14 @@ def argument_parser(description=None):
     parser.add_argument(
         "--output",
         metavar="PATH",
-        help="explicit flat base STL path; the case parts and cover get "
-        "_case_bottom/_case_edges/_cover suffixes.  By default each keyboard "
-        "writes build/<name>/top_plate/top_plate_top_half.stl and "
+        help="explicit flat base STL path; the case parts, cover and tilt bar "
+        "get _case_bottom/_case_edges/_cover/_tilt suffixes.  By default each "
+        "keyboard writes build/<name>/top_plate/top_plate_top_half.stl and "
         "top_plate_bottom_half.stl, build/<name>/case/case_bottom.stl, "
-        "build/<name>/case/case_edges.stl and build/<name>/cover/cover.stl; "
-        "--no-split-plate writes a single top_plate.stl instead, and a wide "
-        "case writes _case_edges_west/_east/_north/_south plus "
+        "build/<name>/case/case_edges.stl, build/<name>/cover/cover.stl and "
+        "build/<name>/tilt/tilt.stl; --no-split-plate writes a single "
+        "top_plate.stl instead, and a wide case writes "
+        "_case_edges_west/_east/_north/_south plus "
         "_case_bottom_west/_east in the case directory",
     )
     return parser
@@ -246,12 +247,13 @@ def output_paths(
     case_bottom_default,
     case_edges_default,
     cover_default,
+    tilt_default,
 ):
-    """Resolve the four part paths for one keyboard.
+    """Resolve the five part paths for one keyboard.
 
-    ``--output`` (``base_path``) names the top plate STL; the two case parts
-    and cover reuse its stem with ``_case_bottom``, ``_case_edges`` and
-    ``_cover`` suffixes, so generating variants with different
+    ``--output`` (``base_path``) names the top plate STL; the case parts, cover
+    and tilt bar reuse its stem with ``_case_bottom``, ``_case_edges``,
+    ``_cover`` and ``_tilt`` suffixes, so generating variants with different
     paddings/facings never overwrites another variant.
     """
 
@@ -261,6 +263,7 @@ def output_paths(
             case_bottom_default,
             case_edges_default,
             cover_default,
+            tilt_default,
         )
 
     stem, extension = os.path.splitext(base_path)
@@ -272,6 +275,7 @@ def output_paths(
         f"{stem}_case_bottom{extension}",
         f"{stem}_case_edges{extension}",
         f"{stem}_cover{extension}",
+        f"{stem}_tilt{extension}",
     )
 
 
@@ -285,6 +289,7 @@ def default_paths(project_dir, name):
         build/<name>/case/case_bottom.stl
         build/<name>/case/case_edges.stl
         build/<name>/cover/cover.stl
+        build/<name>/tilt/tilt.stl
 
     A wide case replaces ``case_edges.stl`` with the four ``case_edges_*``
     pieces in the same directory and ``case_bottom.stl`` with
@@ -299,6 +304,7 @@ def default_paths(project_dir, name):
         os.path.join(base_dir, "case", "case_bottom.stl"),
         os.path.join(base_dir, "case", "case_edges.stl"),
         os.path.join(base_dir, "cover", "cover.stl"),
+        os.path.join(base_dir, "tilt", "tilt.stl"),
     )
 
 

@@ -61,6 +61,7 @@ build/kbNumpad/top_plate/top_plate.stl
 build/kbNumpad/case/case_bottom.stl
 build/kbNumpad/case/case_edges.stl
 build/kbNumpad/cover/cover.stl
+build/kbNumpad/tilt/tilt.stl
 build/kbNumpad_preview.png
 ```
 
@@ -93,6 +94,7 @@ build/kb60/case/case_edges_east.stl
 build/kb60/case/case_edges_north.stl
 build/kb60/case/case_edges_south.stl
 build/kb60/cover/cover.stl
+build/kb60/tilt/tilt.stl
 build/kb60_preview.png
 ```
 
@@ -125,6 +127,7 @@ build/kb75/case/case_edges_east.stl
 build/kb75/case/case_edges_north.stl
 build/kb75/case/case_edges_south.stl
 build/kb75/cover/cover.stl
+build/kb75/tilt/tilt.stl
 build/kb75_preview.png
 ```
 
@@ -157,6 +160,7 @@ build/kb100/case/case_edges_east.stl
 build/kb100/case/case_edges_north.stl
 build/kb100/case/case_edges_south.stl
 build/kb100/cover/cover.stl
+build/kb100/tilt/tilt.stl
 build/kb100_preview.png
 ```
 

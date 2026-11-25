@@ -19,6 +19,18 @@ Bottom view of the plate::
     blender --background --python-exit-code 1 --python keyboards/render_part.py -- \
         --keyboard kb60 --part plate --azimuth 0 --elevation -60
 
+Rear tilt bar, top and underside::
+
+    blender --background --python-exit-code 1 --python keyboards/render_part.py -- \
+        --keyboard kb75 --part tilt --azimuth 35 --elevation 30
+    blender --background --python-exit-code 1 --python keyboards/render_part.py -- \
+        --keyboard kb75 --part tilt --azimuth 0 --elevation -35
+
+The five-part assembly includes the tilt bar under the rear bay::
+
+    blender --background --python-exit-code 1 --python keyboards/render_part.py -- \
+        --keyboard kb75 --part assembly --azimuth 180 --elevation -25
+
 An exported STL::
 
     blender --background --python-exit-code 1 --python keyboards/render_part.py -- \
@@ -51,6 +63,7 @@ import layout
 import mounting
 import plate as plate_module
 import stabilizer
+import tilt as tilt_module
 import render_preview as preview
 
 BUILD_DIR = os.path.join(PROJECT_DIR, "build")
@@ -61,6 +74,7 @@ PART_COLOURS = {
     "case_bottom": preview.CASE_BOTTOM_COLOUR,
     "case_edges": preview.CASE_COLOUR,
     "cover": preview.COVER_COLOUR,
+    "tilt": "#A6E22E",
     "slider": "#A6E22E",
 }
 
@@ -81,6 +95,7 @@ def parse_args(argv=None):
             "case_bottom",
             "case_edges",
             "cover",
+            "tilt",
             "assembly",
             "slider",
         ),
@@ -221,7 +236,15 @@ def _build(keyboard, part):
                 keys, name=name, params=params, options=options
             )
         ]
+    if part == "tilt":
+        metrics = case_module.case_metrics(
+            keys, params=params, options=options
+        )
+        return [
+            tilt_module.build_tilt_bar(metrics.tilt, name=name)
+        ]
 
+    metrics = case_module.case_metrics(keys, params=params, options=options)
     top_plate = plate_module.build_top_plate(
         keys, name=f"{name}_plate", params=params
     )
@@ -234,8 +257,12 @@ def _build(keyboard, part):
     cover_obj = cover_module.build_cover(
         keys, name=f"{name}_cover", params=params, options=options
     )
+    bar = tilt_module.build_tilt_bar(
+        metrics.tilt, name=f"{name}_tilt"
+    )
     top_plate.location.z = case_module.FLOOR
-    return [top_plate, bottom, edges, cover_obj]
+    bar.location = (0.0, metrics.tilt.mount_y, -metrics.tilt.height)
+    return [top_plate, bottom, edges, cover_obj, bar]
 
 
 def _apply_materials(objects, part, args):
@@ -243,12 +270,13 @@ def _apply_materials(objects, part, args):
         for obj in objects:
             preview.apply_material(obj, args.colour)
         return
-    if part == "assembly" and len(objects) == 4:
+    if part == "assembly" and len(objects) == 5:
         colours = (
             PART_COLOURS["plate"],
             PART_COLOURS["case_bottom"],
             PART_COLOURS["case_edges"],
             PART_COLOURS["cover"],
+            PART_COLOURS["tilt"],
         )
         for obj, colour in zip(objects, colours):
             preview.apply_material(obj, colour)

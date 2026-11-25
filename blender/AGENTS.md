@@ -10,10 +10,10 @@ Implemented keyboards:
 
 | Entry point | Layout | Parts |
 |---|---|---|
-| `keyboards/kbNumpad/main.py` | 17-key numpad | plate, case bottom, case edges, cover |
-| `keyboards/kb60/main.py` | ANSI 61-key 60% | plate, case bottom, case edges, cover |
-| `keyboards/kb75/main.py` | 83-key 75% | plate, case bottom, case edges, cover |
-| `keyboards/kb100/main.py` | ANSI 104-key full-size | plate, case bottom, case edges, cover |
+| `keyboards/kbNumpad/main.py` | 17-key numpad | plate, case bottom, case edges, cover, tilt bar |
+| `keyboards/kb60/main.py` | ANSI 61-key 60% | plate, case bottom, case edges, cover, tilt bar |
+| `keyboards/kb75/main.py` | 83-key 75% | plate, case bottom, case edges, cover, tilt bar |
+| `keyboards/kb100/main.py` | ANSI 104-key full-size | plate, case bottom, case edges, cover, tilt bar |
 
 Placeholders:
 
@@ -64,12 +64,13 @@ blender/
 │   ├── layout.py                # pure layout model; no bpy
 │   ├── mesh.py                  # bmesh primitives, booleans, validation
 │   ├── hardware.py              # MX switch, hotswap, LED cutouts
-│   ├── mounting.py              # plate tabs, cover magnets, wire ribs
+│   ├── mounting.py              # plate tabs, cover magnets, tilt bar, wire ribs
 │   ├── stabilizer.py            # custom 2 mm-wire stabilizer cutouts + slider
 │   ├── plate.py                 # flat top plate + lower locating tabs
 │   ├── case.py                  # split case bottom/edges, bay, USB-C, magnets
 │   ├── case_split.py            # wide edge-ring split + dovetail joints
 │   ├── cover.py                 # L-shaped/flat cover with local magnet bosses
+│   ├── tilt.py                  # removable rear tilt bar + locating pins
 │   ├── export.py                # scene reset + atomic STL export
 │   ├── cli.py                   # shared argparse and output paths
 │   ├── generate.py              # KeyboardSpec + generate_keyboard
@@ -123,6 +124,13 @@ blender/
   long sides on Y (or one centered if the span is too short), plus an adaptive
   evenly spaced row along the top edge with long sides on X (target spacing
   40 mm). The edge ring supports each one with its own small 45-degree shelf.
+- The rear tilt bar is **80% of the case width**, 17.5 mm deep and 10 mm tall,
+  with a 2 mm, 45-degree bevel on both long bottom edges. It is built in
+  printing orientation: local z = 0 (bottom) to 10 mm (top), with two 2.5 mm
+  locating pins above that. In the assembly the bar is lowered by 10 mm and
+  moved to the bay centre, so its top face meets the bottom tray at z = 0.
+  Six fixed 6 x 3 x 3 mm magnets sit in the bar's top face and six matching
+  pockets in the tray's underside; both sets open on the mating faces.
 - `--led-facing south` adds 180 degrees to every key's cutout rotation. It flips
   the whole switch footprint, not only the LED. North and south plates are not
   interchangeable; generate the matching variant.
@@ -141,17 +149,20 @@ layout data
    │
    ├─ build_top_plate()   ──► build/<name>/top_plate/...  (tabs + 2 pilots)
    ├─ build_case_bottom() ──► build/<name>/case/case_bottom.stl
+   │                            │
+   │                            └─ tilt_plan() ──► blind pin/magnet sockets
    ├─ build_case_edges()  ──► build/<name>/case/case_edges.stl
    │                            │
    │                            └─ split_case_edges() (case width > 250 mm)
-   └─ build_cover()       ──► build/<name>/cover/cover.stl
+   ├─ build_cover()       ──► build/<name>/cover/cover.stl
+   └─ build_tilt_bar()    ──► build/<name>/tilt/tilt.stl
 ```
 
 `generate_keyboard(spec)`:
 
 1. validates case metrics and compartment values before touching the scene,
 2. resets the scene once,
-3. builds the plate, both case parts and the cover,
+3. builds the plate, both case parts, the cover and the tilt bar,
 4. splits the edge ring into four dovetailed pieces when the case is wider
    than 250 mm,
 5. runs strict mesh validation on each part and piece,
@@ -163,13 +174,15 @@ layout data
 - `mesh.py` owns low-level bmesh primitives, booleans and validation.
 - `hardware.py` owns shared MX/hotswap/LED cutout dimensions and cutters.
 - `stabilizer.py` owns the custom stabilizer dimensions, plate cutters and slider.
-- `mounting.py` owns plate-tab, magnet and wire dimensions and the shared
-  tab/magnet/rib plans. It is pure Python and imports only layout.
+- `mounting.py` owns plate-tab, tilt-bar, magnet and wire dimensions and the
+  shared tab/magnet/tilt/rib plans. It is pure Python and imports only layout.
 - `plate.py` imports layout, hardware, mesh, mounting and stabilizer.
-- `case.py` imports layout, hardware, mesh and mounting.
+- `case.py` imports layout, hardware, mesh and mounting; its bottom-tray builder
+  cuts the tilt-bar sockets from the shared tilt plan.
 - `case_split.py` imports case and mesh; it splits a built wide edge ring and
   owns the dovetail dimensions. `generate.py` calls it above the builders.
 - `cover.py` imports case, mesh, hardware and mounting.
+- `tilt.py` imports mesh and builds the rear tilt bar.
 - `export.py`, `cli.py` and `generate.py` sit above the builders.
 - Keyboard `main.py` files contain only the layout data, path setup, CLI call and
   `KeyboardSpec` construction.
@@ -209,7 +222,7 @@ blender --background --python-exit-code 1 --python keyboards/kb60/main.py -- \
 | `--wall MM` | Case outer wall thickness (default 7 mm; the split geometry needs at least 7 mm). |
 | `--compartment-ramp MM` | Horizontal run of the raised-compartment slope; 0 gives a vertical step. |
 | `--split-plate` | Export the top plate as two horizontal halves instead of one STL; the split case and cover are unchanged. |
-| `--output PATH` | Explicit flat base STL path; case parts/cover reuse the stem with `_case_bottom`/`_case_edges`/`_cover`; `--split-plate` adds `_top_half`/`_bottom_half`; a wide case adds `_case_edges_west`/`_east`/`_north`/`_south`. Without it outputs go to `build/<name>/{top_plate,case,cover}/`. |
+| `--output PATH` | Explicit flat base STL path; case parts/cover/tilt bar reuse the stem with `_case_bottom`/`_case_edges`/`_cover`/`_tilt`; `--split-plate` adds `_top_half`/`_bottom_half`; a wide case adds `_case_edges_west`/`_east`/`_north`/`_south`. Without it outputs go to `build/<name>/{top_plate,case,cover,tilt}/`. |
 | `--magnet-width MM` | Magnet long side, along the edge (default 6.0). |
 | `--magnet-length MM` | Magnet short side, across the edge (default 3.0). |
 | `--magnet-thickness MM` | Magnet vertical size; sets the local cover boss height (default 3.0). |
@@ -228,22 +241,25 @@ build/<name>/top_plate/top_plate.stl
 build/<name>/case/case_bottom.stl
 build/<name>/case/case_edges.stl
 build/<name>/cover/cover.stl
+build/<name>/tilt/tilt.stl
 ```
 
 Examples: `build/kb75/top_plate/top_plate.stl`,
 `build/kb100/case/case_bottom.stl`, `build/kb100/case/case_edges_west.stl`,
-`build/kbNumpad/case/case_edges.stl`, `build/kbNumpad/cover/cover.stl`.
+`build/kbNumpad/case/case_edges.stl`, `build/kbNumpad/cover/cover.stl`,
+`build/kbNumpad/tilt/tilt.stl`.
 
 `--output` is an explicit flat override: it names the top plate and the case
-parts and cover reuse its stem. For example:
+parts, cover and tilt bar reuse its stem. For example:
 
 ```sh
 --output build/kb60_south.stl
 ```
 
 writes `build/kb60_south.stl`, `build/kb60_south_case_bottom.stl`,
-`build/kb60_south_case_edges.stl` and `build/kb60_south_cover.stl`.  Without
-`--output`, the per-keyboard tree above is used.
+`build/kb60_south_case_edges.stl`, `build/kb60_south_cover.stl` and
+`build/kb60_south_tilt.stl`.  Without `--output`, the per-keyboard tree above is
+used.
 
 With `--split-plate`, the normal top plate is replaced by two files in the
 keyboard's `top_plate/` directory:
@@ -257,7 +273,7 @@ The split is at z = **3.75 mm**, through the middle of the switch/socket web and
 the middle-pin hole. The top half contains the switch pockets and only the top
 0.25 mm edge of the locating tabs; the bottom half contains the hotswap/LED
 pockets and the lower 3.75 mm of the tabs. Both halves are validated strictly
-before export. The split case and cover are still exported unchanged.
+before export. The split case, cover and tilt bar are still exported unchanged.
 
 When the case is wider than **250 mm** (the 60%, 75% and 100% boards), the
 single `case/case_edges.stl` is replaced by four dovetailed pieces in the same
@@ -271,9 +287,9 @@ build/<name>/case/case_edges_south.stl
 ```
 
 With `--output build/kb60_south.stl` the pieces become flat
-`build/kb60_south_case_edges_west.stl` and so on. The top plate, bottom tray and
-cover outputs are unchanged. A 250 mm case is *not* split; the cut is triggered
-above 250 mm.
+`build/kb60_south_case_edges_west.stl` and so on. The top plate, bottom tray,
+cover and tilt bar outputs are unchanged. A 250 mm case is *not* split; the cut
+is triggered above 250 mm.
 
 The standalone stabilizer generator writes:
 
@@ -410,7 +426,7 @@ or print one width's wire data:
 blender --background --python-exit-code 1 --python keyboards/stabilizers/main.py -- --width 6.25
 ```
 
-## Case, cover and USB-C
+## Case, cover, tilt bar and USB-C
 
 `case.py` builds the case as two parts that share the old outside silhouette: a
 bottom tray with an inset perimeter, and a full-height outer edge ring with the
@@ -481,6 +497,38 @@ leaving the bay and cover lip free.
   with the same profile and a uniform 0.2 mm print clearance.
   The ledge is interrupted at every south plate tab.
 
+### Rear tilt bar
+
+`tilt.py` builds a removable rear riser; `mounting.tilt_plan()` owns its
+dimensions and the matching sockets, so `case.py` and the builder share one
+source of truth.
+
+- The bar is **80% of the case width**, **17.5 mm** deep and **10 mm** tall,
+  with a **2 mm, 45-degree bevel on both long bottom edges**.
+- Two wide locating pins stand up from the top face: **22% of the bar width**
+  long, **4 mm** deep and **2.5 mm** high, at **±25% of the bar width** and
+  **4.5 mm** behind the bar centre.
+- Six fixed **6 x 3 x 3 mm** magnets sit in one row in the front half of the
+  bar (centre 2.5 mm forward of the bar centre), with long sides along X. The
+  pockets are `magnet + 0.4 mm` across and `thickness + 0.1 mm` deep.
+- The bottom tray gets blind pin and magnet sockets on its underside, under
+  the solid bay floor. Pin sockets are **2.6 mm** deep (1.4 mm of floor left);
+  magnet pockets are **3.1 mm** deep (0.9 mm left). They never reach the wire
+  recess or the bay cavity.
+- The magnet row uses six (an even count), so no pocket straddles the bottom
+  tray's x = 0 split; the pins are also clear of it.
+- Both magnet sets open on the mating faces. Insert the magnets from below the
+  tray / above the bar and glue them; the bar's pins key the orientation. Test
+  the polarity before gluing: the two sets must face opposite poles.
+- The bar is built in print orientation: bottom at z = 0, top at z = 10 mm,
+  pins above that, magnet pockets open upward. In the assembly it is lowered
+  by 10 mm and moved to `plan.mount_y`. The 10 mm lift gives about 5.0 degrees
+  on the five-row cases and 4.3 degrees on the six-row cases.
+- The tilt bar is always exported as **one printed part**, as designed; it is
+  not split with the case. The numpad and 60% bars (76 mm and 243 mm) fit the
+  250 mm print target; the 75% and 100% bars are 259 mm and 358 mm and need a
+  bed at least that wide. Document the bed requirement before printing.
+
 ### Wide edge-ring split
 
 `case_split.py` splits the finished edge ring when the case is wider than
@@ -528,10 +576,10 @@ overhang the lower recess / open slot by about **3.6 mm**; print both rails with
 support under the dovetail, or orient them so that face is not a downward
 overhang.
 
-The plate, bottom tray and cover are not split by this feature.  Each piece is
-validated strictly and its X extent is checked against the 250 mm target; if a
-1:2:1 split would still leave a piece too wide, generation raises instead of
-exporting it.
+The plate, bottom tray, cover and tilt bar are not split by this feature.  Each
+piece is validated strictly and its X extent is checked against the 250 mm
+target; if a 1:2:1 split would still leave a piece too wide, generation raises
+instead of exporting it.
 
 ### Plate support and wire routing
 
@@ -644,7 +692,7 @@ The cover's front lip hides its underside from a low south view; use azimuth
 
 Options:
 
-- `--keyboard ...`, `--part plate|case|case_bottom|case_edges|cover|assembly|slider`
+- `--keyboard ...`, `--part plate|case|case_bottom|case_edges|cover|tilt|assembly|slider`
 - `--stl PATH` — render an existing STL instead of building a part
 - `--azimuth DEG` — 0 south, 90 east, 180 north, 270 west
 - `--elevation DEG` — negative values look from below
@@ -720,7 +768,7 @@ slot's open bottom / top cap are visible.
 5. Build paths with `cli.default_paths(PROJECT_DIR, NAME)` and
    `cli.output_paths(...)`.
 6. Create a `generate.KeyboardSpec` and call `generate.generate_keyboard(spec)`.
-7. Do not duplicate plate/case/cover code in the layout file.
+7. Do not duplicate plate/case/cover/tilt code in the layout file.
 
 Example skeleton:
 
@@ -730,7 +778,7 @@ KEYS = layout.keys_from_rows(ROWS)
 
 args = cli.parse_args(argv, description=f"{NAME} ({len(KEYS)} keys)")
 params = cli.params_from_args(args)
-plate, case_bottom, case_edges, cover = cli.output_paths(
+plate, case_bottom, case_edges, cover, tilt_path = cli.output_paths(
     args.output, *cli.default_paths(PROJECT_DIR, NAME)
 )
 spec = generate.KeyboardSpec(
@@ -740,6 +788,7 @@ spec = generate.KeyboardSpec(
     case_bottom_path=case_bottom,
     case_edges_path=case_edges,
     cover_path=cover,
+    tilt_path=tilt_path,
     params=params,
     compartment_height=args.compartment_height,
     compartment_ramp=args.compartment_ramp,
@@ -757,8 +806,8 @@ generate.generate_keyboard(spec)
   exits 0.
 - Default mode creates the `build/<name>/` tree: one `top_plate/` file (or two
   with `--split-plate`), `case/` with the bottom tray plus one edge ring or
-  four pieces, and one `cover/` file. Above 250 mm case width the edge ring
-  becomes four pieces instead of one.
+  four pieces, one `cover/` file and one `tilt/` file. Above 250 mm case width
+  the edge ring becomes four pieces instead of one.
 - Every part passes strict mesh validation (manifold, no zero-area faces).
 - Dimensions are plausible and the parts align.
 - North and south variants both generate if the layout is intended to support
@@ -783,8 +832,8 @@ python3 -m unittest discover -s tests -p "test_*.py" -v
 ```
 
 Geometry metrics for all four boards, a real numpad plate/case-bottom/
-case-edges/cover/split build, a split kb60 edge ring and the south-facing 100%
-plate:
+case-edges/cover/split build with the tilt-bar sockets and bar, a split kb60
+edge ring and the south-facing 100% plate:
 
 ```sh
 blender --background --python-exit-code 1 --python tests/run_blender_tests.py
@@ -830,9 +879,10 @@ blender --background --python-exit-code 1 --python keyboards/render_part.py -- \
   --keyboard kb75 --part case_edges --azimuth 35 --elevation 35
 ```
 
-`render_part.py` builds one part (or the assembly, or a slider), frames it
-automatically and can also load an arbitrary STL with `--stl`.  Negative
-elevation looks from below; `--orthographic` gives a dimension-friendly view.
+`render_part.py` builds one part (or the assembly, the tilt bar, or a slider),
+frames it automatically and can also load an arbitrary STL with `--stl`.
+Negative elevation looks from below; `--orthographic` gives a
+dimension-friendly view.
 
 ## Known constraints and pitfalls
 
@@ -877,6 +927,14 @@ elevation looks from below; `--orthographic` gives a dimension-friendly view.
   overhang over the lower recess / open slot, so support both rails when
   printing them. Re-run all four boards after changing the `case_split`
   constants or the wall/top-chamfer geometry.
+- **Tilt bar:** it is always one printed part at **80% of the case width**, by
+  design; do not split it. The numpad and 60% bars fit a 250 mm bed; the 75%
+  (259 mm) and 100% (358 mm) bars need a bed at least that wide. The tilt
+  magnets are fixed at 6 x 3 x 3 mm, independent of `--magnet-*` (those options
+  only change the cover magnets). The tray sockets open on the print-bed face;
+  the 3.1 mm magnet pockets bridge 3.4 mm and the 2.6 mm pin sockets bridge
+  4.4 mm. Glue the magnets in both parts. The sockets stay clear of the
+  bottom-tray x = 0 split and of the wire recess.
 - **Tiny boolean holes:** the 100% south-facing plate can leave a sub-millimetre
   boundary loop where a hotswap pocket corner meets a switch leg hole.
   `mesh.fill_small_holes()` closes only loops under 2 mm perimeter; larger

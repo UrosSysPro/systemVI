@@ -1,8 +1,10 @@
 """Render an assembled keyboard: top plate, split case and cover.
 
-The keyboard is selected on the command line and the four printed parts use
-distinct Monokai accent colours.  The script builds the same parts as
-the generator, so the render matches the exported STLs.
+The keyboard is selected on the command line and the four main printed parts use
+distinct Monokai accent colours.  The removable rear tilt bar is not part of this
+assembly preview; render it (or the five-part assembly with it) with
+``render_part.py``.  The script builds the same parts as the generator, so the
+render matches the exported STLs.
 
 Run headlessly with:
     blender --background --python keyboards/render_preview.py -- --keyboard kb75
