@@ -9,6 +9,9 @@ The cover is held by rectangular magnets on 45-degree case shelves.  The lid
 itself stays thin; each magnet sits in a small local boss on the underside, so
 only the magnet locations are thickened.  The boss bottoms land on the shelf
 tops while the rest of the cover rests on the bay shelf.
+
+The exposed front-top edge is chamfered slightly (``COVER_TOP_BEVEL``) so the
+long right-angle edge above the top row of keys is not sharp.
 """
 
 from __future__ import annotations
@@ -19,6 +22,8 @@ import case
 import hardware
 import mesh
 import mounting
+
+COVER_TOP_BEVEL = 0.8  # 45-degree chamfer on the exposed front-top edge
 
 
 def _boss_rect(metrics, mount):
@@ -80,14 +85,16 @@ def build_cover(
         # Flush bay: no vertical wall below the lid, so use a simple box.
         profile = (
             (y0, z_bottom),
-            (y0, z_top),
+            (y0, z_top - COVER_TOP_BEVEL),
+            (y0 + COVER_TOP_BEVEL, z_top),
             (y1, z_top),
             (y1, z_bottom),
         )
     else:
         profile = (
             (y0, z_bottom),
-            (y0, z_top),
+            (y0, z_top - COVER_TOP_BEVEL),
+            (y0 + COVER_TOP_BEVEL, z_top),
             (y1, z_top),
             (y1, z_top - lid_thickness),
             (y0 + case.COVER_WALL, z_top - lid_thickness),

@@ -22,6 +22,8 @@ Each keyboard produces five part types:
   bay's front edge so the cover's front wall clears them.
 - **Cover** — thin L-shaped lid for the electronics bay, with local magnet
   bosses and pockets on its underside. Only the magnet locations are thickened.
+  The exposed front-top edge gets a **0.8 mm × 45° chamfer** so the long edge
+  above the top row of keys is not sharp.
 - **Tilt bar** — removable rear riser that lifts the back of the keyboard. It
   is 80% of the case width, 17.5 mm deep and 10 mm tall, with a 45° bevel on
   both long bottom edges. Two wide pins enter the case sockets and six
@@ -264,7 +266,8 @@ This writes the male plug and female slot views to
 - Electronics bay depth: **27.5 mm**
 - Compartment height: **30 mm**
 - Switch/LED facing: north
-- Cover: **2.5 mm** lid with **1.5 mm** local bosses around the magnets
+- Cover: **2.5 mm** lid with a **0.8 mm × 45° chamfer** on the exposed
+  front-top edge and **1.5 mm** local bosses around the magnets
 - Magnets: **6 × 3 × 3**; two per side edge with their long sides along the
   edge when they fit, otherwise one centered per side, plus an adaptive evenly
   spaced top-edge row (default target spacing **40 mm**)
@@ -325,7 +328,7 @@ keyboards/
   plate.py           flat top plate
   case.py            split case parts, USB-C opening, magnet shelves
   case_split.py      wide edge-ring split with dovetail joints
-  cover.py           cover with local magnet bosses
+  cover.py           cover with local magnet bosses and front-top chamfer
   tilt.py            removable rear tilt bar and locating pins
   export.py          scene reset and atomic STL export
   cli.py             shared command-line options

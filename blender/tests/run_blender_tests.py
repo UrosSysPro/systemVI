@@ -217,6 +217,28 @@ def check_numpad_build(keys):
     close(bottom.dimensions.y, plate_obj.dimensions.y, 0.05)
 
     metrics = case.case_metrics(keys)
+    top_vertices = [
+        vertex
+        for vertex in cover_obj.data.vertices
+        if abs(vertex.co.z - metrics.height) < 1e-4
+    ]
+    assert top_vertices, "cover has no top face"
+    close(
+        min(vertex.co.y for vertex in top_vertices),
+        metrics.cover.y0 + cover.COVER_TOP_BEVEL,
+        0.01,
+    )
+    front_vertices = [
+        vertex
+        for vertex in cover_obj.data.vertices
+        if abs(vertex.co.y - metrics.cover.y0) < 1e-4
+    ]
+    assert front_vertices, "cover has no front face"
+    close(
+        max(vertex.co.z for vertex in front_vertices),
+        metrics.height - cover.COVER_TOP_BEVEL,
+        0.01,
+    )
     tilt_obj = tilt.build_tilt_bar(metrics.tilt, name="test_tilt")
     close(tilt_obj.dimensions.x, metrics.tilt.width, 0.05)
     close(tilt_obj.dimensions.y, metrics.tilt.depth, 0.05)

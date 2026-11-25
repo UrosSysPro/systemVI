@@ -69,7 +69,7 @@ blender/
 │   ├── plate.py                 # flat top plate + lower locating tabs
 │   ├── case.py                  # split case bottom/edges, bay, USB-C, magnets
 │   ├── case_split.py            # wide edge-ring split + dovetail joints
-│   ├── cover.py                 # L-shaped/flat cover with local magnet bosses
+│   ├── cover.py                 # L-shaped/flat cover with bosses + front-top chamfer
 │   ├── tilt.py                  # removable rear tilt bar + locating pins
 │   ├── export.py                # scene reset + atomic STL export
 │   ├── cli.py                   # shared argparse and output paths
@@ -104,7 +104,8 @@ blender/
   switch/socket web (the middle-pin hole): the bottom half keeps the lower
   3.75 mm of the tabs and the top half gets only their top 0.25 mm edge.
 - The case rim is at 15 mm. The default compartment and cover top are at
-  **30 mm**; the cover lid is 2.5 mm thick, its front lip is 14 mm tall,
+  **30 mm**; the cover lid is 2.5 mm thick, its front lip is 14 mm tall and the
+  exposed front-top edge carries a 0.8 mm x 45-degree chamfer,
   and local 1.5 mm bosses under the magnets hang down to the 45-degree case
   shelves.
 - The default case uses 7 mm walls, a **4 mm floor** and a **27.5 mm-deep**
@@ -604,9 +605,12 @@ is no perimeter rib.
 The cover lid stays **2.5 mm** thick.  Only the magnet locations are thickened:
 each magnet gets a local **1.5 mm boss** on the cover underside.  The bosses
 land on small 45-degree shelves inside the bay; the rest of the lid rests on the
-bay shelf at 27.5 mm.  The west/east lid ledges are notched back 4.7 mm at the
-bay's front so the cover's front wall clears them; the side magnet shelves keep
-their 2.7 mm set-back and their front ends stay hidden under the cover.
+bay shelf at 27.5 mm.  The exposed front-top edge is chamfered by
+**COVER_TOP_BEVEL = 0.8 mm at 45 degrees** so the long right-angle edge above
+the top row of keys is not sharp.  The west/east lid ledges are notched back
+4.7 mm at the bay's front so the cover's front wall clears them; the side magnet
+shelves keep their 2.7 mm set-back and their front ends stay hidden under the
+cover.
 
 Standard magnets are **6 x 3 x 3 mm**.  The longest side follows the edge:
 6 mm along Y on the side edges, 6 mm along X on the top edge, and 3 mm
