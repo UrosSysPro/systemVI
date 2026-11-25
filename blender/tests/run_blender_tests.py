@@ -95,12 +95,22 @@ def check_metrics(name, keys):
         f"{name}: tilt bar wider than the bottom tray"
     )
     assert case.FLOOR - tilt_plan.pin_pocket_depth >= 1.0, name
-    assert case.FLOOR - tilt_plan.magnet_pocket_depth >= 0.8, name
+    assert (
+        tilt_plan.case_magnet_bottom_skin
+        + tilt_plan.case_magnet_pocket_depth
+        + tilt_plan.cover_thickness
+        <= case.FLOOR + 1e-9
+    ), name
+    assert tilt_plan.mount_y - tilt_plan.depth / 2.0 >= (
+        metrics.bay_opening.y0 + mounting.TILT_BAY_CLEARANCE - 1e-9
+    ), name
     for magnet in tilt_plan.magnets:
         assert (
             abs(magnet.centre[0]) - magnet.size[0] / 2.0
             >= mounting.TILT_SEAM_CLEARANCE
         ), f"{name}: tilt magnet crosses the tray split"
+    for pin in tilt_plan.pins:
+        assert pin.centre[1] < magnet.centre[1], name
     print(
         f"{name}: tilt bar {tilt_plan.width:.1f} x {tilt_plan.depth:.1f} x "
         f"{tilt_plan.height:.1f} mm, {tilt_plan.magnet_count} magnets, "
@@ -219,13 +229,26 @@ def check_numpad_build(keys):
         x = magnet.centre[0]
         y = metrics.tilt.mount_y + magnet.centre[1]
         close(
-            cast_z(case_bottom, x, y, -1.0, 1.0),
-            metrics.tilt.magnet_pocket_depth,
+            cast_z(case_bottom, x, y, 2.0, 1.0),
+            metrics.tilt.case_magnet_bottom_skin
+            + metrics.tilt.case_magnet_pocket_depth,
             0.05,
         )
         close(
-            cast_z(tilt_obj, x, magnet.centre[1], 20.0, -1.0),
-            metrics.tilt.height - metrics.tilt.magnet_pocket_depth,
+            cast_z(case_bottom, x, y, 2.0, -1.0),
+            metrics.tilt.case_magnet_bottom_skin,
+            0.05,
+        )
+        close(
+            cast_z(tilt_obj, x, magnet.centre[1], 8.0, 1.0),
+            metrics.tilt.height - metrics.tilt.cover_thickness,
+            0.05,
+        )
+        close(
+            cast_z(tilt_obj, x, magnet.centre[1], 8.0, -1.0),
+            metrics.tilt.height
+            - metrics.tilt.cover_thickness
+            - metrics.tilt.bar_magnet_pocket_depth,
             0.05,
         )
     for pin in metrics.tilt.pins:

@@ -11,8 +11,8 @@ Each keyboard produces five part types:
   blind 3 mm pilot holes in the webs between three keys.
 - **Case bottom** — 4 mm-thick inset bottom tray with the 1.5 mm wire recess,
   short inter-key support ribs, an upstanding perimeter lip, six countersunk
-  3 mm screw holes, a triangular dent in its south side and blind sockets for
-  the rear tilt bar.
+  3 mm screw holes, a triangular dent in its south side and blind pin sockets
+  plus embedded magnet cavities for the rear tilt bar.
 - **Case edges** — full-height outer edge ring with an electronics bay, USB-C
   opening with a 45° beveled recess and internal glue shelf. From outside it
   looks exactly like the old one-piece case. Inside it has a lower recess for
@@ -83,18 +83,18 @@ build/<name>/case/case_edges_south.stl
 
 Assembly: fit 6 × 3 × 3 magnets in the case shelves and cover bosses — two per
 side edge with their long sides along the edge, plus an adaptive evenly spaced
-row along the top edge. Fit six more magnets in the tilt bar's top face and six
-in the matching pockets on the bottom tray's underside. When the edge ring is
-split, place the two middle rails first and lower the side pieces onto them from
-above; the slots are open at the bottom and the caps stop the rails lifting.
-Glue the joints. Put the plate on the bottom tray so its tabs sit in the lip
-cutouts, then lower the edge ring over it: the triangular south ledge enters the
-tray's side dent and the north screw boxes land in the lip cutouts. The bottom
-tray and edge ring bottom faces are flush. Drive six 3 mm wood screws from below:
-two through the tray into the blind plate pilots, four along the north edge into
-the boxes. Route wires in the 1.5 mm recess between the support ribs. Push the
-tilt bar's two wide pins into the sockets under the rear bay and let the magnets
-snap it in place.
+row along the top edge. For the tilt bar and tray, pause each print at the top
+of the magnet cavity, insert its six magnets, and resume to print the 0.6 mm
+cover. When the edge ring is split, place the two middle rails first and lower
+the side pieces onto them from above; the slots are open at the bottom and the
+caps stop the rails lifting. Glue the joints. Put the plate on the bottom tray
+so its tabs sit in the lip cutouts, then lower the edge ring over it: the
+triangular south ledge enters the tray's side dent and the north screw boxes land
+in the lip cutouts. The bottom tray and edge ring bottom faces are flush. Drive
+six 3 mm wood screws from below: two through the tray into the blind plate
+pilots, four along the north edge into the boxes. Route wires in the 1.5 mm
+recess between the support ribs. Push the tilt bar's two wide pins into the
+sockets at the start of the rear bay and let the magnets snap it in place.
 
 The case split also leaves the bottom tray’s vertical edge hidden inside the
 edge ring, so only the underside of the bottom part is visible from outside.
@@ -163,26 +163,35 @@ bottom tray and cover are not split by this feature.
 
 Every keyboard also exports a removable rear riser at
 `build/<name>/tilt/tilt.stl`. It spans **80% of the case width**, is
-**17.5 mm** deep and **10 mm** tall, and has a **2 mm, 45° bevel on both long
-bottom edges**. In the assembly its top face meets the bottom tray at z = 0;
-the bar hangs below the rear electronics bay.
+**17.5 mm** deep and **10 mm** tall, and has a **4 mm, 45° bevel on both long
+bottom edges**. It sits at the beginning (south edge) of the electronics bay,
+1 mm behind the bay front. In the assembly its top face meets the bottom tray
+at z = 0; the bar hangs below the rear bay.
 
-- Two wide locating pins stand up from the top face: 22% of the bar width,
-  4 mm deep and 2.5 mm high. They enter blind rectangular sockets in the
-  bottom tray, so the bar cannot slide or rotate.
-- Six **6 × 3 × 3 mm** magnets sit in one row in the front half of the bar.
-  Six matching pockets are cut in the tray's underside. Every pocket opens on
-  the mating face; insert the magnets and glue them. Test the polarity first:
-  the bar and tray magnets must face each other with opposite poles.
-- The sockets are under the solid bay floor: the pin sockets leave 1.4 mm of
-  the 4 mm floor and the magnet pockets leave 0.9 mm. They never reach the wire
-  recess or the bay cavity.
+- Two wide locating pins stand up from the **front** of the top face: 22% of
+  the bar width, 4 mm deep and 2.5 mm high, at ±25% of the bar width. They enter
+  blind rectangular sockets in the bottom tray, so the bar cannot slide or
+  rotate.
+- Six **6 × 3 × 3 mm** magnets sit in one row **behind the pins**, higher on Y.
+  Every magnet pocket is an internal cavity with a **0.6 mm printed cover**
+  (three 0.2 mm layers). Both parts use the same pause-and-embed workflow:
+  1. print up to the top of the cavity,
+  2. pause, drop the magnets in,
+  3. resume and print the 0.6 mm cover.
+- In the bar, the pocket is 3.1 mm high (0.1 mm clearance above the magnet) and
+  the cover is the top 0.6 mm of the body. In the tray, the pocket is 3.0 mm
+  high, the **bottom skin is 0.4 mm**, and the cover is the top 0.6 mm of the
+  floor. Both cavities stay under the solid bay floor and clear of the wire
+  recess. In the default STLs the pause heights are **z = 9.4 mm** for the bar
+  and **z = 3.4 mm** for the tray.
+- Test the polarity first: the bar and tray magnets must face each other with
+  opposite poles. Glue is optional after the cover is printed.
 - Six magnets is an even count, so the row always straddles the tray's x = 0
   print split without a pocket crossing it.
-- The bar is built in printing orientation: bottom at z = 0, pins and magnet
-  pockets facing up. Its bottom bevels print without support.
-- The 10 mm rear lift gives about a **5.0°** typing angle on the five-row
-  numpad/60% cases and **4.3°** on the six-row 75%/100% cases.
+- The bar is built in printing orientation: bottom at z = 0, pins above the top
+  face. Its bottom bevels print without support.
+- The 10 mm rear lift gives about a **5.1°** typing angle on the five-row
+  numpad/60% cases and **4.4°** on the six-row 75%/100% cases.
 
 The tilt bar is always exported as **one printed part**, as designed — it is
 not split with the case. At the full 80% width that fits the numpad and the 60%
@@ -259,9 +268,11 @@ This writes the male plug and female slot views to
 - Magnets: **6 × 3 × 3**; two per side edge with their long sides along the
   edge when they fit, otherwise one centered per side, plus an adaptive evenly
   spaced top-edge row (default target spacing **40 mm**)
-- Rear tilt bar: **80% × 17.5 × 10 mm** with 2 mm bottom bevels, two wide pins
-  and **six 6 × 3 × 3 mm magnets**; the bottom tray gets matching blind sockets
-  and magnet pockets
+- Rear tilt bar: **80% × 17.5 × 10 mm** with 4 mm bottom bevels, sitting at the
+  start of the bay; two wide pins in front and six **6 × 3 × 3 mm** magnets
+  behind them, each pocket closed by a **0.6 mm** pause-and-embed cover. The
+  tray has matching internal magnet cavities (0.4 mm bottom skin + 0.6 mm cover)
+  and blind pin sockets
 - Wire recess: **1.5 mm** below the plate, with 3 × 10 mm ribs in the keycap gaps
 - Plate location: adaptive tabs on both sides and the south edge, 4 mm high,
   4.5 mm deep, 12 mm wide, reaching the bottom tray's outer face; the tray lip

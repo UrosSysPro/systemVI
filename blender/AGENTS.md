@@ -125,12 +125,14 @@ blender/
   evenly spaced row along the top edge with long sides on X (target spacing
   40 mm). The edge ring supports each one with its own small 45-degree shelf.
 - The rear tilt bar is **80% of the case width**, 17.5 mm deep and 10 mm tall,
-  with a 2 mm, 45-degree bevel on both long bottom edges. It is built in
-  printing orientation: local z = 0 (bottom) to 10 mm (top), with two 2.5 mm
-  locating pins above that. In the assembly the bar is lowered by 10 mm and
-  moved to the bay centre, so its top face meets the bottom tray at z = 0.
-  Six fixed 6 x 3 x 3 mm magnets sit in the bar's top face and six matching
-  pockets in the tray's underside; both sets open on the mating faces.
+  with a 4 mm, 45-degree bevel on both long bottom edges. It sits at the start
+  (south edge) of the bay, 1 mm behind the bay front. It is built in printing
+  orientation: local z = 0 (bottom) to 10 mm (top), with two 2.5 mm locating
+  pins above that. In the assembly the bar is lowered by 10 mm and moved to the
+  bay start, so its top face meets the bottom tray at z = 0. The pins are in the
+  front row and six fixed 6 x 3 x 3 mm magnets sit behind them. Every magnet
+  pocket is an internal cavity closed by a 0.6 mm printed cover; the tray also
+  keeps a 0.4 mm bottom skin.
 - `--led-facing south` adds 180 degrees to every key's cutout rotation. It flips
   the whole switch footprint, not only the LED. North and south plates are not
   interchangeable; generate the matching variant.
@@ -504,26 +506,31 @@ dimensions and the matching sockets, so `case.py` and the builder share one
 source of truth.
 
 - The bar is **80% of the case width**, **17.5 mm** deep and **10 mm** tall,
-  with a **2 mm, 45-degree bevel on both long bottom edges**.
-- Two wide locating pins stand up from the top face: **22% of the bar width**
-  long, **4 mm** deep and **2.5 mm** high, at **±25% of the bar width** and
-  **4.5 mm** behind the bar centre.
-- Six fixed **6 x 3 x 3 mm** magnets sit in one row in the front half of the
-  bar (centre 2.5 mm forward of the bar centre), with long sides along X. The
-  pockets are `magnet + 0.4 mm` across and `thickness + 0.1 mm` deep.
-- The bottom tray gets blind pin and magnet sockets on its underside, under
-  the solid bay floor. Pin sockets are **2.6 mm** deep (1.4 mm of floor left);
-  magnet pockets are **3.1 mm** deep (0.9 mm left). They never reach the wire
-  recess or the bay cavity.
+  with a **4 mm, 45-degree bevel on both long bottom edges**. It sits at the
+  beginning of the bay: its front edge is 1 mm north of `bay.y0`.
+- Two wide locating pins stand up from the **front** of the top face: **22% of
+  the bar width** long, **4 mm** deep and **2.5 mm** high, at **±25% of the bar
+  width** and **4.5 mm forward of the bar centre**.
+- Six fixed **6 x 3 x 3 mm** magnets sit in one row **behind the pins**
+  (centre **1.0 mm behind the bar centre**), with long sides along X. The
+  pockets are `magnet + 0.4 mm` across.
+- Both magnet pockets are internal cavities closed by a **0.6 mm printed cover**
+  (three 0.2 mm layers). The bar pocket is **3.1 mm** high (0.1 mm clearance)
+  and the cover is the top 0.6 mm of the body. The tray pocket is **3.0 mm**
+  high with a **0.4 mm bottom skin** and a **0.6 mm cover** in the bay floor.
+  Pause at the top of the cavity (bar z = 9.4 mm, tray z = 3.4 mm), insert the
+  magnet, and resume.
+- The bottom tray also gets blind pin sockets on its underside. Pin sockets are
+  **2.6 mm** deep (1.4 mm of floor left). Magnet cavities and pin sockets never
+  reach the wire recess or the bay cavity.
 - The magnet row uses six (an even count), so no pocket straddles the bottom
   tray's x = 0 split; the pins are also clear of it.
-- Both magnet sets open on the mating faces. Insert the magnets from below the
-  tray / above the bar and glue them; the bar's pins key the orientation. Test
-  the polarity before gluing: the two sets must face opposite poles.
+- Test the polarity before closing the covers: the two magnet sets must face
+  each other with opposite poles. Glue is optional after the cover is printed.
 - The bar is built in print orientation: bottom at z = 0, top at z = 10 mm,
-  pins above that, magnet pockets open upward. In the assembly it is lowered
-  by 10 mm and moved to `plan.mount_y`. The 10 mm lift gives about 5.0 degrees
-  on the five-row cases and 4.3 degrees on the six-row cases.
+  pins above that, magnet cavities closed by the top cover. In the assembly it
+  is lowered by 10 mm and moved to `plan.mount_y`. The 10 mm lift gives about
+  5.1 degrees on the five-row cases and 4.4 degrees on the six-row cases.
 - The tilt bar is always exported as **one printed part**, as designed; it is
   not split with the case. The numpad and 60% bars (76 mm and 243 mm) fit the
   250 mm print target; the 75% and 100% bars are 259 mm and 358 mm and need a
@@ -931,10 +938,14 @@ dimension-friendly view.
   design; do not split it. The numpad and 60% bars fit a 250 mm bed; the 75%
   (259 mm) and 100% (358 mm) bars need a bed at least that wide. The tilt
   magnets are fixed at 6 x 3 x 3 mm, independent of `--magnet-*` (those options
-  only change the cover magnets). The tray sockets open on the print-bed face;
-  the 3.1 mm magnet pockets bridge 3.4 mm and the 2.6 mm pin sockets bridge
-  4.4 mm. Glue the magnets in both parts. The sockets stay clear of the
-  bottom-tray x = 0 split and of the wire recess.
+  only change the cover magnets). The bar sits at the bay start, with pins in
+  front and magnets behind; the tray has matching pin sockets and internal
+  magnet cavities. Both magnet sets are enclosed by a 0.6 mm printed cover:
+  pause at the top of the cavity, insert, resume. The bar pocket is 3.1 mm
+  high; the tray pocket is 3.0 mm high with a 0.4 mm bottom skin. Test magnet
+  polarity before closing the covers. Pin sockets are 2.6 mm deep and still
+  open on the print-bed face. The sockets stay clear of the bottom-tray x = 0
+  split and of the wire recess.
 - **Tiny boolean holes:** the 100% south-facing plate can leave a sub-millimetre
   boundary loop where a hotswap pocket corner meets a switch leg hole.
   `mesh.fill_small_holes()` closes only loops under 2 mm perimeter; larger

@@ -7,9 +7,10 @@ its top face and enter blind rectangular sockets in the bottom tray.  Six
 magnets in its underside.
 
 The part is built in its printing orientation: the bottom face is at z = 0, the
-pins rise above the 10 mm body and the magnet pockets open at the top face.  In
-the assembly the bar is lowered by its height and moved to ``plan.mount_y``, so
-its top face meets the case bottom at z = 0.
+pins rise above the 10 mm body and the magnet pockets are internal cavities
+closed by a 0.6 mm top cover.  Pause the print just before that cover, insert
+the magnets, and resume.  In the assembly the bar is lowered by its height and
+moved to ``plan.mount_y``, so its top face meets the case bottom at z = 0.
 
 All dimensions are millimetres.
 """
@@ -84,8 +85,8 @@ def build_tilt_bar(plan, name="tilt"):
         mesh.union(bar, _pin_solid(pin, plan, f"{name}_pin_{index}"))
 
     pockets = bmesh.new()
-    z_top = plan.height + PIN_EMBED
-    z_bottom = plan.height - plan.magnet_pocket_depth
+    z_top = plan.height - plan.cover_thickness
+    z_bottom = z_top - plan.bar_magnet_pocket_depth
     for magnet in plan.magnets:
         mesh.add_box(
             pockets,

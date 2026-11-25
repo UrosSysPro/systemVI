@@ -352,10 +352,15 @@ def case_metrics(
             "the tilt-bar pin sockets would leave less than 1 mm of the case "
             "floor"
         )
-    if FLOOR - tilt.magnet_pocket_depth < 0.8:
+    if (
+        tilt.case_magnet_bottom_skin
+        + tilt.case_magnet_pocket_depth
+        + tilt.cover_thickness
+        > FLOOR + 1e-9
+    ):
         raise ValueError(
-            "the tilt-bar magnet pockets would leave less than 0.8 mm of the "
-            "case floor"
+            "the tilt-bar magnet pockets, bottom skin and cover do not fit "
+            "the case floor"
         )
 
     return CaseMetrics(
@@ -1109,19 +1114,21 @@ def _front_wedge_dent_cutter(metrics):
 
 
 def _tilt_pocket_cutter(metrics):
-    """Blind magnet and pin sockets for the rear tilt bar.
+    """Magnet cavities and blind pin sockets for the rear tilt bar.
 
-    The sockets open on the tray's underside, under the solid bay floor.  They
-    are shallower than the 4 mm floor, so they never reach the electronics bay
-    or the wire recess.  The cutter overshoots below z = 0 so the boolean has a
-    clean opening.
+    The magnet pockets are fully internal: a 0.4 mm bottom skin on the mating
+    face, a 3.0 mm cavity and a 0.6 mm printed cover on the bay-floor side.
+    The print pauses before the cover, so the magnet drops into the open cavity
+    and the next three 0.2 mm layers close it.  The pin sockets still open on
+    the tray's underside.  The sockets stay under the solid bay floor and never
+    reach the wire recess or the bay cavity.
     """
 
     plan = metrics.tilt
     bm = bmesh.new()
     for magnet in plan.magnets:
-        z0 = -0.5
-        z1 = plan.magnet_pocket_depth
+        z0 = plan.case_magnet_bottom_skin
+        z1 = z0 + plan.case_magnet_pocket_depth
         mesh.add_box(
             bm,
             (
