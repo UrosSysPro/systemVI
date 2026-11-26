@@ -25,9 +25,10 @@ import mesh
 # MX switch (5 pin), seen from the switch centre; +y points "north"
 # --------------------------------------------------------------------------
 
-MX_POCKET = 14.0                 # switch pocket band at the plate surface
-MX_POCKET_CLIP_X = 14.0          # clip relief below the band, X direction
-MX_POCKET_CLIP_Y = 15.0          # clip relief below the band, Y direction
+SWITCH_TOLERANCE = 0.05          # per side clearance around the switch housing
+MX_POCKET = 14.0 + 2.0 * SWITCH_TOLERANCE   # 14.1 mm band at the plate surface
+MX_POCKET_CLIP_X = 14.0 + 2.0 * SWITCH_TOLERANCE  # 14.1 mm, X direction
+MX_POCKET_CLIP_Y = 15.0 + 2.0 * SWITCH_TOLERANCE  # 15.1 mm, Y direction
 CLIP_RELIEF_DEPTH = 1.0          # 14x14 band depth before the clips expand
 MX_POCKET_DEPTH = 5.0            # encloses the whole lower switch housing
 MX_CENTER_POST_DIAMETER = 4.2    # centre post is 4.0 mm
@@ -49,11 +50,16 @@ MX_LEG_HOLE_DIAMETER = 2.0
 # Hotswap socket (Gateron / Kailh type), one per switch
 # --------------------------------------------------------------------------
 
-SOCKET_POCKET_LENGTH = 12.0      # X, known-good body envelope
+SOCKET_POCKET_LENGTH = 14.0      # X, body envelope (12 mm base + 2 mm extension)
 SOCKET_POCKET_WIDTH = 9.0        # Y, known-good body envelope
+SOCKET_POCKET_EXTENSION = 2.0    # extra X on the side nearest the switch centre
 SOCKET_CONTACT_SIZE = 3.0        # protruding metal contact tab, 3 x 3 mm
 SOCKET_CONTACT_EMBED = 0.2       # overlap into the body pocket
 SOCKET_POCKET_DEPTH = 3.0
+
+# The contact tabs stay where the known-good 12 mm body put them: the extra
+# 2 mm grows only the +X body face, so the tab anchors use the base length.
+SOCKET_POCKET_BASE_LENGTH = SOCKET_POCKET_LENGTH - SOCKET_POCKET_EXTENSION
 
 # --------------------------------------------------------------------------
 # WS2812B RGB LED (5050 package)
@@ -73,11 +79,17 @@ WEB_THICKNESS = 1.5              # solid floor between switch and socket/LED
 PLATE_THICKNESS = MX_POCKET_DEPTH + WEB_THICKNESS + SOCKET_POCKET_DEPTH
 EPS = 0.5                        # cutters overshoot the plate faces
 
-# The hotswap body pocket is the proven 12 x 9 mm envelope.  Each metal
-# contact tab is a separate 3 x 3 mm extension beyond the body edge, on that
-# pin's X side and at that pin's Y.  The two tabs are therefore diagonal, not
-# mirror-symmetric: the higher pin exits +X, the lower one -X.
-_SOCKET_MID_OFFSET = (-0.635, -3.81)
+# The hotswap body pocket is a 14 x 9 mm envelope: the proven 12 x 9 mm body
+# plus 2 mm extra X on the side nearest the switch centre (the +X pin side).
+# Each metal contact tab is a separate 3 x 3 mm extension beyond the original
+# 12 mm body edge, on that pin's X side and at that pin's Y.  The two tabs are
+# therefore diagonal, not mirror-symmetric: the higher pin exits +X, the lower
+# one -X.
+_SOCKET_MID_OFFSET = (-0.635, -3.81)   # base body centre; the tab anchor
+_SOCKET_BODY_OFFSET = (
+    _SOCKET_MID_OFFSET[0] + SOCKET_POCKET_EXTENSION / 2.0,
+    _SOCKET_MID_OFFSET[1],
+)
 
 
 def _rotate(offset, angle):
@@ -111,9 +123,10 @@ def _clip_relief_profile(clip_half, band_half, z_bottom, z_step, z_top):
 def add_switch_pocket(bm, x, y, rotation, thickness):
     """Add one stepped MX pocket to ``bm``.
 
-    The surface band is a 14 x 14 mm opening.  One millimetre below it the
-    pocket widens by the clip relief so the MX clips can spring back out;
-    with the current constants that relief is 14 x 15 mm, i.e. the extra
+    The surface band is a 14.1 x 14.1 mm opening (the 14 x 14 mm switch
+    housing plus ``SWITCH_TOLERANCE`` on every side).  One millimetre below it
+    the pocket widens by the clip relief so the MX clips can spring back out;
+    with the current constants that relief is 14.1 x 15.1 mm, i.e. the extra
     clearance is on the north and south edges where the clips sit.
 
     The stepped profile is built in the plane of the relief axis and
@@ -211,7 +224,7 @@ def socket_contact_offsets():
     the pair is diagonal rather than symmetric about the body.
     """
 
-    half_length = SOCKET_POCKET_LENGTH / 2.0
+    half_length = SOCKET_POCKET_BASE_LENGTH / 2.0
     tab_centre = (
         half_length + (SOCKET_CONTACT_SIZE - SOCKET_CONTACT_EMBED) / 2.0
     )
@@ -227,7 +240,7 @@ def socket_pocket_cutters(placed):
 
     body_bm = bmesh.new()
     for x, y, rotation in placed:
-        ox, oy = _rotate(_SOCKET_MID_OFFSET, rotation)
+        ox, oy = _rotate(_SOCKET_BODY_OFFSET, rotation)
         mesh.add_box(
             body_bm,
             (x + ox, y + oy, (SOCKET_POCKET_DEPTH - EPS) / 2.0),
@@ -329,7 +342,7 @@ _SCREW_LED_HALF = (LED_POCKET / 2.0, LED_POCKET / 2.0)
 _SCREW_TAB_OFFSETS = socket_contact_offsets()
 _SCREW_FEATURE_RECTS = (
     ((0.0, 0.0), _SCREW_SWITCH_HALF),
-    (_SOCKET_MID_OFFSET, _SCREW_SOCKET_HALF),
+    (_SOCKET_BODY_OFFSET, _SCREW_SOCKET_HALF),
     (LED_OFFSET, _SCREW_LED_HALF),
 ) + tuple(
     (offset, (SOCKET_CONTACT_SIZE / 2.0, SOCKET_CONTACT_SIZE / 2.0))

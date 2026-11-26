@@ -327,9 +327,11 @@ does for its main block, navigation cluster and numpad.
 ### Switch pocket
 
 - Stepped 5-pin MX pocket.
-- `14 x 14 mm` band at the surface.
-- `14 x 15 mm` clip relief 1 mm below the surface; the switch clips are on the
-  north and south edges, so the extra clearance is in Y.
+- `14.1 x 14.1 mm` band at the surface: the nominal 14 x 14 mm housing plus
+  `SWITCH_TOLERANCE = 0.05 mm` per side.
+- `14.1 x 15.1 mm` clip relief 1 mm below the surface: the nominal 14 x 15 mm
+  relief plus the same 0.05 mm per side; the switch clips are on the north and
+  south edges, so the extra clearance is in Y.
 - Pocket depth 5 mm.
 - 4.2 mm centre-post hole, two 3.2 mm pin holes and two 2.0 mm leg holes through
   the plate floor.
@@ -338,23 +340,30 @@ does for its main block, navigation cluster and numpad.
 
 Current known-good profile:
 
-- Body pocket: **12 x 9 mm**, centred at `(-0.635, -3.81)` from the switch
-  centre.
+- Body pocket: **14 x 9 mm**. The known-good 12 x 9 mm body is extended by
+  **2 mm on the +X side** (the pin nearest the switch centre), so the base body
+  still spans the original `-0.635 ± 6 mm` while the extra 2 mm grows the +X
+  face to `x = 7.365 mm` (`SOCKET_POCKET_EXTENSION`). The body centre is
+  `(0.365, -3.81)` from the switch centre.
 - Pin/contact holes: `(3.81, -2.54)` and `(-2.54, -5.08)`, diameter 3.2 mm.
   This is the X-mirrored pad pattern.
 - Two **3 x 3 mm** side tabs, one per metal contact, each on its own pin's
   X side and at that pin's Y, so the pair is diagonal rather than symmetric:
   - higher pin `(3.81, -2.54)`: +X/right side, tab centre Y = `-2.54 mm`,
   - lower pin `(-2.54, -5.08)`: -X/left side, tab centre Y = `-5.08 mm`,
-  - 3 mm outward from the body edge,
+  - anchored to the original 12 mm body edge (`SOCKET_POCKET_BASE_LENGTH`), so
+    they keep their validated positions and are not pushed out by the
+    extension,
+  - 3 mm outward from that base body edge,
   - 0.2 mm overlap into the body pocket.
 - Socket pocket depth: 3 mm.
 
 The physical hotswap pad body was measured at 11 x 7 mm. A literal 11 x 7 plate
 pocket creates non-manifold slivers where the switch-leg holes break the pocket
-corner. The current 12 x 9 envelope plus the two contact tabs is the validated
-compromise. Do not blindly shrink it; if a tighter fit is required, add local
-leg relief and revalidate all four layouts.
+corner. The current 14 x 9 envelope (12 x 9 base plus the 2 mm +X extension)
+plus the two contact tabs is the validated compromise. Do not blindly shrink
+it; if a tighter fit is required, add local leg relief and revalidate all four
+layouts.
 
 **Cut order matters.** In `plate.py` the socket body is cut before the leg/pin
 holes, and both side tabs are cut **last**, after the through-holes. Changing
@@ -897,9 +906,10 @@ dimension-friendly view.
 
 ## Known constraints and pitfalls
 
-- **Hotswap pocket size:** the current validated pocket is 12 x 9 mm plus two
-  3 x 3 mm contact tabs. A literal 11 x 7 mm pocket produced non-manifold
-  slivers at the switch-leg openings.
+- **Hotswap pocket size:** the current validated pocket is 14 x 9 mm (the
+  12 x 9 mm body plus a 2 mm extension on the +X side) plus two 3 x 3 mm contact
+  tabs. A literal 11 x 7 mm pocket produced non-manifold slivers at the
+  switch-leg openings.
 - **Hotswap tab order:** both tabs must be cut after the through-holes. The
   socket body is cut before them.
 - **South facing:** all switch/hotswap/stabilizer cutouts rotate 180 degrees.
