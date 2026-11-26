@@ -23,9 +23,11 @@ small 1.5 mm bosses on the underside around each magnet.  The small case shelf
 tops sit 1.5 mm below the bay shelf, so the bosses and magnets meet there while
 the rest of the lid rests on the shelf.
 
-The plate pocket floor is recessed by ``wire_gap`` and gets short ribs, one in
-each gap between neighbouring keycaps, at the original floor height.
-Wires run in the channels between them.
+The plate pocket floor is recessed by ``wire_gap`` and gets short ribs at the
+original floor height.  Candidates are planned at every gap between
+neighbouring keycaps, then thinned to every third boundary along X on every
+other key row along Y, so the plate rests on a sparse regular grid instead of
+one rib under every cap gap.  Wires run in the channels between them.
 
 The rear tilt bar is planned here too: :func:`tilt_plan` fixes its width,
 thickness, pins and six 6 x 3 x 3 mm magnets and returns the matching blind
@@ -104,13 +106,17 @@ TILT_PIN_Y = -4.5          # front row, near the bay beginning
 TILT_PIN_CLEARANCE = 0.25  # per side, pin socket vs pin
 TILT_PIN_POCKET_DEPTH = TILT_PIN_HEIGHT + 0.1
 
-# Wire routing: one short rib in each keycap gap.
+# Wire routing: short support ribs, every third key boundary on alternate rows.
 RIB_WIDTH = 3.0
 RIB_MAX_LENGTH = 10.0
 RIB_CLEARANCE = 0.5        # between neighbouring ribs
 RIB_MIN_LENGTH = 2.0
 RIB_MAX_CELL_GAP = 1.5     # only cells that touch (or nearly touch)
 RIB_MIN_OVERLAP = 4.0
+RIB_X_EVERY = 3            # keep one rib every third cap boundary along X
+RIB_Y_EVERY = 2            # keep ribs on every other key row along Y
+RIB_ROW_TOLERANCE = 2.0    # candidates within this Y distance share a row
+RIB_EDGE_EPSILON = 1e-6    # treat floating-point cap edges as touching
 
 # --------------------------------------------------------------------------
 # Split case and plate location
@@ -144,7 +150,7 @@ class MountingOptions:
     magnet_length: float = 3.0
     magnet_thickness: float = 3.0
     magnet_spacing: float = 40.0
-    wire_gap: float = 1.5
+    wire_gap: float = 2.0
 
     def magnet_pocket_depth(self, vertical):
         """Pocket depth for a magnet whose vertical size is ``vertical``."""
@@ -618,27 +624,32 @@ def plate_tab_plan(width, height):
 
 
 def rib_plan(keys, bounds):
-    """One short support rib in each gap between neighbouring keycaps.
+    """Sparse support ribs on alternate key rows.
 
-    Keys are paired when their cap cells touch in X and overlap in Y.  The rib
-    is centred on the cap boundary, which is also under solid plate: even for
-    a 1u key the nearest switch pocket is 2.525 mm away, more than the rib's
-    1.5 mm half-width plus clearance.  Wide keys therefore get ribs at their
-    cap edges too.  Overlapping candidates (a 2u-tall key next to two 1u keys)
-    are merged by keeping the first.
+    Candidate ribs are still built at every gap between neighbouring keycaps:
+    keys are paired when their cap cells touch in X and overlap in Y.  The
+    candidates are then grouped into key rows north-to-south; only every other
+    row is kept, and within a kept row only every third boundary is kept.  The
+    result is a regular, sparse grid instead of one rib under every cap gap.
+
+    The rib is centred on the cap boundary, which is also under solid plate:
+    even for a 1u key the nearest switch pocket is 2.525 mm away, more than the
+    rib's 1.5 mm half-width plus clearance.  Wide keys therefore get candidate
+    boundaries at their cap edges too.  Overlapping candidates (a 2u-tall key
+    next to two 1u keys) are merged by keeping the first.
     """
 
-    ribs = []
+    candidates = []
     for index, first in enumerate(keys):
         for second in keys[index + 1 :]:
             a = first.bounds()
             b = second.bounds()
 
-            if b.x0 >= a.x1:
-                gap = b.x0 - a.x1
+            if b.x0 >= a.x1 - RIB_EDGE_EPSILON:
+                gap = max(0.0, b.x0 - a.x1)
                 boundary = (a.x1 + b.x0) / 2.0
-            elif a.x0 >= b.x1:
-                gap = a.x0 - b.x1
+            elif a.x0 >= b.x1 - RIB_EDGE_EPSILON:
+                gap = max(0.0, a.x0 - b.x1)
                 boundary = (a.x0 + b.x1) / 2.0
             else:
                 continue
@@ -670,9 +681,22 @@ def rib_plan(keys, bounds):
                 and rect.x1 > other.x0 - RIB_CLEARANCE
                 and rect.y0 < other.y1 + RIB_CLEARANCE
                 and rect.y1 > other.y0 - RIB_CLEARANCE
-                for other in ribs
+                for other in candidates
             ):
                 continue
-            ribs.append(rect)
+            candidates.append(rect)
 
+    rows = []
+    for rect in sorted(candidates, key=lambda item: -item.centre_y):
+        if rows and abs(rows[-1][0] - rect.centre_y) <= RIB_ROW_TOLERANCE:
+            rows[-1][1].append(rect)
+        else:
+            rows.append((rect.centre_y, [rect]))
+
+    ribs = []
+    for row_index, (_, row_ribs) in enumerate(rows):
+        if row_index % RIB_Y_EVERY:
+            continue
+        row_ribs.sort(key=lambda item: item.centre_x)
+        ribs.extend(row_ribs[::RIB_X_EVERY])
     return tuple(ribs)

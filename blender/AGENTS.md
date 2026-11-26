@@ -99,7 +99,7 @@ blender/
   centered coordinates so the parts align.
 - Top plate local Z is `0 .. 9.5 mm`. In the assembly the plate sits on the
   inter-key support ribs at `z = 4 .. 13.5 mm`. The rest of the pocket floor is
-  recessed 1.5 mm for wires. The lower 4 mm of the plate carries the locating
+  recessed 2 mm for wires. The lower 4 mm of the plate carries the locating
   tabs. The plate split is at local z = **3.75 mm**, through the middle of the
   switch/socket web (the middle-pin hole): the bottom half keeps the lower
   3.75 mm of the tabs and the top half gets only their top 0.25 mm edge.
@@ -230,7 +230,7 @@ blender --background --python-exit-code 1 --python keyboards/kb60/main.py -- \
 | `--magnet-length MM` | Magnet short side, across the edge (default 3.0). |
 | `--magnet-thickness MM` | Magnet vertical size; sets the local cover boss height (default 3.0). |
 | `--magnet-spacing MM` | Target spacing for the adaptive top-edge row (default 40.0). |
-| `--wire-gap MM` | Depth of the wire recess under the plate (default 1.5). |
+| `--wire-gap MM` | Depth of the wire recess under the plate (default 2.0). |
 
 Padding precedence is `--all`, then `--horizontal`/`--vertical`, then the
 individual sides.
@@ -493,8 +493,11 @@ leaving the bay and cover lip free.
 ### Mounting screws and front key
 
 - Two 3 mm wood screws enter from counterbores in the tray, pass through the
-  bed (and the 1.5 mm wire recess) and thread into **7 mm blind pilots** in the
-  plate.  The pilots are placed automatically at key-cap junctions, clear of
+  bed (and the 2 mm wire recess) and thread into **7 mm blind pilots** in the
+  plate.  Each screw sits inside an **8 mm cylindrical boss** printed on the
+  tray: the boss starts at the recess floor and reaches the plate underside at
+  z = 4, bridging the wire gap so the screw also clamps a direct support
+  column.  The pilots are placed automatically at key-cap junctions, clear of
   every switch, socket, LED and stabilizer cutout.
 - Four more screws enter along the north edge through tray counterbores into
   **10 x 6.45 x 8 mm boxes** on the lower north wall.  The boxes locally
@@ -605,14 +608,19 @@ instead of exporting it.
 
 ### Plate support and wire routing
 
-The plate-pocket floor is recessed by `wire_gap` (1.5 mm) and gets one short
-**3 x 10 mm rib in each gap between neighbouring keycaps**, at the original
-floor level.  The ribs sit under the cap boundaries, which are solid plate even
-for wide keys; they are clear of the switch pockets and socket tabs.  The plate
-rests on them; wires run in the channels between.  The recess is open to the
-bay at the plate's north edge.  It is inset **0.5 mm** from the west, east and
-south pocket walls so the recess keeps a solid rim under the plate edge.  There
-is no perimeter rib.
+The plate-pocket floor is recessed by `wire_gap` (2 mm) and gets short
+**3 x 10 mm ribs** at the original floor level.  Candidate ribs are planned in
+every gap between neighbouring keycaps, then thinned to **every third boundary
+along X** and only on **every other key row along Y**; the result is a sparse
+regular grid rather than one rib under every cap gap.  The ribs sit under the
+cap boundaries, which are solid plate even for wide keys; they are clear of the
+switch pockets and socket tabs.  The plate rests on them; wires run in the
+channels between.  The recess is **extended 5 mm north into the bay floor** as a
+**1.2 mm-deep** trench, so wires can pass from under the plate up into the
+compartment.  The trench bottom is 0.2 mm above the tilt-bar pin sockets, so
+they stay blind.  It is inset **0.5 mm** from the west, east and south pocket
+walls so the recess keeps a solid rim under the plate edge.  There is no
+perimeter rib.
 
 ### Cover magnets
 
@@ -964,13 +972,15 @@ dimension-friendly view.
   high; the tray pocket is 3.0 mm high with a 0.4 mm bottom skin. Test magnet
   polarity before closing the covers. Pin sockets are 2.6 mm deep and still
   open on the print-bed face. The sockets stay clear of the bottom-tray x = 0
-  split and of the wire recess.
+  split and of the wire recess; the 5 mm bay-access trench is only 1.2 mm deep
+  and stays 0.2 mm above them.
 - **Tiny boolean holes:** the 100% south-facing plate can leave a sub-millimetre
   boundary loop where a hotswap pocket corner meets a switch leg hole.
   `mesh.fill_small_holes()` closes only loops under 2 mm perimeter; larger
   boundary loops are still rejected by the strict mesh check.
-- **Inter-key ribs:** the case support ribs are deliberately short and placed
-  only in keycap gaps; there is no continuous rib or perimeter rib.
+- **Inter-key ribs:** the case support ribs are deliberately short and sparse:
+  every third cap boundary along X, on every other key row along Y.  There is
+  no continuous rib or perimeter rib.
 - **Compatibility shims:** do not add features to `keyboard_parts.py` or
   `keyboard_case.py`.
 - **Build PNGs:** STLs and working previews under `build/` are generated

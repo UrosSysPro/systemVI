@@ -4,9 +4,10 @@ The case is printed as two parts that share the existing outer silhouette:
 
 - :func:`build_case_bottom` is the bottom tray.  Its footprint is inset behind
   the edge ring, so only its underside is visible.  It carries the wire recess,
-  the inter-key support ribs, an upstanding perimeter lip, two countersunk
-  plate-screw holes, four countersunk north-edge holes, a triangular dent in
-  its south side and blind sockets for the rear tilt bar.
+  the inter-key support ribs, two cylindrical bosses that support the plate at
+  the screw holes, an upstanding perimeter lip, two countersunk plate-screw
+  holes, four countersunk north-edge holes, a triangular dent in its south side
+  and blind sockets for the rear tilt bar.
 - :func:`build_case_edges` is the full-height outer edge ring plus the bay,
   USB-C opening and cover magnet shelves.  From the outside it is unchanged.
   Inside it has a lower recess that fits over the bottom tray's lip, an
@@ -108,7 +109,14 @@ BOTTOM_LIP_CLEARANCE = 0.2                   # below the edge shelf
 # than 0.2 mm to let the tray slide past tabs that are not perfectly centred.
 BOTTOM_LIP_TAB_CLEARANCE = 0.5
 SPLIT_MIN_WALL = 7.0                         # radial room for tabs and recess
+# The plate pocket floor is recessed by the wire gap and gets short support
+# ribs at the original floor level.  The recess continues WIRE_RECESS_BAY_ACCESS
+# north into the bay floor, giving wires a path from under the plate into the
+# compartment.  That bay strip is shallower than the plate-pocket recess so it
+# stays 0.2 mm above the tilt-bar pin sockets.
 WIRE_RECESS_INSET = 0.5                      # solid rim under the plate edge
+WIRE_RECESS_BAY_ACCESS = 5.0                 # trench into the bay floor
+WIRE_RECESS_BAY_PIN_CLEARANCE = 0.2          # above the pin sockets
 BOTTOM_RADIUS = 6.25                         # bottom tray footprint
 EDGE_LOWER_RADIUS = 6.45                     # edge lower recess
 
@@ -163,6 +171,12 @@ BOTTOM_DOVETAIL_TARGET_SPACING = 30.0
 BOTTOM_DOVETAIL_SPAN_FRACTION = 0.6  # share of the plate depth that gets tenons
 BOTTOM_DOVETAIL_MIN_WEB = 5.0    # material between two neighbouring tenons
 BOTTOM_PIECE_SUFFIXES = ("west", "east")
+
+# The two plate screws pass through the recessed wire floor.  A short
+# cylindrical boss around each hole bridges the wire gap, so the screw also
+# provides a direct support column from the tray to the underside of the top
+# plate instead of the plate hanging over the recess.
+PLATE_SCREW_BOSS_DIAMETER = 8.0
 
 MAGNET_SHELF_EDGE = 1.5    # material under the magnet pocket at the shelf edge
 DEFAULT_COMPARTMENT_HEIGHT = 30.0  # raised bay height
@@ -763,31 +777,60 @@ def _usb_platform(metrics):
 
 
 def _wire_recess_cutter(metrics, options):
-    """Recess the plate-pocket floor so wires can pass under the plate.
+    """Recess the plate-pocket floor and step a trench into the bay floor.
 
     The recess is inset slightly on the west, east and south walls so the
-    bottom tray keeps a solid rim under the plate edge.  It stays open to the
-    bay on the north side.
+    bottom tray keeps a solid rim under the plate edge.  It continues
+    ``WIRE_RECESS_BAY_ACCESS`` north of the plate pocket as a shallower trench
+    in the bay floor, so wires can pass from under the plate up into the
+    compartment without breaking into the tilt-bar pin sockets.
     """
 
     inset = WIRE_RECESS_INSET
     pocket = metrics.plate_pocket
-    recess = layout.Rect(
-        pocket.x0 + inset,
-        pocket.x1 - inset,
-        pocket.y0 + inset,
-        pocket.y1,
+    x0 = pocket.x0 + inset
+    x1 = pocket.x1 - inset
+    main_y = pocket.y0 + inset
+    bay_y0 = pocket.y1
+    bay_y1 = pocket.y1 + WIRE_RECESS_BAY_ACCESS
+    top = FLOOR + hardware.EPS
+    main_bottom = FLOOR - options.wire_gap
+    bay_depth = min(
+        options.wire_gap,
+        FLOOR
+        - mounting.TILT_PIN_POCKET_DEPTH
+        - WIRE_RECESS_BAY_PIN_CLEARANCE,
     )
-    return _box_cutter(
-        "wire_recess",
-        recess,
-        FLOOR - options.wire_gap,
-        FLOOR + hardware.EPS,
-    )
+    if bay_depth <= 0.0:
+        raise ValueError(
+            "the bay-access wire trench would not clear the tilt pin sockets; "
+            "reduce the tilt pin pocket depth"
+        )
+    bay_bottom = FLOOR - bay_depth
+
+    bm = bmesh.new()
+    if bay_bottom <= main_bottom + 1e-9:
+        profile = (
+            (main_y, main_bottom),
+            (bay_y1, main_bottom),
+            (bay_y1, top),
+            (main_y, top),
+        )
+    else:
+        profile = (
+            (main_y, main_bottom),
+            (bay_y0, main_bottom),
+            (bay_y0, bay_bottom),
+            (bay_y1, bay_bottom),
+            (bay_y1, top),
+            (main_y, top),
+        )
+    mesh.add_prism_x(bm, profile, x0, x1)
+    return mesh.mesh_object("wire_recess", bm)
 
 
 def _floor_rib_builder(metrics, options):
-    """Short support ribs, one in each gap between adjacent 1u keys."""
+    """Sparse support ribs on alternate key rows, every third cap boundary."""
 
     bm = bmesh.new()
     for rect in metrics.ribs:
@@ -797,6 +840,22 @@ def _floor_rib_builder(metrics, options):
             (rect.width, rect.height, options.wire_gap),
         )
     return mesh.mesh_object("floor_ribs", bm)
+
+
+def _plate_screw_boss_builder(metrics, options):
+    """Cylinders around the plate screws, bridging the wire recess.
+
+    They run from the recess floor to the top plate underside, so the two
+    screws clamp and support the plate at the same points.  The countersunk
+    hole cutter removes their centre afterwards.
+    """
+
+    bm = bmesh.new()
+    radius = PLATE_SCREW_BOSS_DIAMETER / 2.0
+    z0 = FLOOR - options.wire_gap
+    for centre in metrics.plate_screws:
+        mesh.add_cylinder(bm, centre, radius, z0, FLOOR)
+    return mesh.mesh_object("plate_screw_bosses", bm)
 
 
 def _magnet_shelf_builders(metrics):
@@ -1201,6 +1260,7 @@ def build_case_bottom(
     mesh.difference(bottom, _wire_recess_cutter(metrics, options))
     if metrics.ribs:
         mesh.union(bottom, _floor_rib_builder(metrics, options))
+    mesh.union(bottom, _plate_screw_boss_builder(metrics, options))
 
     # New screw mounting: two pilot-screw holes through the bed into the plate,
     # four north-edge holes into the edge-ring boxes, and the front triangular

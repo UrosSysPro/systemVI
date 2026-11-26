@@ -289,6 +289,8 @@ def check_numpad_build(keys):
     for x, y in metrics.plate_screws:
         close(cast_z(plate_obj, x, y, 20.0, -1.0), 9.5, 0.05)
         close(cast_z(plate_obj, x, y, -1.0, 1.0), hardware.PLATE_SCREW_PILOT_DEPTH, 0.05)
+        # The screw boss bridges the wire recess and reaches the plate.
+        close(cast_z(case_bottom, x + 2.5, y + 2.5, 20.0, -1.0), case.FLOOR, 0.05)
     for x, y in metrics.edge_screws:
         assert cast_z(case_bottom, x, y, -1.0, 1.0) is None
         close(
@@ -301,6 +303,33 @@ def check_numpad_build(keys):
     close(
         cast_z(case_edges, wedge_x, wedge_y, -1.0, 1.0),
         case.FRONT_WEDGE_BOTTOM + 1.5,
+        0.05,
+    )
+    wire_x = metrics.plate_pocket.centre_x
+    pocket_y1 = metrics.plate_pocket.y1
+    bay_access_floor = (
+        mounting.TILT_PIN_POCKET_DEPTH + case.WIRE_RECESS_BAY_PIN_CLEARANCE
+    )
+    close(
+        cast_z(case_bottom, wire_x, pocket_y1 + 2.5, 20.0, -1.0),
+        bay_access_floor,
+        0.05,
+    )
+    close(
+        cast_z(case_bottom, wire_x, pocket_y1 + 5.5, 20.0, -1.0),
+        case.FLOOR,
+        0.05,
+    )
+    pin = metrics.tilt.pins[0]
+    pin_socket_y = (
+        metrics.tilt.mount_y
+        + pin.centre[1]
+        - pin.depth / 2.0
+        - metrics.tilt.pin_clearance
+    )
+    close(
+        cast_z(case_bottom, pin.centre[0], pin_socket_y + 0.5, 20.0, -1.0),
+        bay_access_floor,
         0.05,
     )
 

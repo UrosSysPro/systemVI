@@ -9,7 +9,7 @@ Each keyboard produces five part types:
 - **Top plate** — MX switch pockets, hotswap-socket pockets, LED pockets/light
   holes, stabilizer post holes/wire channels, 4 mm lower side tabs and two
   blind 3 mm pilot holes in the webs between three keys.
-- **Case bottom** — 4 mm-thick inset bottom tray with the 1.5 mm wire recess,
+- **Case bottom** — 4 mm-thick inset bottom tray with the 2 mm wire recess,
   short inter-key support ribs, an upstanding perimeter lip, six countersunk
   3 mm screw holes, a triangular dent in its south side and blind pin sockets
   plus embedded magnet cavities for the rear tilt bar.
@@ -94,7 +94,7 @@ so its tabs sit in the lip cutouts, then lower the edge ring over it: the
 triangular south ledge enters the tray's side dent and the north screw boxes land
 in the lip cutouts. The bottom tray and edge ring bottom faces are flush. Drive
 six 3 mm wood screws from below: two through the tray into the blind plate
-pilots, four along the north edge into the boxes. Route wires in the 1.5 mm
+pilots, four along the north edge into the boxes. Route wires in the 2 mm
 recess between the support ribs. Push the tilt bar's two wide pins into the
 sockets at the start of the rear bay and let the magnets snap it in place.
 
@@ -276,12 +276,17 @@ This writes the male plug and female slot views to
   behind them, each pocket closed by a **0.6 mm** pause-and-embed cover. The
   tray has matching internal magnet cavities (0.4 mm bottom skin + 0.6 mm cover)
   and blind pin sockets
-- Wire recess: **1.5 mm** below the plate, with 3 × 10 mm ribs in the keycap gaps
+- Wire recess: **2 mm** below the plate, with 3 × 10 mm ribs on every third
+  key boundary and every other key row; the recess continues **5 mm into the
+  bay floor** as a **1.2 mm-deep** wire-access trench that stays clear of the
+  tilt pin sockets
 - Plate location: adaptive tabs on both sides and the south edge, 4 mm high,
   4.5 mm deep, 12 mm wide, reaching the bottom tray's outer face; the tray lip
   and edge-ring recess locate the stack
 - Screws: **six 3 mm countersunk wood screws** — two in the plate webs between
-  three keys and four along the north edge into the edge-ring boxes
+  three keys and four along the north edge into the edge-ring boxes; the two
+  plate screws pass through **8 mm cylindrical bosses** that bridge the wire
+  recess and support the plate underside
 - Front key: an **80%-width** triangular ledge on the south wall, with a
   matching triangular dent in the tray's side
 - Case split: bottom tray inset behind the edge ring; both undersides flush;
@@ -304,7 +309,7 @@ Magnet and wire sizes are parameters too:
 ```sh
 blender --background --python-exit-code 1 --python keyboards/kb75/main.py -- \
   --magnet-width 6 --magnet-length 3 --magnet-thickness 3 \
-  --magnet-spacing 30 --wire-gap 1.5
+  --magnet-spacing 30 --wire-gap 2.0
 ```
 
 See [AGENTS.md](AGENTS.md) for the full option reference, mesh conventions, and

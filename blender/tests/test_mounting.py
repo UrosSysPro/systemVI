@@ -373,6 +373,26 @@ class TestRibPlan(unittest.TestCase):
         bounds = layout.layout_bounds(keys, zero_margin_params())
         self.assertEqual(mounting.rib_plan(keys, bounds), ())
 
+    def test_sparse_grid_on_alternate_rows(self):
+        keys = layout.keys_from_rows([[1.0] * 7 for _ in range(4)])
+        bounds = layout.layout_bounds(keys, zero_margin_params())
+        ribs = mounting.rib_plan(keys, bounds)
+        self.assertEqual(len(ribs), 4)
+        self.assertEqual(
+            {round(rib.centre_y, 6) for rib in ribs},
+            {
+                round(1.5 * layout.PITCH, 6),
+                round(-0.5 * layout.PITCH, 6),
+            },
+        )
+        self.assertEqual(
+            {round(rib.centre_x, 6) for rib in ribs},
+            {
+                round(-2.5 * layout.PITCH, 6),
+                round(0.5 * layout.PITCH, 6),
+            },
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
