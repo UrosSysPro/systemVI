@@ -300,7 +300,7 @@ def check_numpad_build(keys):
     wedge_y = metrics.edge_lower.y0 + 1.5
     close(
         cast_z(case_edges, wedge_x, wedge_y, -1.0, 1.0),
-        case.FRONT_WEDGE_BOTTOM,
+        case.FRONT_WEDGE_BOTTOM + 1.5,
         0.05,
     )
 

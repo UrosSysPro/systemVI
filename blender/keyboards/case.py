@@ -130,15 +130,17 @@ EDGE_BOX_EMBED = 0.5         # overlap into the north wall for a clean union
 
 # The front key is a wide triangular ledge on the inner edge-ring wall.  Its
 # vertical cross-section is a right triangle: a flat top, a 45-degree
-# underside running back to the wall, and the normal wall below it.  The tray
-# has a matching triangular dent in its south side, open at the top so the
-# edge ring can be lowered onto the tray.
+# underside running down and back to the wall, and the normal wall below it.
+# The tray has a matching triangular dent in its south side, open at the top so
+# the edge ring can be lowered onto the tray.  The flat top faces up so the
+# ledge is not printed as a horizontal overhang; the 45-degree underside is
+# self-supporting.
 FRONT_WEDGE_WIDTH_FRACTION = 0.8
 FRONT_WEDGE_DEPTH = 2.0      # ledge depth into the tray side
 FRONT_WEDGE_HEIGHT = 2.0     # 45-degree underside; depth == height
 FRONT_WEDGE_EMBED = 0.5      # overlap into the edge-ring wall
 FRONT_WEDGE_CLEARANCE = 0.2  # around the triangular dent
-FRONT_WEDGE_BOTTOM = 2.3     # unchanged height above the floor
+FRONT_WEDGE_BOTTOM = 1.7     # unchanged height above the floor
 FRONT_WEDGE_TOP = FRONT_WEDGE_BOTTOM + FRONT_WEDGE_HEIGHT
 
 # Wide bottom trays are printed as two halves.  The single cut runs along X = 0
@@ -1053,8 +1055,8 @@ def _front_wedge_builder(metrics):
     x1 = FRONT_WEDGE_WIDTH_FRACTION * metrics.width / 2.0
     profile = (
         (wall_y - FRONT_WEDGE_EMBED, FRONT_WEDGE_BOTTOM),
-        (wall_y + FRONT_WEDGE_DEPTH, FRONT_WEDGE_BOTTOM),
-        (wall_y, FRONT_WEDGE_TOP),
+        (wall_y, FRONT_WEDGE_BOTTOM),
+        (wall_y + FRONT_WEDGE_DEPTH, FRONT_WEDGE_TOP),
         (wall_y - FRONT_WEDGE_EMBED, FRONT_WEDGE_TOP),
     )
     bm = bmesh.new()
@@ -1101,7 +1103,7 @@ def _front_wedge_dent_cutter(metrics):
     out_y = wall_y - clearance
     profile = (
         (out_y, bottom - clearance),
-        (wall_y + FRONT_WEDGE_DEPTH + clearance, bottom - clearance),
+        (wall_y + FRONT_WEDGE_DEPTH + clearance, top + clearance),
         (out_y, top + clearance),
     )
     half = (

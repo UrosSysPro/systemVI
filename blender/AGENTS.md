@@ -504,8 +504,13 @@ leaving the bay and cover lip free.
   leaves 2.5 mm under the head.
 - The south inner wall carries an **80%-width triangular ledge** (2 mm deep,
   2 mm high, 0.5 mm embedded in the wall).  Its vertical cross-section is a
-  right triangle with a **flat bottom** at z = 2.3, a 45-degree top, and the
-  normal wall above and below.  The tray has a matching triangular side dent
+  right triangle with a **flat top** at z = 3.7, a 45-degree underside running
+  down and back to the wall at z = 1.7, and the normal wall above and below.
+  The ledge is flipped relative to a shelf so the flat face is up and the
+  45-degree underside is self-supporting when the edge ring is printed upright.
+  It sits below the tray lip's tab cutouts (which start at z = 3.95), so the
+  matching dent and the ledge stay clear of the plate tabs.
+  The tray has a matching triangular side dent
   with the same profile and a uniform 0.2 mm print clearance.
   The ledge is interrupted at every south plate tab.
 
